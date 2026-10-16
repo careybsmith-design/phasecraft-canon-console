@@ -12,4 +12,10 @@ export default defineConfig({
     // nitro/vite builds from this
     server: { entry: "server" },
   },
+  vite: {
+    // The graph renderer is imported lazily in the browser. Pre-bundle it at startup so the
+    // dev server never re-optimizes mid-session, which mixed old and new chunks and broke
+    // sigma's EventEmitter base class ("Super expression must either be null or a function").
+    optimizeDeps: { include: ["sigma", "graphology", "events"] },
+  },
 });
