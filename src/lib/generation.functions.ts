@@ -112,6 +112,17 @@ export const serveRendition = createServerFn({ method: "POST" })
       generated_from: Array<{ id: string; human_ref: string; version: number }>; generator: { model: string; route: string; adapter_mode: string }; generated_at: string; permission_context: { purpose: string } };
   });
 
+/** Records a PDF download of a rendition (same identity/purpose checks as opening it) in the ledger. */
+export const recordRenditionDownload = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => z.object({ id: uuid, purpose: z.string().max(200) }).parse(d))
+  .handler(async ({ data, context }) => {
+    const db = (await import("@/integrations/supabase/client.server")).supabaseAdmin;
+    const { data: r, error } = await db.rpc("thread_record_rendition_download", { p_actor: human(context.userId), p_id: data.id, p_purpose: data.purpose });
+    if (error) throw err(error.message);
+    return r as unknown as { classification: string; ledger_seq: number; downloaded_at: string; rendition: { expires_at: string } };
+  });
+
 export const generateMyBrief = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
