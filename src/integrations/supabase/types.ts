@@ -2668,6 +2668,7 @@ export type Database = {
         Returns: number
       }
       phase10_measurements: { Args: never; Returns: Json }
+      phase10_measurements_extended: { Args: never; Returns: Json }
       phase10_schema_check: { Args: never; Returns: Json }
       show_limit: { Args: never; Returns: number }
       show_trgm: { Args: { "": string }; Returns: string[] }
@@ -3086,6 +3087,10 @@ export type Database = {
       thread_record_production_outcome: {
         Args: { p: Json; p_actor: Json; p_capability: string }
         Returns: Json
+      }
+      thread_record_query_refusal: {
+        Args: { p_actor: Json; p_input_hash: string; p_kind: string }
+        Returns: undefined
       }
       thread_record_render_benchmark: {
         Args: { p: Json; p_actor: Json }
