@@ -63,7 +63,7 @@ function nodeToken(n: GraphNode, overlay: Overlay, families: string[]): string {
 function toCanvas(nodes: GraphNode[], edges: GraphEdge[], overlay: Overlay, pos: (n: GraphNode, i: number) => { x: number; y: number }, highlight?: Set<string>) {
   const families = [...new Set(nodes.map((n) => n.family))].sort();
   const cn: CanvasNode[] = nodes.map((n, i) => ({ id: n.id, label: `${n.ref} ${n.title}`, ...pos(n, i), size: n.depth === 0 ? 8 : 5, token: nodeToken(n, overlay, families), tombstone: n.tombstone }));
-  const ce: CanvasEdge[] = edges.map((e) => ({ id: e.id, source: e.from, target: e.to, inferred: e.source === "inferred", highlight: highlight?.has(e.id), label: e.verb }));
+  const ce: CanvasEdge[] = edges.map((e) => ({ id: e.id, source: e.from, target: e.to, inferred: e.source === "inferred", highlight: !!highlight?.has(e.id), label: e.verb }));
   return { cn, ce };
 }
 

@@ -191,14 +191,14 @@ export const getCanonChanges = createServerFn({ method: "GET" })
     const ids = (ch ?? []).map((c) => c.id);
     const evIds = [...new Set((ch ?? []).flatMap((c) => c.evidence_refs ?? []))];
     const [chal, ev] = await Promise.all([
-      ids.length ? context.supabase.from("canon_challenges").select("id,change_id,author,origin,argument,created_at").in("change_id", ids).order("created_at") : Promise.resolve({ data: [] as never[] }),
+      ids.length ? context.supabase.from("canon_challenges").select("id,change_id,origin,argument,created_at").in("change_id", ids).order("created_at") : Promise.resolve({ data: [] as never[] }),
       evIds.length ? context.supabase.from("objects").select("id,human_ref,title").in("id", evIds) : Promise.resolve({ data: [] as never[] }),
     ]);
     const refs = new Map(((ev.data ?? []) as { id: string; human_ref: string; title: string }[]).map((o) => [o.id, o]));
     return (ch ?? []).map((c) => ({
       ...c,
       evidence: (c.evidence_refs ?? []).map((id: string) => refs.get(id) ?? { id, human_ref: id.slice(0, 8), title: "not visible" }),
-      challenges: ((chal.data ?? []) as { id: string; change_id: string; author: unknown; origin: string; argument: string; created_at: string }[]).filter((x) => x.change_id === c.id),
+      challenges: ((chal.data ?? []) as { id: string; change_id: string; origin: string; argument: string; created_at: string }[]).filter((x) => x.change_id === c.id),
     }));
   });
 
