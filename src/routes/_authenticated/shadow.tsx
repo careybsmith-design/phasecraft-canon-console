@@ -69,8 +69,6 @@ function ShadowPage() {
   const [inSev, setInSev] = useState<"minor" | "major" | "critical">("minor");
   const [inDesc, setInDesc] = useState("");
 
-  const cap = (id: string) => ov?.capabilities.find((c) => c.id === id);
-
   return (
     <main className="mx-auto max-w-6xl space-y-8 p-6">
       <header>
@@ -256,7 +254,7 @@ function ShadowPage() {
       <section aria-labelledby="evidence" className="space-y-3 rounded border p-4">
         <h2 id="evidence" className="text-lg font-medium">Phase 7 exit evidence</h2>
         <button type="button" className="rounded bg-primary px-3 py-1 text-primary-foreground"
-          onClick={() => run(() => runPhase7Evidence({ data: undefined as never }), (r) => {
+          onClick={() => run(() => runPhase7Evidence({}), (r) => {
             const x = r as { ledger_seq: number; selftest: { passed: boolean } };
             return `Exit evidence recorded as ledger #${x.ledger_seq} — self-test ${x.selftest.passed ? "passed" : "FAILED"}.`;
           })}>Run self-test and record evidence</button>
