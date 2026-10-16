@@ -75,7 +75,7 @@ export function transitions(family: LifecycleFamily): Array<[string, string]> {
   ranks.forEach((rank, i) => {
     for (const from of rank) {
       for (let j = i + 1; j < ranks.length; j++) {
-        for (const to of ranks[j]) out.push([from, to]);
+        for (const to of ranks[j] ?? []) out.push([from, to]);
       }
     }
   });

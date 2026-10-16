@@ -21,7 +21,7 @@ async function admin() {
 
 export const listObjects = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: { q?: string; type?: string; includeTombstones?: boolean }) => d)
+  .inputValidator((d: { q?: string | undefined; type?: string | undefined; includeTombstones?: boolean | undefined }) => d)
   .handler(async ({ data, context }) => {
     let query = context.supabase
       .from("objects")
@@ -53,14 +53,13 @@ export const getObjectDetail = createServerFn({ method: "GET" })
   .inputValidator((d: { id: string }) => z.object({ id: z.string().uuid() }).parse(d))
   .handler(async ({ data, context }) => {
     const [obj, versions, ledger] = await Promise.all([
-      context.supabase.from("objects").select("*").eq("id", data.id).maybeSingle(),
+      context.supabase.from("objects").select("id,human_ref,type,title,statement,machine_description,version,lifecycle_state,risk_tier,authority_level,data_classification,review_date,expiration_condition,retirement_path,created_by,permission,content_hash,provenance_chain_id,is_tombstone,retirement_reason").eq("id", data.id).maybeSingle(),
       context.supabase.from("object_versions").select("version,title,statement,lifecycle_state,content_hash,updated_at,updated_by,is_tombstone,risk_tier").eq("id", data.id).order("version", { ascending: false }),
       context.supabase.from("ledger").select("seq,occurred_at,actor,action,object_version,payload,prev_hash,hash,adapter_mode").eq("object_id", data.id).order("seq", { ascending: false }),
     ]);
     if (obj.error) throw new Error(obj.error.message);
     if (!obj.data) return null;
-    const { search: _s, ...rest } = obj.data as Record<string, unknown>;
-    return { object: rest, versions: versions.data ?? [], ledger: ledger.data ?? [] };
+    return { object: obj.data, versions: versions.data ?? [], ledger: ledger.data ?? [] };
   });
 
 export const createObject = createServerFn({ method: "POST" })

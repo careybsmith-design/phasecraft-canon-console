@@ -188,7 +188,8 @@ function Detail({ id, transitions, types }: { id: string; transitions: { lifecyc
 
   if (d.isLoading) return <p className="text-muted-foreground">Loading…</p>;
   if (!d.data) return <p className="text-muted-foreground">Not visible under your permissions.</p>;
-  const o = d.data.object as Record<string, any>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const o = d.data.object as any;
   const fam = types.find((t) => t.type === o.type)?.lifecycle_family;
   const next = transitions.filter((t) => t.lifecycle_family === fam && t.from_state === o.lifecycle_state).map((t) => t.to_state);
 
