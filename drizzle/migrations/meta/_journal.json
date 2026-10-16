@@ -183,6 +183,13 @@
       "when": 1792174603098,
       "tag": "0025_phase7_selftest_fix",
       "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "7",
+      "when": 1792174630709,
+      "tag": "0026_phase7_envelope_adapter_mode",
+      "breakpoints": true
     }
   ]
 }
