@@ -89,16 +89,21 @@ export const VERBS: VerbDef[] = [
   v("iterated_as", "forward", s("BuildRun", "BuildRun")),
   // Evidence
   v("verified_by", "forward", s("BehaviorStatement|ComposableCapability", "TestRun")),
-  v("simulated_by", "forward", s("WorkingCapability", "SimulationRun")),
-  v("challenged_by", "forward", s("WorkingCapability", "AdversarialRun")),
+  // Phase 5: ComposableCapability added so the Part 5.1 chain can run on either capability type.
+  v("simulated_by", "forward", s("WorkingCapability|ComposableCapability", "SimulationRun")),
+  v("challenged_by", "forward", s("WorkingCapability|ComposableCapability", "AdversarialRun")),
   v("evaluated_by", "forward", s("ModelRoute|Agent", "ModelEvaluation")),
-  v("shadowed_by", "forward", s("WorkingCapability", "ShadowRun")),
+  v("shadowed_by", "forward", s("WorkingCapability|ComposableCapability", "ShadowRun")),
   v("discrepancy_in", "reverse", s("ShadowRun", "Discrepancy")),
-  v("authorised_by", "forward", s("ExposureAuthorization", "WorkingCapability")),
+  v("authorised_by", "forward", s("ExposureAuthorization", "WorkingCapability|ComposableCapability")),
   v("exposed_to", "forward", s("ExposureAuthorization", "ExposurePopulation")),
-  v("observed_as", "forward", s("WorkingCapability", "ProductionOutcome")),
+  v("observed_as", "forward", s("WorkingCapability|ComposableCapability", "ProductionOutcome")),
   v("values", "forward", s("ProductionOutcome", "ValueMeasure")),
   v("caused", "forward", s("ProductionOutcome", "Incident")),
+  // DESIGN DECISION (Phase 5): Part 4.2 has no verb for these Part 5.1 chain links.
+  v("decided_from", "reverse", s("ConfirmedDecision", "ValueSignal|FramingSession")),
+  v("built", "forward", s("BuildRun", "ComposableCapability|WorkingCapability")),
+  v("renews", "none", s("ConfirmedDecision", "ExposureAuthorization")),
   // Authority and assurance
   v("authority_granted_by", "reverse", s("*", "AuthorityGrant")),
   v("policy_evaluated_by", "none", s("*", "PolicyEvaluation")),

@@ -127,6 +127,20 @@
       "when": 1792125122057,
       "tag": "0017_thread_phase1_selftest_helpers",
       "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1792161043932,
+      "tag": "0018_thread_phase5_evidence_graph",
+      "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1792161137288,
+      "tag": "0019_thread_phase5_selftest_evidence",
+      "breakpoints": true
     }
   ]
 }

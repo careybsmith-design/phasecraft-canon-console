@@ -1770,6 +1770,8 @@ export type Database = {
         Returns: undefined
       }
       _capability_gaps: { Args: { _body: Json }; Returns: string[] }
+      _chain_obj: { Args: { _ids: string[] }; Returns: Json }
+      _cite: { Args: { _objs: Json }; Returns: Json }
       _demotion_target: {
         Args: {
           _from: Database["public"]["Enums"]["authority_level"]
@@ -1782,14 +1784,17 @@ export type Database = {
         Returns: boolean
       }
       _expand_type_group: { Args: { _name: string }; Returns: string[] }
+      _explain: { Args: { p_chain: Json; p_question: string }; Returns: Json }
       _framing_confirmer_ok: {
         Args: { _actor: string; _session: string }
         Returns: boolean
       }
+      _fwd: { Args: { _ids: string[]; _verb: string }; Returns: string[] }
       _fx_payload: {
         Args: { _body: Json; _title: string; _type: string }
         Returns: Json
       }
+      _is_current_member: { Args: { _u: string }; Returns: boolean }
       _ledger_write: {
         Args: {
           _action: string
@@ -1800,6 +1805,7 @@ export type Database = {
         }
         Returns: undefined
       }
+      _list: { Args: { _q: string; _rows: Json }; Returns: Json }
       _load_for_write: {
         Args: { p_actor: Json; p_expected_version: number; p_id: string }
         Returns: {
@@ -1853,10 +1859,68 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      _of_type: {
+        Args: { _ids: string[]; _types: string[] }
+        Returns: string[]
+      }
       _p4_cap_body: {
         Args: { _ins: string[]; _outs: string[]; _title: string }
         Returns: Json
       }
+      _prod_caps: {
+        Args: never
+        Returns: {
+          authority_level: Database["public"]["Enums"]["authority_level"]
+          body: Json
+          builder_id: string | null
+          citations: Json
+          co_creator_id: string | null
+          confidence_bundle: Json | null
+          consequence_class: Database["public"]["Enums"]["consequence_class"]
+          content_hash: string
+          created_at: string
+          created_by: Json
+          data_classification: Database["public"]["Enums"]["data_classification"]
+          derived_from: string[]
+          effective_from: string
+          evidence_refs: string[]
+          expiration_condition: Json
+          expires_at: string | null
+          human_ref: string
+          id: string
+          is_tombstone: boolean
+          lifecycle_state: string
+          machine_description: string
+          open_questions: string[]
+          owner_id: string
+          permission: Json
+          permitted_uses: string[]
+          provenance_chain_id: string
+          retired_at: string | null
+          retirement_path: Json
+          retirement_reason: string | null
+          review_date: string
+          risk_tier: Database["public"]["Enums"]["risk_tier"]
+          schema_version: string
+          search: unknown
+          statement: string
+          steward_id: string | null
+          superseded_by: string[]
+          supersedes: string[]
+          title: string
+          type: string
+          updated_at: string
+          updated_by: Json
+          version: number
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "objects"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
+      _rev: { Args: { _ids: string[]; _verb: string }; Returns: string[] }
       _selftest_body: { Args: { _refs: Json; _type: string }; Returns: Json }
       _selftest_next_state: {
         Args: { _family: string; _from: string }
@@ -1926,6 +1990,7 @@ export type Database = {
         Args: { _from: string; _to: string; _type: string }
         Returns: undefined
       }
+      can_reach_creation: { Args: { p_behavior: string }; Returns: boolean }
       can_read_object: {
         Args: {
           _cls: Database["public"]["Enums"]["data_classification"]
@@ -1935,10 +2000,18 @@ export type Database = {
       }
       can_read_session: { Args: { _s: string }; Returns: boolean }
       canon_drift_report: { Args: never; Returns: Json }
+      chain_completeness: { Args: { p_id: string }; Returns: Json }
       composition_effective_authority: {
         Args: { p_id: string }
         Returns: Database["public"]["Enums"]["authority_level"]
       }
+      decision_ancestor: { Args: { p_behavior: string }; Returns: string }
+      evidence_chain: { Args: { p_id: string }; Returns: Json }
+      explain_capability: {
+        Args: { p_id: string; p_question: string }
+        Returns: Json
+      }
+      explain_capability_all: { Args: { p_id: string }; Returns: Json }
       fabric_search: {
         Args: {
           p_domain: string
@@ -2166,6 +2239,7 @@ export type Database = {
       thread_phase2b_selftest: { Args: never; Returns: Json }
       thread_phase3_selftest: { Args: never; Returns: Json }
       thread_phase4_selftest: { Args: never; Returns: Json }
+      thread_phase5_selftest: { Args: never; Returns: Json }
       thread_propose_canon_change: {
         Args: { p: Json; p_actor: Json }
         Returns: {
@@ -2260,6 +2334,10 @@ export type Database = {
         Returns: Json
       }
       thread_record_phase4_evidence: {
+        Args: { p: Json; p_actor: Json }
+        Returns: Json
+      }
+      thread_record_phase5_evidence: {
         Args: { p: Json; p_actor: Json }
         Returns: Json
       }
@@ -2552,6 +2630,22 @@ export type Database = {
         }
       }
       thread_verify_ledger: { Args: never; Returns: Json }
+      trace_behaviors_without_tests: { Args: never; Returns: Json }
+      trace_blast_radius: { Args: { p_behavior: string }; Returns: Json }
+      trace_canon_change_impact: { Args: { p_id: string }; Returns: Json }
+      trace_expired_exposures: { Args: never; Returns: Json }
+      trace_full_chain: { Args: { p_id: string }; Returns: Json }
+      trace_incident_to_decision: {
+        Args: { p_incident: string }
+        Returns: Json
+      }
+      trace_production_without_decision: { Args: never; Returns: Json }
+      trace_production_without_value: {
+        Args: { p_period?: string }
+        Returns: Json
+      }
+      trace_retirement_impact: { Args: { p_capability: string }; Returns: Json }
+      trace_value_without_owner: { Args: never; Returns: Json }
       uuid_v7: { Args: never; Returns: string }
     }
     Enums: {
