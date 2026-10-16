@@ -12,7 +12,7 @@
 - [x] Phase 9 — Agent-executable surface (waiting for user approval); exit evidence ledger #10660
 - [ ] Phase 10 — Detection and measurement implemented; signed-in validation and remaining exit evidence below
 - [ ] Phase 11 — Human surfaces added; partial implementation, validation and exit blockers below; awaiting user review
-- [ ] Phase 12 — Hardening, assurance and scale
+- [ ] Phase 12 — Hardening, assurance and scale (in progress; user authorized 16 October 2026)
 
 ## Open items — keep until addressed at the end (never delete without resolving)
 
