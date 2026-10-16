@@ -29,13 +29,5 @@
 - DESIGN DECISION: the Challenge Agent is rule-based until ModelGateway exists (Phase 2B).
 - Graph-integrity detectors (GraphOrphan, DependencyCycle, CanonDrift, CanonWithoutSteward) are owned by the first steward and swept after writes; Phase 10 owns the full detector suite.
 - The browser build pins the bare `events` / `node:events` import to the `events` npm package (plugin in `vite.config.ts`). Why: the toolchain otherwise stubs it, breaking sigma's EventEmitter base class.
-- Framing (Phase 2B) logic lives in `src/domain/framing.ts` (pure post-rules, materiality, entry test, P/R) and `src/server/framing/extractor.ts` (ModelGateway calls); server functions in `src/lib/framing.functions.ts`. Why: the DB triggers, the tests and the UI share one rule set.
-- `framing_guard`, `creation_source_guard` and `session_events_guard` enforce consent-before-capture, decisions only from authority holders, human-only promotion of context/question, confirmation preservation, and close-with-no-unrecorded-items in the database. Why: Part 8A NON-NEGOTIABLEs must not depend on the UI.
-- FramingSession uses the `framing_session` lifecycle (planned→capturing→closed→retired); extracted items use `framing_extract` (draft→confirmed|rejected→superseded). A decision becomes a ConfirmedDecision only when its authority holder confirms it.
-- Tier B content is classified by in-boundary rules (no external model call); Tier C is never stored or sent anywhere. Speech goes through the simulated Transcription adapter and is ledgered `adapter_mode='simulated'` (enforced in `thread_create_object`).
-- DESIGN DECISION: prior-object surfacing uses trigram + full-text similarity (`framing_related_objects`) until an embedding route is warm; participants without accounts have consent attested by the Builder.
-- The authority engine is pure TS in `src/server/authority/engine.ts` (no I/O, callers pass `now`); server functions in `src/lib/authority.functions.ts` load it inside handlers. Why: Section 5, the same deterministic module runs in tests and in production.
-- Authority changes only through `thread_set_authority` / `thread_authority_event`; `authority_guard` rejects any `authority_level` change without a same-transaction `authority_history` row. SQL `_demotion_target` must mirror `demote()` in the engine. Why: 6.2 demotion is automatic and auditable.
-- DESIGN DECISION: risk tier = max of per-input floors; confidence rule cr-1.0.0 = weakest required dimension; promotion thresholds are provisional values in the `human_oversight` guardrail params; reset-to-observe vs step-down split for demotion triggers. Part 6 gives none of these numbers.
-- `decision_queue_guard` enforces the exact Part 6.5 field set on HumanDecisionRequest and the four responses (decide, one clarification, reduce authority, stop) on Decision. Council engagements are ConfirmedDecision with source governance_council.
-- The Phase 3 seed (`scripts/seed-phase3.ts`) is generated from engine constants; change both together.
+
+- Subdirectories have their own `AGENTS.md` (src/server/framing, src/server/authority); read it before changing files there or the DB functions they name.
