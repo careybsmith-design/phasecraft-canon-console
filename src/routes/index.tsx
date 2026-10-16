@@ -11,6 +11,8 @@ export const Route = createFileRoute("/")({
       { name: "description", content: "THREAD: the canonical, versioned operating and evidence graph for MASA Global." },
       { property: "og:title", content: "THREAD · MASA Global operating graph" },
       { property: "og:description", content: "The canonical, versioned operating and evidence graph for MASA Global." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
 });

@@ -36,3 +36,4 @@
 - Evidence graph rules: see src/server/evidence/AGENTS.md (read before changing evidence/trace DB functions).
 - Shadow/exposure rules: see src/server/shadow/AGENTS.md.
 - Generation (renditions) rules: see src/server/generation/AGENTS.md.
+- Detection and measurement: read src/server/detection/AGENTS.md before changing phase10 SQL or domain rules. Why: observations, live evidence and time-based reconciliation must stay distinct.

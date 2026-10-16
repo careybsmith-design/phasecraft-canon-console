@@ -35,7 +35,6 @@ const D = (name: string, kernel: string, purpose: string, input: z.ZodObject, o:
     failure_modes: o.failure_modes ?? ["VALIDATION_FAILED", "AUTHORITY_EXCEEDED", "NOT_FOUND", "QUOTA_EXCEEDED"], per_minute: o.per_minute ?? 60,
   };
 };
-const P10 = { status: "pending_kernel" as const, pending: "Phase 10 Detection and measurement" };
 const P11 = { status: "pending_kernel" as const, pending: "Phase 11 Human surfaces (missions, cells, bursts, simulation)" };
 const P12 = { status: "pending_kernel" as const, pending: "Phase 12 Hardening and assurance (live assurance adapters)" };
 const HUMAN = { status: "human_only" as const, pending: "consent-gated framing capture (P13): performed by a consented person in the session" };
@@ -155,12 +154,12 @@ export const TOOLS: ToolDef[] = [
 
   // Detectors and measurement
   D("list_detector_findings", "K8", "Open detector findings you may read", z.object({ detector_key: txt(80).optional(), limit: z.number().int().min(1).max(200).default(50) }).strict()),
-  D("resolve_finding", "K8", "Resolve or accept the risk of a finding", z.object({ finding_id: id, resolution: txt(1000) }).strict(), { ...P10, side_effects: "creates_objects" }),
-  D("measure_flow", "K8", "Flow measures", z.object({ scope: txt(200) }).strict(), P10),
-  D("measure_value", "K8", "Value measures", z.object({ scope: txt(200) }).strict(), P10),
-  D("measure_capability_health", "K8", "Capability health measures", z.object({ capability_id: id }).strict(), P10),
-  D("measure_community", "K8", "Community measures (aggregate only)", z.object({ scope: txt(200) }).strict(), P10),
-  D("get_intent_to_value_time", "K8", "Intent-to-value time computed from the graph", z.object({ capability_id: id }).strict(), P10),
+  D("resolve_finding", "K8", "Resolve a finding; only a person may accept risk", z.object({ finding_id: id, resolution: txt(1000) }).strict(), { side_effects: "creates_objects" }),
+  D("measure_flow", "K8", "Flow measures", z.object({ scope: txt(200) }).strict(), { origin: "computed" }),
+  D("measure_value", "K8", "Value measures", z.object({ scope: txt(200) }).strict(), { origin: "computed" }),
+  D("measure_capability_health", "K8", "Capability health measures", z.object({ capability_id: id }).strict(), { origin: "computed" }),
+  D("measure_community", "K8", "Community measures (aggregate only)", z.object({ scope: txt(200) }).strict(), { origin: "computed" }),
+  D("get_intent_to_value_time", "K8", "Intent-to-value time computed from the graph", z.object({ capability_id: id }).strict(), { origin: "computed" }),
 
   // Generation
   D("generate_briefing", "K9", "Generate the caller's morning intelligence brief", z.object({}).strict(), { side_effects: "creates_objects", origin: "generated", cost: 0.5 }),

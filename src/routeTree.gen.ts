@@ -17,10 +17,12 @@ import { Route as AuthenticatedAuthorityRouteImport } from './routes/_authentica
 import { Route as AuthenticatedCanonRouteImport } from './routes/_authenticated/canon'
 import { Route as AuthenticatedCreationRouteImport } from './routes/_authenticated/creation'
 import { Route as AuthenticatedDecisionsRouteImport } from './routes/_authenticated/decisions'
+import { Route as AuthenticatedDetectorsRouteImport } from './routes/_authenticated/detectors'
 import { Route as AuthenticatedEvidenceRouteImport } from './routes/_authenticated/evidence'
 import { Route as AuthenticatedFabricRouteImport } from './routes/_authenticated/fabric'
 import { Route as AuthenticatedGenerationRouteImport } from './routes/_authenticated/generation'
 import { Route as AuthenticatedGraphRouteImport } from './routes/_authenticated/graph'
+import { Route as AuthenticatedMeasurementRouteImport } from './routes/_authenticated/measurement'
 import { Route as AuthenticatedShadowRouteImport } from './routes/_authenticated/shadow'
 import { Route as AuthenticatedFramingIndexRouteImport } from './routes/_authenticated/framing.index'
 import { Route as AuthenticatedFramingSessionIdRouteImport } from './routes/_authenticated/framing.$sessionId'
@@ -68,6 +70,11 @@ const AuthenticatedDecisionsRoute = AuthenticatedDecisionsRouteImport.update({
   path: '/decisions',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedDetectorsRoute = AuthenticatedDetectorsRouteImport.update({
+  id: '/detectors',
+  path: '/detectors',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedEvidenceRoute = AuthenticatedEvidenceRouteImport.update({
   id: '/evidence',
   path: '/evidence',
@@ -88,6 +95,12 @@ const AuthenticatedGraphRoute = AuthenticatedGraphRouteImport.update({
   path: '/graph',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedMeasurementRoute =
+  AuthenticatedMeasurementRouteImport.update({
+    id: '/measurement',
+    path: '/measurement',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedShadowRoute = AuthenticatedShadowRouteImport.update({
   id: '/shadow',
   path: '/shadow',
@@ -137,10 +150,12 @@ export interface FileRoutesByFullPath {
   '/canon': typeof AuthenticatedCanonRoute
   '/creation': typeof AuthenticatedCreationRoute
   '/decisions': typeof AuthenticatedDecisionsRoute
+  '/detectors': typeof AuthenticatedDetectorsRoute
   '/evidence': typeof AuthenticatedEvidenceRoute
   '/fabric': typeof AuthenticatedFabricRoute
   '/generation': typeof AuthenticatedGenerationRoute
   '/graph': typeof AuthenticatedGraphRoute
+  '/measurement': typeof AuthenticatedMeasurementRoute
   '/shadow': typeof AuthenticatedShadowRoute
   '/framing/$sessionId': typeof AuthenticatedFramingSessionIdRoute
   '/framing/views': typeof AuthenticatedFramingViewsRoute
@@ -157,10 +172,12 @@ export interface FileRoutesByTo {
   '/canon': typeof AuthenticatedCanonRoute
   '/creation': typeof AuthenticatedCreationRoute
   '/decisions': typeof AuthenticatedDecisionsRoute
+  '/detectors': typeof AuthenticatedDetectorsRoute
   '/evidence': typeof AuthenticatedEvidenceRoute
   '/fabric': typeof AuthenticatedFabricRoute
   '/generation': typeof AuthenticatedGenerationRoute
   '/graph': typeof AuthenticatedGraphRoute
+  '/measurement': typeof AuthenticatedMeasurementRoute
   '/shadow': typeof AuthenticatedShadowRoute
   '/framing/$sessionId': typeof AuthenticatedFramingSessionIdRoute
   '/framing/views': typeof AuthenticatedFramingViewsRoute
@@ -179,10 +196,12 @@ export interface FileRoutesById {
   '/_authenticated/canon': typeof AuthenticatedCanonRoute
   '/_authenticated/creation': typeof AuthenticatedCreationRoute
   '/_authenticated/decisions': typeof AuthenticatedDecisionsRoute
+  '/_authenticated/detectors': typeof AuthenticatedDetectorsRoute
   '/_authenticated/evidence': typeof AuthenticatedEvidenceRoute
   '/_authenticated/fabric': typeof AuthenticatedFabricRoute
   '/_authenticated/generation': typeof AuthenticatedGenerationRoute
   '/_authenticated/graph': typeof AuthenticatedGraphRoute
+  '/_authenticated/measurement': typeof AuthenticatedMeasurementRoute
   '/_authenticated/shadow': typeof AuthenticatedShadowRoute
   '/_authenticated/framing/$sessionId': typeof AuthenticatedFramingSessionIdRoute
   '/_authenticated/framing/views': typeof AuthenticatedFramingViewsRoute
@@ -201,10 +220,12 @@ export interface FileRouteTypes {
     | '/canon'
     | '/creation'
     | '/decisions'
+    | '/detectors'
     | '/evidence'
     | '/fabric'
     | '/generation'
     | '/graph'
+    | '/measurement'
     | '/shadow'
     | '/framing/$sessionId'
     | '/framing/views'
@@ -221,10 +242,12 @@ export interface FileRouteTypes {
     | '/canon'
     | '/creation'
     | '/decisions'
+    | '/detectors'
     | '/evidence'
     | '/fabric'
     | '/generation'
     | '/graph'
+    | '/measurement'
     | '/shadow'
     | '/framing/$sessionId'
     | '/framing/views'
@@ -242,10 +265,12 @@ export interface FileRouteTypes {
     | '/_authenticated/canon'
     | '/_authenticated/creation'
     | '/_authenticated/decisions'
+    | '/_authenticated/detectors'
     | '/_authenticated/evidence'
     | '/_authenticated/fabric'
     | '/_authenticated/generation'
     | '/_authenticated/graph'
+    | '/_authenticated/measurement'
     | '/_authenticated/shadow'
     | '/_authenticated/framing/$sessionId'
     | '/_authenticated/framing/views'
@@ -322,6 +347,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDecisionsRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/detectors': {
+      id: '/_authenticated/detectors'
+      path: '/detectors'
+      fullPath: '/detectors'
+      preLoaderRoute: typeof AuthenticatedDetectorsRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/evidence': {
       id: '/_authenticated/evidence'
       path: '/evidence'
@@ -348,6 +380,13 @@ declare module '@tanstack/react-router' {
       path: '/graph'
       fullPath: '/graph'
       preLoaderRoute: typeof AuthenticatedGraphRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/measurement': {
+      id: '/_authenticated/measurement'
+      path: '/measurement'
+      fullPath: '/measurement'
+      preLoaderRoute: typeof AuthenticatedMeasurementRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/shadow': {
@@ -408,10 +447,12 @@ interface AuthenticatedRouteChildren {
   AuthenticatedCanonRoute: typeof AuthenticatedCanonRoute
   AuthenticatedCreationRoute: typeof AuthenticatedCreationRoute
   AuthenticatedDecisionsRoute: typeof AuthenticatedDecisionsRoute
+  AuthenticatedDetectorsRoute: typeof AuthenticatedDetectorsRoute
   AuthenticatedEvidenceRoute: typeof AuthenticatedEvidenceRoute
   AuthenticatedFabricRoute: typeof AuthenticatedFabricRoute
   AuthenticatedGenerationRoute: typeof AuthenticatedGenerationRoute
   AuthenticatedGraphRoute: typeof AuthenticatedGraphRoute
+  AuthenticatedMeasurementRoute: typeof AuthenticatedMeasurementRoute
   AuthenticatedShadowRoute: typeof AuthenticatedShadowRoute
   AuthenticatedFramingSessionIdRoute: typeof AuthenticatedFramingSessionIdRoute
   AuthenticatedFramingViewsRoute: typeof AuthenticatedFramingViewsRoute
@@ -424,10 +465,12 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedCanonRoute: AuthenticatedCanonRoute,
   AuthenticatedCreationRoute: AuthenticatedCreationRoute,
   AuthenticatedDecisionsRoute: AuthenticatedDecisionsRoute,
+  AuthenticatedDetectorsRoute: AuthenticatedDetectorsRoute,
   AuthenticatedEvidenceRoute: AuthenticatedEvidenceRoute,
   AuthenticatedFabricRoute: AuthenticatedFabricRoute,
   AuthenticatedGenerationRoute: AuthenticatedGenerationRoute,
   AuthenticatedGraphRoute: AuthenticatedGraphRoute,
+  AuthenticatedMeasurementRoute: AuthenticatedMeasurementRoute,
   AuthenticatedShadowRoute: AuthenticatedShadowRoute,
   AuthenticatedFramingSessionIdRoute: AuthenticatedFramingSessionIdRoute,
   AuthenticatedFramingViewsRoute: AuthenticatedFramingViewsRoute,
