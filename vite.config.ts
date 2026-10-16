@@ -4,7 +4,13 @@
 //     nitro (build-only using cloudflare as a default target), VITE_* env injection, @ path alias,
 //     React/TanStack dedupe, error logger plugins, and sandbox detection (port/host/strictPort).
 // You can pass additional config via defineConfig({ vite: { ... }, etc... }) if needed.
+import { fileURLToPath } from "node:url";
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
+
+// sigma's base class extends EventEmitter from the bare "events" import. The toolchain otherwise
+// rewrites that to "node:events", which is an empty stub in the browser, so sigma throws
+// "Super expression must either be null or a function". Pin it to the browser `events` package.
+const eventsShim = fileURLToPath(new URL("./node_modules/events/events.js", import.meta.url));
 
 export default defineConfig({
   tanstackStart: {
@@ -13,9 +19,8 @@ export default defineConfig({
     server: { entry: "server" },
   },
   vite: {
-    // The graph renderer is imported lazily in the browser. Pre-bundle it at startup so the
-    // dev server never re-optimizes mid-session, which mixed old and new chunks and broke
-    // sigma's EventEmitter base class ("Super expression must either be null or a function").
-    optimizeDeps: { include: ["sigma", "graphology", "events"] },
+    resolve: { alias: [{ find: /^events$/, replacement: eventsShim }] },
+    // The graph renderer is imported lazily; pre-bundle it so the dev server never re-optimizes mid-session.
+    optimizeDeps: { include: ["sigma", "graphology"] },
   },
 });
