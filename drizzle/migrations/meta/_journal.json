@@ -64,6 +64,20 @@
       "when": 1792121176211,
       "tag": "0008_thread_phase2b_adapter_mode_related",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1792123954471,
+      "tag": "0009_thread_phase3_authority",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1792124020094,
+      "tag": "0010_thread_phase3_selftest_evidence",
+      "breakpoints": true
     }
   ]
 }

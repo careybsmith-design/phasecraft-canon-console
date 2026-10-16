@@ -71,7 +71,9 @@ export type Database = {
           id: number
           object_id: string
           to_level: Database["public"]["Enums"]["authority_level"]
+          trigger: string | null
           trigger_ref: string | null
+          txid: number
         }
         Insert: {
           at?: string
@@ -81,7 +83,9 @@ export type Database = {
           id?: number
           object_id: string
           to_level: Database["public"]["Enums"]["authority_level"]
+          trigger?: string | null
           trigger_ref?: string | null
+          txid?: number
         }
         Update: {
           at?: string
@@ -91,7 +95,9 @@ export type Database = {
           id?: number
           object_id?: string
           to_level?: Database["public"]["Enums"]["authority_level"]
+          trigger?: string | null
           trigger_ref?: string | null
+          txid?: number
         }
         Relationships: [
           {
@@ -881,25 +887,31 @@ export type Database = {
         Row: {
           active: boolean
           category: string
+          enforcement: string
           evaluator: string
           id: string
           params: Json
+          proposed_by: string
           version: string
         }
         Insert: {
           active?: boolean
           category: string
+          enforcement?: string
           evaluator: string
           id: string
           params: Json
+          proposed_by?: string
           version: string
         }
         Update: {
           active?: boolean
           category?: string
+          enforcement?: string
           evaluator?: string
           id?: string
           params?: Json
+          proposed_by?: string
           version?: string
         }
         Relationships: []
@@ -1535,6 +1547,53 @@ export type Database = {
         }
         Relationships: []
       }
+      risk_assessments: {
+        Row: {
+          computed_at: string
+          computed_by: string
+          computed_tier: Database["public"]["Enums"]["risk_tier"]
+          id: string
+          inputs: Json
+          object_id: string
+          override_rationale: string | null
+          override_tier: Database["public"]["Enums"]["risk_tier"] | null
+          reasons: Json
+          treatment: string
+        }
+        Insert: {
+          computed_at?: string
+          computed_by: string
+          computed_tier: Database["public"]["Enums"]["risk_tier"]
+          id?: string
+          inputs: Json
+          object_id: string
+          override_rationale?: string | null
+          override_tier?: Database["public"]["Enums"]["risk_tier"] | null
+          reasons?: Json
+          treatment: string
+        }
+        Update: {
+          computed_at?: string
+          computed_by?: string
+          computed_tier?: Database["public"]["Enums"]["risk_tier"]
+          id?: string
+          inputs?: Json
+          object_id?: string
+          override_rationale?: string | null
+          override_tier?: Database["public"]["Enums"]["risk_tier"] | null
+          reasons?: Json
+          treatment?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "risk_assessments_object_id_fkey"
+            columns: ["object_id"]
+            isOneToOne: false
+            referencedRelation: "objects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       session_events: {
         Row: {
           id: number
@@ -1647,6 +1706,13 @@ export type Database = {
           p_payload: Json
         }
         Returns: undefined
+      }
+      _demotion_target: {
+        Args: {
+          _from: Database["public"]["Enums"]["authority_level"]
+          _trigger: string
+        }
+        Returns: Database["public"]["Enums"]["authority_level"]
       }
       _edge_signature_ok: {
         Args: { _from: string; _to: string; _verb: string }
@@ -1893,6 +1959,16 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      thread_authority_event: {
+        Args: {
+          p_actor: Json
+          p_evidence?: string[]
+          p_id: string
+          p_trigger: string
+        }
+        Returns: Json
+      }
+      thread_authority_sweep: { Args: { p_actor: Json }; Returns: Json }
       thread_create_edge: {
         Args: { p: Json; p_actor: Json }
         Returns: {
@@ -1984,6 +2060,7 @@ export type Database = {
       thread_phase1_selftest: { Args: never; Returns: Json }
       thread_phase2_selftest: { Args: never; Returns: Json }
       thread_phase2b_selftest: { Args: never; Returns: Json }
+      thread_phase3_selftest: { Args: never; Returns: Json }
       thread_propose_canon_change: {
         Args: { p: Json; p_actor: Json }
         Returns: {
@@ -2016,9 +2093,34 @@ export type Database = {
         Args: { p: Json; p_actor: Json }
         Returns: Json
       }
+      thread_record_phase3_evidence: {
+        Args: { p: Json; p_actor: Json }
+        Returns: Json
+      }
       thread_record_render_benchmark: {
         Args: { p: Json; p_actor: Json }
         Returns: number
+      }
+      thread_record_risk: {
+        Args: { p: Json; p_actor: Json; p_id: string }
+        Returns: {
+          computed_at: string
+          computed_by: string
+          computed_tier: Database["public"]["Enums"]["risk_tier"]
+          id: string
+          inputs: Json
+          object_id: string
+          override_rationale: string | null
+          override_tier: Database["public"]["Enums"]["risk_tier"] | null
+          reasons: Json
+          treatment: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "risk_assessments"
+          isOneToOne: true
+          isSetofReturn: false
+        }
       }
       thread_refresh_graph_layout: { Args: never; Returns: Json }
       thread_restore_rehearsal: { Args: never; Returns: Json }
@@ -2053,6 +2155,67 @@ export type Database = {
           p_id: string
           p_patch: Json
           p_rationale: string
+        }
+        Returns: {
+          authority_level: Database["public"]["Enums"]["authority_level"]
+          body: Json
+          builder_id: string | null
+          citations: Json
+          co_creator_id: string | null
+          confidence_bundle: Json | null
+          consequence_class: Database["public"]["Enums"]["consequence_class"]
+          content_hash: string
+          created_at: string
+          created_by: Json
+          data_classification: Database["public"]["Enums"]["data_classification"]
+          derived_from: string[]
+          effective_from: string
+          evidence_refs: string[]
+          expiration_condition: Json
+          expires_at: string | null
+          human_ref: string
+          id: string
+          is_tombstone: boolean
+          lifecycle_state: string
+          machine_description: string
+          open_questions: string[]
+          owner_id: string
+          permission: Json
+          permitted_uses: string[]
+          provenance_chain_id: string
+          retired_at: string | null
+          retirement_path: Json
+          retirement_reason: string | null
+          review_date: string
+          risk_tier: Database["public"]["Enums"]["risk_tier"]
+          schema_version: string
+          search: unknown
+          statement: string
+          steward_id: string | null
+          superseded_by: string[]
+          supersedes: string[]
+          title: string
+          type: string
+          updated_at: string
+          updated_by: Json
+          version: number
+        }
+        SetofOptions: {
+          from: "*"
+          to: "objects"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      thread_set_authority: {
+        Args: {
+          p_actor: Json
+          p_cause: string
+          p_conditions?: Json
+          p_evidence: string[]
+          p_id: string
+          p_to: Database["public"]["Enums"]["authority_level"]
+          p_trigger: string
         }
         Returns: {
           authority_level: Database["public"]["Enums"]["authority_level"]
