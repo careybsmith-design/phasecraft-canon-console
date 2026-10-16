@@ -79,24 +79,8 @@ export const recordReuseCheck = createServerFn({ method: "POST" })
     extra_gaps: z.record(z.array(z.string().trim().min(1).max(200))).default({}),
   }).parse(d))
   .handler(async ({ data, context }) => {
-    // Results are recomputed on the server, never trusted from the browser.
-    const { data: rows, error } = await context.supabase.rpc("fabric_search", { p_outcome: data.intent_shape.outcome, p_inputs: data.intent_shape.inputs, p_outputs: data.intent_shape.outputs, p_domain: data.intent_shape.domain, p_limit: 10 } as never);
-    if (error) throw err(error.message);
-    const results = ((rows ?? []) as unknown as ReuseResult[]).map((r) => ({ capability_id: r.capability_id, match_score: r.match_score, reuse_mode: r.reuse_mode, gaps: [...r.gaps, ...(data.extra_gaps[r.capability_id] ?? [])] }));
-    const bad = reuseDecisionError(results, data.decision, data.rationale);
-    if (bad) throw err(bad);
-    if (data.behavior_statement_id) {
-      const { data: bs } = await context.supabase.from("objects").select("type").eq("id", data.behavior_statement_id).maybeSingle();
-      if (bs?.type !== "BehaviorStatement") throw err("NOT_A_BEHAVIOR_STATEMENT: the reuse check links to the originating Behaviour Statement");
-    }
-    const db = await admin();
-    const id = crypto.randomUUID();
-    const { error: e2 } = await db.from("reuse_checks").insert({
-      id, intent_shape: data.intent_shape, query_text: `${data.intent_shape.outcome} ${data.intent_shape.domain}`.trim(), results, decision: data.decision,
-      rationale: data.rationale, checked_by: human(context.userId), behavior_statement_id: data.behavior_statement_id ?? null,
-    } as never);
-    if (e2) throw err(e2.message);
-    return { reuse_check_id: id, results };
+    const { reuseCheckCore } = await import("@/server/ops/fabric.server");
+    return reuseCheckCore({ sb: context.supabase, db: await admin(), actor: human(context.userId) as never, userId: context.userId }, data);
   });
 
 const CapInput = z.object({

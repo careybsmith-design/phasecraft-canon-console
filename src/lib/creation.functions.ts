@@ -62,81 +62,14 @@ export const compilePrompt = createServerFn({ method: "POST" })
     quoted_reference: z.string().max(280).optional(),
   }).parse(d))
   .handler(async ({ data, context }) => {
-    const sb = context.supabase;
-    const ids = [...data.behavior_ids, data.contract_id, data.template_id];
-    const [objs, gr, rc] = await Promise.all([
-      sb.from("objects").select("id,human_ref,title,type,body,data_classification").in("id", ids),
-      sb.from("guardrails").select("id,category,version,enforcement").eq("active", true),
-      sb.from("reuse_checks").select("results,decision").eq("id", data.reuse_check_id).maybeSingle(),
-    ]);
-    if (objs.error) throw err(objs.error.message);
-    const by = new Map((objs.data ?? []).map((o) => [o.id, o]));
-    const con = by.get(data.contract_id); const tpl = by.get(data.template_id);
-    if (!con || !tpl) throw err("NOT_FOUND: contract or template not visible to you");
-    // Part 13.4: only these typed fields are read; transcripts, raw_text, spans and quotes never are
-    const behaviors = data.behavior_ids.map((id) => {
-      const o = by.get(id); if (!o) throw err(`NOT_FOUND: ${id}`);
-      const b = o.body as Json;
-      return { id, human_ref: o.human_ref, condition: String(b["condition"] ?? ""), observable_result: String(b["observable_result"] ?? ""), operating_constraints: strs(b["operating_constraints"]) };
-    });
-    const cb = con.body as Json; const tb = tpl.body as Json;
-    const capRefs = ((rc.data?.results as Array<{ capability_id?: string; human_ref?: string; title?: string }> | null) ?? [])
-      .filter(() => rc.data?.decision !== "create_new").filter((r) => r.capability_id);
-    const compiled = compileCreationPrompt({
-      behaviors,
-      contract: { id: con.id, human_ref: con.human_ref, desired_outcome: String(cb["desired_outcome"] ?? con.title), non_negotiables: strs(cb["non_negotiables"]), acceptance_evidence: strs(cb["acceptance_evidence"]) },
-      template: { id: tpl.id, human_ref: tpl.human_ref, version: String(tb["version"] ?? "1"), stack: String(tb["stack"] ?? ""), instructions: String(tb["instructions"] ?? "") },
-      guardrails: (gr.data ?? []).map((g) => ({ id: g.id, category: g.category, version: g.version, enforcement: g.enforcement as "advisory" | "enforcing" })),
-      capabilities: capRefs.map((c) => ({ id: c.capability_id!, human_ref: c.human_ref ?? c.capability_id!, title: c.title ?? "" })),
-      platform: data.target_platform, ...(data.quoted_reference ? { quoted_reference: data.quoted_reference } : {}),
-    });
-    const { data: o, error } = await (await admin()).rpc("thread_compile_creation_prompt", {
-      p_actor: human(context.userId),
-      p: { behavior_ids: data.behavior_ids, contract_id: data.contract_id, template_id: data.template_id, reuse_check_id: data.reuse_check_id,
-        target_platform: data.target_platform, title: `Build ${behaviors.map((b) => b.human_ref).join(", ")}`, compiled_text: compiled.text,
-        compiled_hash: await sha256(compiled.text), guardrails_applied: compiled.guardrails_applied, capability_refs: capRefs.map((c) => c.capability_id),
-        mission_ref: data.mission_ref, estimated_cost: data.estimated_cost },
-    } as never);
-    if (error) throw err(error.message);
-    return o as unknown as { id: string; human_ref: string };
+    const { compilePromptCore } = await import("@/server/ops/creation.server");
+    return compilePromptCore({ sb: context.supabase, db: await admin(), actor: human(context.userId) as never, userId: context.userId }, data);
   });
 
-async function runOnPlatform(userId: string, p: { prompt_id: string; platform: Platform; cost_ceiling: number; estimated_cost: number; replay_of?: string }) {
-  const sb = await admin();
-  const [{ data: prompt }, { data: cp }, { data: binding }] = await Promise.all([
-    sb.from("objects").select("data_classification").eq("id", p.prompt_id).single(),
-    sb.from("creation_prompts").select("compiled_text,compiled_hash,template_version").eq("object_id", p.prompt_id).single(),
-    sb.from("adapter_bindings").select("mode").eq("adapter", "BuildPlatform").eq("environment", "preview").maybeSingle(),
-  ]);
-  if (!prompt || !cp) throw err("PROMPT_REQUIRED: compile the prompt first");
-  const refused = platformRefusal(p.platform, prompt.data_classification as Classification);
-  if (refused) throw err(refused);
-  const { liveConfig, liveBuildPlatform } = await import("@/server/adapters/build-platform/live");
-  const { simulatedBuildPlatform } = await import("@/server/adapters/build-platform/simulated");
-  const cfg = binding?.mode === "live" ? liveConfig(p.platform) : null;
-  const adapter = cfg ? liveBuildPlatform(p.platform, cfg) : simulatedBuildPlatform();
-  const model_version = adapter.mode === "simulated" ? "sim-1" : (process.env[`BUILD_PLATFORM_${p.platform.toUpperCase()}_MODEL`] ?? "unpinned");
-  const actor = human(userId);
-  // ceilings, clearance and the reproducibility key are checked by the database BEFORE anything leaves THREAD
-  const d = await sb.rpc("thread_dispatch_build", { p_actor: actor, p: { ...p, model_version, adapter_mode: adapter.mode } } as never);
-  if (d.error) throw err(d.error.message);
-  const disp = d.data as unknown as { run_id: string; human_ref: string; repro_key: { model_version: string; template_version: string; guardrail_set_version: string } };
-  let result: Json;
-  try {
-    const { external_run_id } = await adapter.dispatch({ platform: p.platform, prompt_id: p.prompt_id, compiled_prompt: cp.compiled_text, compiled_hash: cp.compiled_hash, repro_key: disp.repro_key, cost_ceiling: p.cost_ceiling });
-    if (adapter.mode === "live") return { run_id: disp.run_id, human_ref: disp.human_ref, status: "dispatched", note: "results arrive by signed webhook" };
-    const st = await adapter.status(external_run_id);
-    const artifacts = st.state === "succeeded" ? await adapter.fetchArtifacts(external_run_id) : [];
-    const r = await sb.rpc("thread_record_build_result", { p_actor: actor, p: { run_id: disp.run_id, external_run_id, status: st.state === "succeeded" ? "succeeded" : "failed",
-      cost_actual: st.cost, duration_ms: st.duration_ms, secrets_scan: st.secrets_scan, failure_reason: st.failure_reason, artifacts } } as never);
-    if (r.error) throw err(r.error.message);
-    result = r.data as Json;
-  } catch (e) {
-    const msg = e instanceof Error ? e.message : String(e);
-    await sb.rpc("thread_record_build_result", { p_actor: actor, p: { run_id: disp.run_id, status: "failed", failure_reason: msg.slice(0, 500) } } as never);
-    throw e;
-  }
-  return { ...result, human_ref: disp.human_ref };
+async function runOnPlatform(userId: string, p: { prompt_id: string; platform: Platform; cost_ceiling: number; estimated_cost: number; replay_of?: string }, sbUser?: unknown) {
+  const { dispatchCore } = await import("@/server/ops/creation.server");
+  const db = await admin();
+  return dispatchCore({ sb: (sbUser ?? db) as never, db, actor: human(userId) as never, userId }, p);
 }
 
 export const dispatchBuild = createServerFn({ method: "POST" })

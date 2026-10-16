@@ -32,33 +32,166 @@ export type Database = {
         }
         Relationships: []
       }
+      agent_calls: {
+        Row: {
+          agent_id: string
+          authority_used: Database["public"]["Enums"]["authority_level"]
+          confirmation_id: string | null
+          cost: number
+          duration_ms: number | null
+          error: string | null
+          finished_at: string | null
+          id: string
+          input_hash: string
+          ledger_seq: number | null
+          method: string
+          origin_tags: Json
+          output_hash: string | null
+          refusal_code: string | null
+          started_at: string
+          status: string
+          tool: string
+        }
+        Insert: {
+          agent_id: string
+          authority_used: Database["public"]["Enums"]["authority_level"]
+          confirmation_id?: string | null
+          cost?: number
+          duration_ms?: number | null
+          error?: string | null
+          finished_at?: string | null
+          id?: string
+          input_hash: string
+          ledger_seq?: number | null
+          method?: string
+          origin_tags?: Json
+          output_hash?: string | null
+          refusal_code?: string | null
+          started_at?: string
+          status: string
+          tool: string
+        }
+        Update: {
+          agent_id?: string
+          authority_used?: Database["public"]["Enums"]["authority_level"]
+          confirmation_id?: string | null
+          cost?: number
+          duration_ms?: number | null
+          error?: string | null
+          finished_at?: string | null
+          id?: string
+          input_hash?: string
+          ledger_seq?: number | null
+          method?: string
+          origin_tags?: Json
+          output_hash?: string | null
+          refusal_code?: string | null
+          started_at?: string
+          status?: string
+          tool?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_calls_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      agent_notifications: {
+        Row: {
+          agent_id: string
+          body: Json
+          created_at: string
+          delivered_at: string | null
+          id: number
+          ledger_seq: number
+          object_id: string | null
+          topic: string
+        }
+        Insert: {
+          agent_id: string
+          body: Json
+          created_at?: string
+          delivered_at?: string | null
+          id?: number
+          ledger_seq: number
+          object_id?: string | null
+          topic: string
+        }
+        Update: {
+          agent_id?: string
+          body?: Json
+          created_at?: string
+          delivered_at?: string | null
+          id?: number
+          ledger_seq?: number
+          object_id?: string | null
+          topic?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_notifications_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       agents: {
         Row: {
           a2a_card: Json | null
+          auth_user_id: string | null
           authority_ceiling: Database["public"]["Enums"]["authority_level"]
           cost_cap: number
+          created_at: string
           id: string
+          mandate: string | null
           name: string
+          owner_id: string | null
           quota: Json
+          revoked_at: string | null
+          revoked_reason: string | null
+          state: string
           token_hash: string
+          token_prefix: string | null
         }
         Insert: {
           a2a_card?: Json | null
+          auth_user_id?: string | null
           authority_ceiling: Database["public"]["Enums"]["authority_level"]
           cost_cap: number
-          id: string
+          created_at?: string
+          id?: string
+          mandate?: string | null
           name: string
+          owner_id?: string | null
           quota: Json
+          revoked_at?: string | null
+          revoked_reason?: string | null
+          state?: string
           token_hash: string
+          token_prefix?: string | null
         }
         Update: {
           a2a_card?: Json | null
+          auth_user_id?: string | null
           authority_ceiling?: Database["public"]["Enums"]["authority_level"]
           cost_cap?: number
+          created_at?: string
           id?: string
+          mandate?: string | null
           name?: string
+          owner_id?: string | null
           quota?: Json
+          revoked_at?: string | null
+          revoked_reason?: string | null
+          state?: string
           token_hash?: string
+          token_prefix?: string | null
         }
         Relationships: []
       }
@@ -516,6 +649,56 @@ export type Database = {
           version?: string
         }
         Relationships: []
+      }
+      confirmation_tokens: {
+        Row: {
+          agent_id: string
+          consumed_at: string | null
+          consumed_call: string | null
+          expires_at: string
+          id: string
+          input_hash: string
+          issued_at: string
+          issued_by: string
+          ledger_seq: number | null
+          reason: string
+          tool: string
+        }
+        Insert: {
+          agent_id: string
+          consumed_at?: string | null
+          consumed_call?: string | null
+          expires_at: string
+          id?: string
+          input_hash: string
+          issued_at?: string
+          issued_by: string
+          ledger_seq?: number | null
+          reason: string
+          tool: string
+        }
+        Update: {
+          agent_id?: string
+          consumed_at?: string | null
+          consumed_call?: string | null
+          expires_at?: string
+          id?: string
+          input_hash?: string
+          issued_at?: string
+          issued_by?: string
+          ledger_seq?: number | null
+          reason?: string
+          tool?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "confirmation_tokens_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       consent_records: {
         Row: {
@@ -1227,6 +1410,38 @@ export type Database = {
           to_state?: string
         }
         Relationships: []
+      }
+      mcp_subscriptions: {
+        Row: {
+          agent_id: string
+          created_at: string
+          id: string
+          object_id: string | null
+          topic: string
+        }
+        Insert: {
+          agent_id: string
+          created_at?: string
+          id?: string
+          object_id?: string | null
+          topic: string
+        }
+        Update: {
+          agent_id?: string
+          created_at?: string
+          id?: string
+          object_id?: string | null
+          topic?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mcp_subscriptions_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       notifications: {
         Row: {
@@ -1984,6 +2199,10 @@ export type Database = {
         }
         Returns: undefined
       }
+      _authority_rank: {
+        Args: { _l: Database["public"]["Enums"]["authority_level"] }
+        Returns: number
+      }
       _can_read_as: {
         Args: {
           _cls: Database["public"]["Enums"]["data_classification"]
@@ -2097,6 +2316,10 @@ export type Database = {
       _max_classification: {
         Args: { _ids: string[] }
         Returns: Database["public"]["Enums"]["data_classification"]
+      }
+      _mcp_ledger: {
+        Args: { _action: string; _actor: Json; _object: string; _payload: Json }
+        Returns: number
       }
       _of_type: {
         Args: { _ids: string[]; _types: string[] }
@@ -2352,6 +2575,13 @@ export type Database = {
         Args: { _role: Database["public"]["Enums"]["app_role"]; _uid: string }
         Returns: boolean
       }
+      least_auth: {
+        Args: {
+          a: Database["public"]["Enums"]["authority_level"]
+          b: Database["public"]["Enums"]["authority_level"]
+        }
+        Returns: Database["public"]["Enums"]["authority_level"]
+      }
       ledger_row_hash: {
         Args: { l: Database["public"]["Tables"]["ledger"]["Row"] }
         Returns: string
@@ -2363,6 +2593,10 @@ export type Database = {
       }
       show_limit: { Args: never; Returns: number }
       show_trgm: { Args: { "": string }; Returns: string[] }
+      thread_a2a_message: {
+        Args: { p: Json; p_from: string; p_to: string }
+        Returns: number
+      }
       thread_add_canon_challenge: {
         Args: {
           p_actor: Json
@@ -2385,6 +2619,29 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      thread_agent_begin_call: {
+        Args: {
+          p_authority_required: Database["public"]["Enums"]["authority_level"]
+          p_confirmation: string
+          p_cost: number
+          p_high_consequence: boolean
+          p_input_hash: string
+          p_method?: string
+          p_token_hash: string
+          p_tool: string
+        }
+        Returns: Json
+      }
+      thread_agent_end_call: {
+        Args: {
+          p_call: string
+          p_error: string
+          p_origin_tags: Json
+          p_output_hash: string
+          p_status: string
+        }
+        Returns: number
       }
       thread_authority_event: {
         Args: {
@@ -2565,8 +2822,31 @@ export type Database = {
         Returns: Json
       }
       thread_graph_sweep: { Args: { p_actor: Json }; Returns: Json }
+      thread_issue_confirmation: {
+        Args: {
+          p_actor: Json
+          p_agent: string
+          p_input_hash: string
+          p_reason: string
+          p_tool: string
+        }
+        Returns: Json
+      }
       thread_kill_switch: {
         Args: { p?: Json; p_actor: Json; p_capability: string }
+        Returns: Json
+      }
+      thread_mcp_subscribe: {
+        Args: {
+          p_agent: string
+          p_object: string
+          p_on: boolean
+          p_topic: string
+        }
+        Returns: undefined
+      }
+      thread_mcp_take_notifications: {
+        Args: { p_agent: string; p_limit: number }
         Returns: Json
       }
       thread_phase1_selftest: { Args: never; Returns: Json }
@@ -2669,6 +2949,10 @@ export type Database = {
         Args: { p: Json; p_actor: Json; p_capability: string }
         Returns: Json
       }
+      thread_record_injection: {
+        Args: { p_call: string; p_findings: Json }
+        Returns: string
+      }
       thread_record_iteration: {
         Args: { p: Json; p_actor: Json }
         Returns: Json
@@ -2700,6 +2984,10 @@ export type Database = {
         Returns: Json
       }
       thread_record_phase8_evidence: {
+        Args: { p: Json; p_actor: Json }
+        Returns: Json
+      }
+      thread_record_phase9_evidence: {
         Args: { p: Json; p_actor: Json }
         Returns: Json
       }
@@ -2802,6 +3090,7 @@ export type Database = {
         Returns: Json
       }
       thread_refresh_graph_layout: { Args: never; Returns: Json }
+      thread_register_agent: { Args: { p: Json; p_actor: Json }; Returns: Json }
       thread_rendition_sweep: { Args: { p_now?: string }; Returns: Json }
       thread_restore_rehearsal: { Args: never; Returns: Json }
       thread_retire_edge: {
@@ -2887,6 +3176,10 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      thread_revoke_agent: {
+        Args: { p_actor: Json; p_agent: string; p_reason: string }
+        Returns: number
+      }
       thread_serve_rendition: {
         Args: { p_actor: Json; p_id: string; p_purpose: string }
         Returns: Json
@@ -2955,6 +3248,10 @@ export type Database = {
       thread_set_cost_ceiling: {
         Args: { p: Json; p_actor: Json }
         Returns: undefined
+      }
+      thread_sync_tool_contracts: {
+        Args: { p: Json; p_version: string }
+        Returns: number
       }
       thread_tombstone_object: {
         Args: {
