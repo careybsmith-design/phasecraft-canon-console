@@ -1,0 +1,4 @@
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { Button } from "@/components/ui/button";
+export const Route = createFileRoute("/_authenticated/capture")({ head: () => ({ meta: [{ title: "Semantic Capture · THREAD" }, { name: "description", content: "Consent-aware co-creation with speaker authority, live extraction, contradictions and human confirmation." }, { property: "og:title", content: "Semantic Capture · THREAD" }, { property: "og:description", content: "Open a consented framing session and preserve what the enterprise learned." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }), component: Capture });
+function Capture() { return <main className="mx-auto max-w-3xl space-y-4 p-4"><h1 className="text-lg">Semantic Capture</h1><Button asChild><Link to="/framing">Open consent-aware framing capture</Link></Button></main>; }

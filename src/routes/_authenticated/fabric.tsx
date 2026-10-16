@@ -11,8 +11,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { z } from "zod";
 
 export const Route = createFileRoute("/_authenticated/fabric")({
+  validateSearch: z.object({ outcome: z.string().max(4000).optional(), capability: z.string().uuid().optional() }),
   head: () => ({
     meta: [
       { title: "Capability Fabric · THREAD" },
@@ -53,10 +55,11 @@ function FabricPage() {
 }
 
 function Search() {
+  const context = Route.useSearch();
   const qc = useQueryClient();
   const search = useServerFn(searchCapabilityFabric);
   const record = useServerFn(recordReuseCheck);
-  const [outcome, setOutcome] = useState("");
+  const [outcome, setOutcome] = useState((context.outcome ?? "").slice(0, 500));
   const [inputs, setInputs] = useState("");
   const [outputs, setOutputs] = useState("");
   const [domain, setDomain] = useState("");

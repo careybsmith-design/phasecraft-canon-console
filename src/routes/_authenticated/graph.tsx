@@ -97,6 +97,7 @@ function Explorer() {
       {s.view === "decomposition" && <SubgraphView view="decomposition" overlay={s.overlay} onFocus={(id) => set({ view: "focus", root: id })} />}
       {s.view === "nebula" && <Nebula cluster={s.cluster} overlay={s.overlay} setCluster={(c) => set({ cluster: c })} onFocus={(id) => set({ view: "focus", root: id })} />}
       {s.view === "focus" && <Focus root={s.root} depth={Math.min(s.depth ?? 2, 3)} overlay={s.overlay} set={set} />}
+      {s.view === "mission" && <Focus root={s.root} depth={3} overlay={s.overlay} set={set} />}
       {s.view === "path" && <PathFinder from={s.from} to={s.to} depth={s.depth ?? 4} overlay={s.overlay} set={set} />}
       {s.view === "impact" && <Impact root={s.root} depth={s.depth ?? 6} overlay={s.overlay} set={set} />}
       {s.view === "contradictions" && <Contradictions overlay={s.overlay} onFocus={(id) => set({ view: "focus", root: id })} />}
