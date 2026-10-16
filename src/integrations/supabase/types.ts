@@ -2697,6 +2697,7 @@ export type Database = {
       phase10_measurements: { Args: never; Returns: Json }
       phase10_measurements_extended: { Args: never; Returns: Json }
       phase10_schema_check: { Args: never; Returns: Json }
+      phase12_assurance_checks: { Args: never; Returns: Json }
       show_limit: { Args: never; Returns: number }
       show_trgm: { Args: { "": string }; Returns: string[] }
       thread_a2a_message: {
@@ -2929,6 +2930,7 @@ export type Database = {
         Returns: Json
       }
       thread_graph_sweep: { Args: { p_actor: Json }; Returns: Json }
+      thread_hardening_checks: { Args: { p_actor: Json }; Returns: Json }
       thread_human_operation: {
         Args: { p: Json; p_actor: Json; p_operation: string }
         Returns: Json
@@ -3061,6 +3063,10 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      thread_record_assurance: {
+        Args: { p: Json; p_actor: Json }
+        Returns: Json
       }
       thread_record_build_result: {
         Args: { p: Json; p_actor: Json }

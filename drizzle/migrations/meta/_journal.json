@@ -379,6 +379,13 @@
       "when": 1792185234701,
       "tag": "0053_phase12_security_and_bounded_context",
       "breakpoints": true
+    },
+    {
+      "idx": 54,
+      "version": "7",
+      "when": 1792185280740,
+      "tag": "0054_phase12_assurance_evidence",
+      "breakpoints": true
     }
   ]
 }
