@@ -6,7 +6,7 @@ This audit reviews Sections 1–19, the full canonical specification and Appendi
 
 ## Verified summary
 
-- The expanded automated suite passes. The saved full-suite transcript is in `docs/audit/full-suite.log`; the final count is updated after the last run.
+- The expanded automated suite passes: **1,632 tests across 21 files**, including 1,008 authority matrix and 380 lifecycle cases. The complete transcript is in `docs/audit/full-suite.log`. This does not establish every Section 17 runtime acceptance.
 - 1,008 parameterized authority cases now exercise risk × confidence × consequence × reversibility × novelty; 380 lifecycle cases exercise every currently declared state-pair rule. Those prove the declared implementation, not resolution of the specification's lifecycle ambiguity.
 - Current database regression groups: Phase 2, 2B, 3, 4, 5, 6, 7, 8, 10, 11, Phase 12 behavioral checks and the new audit security/callback checks passed when run. Phase 1 timed out at both ten and thirty seconds and remains failed/unverified, not silently skipped.
 - Zero application tables without RLS; zero anonymously readable application-table grants after the fix; zero exposed privileged `thread_*` write functions; authenticated direct inserts into canonical objects are revoked.

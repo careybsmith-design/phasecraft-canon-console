@@ -24,4 +24,8 @@ describe("App routing", () => {
 
     expect(matches.at(-1)?.routeId).not.toBe(rootRouteId);
   });
+  it("opens the complete audit as an authenticated route", () => {
+    const router = createRouter({ routeTree, context: { queryClient: new QueryClient() } });
+    expect(router.matchRoutes("/build-audit").at(-1)?.routeId).toBe("/_authenticated/build-audit");
+  });
 });

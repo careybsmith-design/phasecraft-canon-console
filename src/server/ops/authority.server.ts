@@ -20,7 +20,7 @@ export async function evaluateActionCore(ctx: OpCtx, data: EvaluationInput, opti
     if (guardrailError || grantError) throw err("POLICY_CONTEXT_UNAVAILABLE: guardrails or authority grants could not be read");
     const rawGrant = grants?.[0]?.body as Json | undefined;
     // An object-scoped grant is not an actor/action authorization. Missing scope fails closed.
-    const g = rawGrant && (rawGrant["actor_ref"] === ctx.userId || rawGrant["agent_ref"] === ctx.actor.agent_id)
+    const g = rawGrant && (rawGrant["actor_ref"] === ctx.userId || (typeof ctx.actor.agent_id === "string" && rawGrant["agent_ref"] === ctx.actor.agent_id))
       && (rawGrant["action"] === data.action || (Array.isArray(rawGrant["actions"]) && rawGrant["actions"].includes(data.action))) ? rawGrant : undefined;
     const tierIn = classifyContent(data.content_text ?? "");
     const evidenceIds = [...new Set(Object.values(data.dimensions).flatMap((d) => d.evidence_refs))];

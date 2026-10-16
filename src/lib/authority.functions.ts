@@ -10,7 +10,6 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 type Json = Record<string, unknown>;
 const human = (id: string) => ({ kind: "human" as const, id, authority_used: "observe" });
-const system = (id: string) => ({ kind: "system", id, authority_used: "observe", engine: "thread.authority.engine@1.0.0" });
 async function admin() {
   return (await import("@/integrations/supabase/client.server")).supabaseAdmin;
 }
