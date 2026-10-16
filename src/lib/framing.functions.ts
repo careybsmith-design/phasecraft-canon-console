@@ -864,7 +864,7 @@ const DRAFT_STATES = new Set(["draft", "proposed"]);
 
 export const getFramingView = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: { view: FramingView; session?: string; root?: string }) => z.object({ view: z.enum(FRAMING_VIEWS), session: uuid.optional(), root: uuid.optional() }).parse(d))
+  .inputValidator((d: { view: FramingView; session?: string | undefined; root?: string | undefined }) => z.object({ view: z.enum(FRAMING_VIEWS), session: uuid.optional(), root: uuid.optional() }).parse(d))
   .handler(async ({ data, context }) => {
     const sb = context.supabase;
     const { data: objs, error } = await sb.from("objects").select("id,human_ref,type,title,lifecycle_state,created_at,body").in("type", VIEW_TYPES).eq("is_tombstone", false).not("lifecycle_state", "in", "(rejected,superseded,retired)").limit(3000);
