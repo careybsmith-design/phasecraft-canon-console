@@ -11,7 +11,8 @@
 - [x] Phase 8 — Generation layer (waiting for user approval); exit evidence ledger #10434
 - [x] Phase 9 — Agent-executable surface (waiting for user approval); exit evidence ledger #10660
 - [ ] Phase 10 — Detection and measurement implemented; signed-in validation and remaining exit evidence below
-- [ ] Phase 11 … Phase 12 per Section 16
+- [ ] Phase 11 — Human surfaces (in progress; user requested 16 October 2026)
+- [ ] Phase 12 — Hardening, assurance and scale
 
 ## Open items — keep until addressed at the end (never delete without resolving)
 
