@@ -23,6 +23,8 @@ export const Route = createFileRoute("/_authenticated/canon")({
       { name: "description", content: "Record, version, tombstone and audit canon objects in THREAD." },
       { property: "og:title", content: "Canon console · THREAD" },
       { property: "og:description", content: "Record, version, tombstone and audit canon objects in THREAD." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: CanonConsole,

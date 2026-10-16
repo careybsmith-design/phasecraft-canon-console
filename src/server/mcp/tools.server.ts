@@ -267,6 +267,31 @@ export const HANDLERS: Record<string, Handler> = {
     if (a["detector_key"]) q = q.eq("detector_key", S(a["detector_key"]));
     return call(q);
   },
+  async resolve_finding(ctx, a) {
+    const f = await call<Json | null>(ctx.sb.from("detector_findings").select("id,owner_id").eq("id", S(a["finding_id"])).maybeSingle());
+    if (!f || f["owner_id"] !== ctx.userId) throw err("FINDING_OWNER_REQUIRED");
+    return call(ctx.db.rpc("thread_resolve_finding", { p_actor: ctx.actor, p_finding: S(a["finding_id"]), p_resolution: S(a["resolution"]) }));
+  },
+  async measure_flow(ctx, a) {
+    if (prohibitedInference(S(a["scope"]))) throw err("PROHIBITED_INFERENCE");
+    const s = await call<Json>(ctx.sb.rpc("phase10_measurements_extended")); return s["flow"];
+  },
+  async measure_value(ctx, a) {
+    if (prohibitedInference(S(a["scope"]))) throw err("PROHIBITED_INFERENCE");
+    const s = await call<Json>(ctx.sb.rpc("phase10_measurements_extended")); return s["value"];
+  },
+  async measure_community(ctx, a) {
+    if (prohibitedInference(S(a["scope"]))) throw err("PROHIBITED_INFERENCE");
+    const s = await call<Json>(ctx.sb.rpc("phase10_measurements_extended")); return s["community"];
+  },
+  async measure_capability_health(ctx, a) {
+    await visible(ctx, S(a["capability_id"]), "id");
+    const s = await call<Json>(ctx.sb.rpc("phase10_measurements_extended"));
+    return (Array.isArray(s["capability"]) ? s["capability"] as Json[] : []).filter(c => c["id"] === a["capability_id"]);
+  },
+  async get_intent_to_value_time(ctx, a) {
+    return call(ctx.sb.rpc("get_intent_to_value_time", { p_capability: S(a["capability_id"]) }));
+  },
 
   async generate_briefing(ctx) { return call(ctx.db.rpc("thread_generate_morning_brief", { p_user: ctx.userId })); },
   async generate_explanation(ctx, a) { return generate(ctx, "capability_explanation", a); },
@@ -275,7 +300,9 @@ export const HANDLERS: Record<string, Handler> = {
 
   async log_need(ctx, a) { return create(ctx, "NeedStatement", S(a["statement"]).slice(0, 200), S(a["statement"]), { statement: a["statement"], observed_condition: a["observed_condition"] }); },
   async log_behavior_statement(ctx, a) {
-    return HANDLERS["add_behavior_statement"]!(ctx, { condition: a["condition"], observable_result: a["observable_result"], operating_constraints: a["constraints"] });
+    const handler = HANDLERS["add_behavior_statement"];
+    if (!handler) throw err("TOOL_UNAVAILABLE");
+    return handler(ctx, { condition: a["condition"], observable_result: a["observable_result"], operating_constraints: a["constraints"] });
   },
   async link_need_to_behavior(ctx, a) {
     return call(ctx.db.rpc("thread_create_edge", { p_actor: ctx.actor, p: { from_id: a["behavior_id"], to_id: a["need_id"], verb: "satisfies", origin: "stated", rationale: "linked by agent through MCP" } } as never));

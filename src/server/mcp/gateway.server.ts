@@ -8,6 +8,8 @@ import { scanForInjection, sha256Hex, canonicalJson, withinCeiling, type Authori
 import type { Json } from "@/server/ops/context";
 import { HANDLERS, type AgentCtx } from "./tools.server";
 import { agentReadClient } from "./agent-session.server";
+import { prohibitedInference } from "@/domain/generation";
+import { rejectedMeasure } from "@/domain/detection";
 
 export const PROTOCOL_VERSION = "2025-06-18";
 type Rpc = { jsonrpc: "2.0"; id?: string | number | null; method: string; params?: Json };
@@ -84,6 +86,15 @@ export async function callTool(tokenHash: string, name: string, rawArgs: unknown
     const { data: seq } = await finish("blocked", null, `INJECTION_SUSPECTED: ${hits.map((h) => `${h.rule}@${h.path}`).join(", ")}`, []);
     return { isError: true, code: "INJECTION_SUSPECTED", explanation: "Arguments contain instruction-shaped text. Values are data; nothing was run.", findings: hits, call_id: bb.call_id, ledger_seq: seq };
   }
+  if (t.side_effects === "none") {
+    const requestText = canonicalJson(bound);
+    const refusal = prohibitedInference(requestText) ? "prohibited_inference" : rejectedMeasure(requestText) ? "rejected_measure" : null;
+    if (refusal && agent.auth_user_id) {
+      await db.rpc("thread_record_query_refusal", { p_actor: { kind: "agent", id: agent.auth_user_id, agent_id: agent.id, call_id: bb.call_id, authority_used: "observe" }, p_kind: refusal, p_input_hash: input_hash });
+      const { data: seq } = await finish("refused", null, `${refusal.toUpperCase()}: this query is not permitted`, []);
+      return { isError: true, code: refusal.toUpperCase(), explanation: "Individual activity inferences and rejected measures are not permitted.", call_id: bb.call_id, ledger_seq: seq };
+    }
+  }
   if (t.status !== "live") {
     const { data: seq } = await finish("refused", null, `${t.status === "human_only" ? "HUMAN_ONLY" : "PENDING_KERNEL"}: ${t.pending}`, []);
     return { isError: true, code: t.status === "human_only" ? "HUMAN_ONLY" : "PENDING_KERNEL", explanation: `${name} is registered with its contract; ${t.pending}.`, call_id: bb.call_id, ledger_seq: seq };
@@ -94,7 +105,9 @@ export async function callTool(tokenHash: string, name: string, rawArgs: unknown
     actor: { kind: "agent", id: agent.auth_user_id, agent_id: agent.id, call_id: bb.call_id!, authority_used: withinCeiling(t.authority, agent.authority_ceiling) ? t.authority : "observe" },
   };
   try {
-    const out = await HANDLERS[name]!(ctx, bound);
+    const handler = HANDLERS[name];
+    if (!handler) throw new Error("TOOL_UNAVAILABLE");
+    const out = await handler(ctx, bound);
     // Output scanning (layer 5): text that came back is tagged with its origin; suspicious text is flagged, never obeyed.
     const outHits = scanForInjection(out);
     const tags = [t.origin, ...(outHits.length ? ["suspected_instruction_text"] : [])];

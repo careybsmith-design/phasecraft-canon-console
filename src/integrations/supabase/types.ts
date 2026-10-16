@@ -804,6 +804,47 @@ export type Database = {
           },
         ]
       }
+      detection_observations: {
+        Row: {
+          created_at: string
+          evidence_refs: string[]
+          expires_at: string
+          facts: Json
+          id: string
+          owner_id: string
+          rationale: string
+          subject_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          evidence_refs?: string[]
+          expires_at?: string
+          facts: Json
+          id?: string
+          owner_id: string
+          rationale: string
+          subject_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          evidence_refs?: string[]
+          expires_at?: string
+          facts?: Json
+          id?: string
+          owner_id?: string
+          rationale?: string
+          subject_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "detection_observations_subject_id_fkey"
+            columns: ["subject_id"]
+            isOneToOne: false
+            referencedRelation: "objects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       detector_findings: {
         Row: {
           accepted_by: string | null
@@ -814,6 +855,8 @@ export type Database = {
           id: string
           object_id: string | null
           owner_id: string
+          resolution: Json
+          resolved_at: string | null
           severity: string
           state: string
         }
@@ -826,6 +869,8 @@ export type Database = {
           id: string
           object_id?: string | null
           owner_id: string
+          resolution?: Json
+          resolved_at?: string | null
           severity: string
           state: string
         }
@@ -838,6 +883,8 @@ export type Database = {
           id?: string
           object_id?: string | null
           owner_id?: string
+          resolution?: Json
+          resolved_at?: string | null
           severity?: string
           state?: string
         }
@@ -2341,6 +2388,7 @@ export type Database = {
         }
         Returns: Json
       }
+      _phase10_register: { Args: never; Returns: undefined }
       _prod_caps: {
         Args: never
         Returns: {
@@ -2395,6 +2443,7 @@ export type Database = {
         }
       }
       _prohibited_inference: { Args: { t: string }; Returns: Json }
+      _rejected_measure: { Args: { t: string }; Returns: boolean }
       _rendition_ledger: {
         Args: { _action: string; _actor: Json; _mode: string; _payload: Json }
         Returns: number
@@ -2496,6 +2545,24 @@ export type Database = {
         Returns: Database["public"]["Enums"]["authority_level"]
       }
       decision_ancestor: { Args: { p_behavior: string }; Returns: string }
+      detection_candidates: {
+        Args: never
+        Returns: {
+          detector_key: string
+          evidence: Json
+          object_id: string
+          severity: string
+        }[]
+      }
+      detection_catalogue: {
+        Args: never
+        Returns: {
+          fact: string
+          family: string
+          key: string
+          remediation: string
+        }[]
+      }
       evidence_chain: { Args: { p_id: string }; Returns: Json }
       explain_capability: {
         Args: { p_id: string; p_question: string }
@@ -2519,6 +2586,10 @@ export type Database = {
           p_text: string
           p_types: string[]
         }
+        Returns: Json
+      }
+      get_intent_to_value_time: {
+        Args: { p_capability: string }
         Returns: Json
       }
       graph_closure: {
@@ -2591,6 +2662,15 @@ export type Database = {
         Args: { o: Database["public"]["Tables"]["objects"]["Row"] }
         Returns: string
       }
+      phase10_action_ratios: { Args: never; Returns: Json }
+      phase10_elapsed_hours: {
+        Args: { p_end: string; p_start: string }
+        Returns: number
+      }
+      phase10_flow_intervals: { Args: never; Returns: Json }
+      phase10_measurements: { Args: never; Returns: Json }
+      phase10_measurements_extended: { Args: never; Returns: Json }
+      phase10_schema_check: { Args: never; Returns: Json }
       show_limit: { Args: never; Returns: number }
       show_trgm: { Args: { "": string }; Returns: string[] }
       thread_a2a_message: {
@@ -2805,6 +2885,7 @@ export type Database = {
         }
         Returns: Json
       }
+      thread_detection_sweep: { Args: { p_actor: Json }; Returns: Json }
       thread_dispatch_build: { Args: { p: Json; p_actor: Json }; Returns: Json }
       thread_fabric_sweep: {
         Args: { p_actor: Json; p_now?: string }
@@ -2849,7 +2930,20 @@ export type Database = {
         Args: { p_agent: string; p_limit: number }
         Returns: Json
       }
+      thread_observe_detection: {
+        Args: {
+          p_actor: Json
+          p_evidence: string[]
+          p_facts: Json
+          p_rationale: string
+          p_subject: string
+        }
+        Returns: Json
+      }
       thread_phase1_selftest: { Args: never; Returns: Json }
+      thread_phase10_graph_test: { Args: never; Returns: Json }
+      thread_phase10_risk_test: { Args: never; Returns: Json }
+      thread_phase10_selftest: { Args: never; Returns: Json }
       thread_phase2_selftest: { Args: never; Returns: Json }
       thread_phase2b_selftest: { Args: never; Returns: Json }
       thread_phase3_selftest: { Args: never; Returns: Json }
@@ -2958,6 +3052,7 @@ export type Database = {
         Returns: Json
       }
       thread_record_phase1_evidence: { Args: { p_actor: Json }; Returns: Json }
+      thread_record_phase10_evidence: { Args: { p_actor: Json }; Returns: Json }
       thread_record_phase2_evidence: { Args: { p_actor: Json }; Returns: Json }
       thread_record_phase2b_evidence: {
         Args: { p: Json; p_actor: Json }
@@ -2994,6 +3089,10 @@ export type Database = {
       thread_record_production_outcome: {
         Args: { p: Json; p_actor: Json; p_capability: string }
         Returns: Json
+      }
+      thread_record_query_refusal: {
+        Args: { p_actor: Json; p_input_hash: string; p_kind: string }
+        Returns: undefined
       }
       thread_record_render_benchmark: {
         Args: { p: Json; p_actor: Json }
@@ -3092,6 +3191,15 @@ export type Database = {
       thread_refresh_graph_layout: { Args: never; Returns: Json }
       thread_register_agent: { Args: { p: Json; p_actor: Json }; Returns: Json }
       thread_rendition_sweep: { Args: { p_now?: string }; Returns: Json }
+      thread_resolve_finding: {
+        Args: {
+          p_accept_until?: string
+          p_actor: Json
+          p_finding: string
+          p_resolution: string
+        }
+        Returns: Json
+      }
       thread_restore_rehearsal: { Args: never; Returns: Json }
       thread_retire_edge: {
         Args: { p_actor: Json; p_edge_id: string; p_reason: string }

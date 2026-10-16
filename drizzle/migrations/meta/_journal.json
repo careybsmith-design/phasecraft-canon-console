@@ -302,6 +302,48 @@
       "when": 1792179233201,
       "tag": "0042_notify_deferred",
       "breakpoints": true
+    },
+    {
+      "idx": 43,
+      "version": "7",
+      "when": 1792181399847,
+      "tag": "0043_phase10_detection_core",
+      "breakpoints": true
+    },
+    {
+      "idx": 44,
+      "version": "7",
+      "when": 1792181461079,
+      "tag": "0044_phase10_evidence_measures",
+      "breakpoints": true
+    },
+    {
+      "idx": 45,
+      "version": "7",
+      "when": 1792181747487,
+      "tag": "0045_phase10_graph_measure_acceptance",
+      "breakpoints": true
+    },
+    {
+      "idx": 46,
+      "version": "7",
+      "when": 1792181861000,
+      "tag": "0046_phase10_extended_measures",
+      "breakpoints": true
+    },
+    {
+      "idx": 47,
+      "version": "7",
+      "when": 1792181943647,
+      "tag": "0047_phase10_acceptance_and_ownership_checks",
+      "breakpoints": true
+    },
+    {
+      "idx": 48,
+      "version": "7",
+      "when": 1792181980635,
+      "tag": "0048_phase10_computed_flow_intervals",
+      "breakpoints": true
     }
   ]
 }
