@@ -414,6 +414,13 @@
       "when": 1792188351796,
       "tag": "0058_audit_live_build_correlation",
       "breakpoints": true
+    },
+    {
+      "idx": 59,
+      "version": "7",
+      "when": 1792188826594,
+      "tag": "0059_audit_authority_evidence_and_regressions",
+      "breakpoints": true
     }
   ]
 }

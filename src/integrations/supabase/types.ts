@@ -2278,6 +2278,10 @@ export type Database = {
         Args: { o: Database["public"]["Tables"]["objects"]["Row"] }
         Returns: boolean
       }
+      _audit_tier4_judgment: {
+        Args: { p_actor: Json; p_capability: string; p_judgment: string }
+        Returns: undefined
+      }
       _authority_rank: {
         Args: { _l: Database["public"]["Enums"]["authority_level"] }
         Returns: number
