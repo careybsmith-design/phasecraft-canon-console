@@ -4,6 +4,7 @@ import type { Platform } from "@/domain/creation";
 export interface DispatchRequest {
   platform: Platform;
   prompt_id: string;
+  run_id: string;
   compiled_prompt: string;
   compiled_hash: string;
   repro_key: { model_version: string; template_version: string; guardrail_set_version: string; [k: string]: unknown };

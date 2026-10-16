@@ -8,6 +8,7 @@ import { z } from "zod/v4";
 import type { AuthorityLevel, ContentOrigin } from "./mcp";
 import { PLATFORMS } from "./creation";
 import { MissionInput, CellInput, BurstInput } from "./human-surfaces";
+import { outputSchema } from "./mcp-output";
 
 const id = z.uuid();
 const txt = (n: number) => z.string().trim().min(1).max(n);
@@ -117,11 +118,11 @@ export const TOOLS: ToolDef[] = [
   D("classify_change", "K5", "Classify a described change (cosmetic, behavioural, scope, architecture)", iterationDiff.strict(), { origin: "computed" }),
 
   // Authority and governance
-  D("evaluate_authority", "K3", "Current authority level and history of an object", z.object({ object_id: id }).strict()),
+  D("evaluate_authority", "K3", "Evaluate a proposed action and record its deterministic policy decision, never execute it", z.object({ object_id: id, action: txt(120) }).strict(), { side_effects: "creates_objects", authority: "observe", idempotent: false, origin: "computed" }),
   D("request_human_decision", "K3", "Put a decision to a person in the Human Decision Queue (Part 6.5 fields)",
     z.object({ subject_id: id, exact_decision_required: txt(1000), reason_ai_cannot_safely_decide: txt(1000), ai_recommendation: txt(1000), viable_alternatives: z.array(txt(300)).min(1).max(6), deadline: z.string().regex(/^\d{4}-\d{2}-\d{2}$/), cost_of_waiting: txt(500), reversibility: z.enum(["trivial", "assisted", "difficult", "impossible"]) }).strict(),
     { side_effects: "creates_objects", authority: "observe" }),
-  D("grant_exposure_authority", "K3", "Authorise exposure (people only: agents are refused by the database)", z.object({ capability_id: id, population_pct: z.number().min(0).max(100), rationale: txt(1000), ...confirmation }).strict(), { side_effects: "production_effect", authority: "act_with_confirmation" }),
+  D("grant_exposure_authority", "K3", "Authorise exposure (people only: agents are refused by the database)", z.object({ capability_id: id, population_pct: z.number().min(0).max(100), rationale: txt(1000), ...confirmation }).strict(), { side_effects: "production_effect", authority: "act_with_confirmation", status: "human_only", pending: "only an accountable human may grant exposure authority" }),
   D("withdraw_authority", "K3", "Withdraw authority from an object", z.object({ object_id: id, reason: txt(1000), ...confirmation }).strict(), { side_effects: "production_effect", authority: "act_with_confirmation" }),
   D("evaluate_policy", "K3", "List active guardrails and the latest policy evaluations for an object", z.object({ object_id: id }).strict()),
   D("check_guardrails", "K3", "Scan text against the injection and prohibited-inference guardrails", z.object({ text: txt(4000) }).strict(), { origin: "computed" }),
@@ -192,17 +193,17 @@ export const TOOLS: ToolDef[] = [
 ];
 
 export const TOOL_BY_NAME = new Map(TOOLS.map((t) => [t.name, t]));
-export const TOOL_CONTRACT_VERSION = "p9.1";
+export const TOOL_CONTRACT_VERSION = "audit-1";
 
 export function toolContract(t: ToolDef) {
   return {
     name: t.name, purpose: t.purpose, kernel: t.kernel,
-    input_schema: z.toJSONSchema(t.input, { io: "input" }), output_schema: { description: t.output, content_origin: t.origin },
+    input_schema: z.toJSONSchema(t.input, { io: "input" }), output_schema: { ...z.toJSONSchema(outputSchema(t.name)), description: t.output, content_origin: t.origin },
     risk_tier: t.risk_tier, authority_required: t.authority, side_effects: t.side_effects, idempotent: t.idempotent,
     requires_policy_evaluation: t.side_effects !== "none", provenance_capture: true,
     permission_predicate: "evaluated at retrieval as the agent's own identity (row-level permissions), never at render",
     rate_limits: { per_minute: t.per_minute, agent_quota: "agents.quota" }, cost_model: { units_per_call: t.cost, cap: "agents.cost_cap per day" },
-    failure_modes: [...t.failure_modes, ...(t.high_consequence ? ["CONFIRMATION_REQUIRED"] : []), ...(t.status !== "live" ? ["PENDING_KERNEL"] : []), "INJECTION_SUSPECTED"],
+    failure_modes: [...t.failure_modes, ...(t.high_consequence ? ["CONFIRMATION_REQUIRED"] : []), ...(t.status === "human_only" ? ["HUMAN_ONLY"] : t.status === "pending_kernel" ? ["PENDING_KERNEL"] : []), "INJECTION_SUSPECTED"],
     compensating_action: t.compensating, high_consequence: t.high_consequence, status: t.status, ...(t.pending ? { pending: t.pending } : {}),
   };
 }

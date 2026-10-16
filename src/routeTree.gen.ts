@@ -30,11 +30,13 @@ import { Route as AuthenticatedMeasurementRouteImport } from './routes/_authenti
 import { Route as AuthenticatedMissionsRouteImport } from './routes/_authenticated/missions'
 import { Route as AuthenticatedShadowRouteImport } from './routes/_authenticated/shadow'
 import { Route as AuthenticatedSimulateRouteImport } from './routes/_authenticated/simulate'
+import { Route as AuthenticatedEvidenceCapabilityIdRouteImport } from './routes/_authenticated/evidence_.$capabilityId'
 import { Route as AuthenticatedFramingIndexRouteImport } from './routes/_authenticated/framing.index'
 import { Route as AuthenticatedFramingSessionIdRouteImport } from './routes/_authenticated/framing.$sessionId'
 import { Route as AuthenticatedFramingViewsRouteImport } from './routes/_authenticated/framing.views'
 import { Route as AuthenticatedMissionsIndexRouteImport } from './routes/_authenticated/missions.index'
 import { Route as AuthenticatedMissionsMissionIdRouteImport } from './routes/_authenticated/missions.$missionId'
+import { Route as AuthenticatedSessionsSessionIdRouteImport } from './routes/_authenticated/sessions.$sessionId'
 import { Route as ApiPublicMcpRouteImport } from './routes/api/public/mcp'
 import { Route as ApiPublicA2aDotwellKnownAgentDotjsonRouteImport } from './routes/api/public/a2a/[.]well-known/agent[.]json'
 import { Route as ApiPublicHooksBuildPlatformRouteImport } from './routes/api/public/hooks/build.$platform'
@@ -144,6 +146,12 @@ const AuthenticatedSimulateRoute = AuthenticatedSimulateRouteImport.update({
   path: '/simulate',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedEvidenceCapabilityIdRoute =
+  AuthenticatedEvidenceCapabilityIdRouteImport.update({
+    id: '/evidence_/$capabilityId',
+    path: '/evidence/$capabilityId',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedFramingIndexRoute =
   AuthenticatedFramingIndexRouteImport.update({
     id: '/framing/',
@@ -173,6 +181,12 @@ const AuthenticatedMissionsMissionIdRoute =
     id: '/$missionId',
     path: '/$missionId',
     getParentRoute: () => AuthenticatedMissionsRoute,
+  } as any)
+const AuthenticatedSessionsSessionIdRoute =
+  AuthenticatedSessionsSessionIdRouteImport.update({
+    id: '/sessions/$sessionId',
+    path: '/sessions/$sessionId',
+    getParentRoute: () => AuthenticatedRoute,
   } as any)
 const ApiPublicMcpRoute = ApiPublicMcpRouteImport.update({
   id: '/api/public/mcp',
@@ -213,9 +227,11 @@ export interface FileRoutesByFullPath {
   '/missions': typeof AuthenticatedMissionsRouteWithChildren
   '/shadow': typeof AuthenticatedShadowRoute
   '/simulate': typeof AuthenticatedSimulateRoute
+  '/evidence/$capabilityId': typeof AuthenticatedEvidenceCapabilityIdRoute
   '/framing/$sessionId': typeof AuthenticatedFramingSessionIdRoute
   '/framing/views': typeof AuthenticatedFramingViewsRoute
   '/missions/$missionId': typeof AuthenticatedMissionsMissionIdRoute
+  '/sessions/$sessionId': typeof AuthenticatedSessionsSessionIdRoute
   '/api/public/mcp': typeof ApiPublicMcpRoute
   '/framing/': typeof AuthenticatedFramingIndexRoute
   '/missions/': typeof AuthenticatedMissionsIndexRoute
@@ -242,9 +258,11 @@ export interface FileRoutesByTo {
   '/measurement': typeof AuthenticatedMeasurementRoute
   '/shadow': typeof AuthenticatedShadowRoute
   '/simulate': typeof AuthenticatedSimulateRoute
+  '/evidence/$capabilityId': typeof AuthenticatedEvidenceCapabilityIdRoute
   '/framing/$sessionId': typeof AuthenticatedFramingSessionIdRoute
   '/framing/views': typeof AuthenticatedFramingViewsRoute
   '/missions/$missionId': typeof AuthenticatedMissionsMissionIdRoute
+  '/sessions/$sessionId': typeof AuthenticatedSessionsSessionIdRoute
   '/api/public/mcp': typeof ApiPublicMcpRoute
   '/framing': typeof AuthenticatedFramingIndexRoute
   '/missions': typeof AuthenticatedMissionsIndexRoute
@@ -274,9 +292,11 @@ export interface FileRoutesById {
   '/_authenticated/missions': typeof AuthenticatedMissionsRouteWithChildren
   '/_authenticated/shadow': typeof AuthenticatedShadowRoute
   '/_authenticated/simulate': typeof AuthenticatedSimulateRoute
+  '/_authenticated/evidence_/$capabilityId': typeof AuthenticatedEvidenceCapabilityIdRoute
   '/_authenticated/framing/$sessionId': typeof AuthenticatedFramingSessionIdRoute
   '/_authenticated/framing/views': typeof AuthenticatedFramingViewsRoute
   '/_authenticated/missions/$missionId': typeof AuthenticatedMissionsMissionIdRoute
+  '/_authenticated/sessions/$sessionId': typeof AuthenticatedSessionsSessionIdRoute
   '/api/public/mcp': typeof ApiPublicMcpRoute
   '/_authenticated/framing/': typeof AuthenticatedFramingIndexRoute
   '/_authenticated/missions/': typeof AuthenticatedMissionsIndexRoute
@@ -306,9 +326,11 @@ export interface FileRouteTypes {
     | '/missions'
     | '/shadow'
     | '/simulate'
+    | '/evidence/$capabilityId'
     | '/framing/$sessionId'
     | '/framing/views'
     | '/missions/$missionId'
+    | '/sessions/$sessionId'
     | '/api/public/mcp'
     | '/framing/'
     | '/missions/'
@@ -335,9 +357,11 @@ export interface FileRouteTypes {
     | '/measurement'
     | '/shadow'
     | '/simulate'
+    | '/evidence/$capabilityId'
     | '/framing/$sessionId'
     | '/framing/views'
     | '/missions/$missionId'
+    | '/sessions/$sessionId'
     | '/api/public/mcp'
     | '/framing'
     | '/missions'
@@ -366,9 +390,11 @@ export interface FileRouteTypes {
     | '/_authenticated/missions'
     | '/_authenticated/shadow'
     | '/_authenticated/simulate'
+    | '/_authenticated/evidence_/$capabilityId'
     | '/_authenticated/framing/$sessionId'
     | '/_authenticated/framing/views'
     | '/_authenticated/missions/$missionId'
+    | '/_authenticated/sessions/$sessionId'
     | '/api/public/mcp'
     | '/_authenticated/framing/'
     | '/_authenticated/missions/'
@@ -534,6 +560,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSimulateRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/evidence_/$capabilityId': {
+      id: '/_authenticated/evidence_/$capabilityId'
+      path: '/evidence/$capabilityId'
+      fullPath: '/evidence/$capabilityId'
+      preLoaderRoute: typeof AuthenticatedEvidenceCapabilityIdRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/framing/': {
       id: '/_authenticated/framing/'
       path: '/framing'
@@ -568,6 +601,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/missions/$missionId'
       preLoaderRoute: typeof AuthenticatedMissionsMissionIdRouteImport
       parentRoute: typeof AuthenticatedMissionsRoute
+    }
+    '/_authenticated/sessions/$sessionId': {
+      id: '/_authenticated/sessions/$sessionId'
+      path: '/sessions/$sessionId'
+      fullPath: '/sessions/$sessionId'
+      preLoaderRoute: typeof AuthenticatedSessionsSessionIdRouteImport
+      parentRoute: typeof AuthenticatedRoute
     }
     '/api/public/mcp': {
       id: '/api/public/mcp'
@@ -627,8 +667,10 @@ interface AuthenticatedRouteChildren {
   AuthenticatedMissionsRoute: typeof AuthenticatedMissionsRouteWithChildren
   AuthenticatedShadowRoute: typeof AuthenticatedShadowRoute
   AuthenticatedSimulateRoute: typeof AuthenticatedSimulateRoute
+  AuthenticatedEvidenceCapabilityIdRoute: typeof AuthenticatedEvidenceCapabilityIdRoute
   AuthenticatedFramingSessionIdRoute: typeof AuthenticatedFramingSessionIdRoute
   AuthenticatedFramingViewsRoute: typeof AuthenticatedFramingViewsRoute
+  AuthenticatedSessionsSessionIdRoute: typeof AuthenticatedSessionsSessionIdRoute
   AuthenticatedFramingIndexRoute: typeof AuthenticatedFramingIndexRoute
 }
 
@@ -651,8 +693,11 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedMissionsRoute: AuthenticatedMissionsRouteWithChildren,
   AuthenticatedShadowRoute: AuthenticatedShadowRoute,
   AuthenticatedSimulateRoute: AuthenticatedSimulateRoute,
+  AuthenticatedEvidenceCapabilityIdRoute:
+    AuthenticatedEvidenceCapabilityIdRoute,
   AuthenticatedFramingSessionIdRoute: AuthenticatedFramingSessionIdRoute,
   AuthenticatedFramingViewsRoute: AuthenticatedFramingViewsRoute,
+  AuthenticatedSessionsSessionIdRoute: AuthenticatedSessionsSessionIdRoute,
   AuthenticatedFramingIndexRoute: AuthenticatedFramingIndexRoute,
 }
 

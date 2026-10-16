@@ -51,7 +51,7 @@ export const Route = createFileRoute("/_authenticated/framing/$sessionId")({
       { name: "twitter:card", content: "summary" },
     ],
   }),
-  component: SessionSurface,
+  component: FramingSessionPage,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -74,8 +74,12 @@ const MODES: Array<[string, string]> = [
   ["third_party_recording", "Third-party material"],
 ];
 
-function SessionSurface() {
+function FramingSessionPage() {
   const { sessionId } = Route.useParams();
+  return <SessionSurface sessionId={sessionId} />;
+}
+
+export function SessionSurface({ sessionId }: { sessionId: string }) {
   const get = useServerFn(getFramingSession);
   const qc = useQueryClient();
   const key = ["framing-session", sessionId];

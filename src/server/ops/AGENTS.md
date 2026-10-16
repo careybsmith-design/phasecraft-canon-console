@@ -5,3 +5,5 @@
 - Capability probes are ledgered as simulated with `results: not_executed`; simulation tools remain pending until an execution harness exists. Why: a planned test is not test evidence.
 - Assurance uses `AssuranceInput` and `thread_record_assurance`; passing requires current live evidence and subject/evidence permission equality. Why: simulations and permission aggregation cannot manufacture assurance.
 - `human_surface_context` bounds breadth-first expansion with RLS before frontier admission and exposes truncation. Why: a small response must not hide unbounded traversal work.
+- Evidence/session deep links reuse their existing surfaces with explicit IDs; metadata reads require current parent visibility. Why: alternate URLs and historical snapshots must not bypass access.
+- Authority evaluations share `authority.server.ts` and `authority-input.ts`; missing policy context or failed risk writes stop evaluation. Why: human and MCP policy outcomes must agree and fail closed.

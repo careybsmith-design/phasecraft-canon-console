@@ -35,7 +35,7 @@ export async function compilePromptCore(ctx: OpCtx, data: CompileInput) {
     contract: { id: con.id, human_ref: con.human_ref, desired_outcome: String(cb["desired_outcome"] ?? con.title), non_negotiables: strs(cb["non_negotiables"]), acceptance_evidence: strs(cb["acceptance_evidence"]) },
     template: { id: tpl.id, human_ref: tpl.human_ref, version: String(tb["version"] ?? "1"), stack: String(tb["stack"] ?? ""), instructions: String(tb["instructions"] ?? "") },
     guardrails: (gr.data ?? []).map((g) => ({ id: g.id, category: g.category, version: g.version, enforcement: g.enforcement as "advisory" | "enforcing" })),
-    capabilities: capRefs.map((c) => ({ id: c.capability_id!, human_ref: c.human_ref ?? c.capability_id!, title: c.title ?? "" })),
+    capabilities: capRefs.flatMap((c) => c.capability_id ? [{ id: c.capability_id, human_ref: c.human_ref ?? c.capability_id, title: c.title ?? "" }] : []),
     platform: data.target_platform, ...(data.quoted_reference ? { quoted_reference: data.quoted_reference } : {}),
   });
   const { data: o, error } = await ctx.db.rpc("thread_compile_creation_prompt", {
@@ -74,8 +74,12 @@ export async function dispatchCore(ctx: OpCtx, p: { prompt_id: string; platform:
   const disp = d.data as unknown as { run_id: string; human_ref: string; repro_key: { model_version: string; template_version: string; guardrail_set_version: string } };
   let result: Json;
   try {
-    const { external_run_id } = await adapter.dispatch({ platform: p.platform, prompt_id: p.prompt_id, compiled_prompt: cp.compiled_text, compiled_hash: cp.compiled_hash, repro_key: disp.repro_key, cost_ceiling: p.cost_ceiling });
-    if (adapter.mode === "live") return { run_id: disp.run_id, human_ref: disp.human_ref, status: "dispatched", note: "results arrive by signed webhook" } as Json;
+    const { external_run_id } = await adapter.dispatch({ platform: p.platform, prompt_id: p.prompt_id, run_id: disp.run_id, compiled_prompt: cp.compiled_text, compiled_hash: cp.compiled_hash, repro_key: disp.repro_key, cost_ceiling: p.cost_ceiling });
+    if (adapter.mode === "live") {
+      const accepted = await sb.rpc("thread_bind_external_build", { p_actor: actor, p_run: disp.run_id, p_external: external_run_id } as never);
+      if (accepted.error) throw err(accepted.error.message);
+      return { run_id: disp.run_id, human_ref: disp.human_ref, status: "dispatched", note: "results arrive by signed webhook" } as Json;
+    }
     const st = await adapter.status(external_run_id);
     const artifacts = st.state === "succeeded" ? await adapter.fetchArtifacts(external_run_id) : [];
     const r = await sb.rpc("thread_record_build_result", { p_actor: actor, p: { run_id: disp.run_id, external_run_id, status: st.state === "succeeded" ? "succeeded" : "failed",
@@ -84,7 +88,10 @@ export async function dispatchCore(ctx: OpCtx, p: { prompt_id: string; platform:
     result = r.data as Json;
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);
-    await sb.rpc("thread_record_build_result", { p_actor: actor, p: { run_id: disp.run_id, status: "failed", failure_reason: msg.slice(0, 500) } } as never);
+    // A live timeout may follow an accepted external run; never falsely mark it failed or invite a duplicate build.
+    if (adapter.mode === "live") throw err(`DISPATCH_RECONCILIATION_REQUIRED: external acceptance is uncertain; reconcile run ${disp.run_id} before retrying`);
+    const failed = await sb.rpc("thread_record_build_result", { p_actor: actor, p: { run_id: disp.run_id, status: "failed", failure_reason: msg.slice(0, 500) } } as never);
+    if (failed.error) throw err(`RESULT_RECORDING_FAILED: reconcile run ${disp.run_id}`);
     throw e;
   }
   return { ...result, run_id: disp.run_id, human_ref: disp.human_ref } as Json;

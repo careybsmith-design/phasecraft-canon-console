@@ -1,5 +1,12 @@
 # THREAD roadmap
 
+## Whole-build audit — Sections 1–19 (authorized 16 October 2026)
+- [ ] Re-read the full specification and Appendices A–C; inventory built, missing and mismatched requirements section by section.
+- [ ] Run full automated tests and all AW-1–AW-15 checks; explicitly retain unexecutable or undecided gates.
+- [ ] Inspect live database layout, access rules, every Section 19 function and MCP tool.
+- [ ] Fix safe implementation gaps and failures; preserve evidence and blockers in docs/THREAD-build-audit.md.
+- [ ] Verify fixes and report proof without representing simulations as live acceptance.
+
 - [x] Phase 1 — Canon and envelope
 - [x] Phase 2 — Operating Graph core; 20,000-node benchmark met (median 30.1 fps, ledger #1150)
 - [x] Phase 2B — Framing session capture and extraction

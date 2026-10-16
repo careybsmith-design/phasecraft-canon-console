@@ -5,10 +5,11 @@
  */
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import { EvalInput } from "@/domain/authority-input";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 type Json = Record<string, unknown>;
-const human = (id: string) => ({ kind: "human", id, authority_used: "observe" });
+const human = (id: string) => ({ kind: "human" as const, id, authority_used: "observe" });
 const system = (id: string) => ({ kind: "system", id, authority_used: "observe", engine: "thread.authority.engine@1.0.0" });
 async function admin() {
   return (await import("@/integrations/supabase/client.server")).supabaseAdmin;
@@ -30,23 +31,6 @@ function envelope(type: string, title: string, statement: string, body: Json, ow
   };
 }
 
-const DIM = z.object({ value: z.number().min(0).max(1), evidence_refs: z.array(z.string()).default([]) });
-const EvalInput = z.object({
-  object_id: z.string().uuid(),
-  action: z.string().trim().min(1).max(120),
-  dimensions: z.record(DIM).default({}),
-  owner_confidence: z.number().min(0).max(1).optional(),
-  content_text: z.string().max(4000).optional(),
-  flags: z.record(z.boolean()).default({}),
-  agent: z.boolean().default(true),
-  risk: z.object({
-    sensitivity: z.enum(["public", "internal", "confidential", "restricted", "prohibited"]).optional(),
-    autonomy: z.number().min(0).max(1).default(0.5),
-    reversibility: z.enum(["trivial", "assisted", "difficult", "impossible"]).default("assisted"),
-    exposure: z.enum(["internal_only", "limited_population", "full_population", "external_parties"]).default("internal_only"),
-    novelty: z.enum(["established_pattern", "adapted_pattern", "novel"]).default("established_pattern"),
-  }).default({}),
-});
 
 export const getAuthorityOverview = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
@@ -70,76 +54,8 @@ export const evaluateAction = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => EvalInput.parse(d))
   .handler(async ({ data, context }) => {
-    const e = await engine();
-    const { classifyContent } = await import("@/domain/content-tier");
-    const { data: obj, error } = await context.supabase.from("objects")
-      .select("id,human_ref,type,title,owner_id,steward_id,risk_tier,consequence_class,data_classification,authority_level,expiration_condition")
-      .eq("id", data.object_id).maybeSingle();
-    if (error) throw err(error.message);
-    if (!obj) throw err("NOT_FOUND: object not visible to you");
-    const db = await admin();
-    const now = new Date().toISOString();
-    const [{ data: grs }, { data: grants }] = await Promise.all([
-      db.from("guardrails").select("id,category,evaluator,enforcement,params,version").eq("active", true),
-      db.from("objects").select("id,body").eq("type", "AuthorityGrant").eq("is_tombstone", false).eq("body->>subject_ref", obj.id).order("created_at", { ascending: false }).limit(1),
-    ]);
-    const g = grants?.[0]?.body as Json | undefined;
-    const tierIn = classifyContent(data.content_text ?? "");
-    // 6.1: risk is computed first and stored with its inputs; it never lowers the stored tier.
-    const risk = e.assessRisk({
-      consequence: obj.consequence_class as never, sensitivity: data.risk.sensitivity ?? (obj.data_classification as never),
-      autonomy: data.risk.autonomy, reversibility: data.risk.reversibility, exposure: data.risk.exposure, novelty: data.risk.novelty,
-      evidence: Object.values(data.dimensions).filter((d) => d.evidence_refs.length).length / e.CONFIDENCE_DIMENSIONS.length,
-    }, now);
-    const tier = Math.max(Number(obj.risk_tier), risk.computed_tier) as 1 | 2 | 3 | 4;
-    const ctx = {
-      action: data.action, now,
-      object: { id: obj.id, type: obj.type, owner_id: obj.owner_id, steward_id: obj.steward_id, risk_tier: tier, consequence_class: obj.consequence_class as never, data_classification: obj.data_classification as never, has_expiration: !!obj.expiration_condition },
-      actor: data.agent ? { kind: "agent" as const, id: `agent-for:${obj.id}`, authority: obj.authority_level as never } : { kind: "human" as const, id: context.userId, authority: obj.authority_level as never },
-      grant: g ? { level: g["authority_level"] as never, effective_to: (g["effective_to"] as string) ?? null, attestation_expires_at: (g["attestation_expires_at"] as string) ?? null } : null,
-      ...(data.content_text ? { content_text: data.content_text } : {}), flags: data.flags,
-    };
-    const bundle = { ...data.dimensions, owner_confidence: data.owner_confidence !== undefined ? { value: data.owner_confidence } : undefined };
-    const out = e.evaluateAuthority(ctx, bundle as never, (grs ?? []) as never);
-    const actor = system(context.userId);
-    await db.rpc("thread_record_risk", { p_actor: human(context.userId), p_id: obj.id, p: { inputs: { ...risk, reasons: undefined }, computed_tier: String(risk.computed_tier), treatment: risk.treatment, reasons: risk.reasons, computed_by: risk.computed_by } } as never);
-    // Raw text is never stored: only the tier and the reasons.
-    const inputs = { action: data.action, risk_tier: tier, consequence_class: obj.consequence_class, content_tier: tierIn.tier, content_reasons: tierIn.reasons,
-      dimensions: data.dimensions, flags: data.flags, grant_ref: grants?.[0]?.id ?? null, authority_level: obj.authority_level };
-    const pe = await db.rpc("thread_create_object", {
-      p_actor: actor,
-      p: envelope("PolicyEvaluation", `${out.treatment.replaceAll("_", " ")}: ${data.action} on ${obj.human_ref}`, out.explanation, {
-        policy_ref: out.rule_ids, subject_ref: obj.id, inputs, decision: out.policy_decision, conditions: out.conditions,
-        decided_by: out.engine, deterministic: true, treatment: out.treatment, engine_decision: out.decision,
-        guardrail_results: out.guardrails, prohibited: out.prohibited, confidence: out.confidence, confidence_rule: e.CONFIDENCE_RULE.version,
-      }, context.userId, { evidence_refs: [] }) as never,
-    });
-    if (pe.error) throw err(pe.error.message);
-    const peRow = pe.data as { id: string; human_ref: string };
-    let hdr: { id: string; human_ref: string } | null = null;
-    if (out.decision === "escalate_human_decision") {
-      const body = {
-        exact_decision_required: `May "${data.action}" proceed on ${obj.human_ref} (${obj.title})?`,
-        reason_ai_cannot_safely_decide: out.explanation,
-        current_evidence_and_confidence: peRow.id,
-        ai_recommendation: out.confidence.band === "high" ? "Proceed under limited exposure with rollback armed" : "Do not proceed until evidence improves",
-        viable_alternatives: [
-          { option: "Proceed", consequences: `Acts with ${obj.consequence_class} consequence`, affected_parties: ["consequence owner"] },
-          { option: "Proceed with limited exposure", consequences: "Smaller population, enhanced observation", affected_parties: ["limited population"] },
-          { option: "Do not proceed", consequences: "Value is delayed; no new risk", affected_parties: ["mission"] },
-        ],
-        affected_parties: ["consequence owner", "affected population"],
-        deadline: new Date(Date.now() + 3 * 864e5).toISOString(),
-        cost_of_waiting: "The action does not happen until a human decides.",
-        reversibility: obj.consequence_class,
-        current_authority_boundary: { object_id: obj.id, level: obj.authority_level, grant_ref: grants?.[0]?.id ?? null, independent_judgment_required: out.independent },
-        proposed_next_machine_action: `Run "${data.action}" as decided, then record the outcome`,
-      };
-      const h = await db.rpc("thread_create_object", { p_actor: actor, p: envelope("HumanDecisionRequest", `Decide: ${data.action} on ${obj.human_ref}`, body.exact_decision_required, body, obj.owner_id ?? context.userId, { risk_tier: String(tier) }) as never });
-      if (h.error) throw err(h.error.message);
-      hdr = h.data as { id: string; human_ref: string };
-    }
-    return { outcome: out, risk, policy_evaluation: peRow, decision_request: hdr };
+    const { evaluateActionCore } = await import("@/server/ops/authority.server");
+    return evaluateActionCore({ sb: context.supabase, db: await admin(), userId: context.userId, actor: human(context.userId) }, data, { simulateAgent: data.agent });
   });
 
 export const listDecisionQueue = createServerFn({ method: "GET" })
@@ -242,8 +158,8 @@ export const runPhase3Evidence = createServerFn({ method: "POST" })
       ["High confidence, low consequence, no encoded authority", c("none", 1, { grant: null }), 0.9, "act_with_confirmation"],
       ["Moderate confidence, reversible", c("reversible", 1), 0.6, "limited_exposure_with_observation"],
       ["Moderate confidence, costly reversible", c("costly_reversible", 2), 0.6, "limited_exposure_with_observation"],
-      ["Low confidence, low consequence (bounded actor)", c("none", 1), 0.2, "limited_exposure_with_observation"],
-      ["Low confidence, low consequence (recommend actor)", c("none", 1, { actor: { kind: "agent", id: "a", authority: "recommend" } }), 0.2, "recommend"],
+      ["Low confidence, low consequence (bounded actor)", c("none", 1), 0.2, "explicit_human_decision"],
+      ["Low confidence, low consequence (recommend actor)", c("none", 1, { actor: { kind: "agent", id: "a", authority: "recommend" } }), 0.2, "explicit_human_decision"],
       ["High confidence, irreversible", c("irreversible", 3), 0.95, "explicit_human_decision"],
       ["Any confidence, rights-affecting", c("rights_affecting", 4), 0.99, "explicit_human_decision_independent"],
       ["Any confidence, safety", c("safety", 4), 0.1, "explicit_human_decision_independent"],
