@@ -2024,6 +2024,17 @@ export type Database = {
         Args: { _ins: string[]; _outs: string[]; _title: string }
         Returns: Json
       }
+      _p7_envelope: {
+        Args: {
+          p_body: Json
+          p_owner: string
+          p_rationale: string
+          p_statement: string
+          p_title: string
+          p_type: string
+        }
+        Returns: Json
+      }
       _prod_caps: {
         Args: never
         Returns: {
@@ -2296,6 +2307,10 @@ export type Database = {
         Returns: Json
       }
       thread_authority_sweep: { Args: { p_actor: Json }; Returns: Json }
+      thread_authorize_exposure: {
+        Args: { p: Json; p_actor: Json; p_capability: string }
+        Returns: Json
+      }
       thread_compile_creation_prompt: {
         Args: { p: Json; p_actor: Json }
         Returns: {
@@ -2455,6 +2470,10 @@ export type Database = {
       }
       thread_framing_sweep: { Args: { p_actor: Json }; Returns: Json }
       thread_graph_sweep: { Args: { p_actor: Json }; Returns: Json }
+      thread_kill_switch: {
+        Args: { p?: Json; p_actor: Json; p_capability: string }
+        Returns: Json
+      }
       thread_phase1_selftest: { Args: never; Returns: Json }
       thread_phase2_selftest: { Args: never; Returns: Json }
       thread_phase2b_selftest: { Args: never; Returns: Json }
@@ -2549,6 +2568,10 @@ export type Database = {
         Args: { p: Json; p_actor: Json; p_id: string }
         Returns: number
       }
+      thread_record_incident: {
+        Args: { p: Json; p_actor: Json; p_capability: string }
+        Returns: Json
+      }
       thread_record_iteration: {
         Args: { p: Json; p_actor: Json }
         Returns: Json
@@ -2575,6 +2598,10 @@ export type Database = {
         Args: { p: Json; p_actor: Json }
         Returns: Json
       }
+      thread_record_production_outcome: {
+        Args: { p: Json; p_actor: Json; p_capability: string }
+        Returns: Json
+      }
       thread_record_render_benchmark: {
         Args: { p: Json; p_actor: Json }
         Returns: number
@@ -2599,6 +2626,14 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      thread_record_rollback: {
+        Args: { p: Json; p_actor: Json; p_capability: string }
+        Returns: Json
+      }
+      thread_record_shadow_run: {
+        Args: { p: Json; p_actor: Json; p_capability: string }
+        Returns: Json
       }
       thread_record_skeleton: {
         Args: { p: Json; p_actor: Json }
@@ -2652,6 +2687,10 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      thread_record_value_measure: {
+        Args: { p: Json; p_actor: Json; p_mission: string }
+        Returns: Json
       }
       thread_refresh_graph_layout: { Args: never; Returns: Json }
       thread_restore_rehearsal: { Args: never; Returns: Json }

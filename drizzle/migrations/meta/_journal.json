@@ -162,6 +162,13 @@
       "when": 1792166162823,
       "tag": "0022_phase6_owner_fix",
       "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "7",
+      "when": 1792174495168,
+      "tag": "0023_phase7_shadow_exposure",
+      "breakpoints": true
     }
   ]
 }
