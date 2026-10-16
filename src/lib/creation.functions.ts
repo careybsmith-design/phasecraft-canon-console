@@ -146,9 +146,9 @@ export const dispatchBuild = createServerFn({ method: "POST" })
     cost_ceiling: z.number().positive().max(100000), estimated_cost: z.number().min(0).max(100000).default(0),
   }).parse(d))
   .handler(async ({ data, context }) => {
-    const out: Array<{ platform: Platform; ok: boolean; result: Json | null; error: string | null }> = [];
+    const out: Array<{ platform: Platform; ok: boolean; result: { human_ref: string; status: string } | null; error: string | null }> = [];
     for (const platform of data.platforms) {
-      try { out.push({ platform, ok: true, error: null, result: await runOnPlatform(context.userId, { prompt_id: data.prompt_id, platform, cost_ceiling: data.cost_ceiling, estimated_cost: data.estimated_cost }) }); }
+      try { { const x = await runOnPlatform(context.userId, { prompt_id: data.prompt_id, platform, cost_ceiling: data.cost_ceiling, estimated_cost: data.estimated_cost }) as Json; out.push({ platform, ok: true, error: null, result: { human_ref: String(x["human_ref"]), status: String(x["status"] ?? "dispatched") } }); } }
       catch (e) { out.push({ platform, ok: false, result: null, error: e instanceof Error ? e.message : String(e) }); }
     }
     return out;
@@ -160,7 +160,9 @@ export const replayBuild = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const { data: r } = await context.supabase.from("build_runs").select("prompt_id,platform,cost_ceiling").eq("object_id", data.run_id).single();
     if (!r) throw err("RUN_NOT_FOUND");
-    return runOnPlatform(context.userId, { prompt_id: r.prompt_id, platform: r.platform as Platform, cost_ceiling: Number(r.cost_ceiling), estimated_cost: 0, replay_of: data.run_id });
+    const x = (await runOnPlatform(context.userId, { prompt_id: r.prompt_id, platform: r.platform as Platform, cost_ceiling: Number(r.cost_ceiling), estimated_cost: 0, replay_of: data.run_id })) as Json;
+    const rr = x["replay_result"] as { verdict?: string } | null | undefined;
+    return { human_ref: String(x["human_ref"]), verdict: rr?.verdict ?? "dispatched" };
   });
 
 export const recordIteration = createServerFn({ method: "POST" })

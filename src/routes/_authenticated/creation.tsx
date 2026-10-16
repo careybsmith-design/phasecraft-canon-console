@@ -143,8 +143,8 @@ function Runs({ d }: { d: Data }) {
   const sk = useServerFn(recordSkeleton);
   async function replay(id: string) {
     try {
-      const r = (await rp({ data: { run_id: id } })) as { replay_result?: { verdict?: string } };
-      toast.success(`Replay: ${r.replay_result?.verdict ?? "dispatched"}`);
+      const r = await rp({ data: { run_id: id } });
+      toast.success(`Replay ${r.human_ref}: ${r.verdict}`);
       qc.invalidateQueries({ queryKey: ["creation"] });
     } catch (e) { toast.error(errText(e)); }
   }
