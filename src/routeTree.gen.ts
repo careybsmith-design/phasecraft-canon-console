@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedAgentsRouteImport } from './routes/_authenticated/agents'
+import { Route as AuthenticatedAssuranceRouteImport } from './routes/_authenticated/assurance'
 import { Route as AuthenticatedAuthorityRouteImport } from './routes/_authenticated/authority'
 import { Route as AuthenticatedCanonRouteImport } from './routes/_authenticated/canon'
 import { Route as AuthenticatedCaptureRouteImport } from './routes/_authenticated/capture'
@@ -55,6 +56,11 @@ const AuthRoute = AuthRouteImport.update({
 const AuthenticatedAgentsRoute = AuthenticatedAgentsRouteImport.update({
   id: '/agents',
   path: '/agents',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedAssuranceRoute = AuthenticatedAssuranceRouteImport.update({
+  id: '/assurance',
+  path: '/assurance',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedAuthorityRoute = AuthenticatedAuthorityRouteImport.update({
@@ -190,6 +196,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/agents': typeof AuthenticatedAgentsRoute
+  '/assurance': typeof AuthenticatedAssuranceRoute
   '/authority': typeof AuthenticatedAuthorityRoute
   '/canon': typeof AuthenticatedCanonRoute
   '/capture': typeof AuthenticatedCaptureRoute
@@ -219,6 +226,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/agents': typeof AuthenticatedAgentsRoute
+  '/assurance': typeof AuthenticatedAssuranceRoute
   '/authority': typeof AuthenticatedAuthorityRoute
   '/canon': typeof AuthenticatedCanonRoute
   '/capture': typeof AuthenticatedCaptureRoute
@@ -249,6 +257,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/auth': typeof AuthRoute
   '/_authenticated/agents': typeof AuthenticatedAgentsRoute
+  '/_authenticated/assurance': typeof AuthenticatedAssuranceRoute
   '/_authenticated/authority': typeof AuthenticatedAuthorityRoute
   '/_authenticated/canon': typeof AuthenticatedCanonRoute
   '/_authenticated/capture': typeof AuthenticatedCaptureRoute
@@ -280,6 +289,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/agents'
+    | '/assurance'
     | '/authority'
     | '/canon'
     | '/capture'
@@ -309,6 +319,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/agents'
+    | '/assurance'
     | '/authority'
     | '/canon'
     | '/capture'
@@ -338,6 +349,7 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/auth'
     | '/_authenticated/agents'
+    | '/_authenticated/assurance'
     | '/_authenticated/authority'
     | '/_authenticated/canon'
     | '/_authenticated/capture'
@@ -401,6 +413,13 @@ declare module '@tanstack/react-router' {
       path: '/agents'
       fullPath: '/agents'
       preLoaderRoute: typeof AuthenticatedAgentsRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/assurance': {
+      id: '/_authenticated/assurance'
+      path: '/assurance'
+      fullPath: '/assurance'
+      preLoaderRoute: typeof AuthenticatedAssuranceRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/authority': {
@@ -591,6 +610,7 @@ const AuthenticatedMissionsRouteWithChildren =
 
 interface AuthenticatedRouteChildren {
   AuthenticatedAgentsRoute: typeof AuthenticatedAgentsRoute
+  AuthenticatedAssuranceRoute: typeof AuthenticatedAssuranceRoute
   AuthenticatedAuthorityRoute: typeof AuthenticatedAuthorityRoute
   AuthenticatedCanonRoute: typeof AuthenticatedCanonRoute
   AuthenticatedCaptureRoute: typeof AuthenticatedCaptureRoute
@@ -614,6 +634,7 @@ interface AuthenticatedRouteChildren {
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedAgentsRoute: AuthenticatedAgentsRoute,
+  AuthenticatedAssuranceRoute: AuthenticatedAssuranceRoute,
   AuthenticatedAuthorityRoute: AuthenticatedAuthorityRoute,
   AuthenticatedCanonRoute: AuthenticatedCanonRoute,
   AuthenticatedCaptureRoute: AuthenticatedCaptureRoute,
