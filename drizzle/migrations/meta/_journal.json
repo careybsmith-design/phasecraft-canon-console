@@ -428,6 +428,13 @@
       "when": 1792188935757,
       "tag": "0060_audit_access_and_callback_acceptance",
       "breakpoints": true
+    },
+    {
+      "idx": 61,
+      "version": "7",
+      "when": 1792189031140,
+      "tag": "0061_audit_detector_candidate_materialization",
+      "breakpoints": true
     }
   ]
 }
