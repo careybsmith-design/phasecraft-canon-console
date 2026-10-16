@@ -14,6 +14,11 @@ function validJson(value: unknown, seen = new Set<object>()): boolean {
 const json = z.json().refine((value) => validJson(value), "Output must be finite plain JSON");
 const object = (keys: string[]) => z.object(Object.fromEntries(keys.map((key) => [key, json]))).catchall(json);
 const arrays = new Set(["search_capability_fabric", "search_graph", "list_renditions", "check_data_use_permission", "list_detector_findings", "measure_value", "measure_capability_health", "find_contradictions", "render_unresolved_frontier", "list_notifications"]);
+const arrayFields: Record<string, string[]> = {
+  search_capability_fabric: ["capability_id", "match_score", "reuse_mode", "gaps"], search_graph: ["id", "human_ref", "type"], list_renditions: ["id", "kind", "state"], check_data_use_permission: ["id", "body"],
+  list_detector_findings: ["id", "detector_key", "severity", "state"], measure_value: ["id", "ref", "evidence"], measure_capability_health: ["id", "authority", "usage"],
+  find_contradictions: ["edge", "a", "b"], render_unresolved_frontier: ["id", "human_ref", "type"], list_notifications: ["id", "topic", "ledger_seq", "body"],
+};
 const fields: Record<string, string[]> = {
   score_value_signal: ["signal", "magnitude", "urgency", "value", "confidence_bundle", "unscored"],
   find_related_missions: ["missions", "capabilities"], create_value_mission: ["id", "human_ref", "version"], recommend_value_cell: ["id", "human_ref", "version"], start_value_burst: ["id", "human_ref", "version"],
@@ -31,7 +36,7 @@ const fields: Record<string, string[]> = {
   link_need_to_behavior: ["id", "verb", "from_id", "to_id"], propose_dependency: ["id", "verb", "from_id", "to_id"],
 };
 export function outputSchema(name: string) {
-  if (arrays.has(name)) return z.array(z.record(z.string(), json));
+  if (arrays.has(name)) return z.array(object(arrayFields[name] ?? []));
   if (name.startsWith("generate_")) return z.union([
     object(["refused", "rendition_id", "human_ref", "ledger_seq"]).extend({ refused: z.literal(false) }),
     object(["refused", "reason"]).extend({ refused: z.literal(true) }),

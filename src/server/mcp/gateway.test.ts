@@ -36,4 +36,10 @@ describe("MCP receipt enforcement", () => {
     const result = await handleRpc("test-hash", { jsonrpc: "2.0", id: 1, method: "tools/call", params: { name: "score_value_signal", arguments: { signal_id: id } } });
     expect(result).toMatchObject({ error: { data: { code: "CALL_COMPLETION_FAILED", call_id: id, retry_safe: false } } });
   });
+  it("malformed handler output is rejected and never returned as success", async () => {
+    fake.handler.mockResolvedValue(undefined);
+    const result = await callTool("test-hash", "detect_value_signal", { observed_condition: "Members wait nine days", evidence_refs: [id] });
+    expect(result).toMatchObject({ isError: true, code: "OUTPUT_VALIDATION_FAILED", operation_outcome: "succeeded", retry_safe: false });
+    expect(fake.rpc.mock.calls.filter(([name]) => name === "thread_agent_end_call")).toHaveLength(1);
+  });
 });
