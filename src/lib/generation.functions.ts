@@ -53,7 +53,7 @@ export const generateRendition = createServerFn({ method: "POST" })
     if (prohibitedInference(`${data.request_text} ${data.purpose}`)) {
       const { data: r, error } = await db.rpc("thread_generate_rendition", { p_actor: human(context.userId), p: { ...base, citations: data.source_ids, body: {}, generator: { model: "none", route: "none", template_version: "g1", adapter_mode: "none" } } as never });
       if (error) throw err(error.message);
-      return r as { refused: boolean; reason?: string; human_ref?: string; ledger_seq?: number };
+      return r as { refused: boolean; reason?: string; human_ref?: string; rendition_id?: string; ledger_seq?: number };
     }
     // Sources read as the caller, so permissions apply before anything is composed.
     const { data: srcs, error: se } = await context.supabase.from("objects")
@@ -109,7 +109,7 @@ export const serveRendition = createServerFn({ method: "POST" })
     const { data: r, error } = await db.rpc("thread_serve_rendition", { p_actor: human(context.userId), p_id: data.id, p_purpose: data.purpose });
     if (error) throw err(error.message);
     return r as unknown as { id: string; human_ref: string; kind: string; marker: string; body: { title?: string; sections?: Array<{ heading: string; text: string; cites: string[] }>; media?: { status: string; note: string }; note?: string };
-      generated_from: Array<{ id: string; human_ref: string; version: number }>; generator: Record<string, string>; generated_at: string; permission_context: { purpose: string } };
+      generated_from: Array<{ id: string; human_ref: string; version: number }>; generator: { model: string; route: string; adapter_mode: string }; generated_at: string; permission_context: { purpose: string } };
   });
 
 export const generateMyBrief = createServerFn({ method: "POST" })
