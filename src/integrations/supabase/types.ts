@@ -2667,6 +2667,7 @@ export type Database = {
         Args: { p_end: string; p_start: string }
         Returns: number
       }
+      phase10_flow_intervals: { Args: never; Returns: Json }
       phase10_measurements: { Args: never; Returns: Json }
       phase10_measurements_extended: { Args: never; Returns: Json }
       phase10_schema_check: { Args: never; Returns: Json }
@@ -2941,6 +2942,7 @@ export type Database = {
       }
       thread_phase1_selftest: { Args: never; Returns: Json }
       thread_phase10_graph_test: { Args: never; Returns: Json }
+      thread_phase10_risk_test: { Args: never; Returns: Json }
       thread_phase10_selftest: { Args: never; Returns: Json }
       thread_phase2_selftest: { Args: never; Returns: Json }
       thread_phase2b_selftest: { Args: never; Returns: Json }
