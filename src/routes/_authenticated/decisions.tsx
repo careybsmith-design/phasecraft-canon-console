@@ -79,7 +79,7 @@ function Request({ item }: { item: Item }) {
   const [reduceTo, setReduceTo] = useState<"observe" | "recommend" | "act_with_confirmation" | "act_bounded">("observe");
   const [busy, setBusy] = useState(false);
   async function send(response: "decide" | "request_clarification" | "reduce_authority" | "stop_mission") {
-    if (!decision.trim() || !rationale.trim()) return toast.error("Write the decision (or question) and a rationale.");
+    if (!decision.trim() || !rationale.trim()) { toast.error("Write the decision (or question) and a rationale."); return; }
     setBusy(true);
     try {
       const r = await respond({ data: { request_id: item.id, response, decision, rationale, reduce_to: response === "reduce_authority" ? reduceTo : undefined } });

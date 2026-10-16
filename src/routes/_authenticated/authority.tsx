@@ -111,7 +111,7 @@ function Evaluate() {
   const [busy, setBusy] = useState(false);
   const [out, setOut] = useState<Outcome | null>(null);
   async function run() {
-    if (!objectId) return toast.error("Choose the object the action is about.");
+    if (!objectId) { toast.error("Choose the object the action is about."); return; }
     setBusy(true);
     try {
       const evidence = refs ? [objectId] : [];
@@ -161,7 +161,7 @@ function Evidence() {
   const [r, setR] = useState<Record<string, unknown> | null>(null);
   async function go() {
     setBusy(true);
-    try { setR(await run()); } catch (e) { toast.error(errText(e)); } finally { setBusy(false); }
+    try { setR(JSON.parse(await run()) as Record<string, unknown>); } catch (e) { toast.error(errText(e)); } finally { setBusy(false); }
   }
   const st = r?.["selftest"] as { passed: boolean; checks: Array<{ name: string; pass: boolean }> } | undefined;
   const client = r?.["client"] as { matrix: Array<{ name: string; expected: string; got: string; pass: boolean }>; phi_pan: { recall: number; precision: number; positives: number; items: number; misses: number } } | undefined;

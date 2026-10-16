@@ -97,7 +97,7 @@ export const evaluateAction = createServerFn({ method: "POST" })
       object: { id: obj.id, type: obj.type, owner_id: obj.owner_id, steward_id: obj.steward_id, risk_tier: tier, consequence_class: obj.consequence_class as never, data_classification: obj.data_classification as never, has_expiration: !!obj.expiration_condition },
       actor: data.agent ? { kind: "agent" as const, id: `agent-for:${obj.id}`, authority: obj.authority_level as never } : { kind: "human" as const, id: context.userId, authority: obj.authority_level as never },
       grant: g ? { level: g["authority_level"] as never, effective_to: (g["effective_to"] as string) ?? null, attestation_expires_at: (g["attestation_expires_at"] as string) ?? null } : null,
-      content_text: data.content_text, flags: data.flags,
+      ...(data.content_text ? { content_text: data.content_text } : {}), flags: data.flags,
     };
     const bundle = { ...data.dimensions, owner_confidence: data.owner_confidence !== undefined ? { value: data.owner_confidence } : undefined };
     const out = e.evaluateAuthority(ctx, bundle as never, (grs ?? []) as never);
@@ -251,7 +251,7 @@ export const runPhase3Evidence = createServerFn({ method: "POST" })
       ["Any confidence, Tier C content", c("none", 1, { content_text: "card 4111 1111 1111 1111" }), 0.99, "hard_block"],
       ["Authority lapsed", c("none", 1, { grant: { level: "act_bounded", effective_to: "2000-01-01T00:00:00Z" } }), 0.99, "route_refused"],
     ];
-    const matrix = cells.map(([name, ctx, v, expected]) => {
+    const matrix: Array<{ name: string; expected: string; got: string; pass: boolean }> = cells.map(([name, ctx, v, expected]) => {
       const got = e.evaluateAuthority(ctx as never, b(v) as never, (grs ?? []) as never).treatment;
       return { name, expected, got, pass: got === expected };
     });
@@ -262,5 +262,5 @@ export const runPhase3Evidence = createServerFn({ method: "POST" })
       p: { matrix, matrix_passed: matrix.every((m) => m.pass), phi_pan: { ...phi, misses: phi.misses.length, measured_at: now, classifier: "ContentClassifier regex+Luhn (deterministic)" } },
     } as never);
     if (r.error) throw err(r.error.message);
-    return r.data as Json;
+    return JSON.stringify(r.data);
   });
