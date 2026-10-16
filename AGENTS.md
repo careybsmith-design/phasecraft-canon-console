@@ -29,8 +29,5 @@
 - DESIGN DECISION: the Challenge Agent is rule-based until ModelGateway exists (Phase 2B).
 - Graph-integrity detectors (GraphOrphan, DependencyCycle, CanonDrift, CanonWithoutSteward) are owned by the first steward and swept after writes; Phase 10 owns the full detector suite.
 - The browser build pins the bare `events` / `node:events` import to the `events` npm package (plugin in `vite.config.ts`). Why: the toolchain otherwise stubs it, breaking sigma's EventEmitter base class.
-- Framing (Phase 2B) logic lives in `src/domain/framing.ts` (pure post-rules, materiality, entry test, P/R) and `src/server/framing/extractor.ts` (ModelGateway calls); server functions in `src/lib/framing.functions.ts`. Why: the DB triggers, the tests and the UI share one rule set.
-- `framing_guard`, `creation_source_guard` and `session_events_guard` enforce consent-before-capture, decisions only from authority holders, human-only promotion of context/question, confirmation preservation, and close-with-no-unrecorded-items in the database. Why: Part 8A NON-NEGOTIABLEs must not depend on the UI.
-- FramingSession uses the `framing_session` lifecycle (planned→capturing→closed→retired); extracted items use `framing_extract` (draft→confirmed|rejected→superseded). A decision becomes a ConfirmedDecision only when its authority holder confirms it.
-- Tier B content is classified by in-boundary rules (no external model call); Tier C is never stored or sent anywhere. Speech goes through the simulated Transcription adapter and is ledgered `adapter_mode='simulated'` (enforced in `thread_create_object`).
-- DESIGN DECISION: prior-object surfacing uses trigram + full-text similarity (`framing_related_objects`) until an embedding route is warm; participants without accounts have consent attested by the Builder.
+
+- Subdirectories have their own `AGENTS.md` (src/server/framing, src/server/authority); read it before changing files there or the DB functions they name.

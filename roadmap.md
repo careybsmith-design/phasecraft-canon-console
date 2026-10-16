@@ -7,4 +7,6 @@
 - [ ] Phase 2B open: real session between two different people (Co-Creator + Builder accounts)
 - [ ] Phase 2B open: live latency budgets (extraction 3 s, contradiction 5 s) — currently ~6–9 s with the model
 - [ ] Phase 2B open: human relabelling of the extraction quality set
-- [ ] Phase 3 … Phase 12 per Section 16
+- [x] Phase 3 — Authority, guardrails and decisions (waiting for user approval); exit evidence ledger #1788
+- [ ] Phase 3 open: human relabel of the PHI/PAN corpus; steward to confirm provisional promotion thresholds
+- [ ] Phase 4 … Phase 12 per Section 16
