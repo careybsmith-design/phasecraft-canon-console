@@ -14,7 +14,7 @@ export const PLATFORM_REGISTRY: Record<Platform, {
   /** DESIGN DECISION: no live platform guarantees determinism of a model-driven build, so live replays are best_effort. */
   live_determinism: "deterministic" | "best_effort"; model_route: string; capture: string;
 }> = {
-  lovable: { label: "Lovable", hosting: "vendor_saas", cleared: ["public", "internal"], live_determinism: "best_effort", model_route: "route.build.vendor", capture: "API run, diff, commit" },
+  lovable: { label: "Lovable", hosting: "vendor_saas", cleared: ["public", "internal", "confidential"], live_determinism: "best_effort", model_route: "route.build.vendor", capture: "API run, diff, commit" },
   claude_code: { label: "Claude Code", hosting: "self_hosted", cleared: ["public", "internal", "confidential"], live_determinism: "best_effort", model_route: "route.build.high", capture: "stdout, diff, commits, token cost" },
   codex: { label: "Codex", hosting: "self_hosted", cleared: ["public", "internal", "confidential"], live_determinism: "best_effort", model_route: "route.build.high", capture: "agent harness log, diff" },
   cursor: { label: "Cursor", hosting: "self_hosted", cleared: ["public", "internal", "confidential"], live_determinism: "best_effort", model_route: "route.build.high", capture: "applied diff" },
