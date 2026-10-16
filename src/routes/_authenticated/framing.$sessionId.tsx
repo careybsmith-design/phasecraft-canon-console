@@ -57,6 +57,7 @@ export const Route = createFileRoute("/_authenticated/framing/$sessionId")({
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Row = any;
 type Queued = {
+  session_id: string;
   client_id: string;
   speaker_id: string;
   text: string;
@@ -472,6 +473,7 @@ function Capture({
         persist([
           ...queue,
           {
+            session_id: sessionId,
             client_id: crypto.randomUUID(),
             speaker_id: speaker,
             text: text.trim(),
