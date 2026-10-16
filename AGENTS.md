@@ -28,3 +28,4 @@
 - Active Canon-family objects change content only through `thread_propose_canon_change` -> challenge window (min 24 h, default 72 h) -> steward `thread_decide_canon_change`, which records a ConfirmedDecision; the `canon_change_path` trigger blocks anything else. Drafts are edited directly. Why: P15.
 - DESIGN DECISION: the Challenge Agent is rule-based until ModelGateway exists (Phase 2B).
 - Graph-integrity detectors (GraphOrphan, DependencyCycle, CanonDrift, CanonWithoutSteward) are owned by the first steward and swept after writes; Phase 10 owns the full detector suite.
+- The browser build pins the bare `events` / `node:events` import to the `events` npm package (plugin in `vite.config.ts`). Why: the toolchain otherwise stubs it, breaking sigma's EventEmitter base class.
