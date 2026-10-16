@@ -7,7 +7,8 @@
 - [x] Phase 4 — Capability Fabric; exit evidence ledger #3674
 - [x] Phase 5 — Evidence graph; exit evidence ledger #4906
 - [x] Phase 6 — Creation loop and platform integration (waiting for user approval); exit evidence ledger #7282
-- [ ] Phase 7 … Phase 12 per Section 16
+- [x] Phase 7 — Shadow, exposure and production outcome (waiting for user approval); exit evidence ledger #7462
+- [ ] Phase 8 … Phase 12 per Section 16
 
 ## Open items — keep until addressed at the end (never delete without resolving)
 
@@ -52,3 +53,10 @@ Phase 6
 - [ ] Confirm platform clearance: Lovable gets public/internal only; self-hosted get up to confidential; restricted goes nowhere
 - [ ] Iteration class is detected from a described diff (obligations / results / contracts / wording); real diff analysis needs live artifacts
 - [ ] Test leftovers: practice chain BS-2026-0018, EO-2026-0001, TP-2026-0001, CP-2026-0001, BR-2026-0001…0006, IT-2026-0001
+- [x] CONFIRMED 16 Oct 2026: live replays are best_effort on all five platforms; iteration class from described diff
+- [x] CONFIRMED 16 Oct 2026 with change: Lovable is cleared up to confidential (not just public/internal); restricted goes nowhere
+
+Phase 7
+- [ ] Live Telemetry and FeatureFlags adapters (`pending_live_adapter`; simulated today, so no real authority can be earned yet)
+- [ ] Steward to confirm provisional exposure steps 1→5→25→50→100% and the 60 s kill-switch bound
+- [ ] Test leftovers: SH-2026-0001…0007, EA-2026-0001…0002, PO-2026-0001…0002, IN-2026-0001…0002, VA-2026-0001…0002, RB-2026-0001…0002 (self-test runs)
