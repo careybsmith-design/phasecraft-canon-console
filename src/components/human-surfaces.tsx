@@ -4,7 +4,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { ArrowUpRight, Bookmark, Download, X, Compass } from "lucide-react";
-import { getHumanSurface, createMission, askCompanion, getFollows, setFollow } from "@/lib/human-surfaces.functions";
+import { getHumanSurface, createMission, askCompanion, getFollows, setFollow, refreshSurfaceRendition } from "@/lib/human-surfaces.functions";
 import { createObject } from "@/lib/canon.functions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -30,7 +30,12 @@ export function SourcePicker({ objects, selected, onChange }: { objects: Surface
   </fieldset>;
 }
 export function RenditionView({ rendition }: { rendition: Rendition }) {
+  const read = useServerFn(refreshSurfaceRendition);
+  const purpose = rendition.body["mode"] === "simulated" ? "Simulation Studio" as const : "Value Companion" as const;
+  const fresh = useQuery({ queryKey: ["surface-rendition", rendition.id], queryFn: () => read({ data: { id: rendition.id, purpose } }), refetchInterval: 15000, retry: false });
   const sections = rendition.body["sections"] as Array<{ heading: string; text: string; cites: string[] }> | undefined;
+  if (fresh.error) return <p role="alert" className="border-y py-3 text-sm text-destructive">{errorText(fresh.error)} Regenerate before using this guidance.</p>;
+  if (fresh.isLoading) return <p role="status" className="text-sm text-muted-foreground">Checking source permissions and currentness…</p>;
   return <section aria-label="Generated guidance" aria-live="polite" className="space-y-3 border-y py-3 text-sm">
     <div className="text-xs text-muted-foreground"><p className="font-medium text-foreground">{rendition.marker ?? "Generated from canon. Not canon."}</p><p><span className="ident">{rendition.human_ref}</span> · {new Date(rendition.generated_at).toLocaleString()} · {rendition.generator.model}</p><p>Expires on source change or {rendition.expires_at ? new Date(rendition.expires_at).toLocaleString() : "its recorded expiry"}.</p></div>
     {Boolean(rendition.body["challenge"]) && <p className="font-medium">{String(rendition.body["challenge"])}</p>}

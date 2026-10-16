@@ -6,4 +6,5 @@
 - Agents cannot confirm, decide or grant: the `ledger_agent_human_only` trigger refuses it. Why: confirmation and authority belong to people (K3).
 - K3 token input hash = sha-256 of `canonicalJson` of the schema-parsed arguments minus `confirmation_token`; `issueConfirmation` must hash the same way.
 - Shared operation cores live in `src/server/ops`; pages and the gateway both call them.
+- Mission, cell and burst inputs use the human-surface schemas and `thread_human_operation`; probe-only simulation records are not executable simulations. Why: callers cannot bypass the bounds or mistake a recorded scenario for a passed test.
 - Notifications fan out from a deferred ledger trigger, so the object exists when permissions are checked.

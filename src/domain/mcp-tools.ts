@@ -7,7 +7,7 @@
 import { z } from "zod/v4";
 import type { AuthorityLevel, ContentOrigin } from "./mcp";
 import { PLATFORMS } from "./creation";
-import { MissionInput, CellInput, BurstInput, CapabilitySimulationInput } from "./human-surfaces";
+import { MissionInput, CellInput, BurstInput } from "./human-surfaces";
 
 const id = z.uuid();
 const txt = (n: number) => z.string().trim().min(1).max(n);

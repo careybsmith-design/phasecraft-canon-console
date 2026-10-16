@@ -4,6 +4,9 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { MissionInput, CellInput, BurstInput, FinishBurstInput, ScenarioInput, ChoiceInput, FollowInput, CapabilitySimulationInput } from "@/domain/human-surfaces";
 
 const actor = (id: string) => ({ kind: "human" as const, id, authority_used: "observe" });
+export const refreshSurfaceRendition = createServerFn({ method: "GET" }).middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => z.object({ id: z.uuid(), purpose: z.enum(["Value Companion", "Simulation Studio"]) }).parse(d))
+  .handler(async ({ data, context }) => { const { openSurfaceRendition } = await import("@/server/ops/human-surfaces.server"); const { supabaseAdmin } = await import("@/integrations/supabase/client.server"); return openSurfaceRendition({ sb: context.supabase, db: supabaseAdmin, actor: actor(context.userId), userId: context.userId }, data.id, data.purpose); });
 export const getHumanSurface = createServerFn({ method: "GET" }).middleware([requireSupabaseAuth])
   .inputValidator((input: unknown) => z.object({ root: z.uuid().optional() }).parse(input))
   .handler(async ({ data, context }) => {

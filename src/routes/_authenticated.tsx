@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { CompanionPanel } from "@/components/human-surfaces";
 import { Compass } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
@@ -45,12 +46,11 @@ function AuthedLayout() {
         </nav>
         <div className="flex items-center gap-3 text-xs text-muted-foreground">
           <span className="ident">{user?.email}</span>
-          <Button size="icon" variant="ghost" aria-label="Open Value Companion" title="Value Companion" onClick={() => setCompanionOpen(true)}><Compass size={18} /></Button>
+          <Sheet open={companionOpen} onOpenChange={setCompanionOpen}><SheetTrigger asChild><Button size="icon" variant="ghost" aria-label="Open Value Companion" title="Value Companion"><Compass size={18} /></Button></SheetTrigger><SheetContent className="w-full overflow-auto sm:max-w-lg"><SheetTitle className="sr-only">Value Companion</SheetTitle><CompanionPanel docked /></SheetContent></Sheet>
           <Button size="sm" variant="ghost" onClick={async () => { await qc.cancelQueries(); qc.clear(); await supabase.auth.signOut(); await navigate({ to: "/auth", replace: true }); }}>Sign out</Button>
         </div>
       </header>
       <Outlet />
-      {companionOpen && <aside aria-label="Value Companion" className="fixed inset-y-0 right-0 z-50 w-full max-w-lg overflow-auto border-l bg-background shadow-lg"><CompanionPanel docked onClose={() => setCompanionOpen(false)} /></aside>}
     </div>
   );
 }
