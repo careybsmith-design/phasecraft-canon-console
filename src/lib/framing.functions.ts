@@ -16,7 +16,8 @@ import { classifyContent, type ContentTier } from "@/domain/content-tier";
 import { LIFECYCLE_FAMILIES } from "@/domain/lifecycle";
 import { REGISTRY } from "@/domain/registry";
 
-type Json = Record<string, unknown>;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type Json = Record<string, any>;
 type Db = Awaited<ReturnType<typeof admin>>;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Row = any;
@@ -35,7 +36,7 @@ const uuid = z.string().uuid();
 const today = (d = 30) => new Date(Date.now() + d * 864e5).toISOString().slice(0, 10);
 const familyOf = (type: string) => REGISTRY.find((r) => r.type === type)?.lifecycle_family ?? "canon";
 
-function payload(type: string, title: string, statement: string, body: Json, o: { owner: string; tier?: ContentTier; adapter_mode?: string; rationale?: string; risk?: string }) {
+function payload(type: string, title: string, statement: string, body: Json, o: { owner: string; tier?: ContentTier | undefined; adapter_mode?: string | undefined; rationale?: string | undefined; risk?: string | undefined }) {
   return {
     type, title: title.slice(0, 200) || type, statement: statement.slice(0, 4000) || title, machine_description: `${type} captured in a framing session (Part 8A). Draft until confirmed.`.slice(0, 2000),
     body, review_date: today(30), expiration_condition: { kind: "review_date_passes" }, retirement_path: { mode: "supersede" },
@@ -175,8 +176,9 @@ export const getFramingSession = createServerFn({ method: "GET" })
   .inputValidator((d: { id: string }) => z.object({ id: uuid }).parse(d))
   .handler(async ({ data, context }) => {
     const sb = context.supabase;
-    const { data: s, error } = await sb.from("objects").select("*").eq("id", data.id).maybeSingle();
+    const { data: s0, error } = await sb.from("objects").select("*").eq("id", data.id).maybeSingle();
     if (error) throw new Error(error.message);
+    const s = s0 as Row;
     if (!s || s.type !== "FramingSession") return null;
     const [events, consents, objs, findings, revisions, timings, corrections] = await Promise.all([
       sb.from("session_events").select("*").eq("session_id", data.id).order("t_offset_ms").order("id").limit(2000),
