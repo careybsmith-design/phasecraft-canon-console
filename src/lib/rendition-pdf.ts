@@ -1,7 +1,7 @@
 /** Browser-only: builds the offline PDF of a rendition with marker, context, sources and an offline warning. */
 type Section = { heading: string; text?: string; cites?: string[]; items?: Array<{ text: string; ref: string }> };
 export type PdfInput = {
-  human_ref: string; marker: string; title: string; note?: string; sections: Section[];
+  human_ref: string; marker: string; title: string; note?: string | undefined; sections: Section[];
   generated_from: Array<{ id: string; human_ref: string; version: number }>;
   generator: { model: string; route: string; adapter_mode: string };
   generated_at: string; expires_at: string; purpose: string; reader: string;
