@@ -45,7 +45,7 @@ export async function companionResponse(ctx: OpCtx, statement: string, sourceIds
   return surfaceRendition(ctx, "Value Companion", sourceIds, {
     title: "Current condition and evidence", challenge: behaviouralChallenge(statement),
     sections: sources.map((s) => ({ heading: `${s.human_ref} · ${s.title}`, text: s.statement, cites: [s.id] })),
-    note: "Evidence-grounded, rule-based challenge. No inferred activity totals or personal assessments.",
+    note: "Evidence-grounded, rule-based challenge.",
   }, statement);
 }
 export async function scenarioTurn(ctx: OpCtx, sourceIds: string[], scenario: string, response: string, turn: number) {

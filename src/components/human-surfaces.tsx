@@ -5,7 +5,6 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { ArrowUpRight, Bookmark, Download, X, Compass } from "lucide-react";
 import { getHumanSurface, createMission, askCompanion, getFollows, setFollow, refreshSurfaceRendition } from "@/lib/human-surfaces.functions";
-import { createObject } from "@/lib/canon.functions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -44,24 +43,17 @@ export function RenditionView({ rendition }: { rendition: Rendition }) {
   </section>;
 }
 export function CompanionPanel({ docked = false, onClose }: { docked?: boolean; onClose?: () => void }) {
-  const q = useSurface(); const ask = useServerFn(askCompanion); const record = useServerFn(createObject); const qc = useQueryClient();
+  const q = useSurface(); const ask = useServerFn(askCompanion);
   const [statement, setStatement] = useState(""); const [sources, setSources] = useState<string[]>([]); const [result, setResult] = useState<Rendition | null>(null); const [busy, setBusy] = useState(false); const uid = useId();
   const objects = q.data?.objects ?? [];
   async function respond() { setBusy(true); setResult(null); try { setResult(await ask({ data: { statement, source_ids: sources } })); } catch (e) { toast.error(errorText(e)); } finally { setBusy(false); } }
-  async function signal() {
-    if (!statement.trim() || sources.length === 0) return;
-    setBusy(true); try {
-      const r = await record({ data: { type: "ValueSignal", title: statement.slice(0, 150), statement, machine_description: "Potential value signal grounded in selected canon evidence", body: { observed_condition: statement, evidence: sources, requested_solution_candidates: [] }, review_date: new Date(Date.now() + 30 * 864e5).toISOString().slice(0, 10), expiration_condition: { kind: "review_date_passes" }, retirement_path: { mode: "tombstone" }, risk_tier: "1", consequence_class: "none", permission: { roles: [], purpose: "Inspect observed business condition" }, data_classification: objects.some((o) => sources.includes(o.id) && o.data_classification === "restricted") ? "restricted" : objects.some((o) => sources.includes(o.id) && o.data_classification === "confidential") ? "confidential" : "internal", rationale: "Person records a potential signal from cited evidence" } });
-      toast.success(`Recorded ${r.human_ref}`); await qc.invalidateQueries({ queryKey: ["human-surface"] });
-    } catch (e) { toast.error(errorText(e)); } finally { setBusy(false); }
-  }
   return <div className={`space-y-4 ${docked ? "p-4" : ""}`}>
     <header className="flex items-center justify-between"><h1 className="flex items-center gap-2 text-lg"><Compass size={18} />Value Companion</h1>{onClose && <Button size="icon" variant="ghost" title="Close companion" aria-label="Close companion" onClick={onClose}><X size={18} /></Button>}</header>
     <form className="space-y-3" onSubmit={(e) => { e.preventDefault(); void respond(); }}><Label htmlFor={uid}>Current business condition</Label><Textarea id={uid} autoFocus required maxLength={2000} value={statement} onChange={(e) => setStatement(e.target.value)} rows={3} />
       {q.error ? <p role="alert" className="text-sm text-destructive">{errorText(q.error)}</p> : <SourcePicker objects={objects} selected={sources} onChange={setSources} />}
       <Button type="submit" disabled={busy || !sources.length}>{busy ? "Checking evidence…" : "Challenge with evidence"}</Button></form>
     {result && <RenditionView rendition={result} />}
-    <div className="flex flex-wrap gap-2"><Button variant="outline" disabled={busy || !statement.trim() || !sources.length} onClick={signal}>Create Value Signal</Button><Button variant="outline" asChild><Link to="/missions">Find related mission</Link></Button><Button variant="outline" asChild><Link to="/fabric">Search reusable capabilities</Link></Button><Button variant="outline" asChild><Link to="/capture">Begin co-creation</Link></Button></div>
+    <div className="flex flex-wrap gap-2"><Button variant="outline" asChild><Link to="/canon">Record a Value Signal in canon</Link></Button><Button variant="outline" asChild><Link to="/missions">Find related mission</Link></Button><Button variant="outline" asChild><Link to="/fabric">Search reusable capabilities</Link></Button><Button variant="outline" asChild><Link to="/capture">Begin co-creation</Link></Button></div>
   </div>;
 }
 const MISSION_FIELDS = { title: "Mission name", measurable_condition: "Measurable condition", baseline: "Baseline", target: "Target condition", affected_population: "Affected population", operating_boundaries: "Operating boundaries", proof_required: "Required production evidence", co_creator: "Business Co-Creator account ID", builder: "Builder account ID", decision_authority: "Co-Creator decision authority", value_hypothesis: "Value hypothesis", stop_conditions: "Stop conditions", maximum_investment: "Maximum investment", review_date: "Decision / review date" };
