@@ -2024,6 +2024,7 @@ export type Database = {
         Args: { _ins: string[]; _outs: string[]; _title: string }
         Returns: Json
       }
+      _p7_discrepancies: { Args: { p: Json }; Returns: Json }
       _p7_envelope: {
         Args: {
           p_body: Json
