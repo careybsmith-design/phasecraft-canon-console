@@ -38,7 +38,7 @@ function AuthorityPage() {
   const d = overview.data;
   return (
     <main className="grid gap-4 p-4 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
-      <section className="space-y-4">
+      <section className="min-w-0 space-y-4">
         <Evaluate />
         <Evidence />
       </section>
@@ -129,7 +129,7 @@ function Evaluate() {
       <div className="grid gap-2 text-sm">
         <Label htmlFor="obj-q">Object</Label>
         <Input id="obj-q" placeholder="Search objects" value={q} onChange={(e) => setQ(e.target.value)} className="h-8" />
-        <select aria-label="Object" className="h-8 rounded-md border bg-background px-2 text-sm" value={objectId} onChange={(e) => setObjectId(e.target.value)}>
+        <select aria-label="Object" className="h-8 w-full min-w-0 rounded-md border bg-background px-2 text-sm" value={objectId} onChange={(e) => setObjectId(e.target.value)}>
           <option value="">Choose…</option>
           {(objs.data ?? []).map((o) => <option key={o.id} value={o.id}>{o.human_ref} · {o.type} · {o.title} (tier {o.risk_tier}, {o.authority_level})</option>)}
         </select>
