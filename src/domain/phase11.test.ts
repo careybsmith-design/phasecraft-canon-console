@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { BURST_PHASES, BurstInput, MissionInput, SIMULATION_CRITERIA, SIMULATION_ROLES, behaviouralChallenge, missionSentence, nextScenario, substantiveBurstOutput } from "./human-surfaces";
+import { BURST_PHASES, BurstInput, MissionInput, FollowInput, SIMULATION_CRITERIA, SIMULATION_ROLES, behaviouralChallenge, missionSentence, nextScenario, substantiveBurstOutput } from "./human-surfaces";
 
 const base = { signal_id: "00000000-0000-4000-8000-000000000001", title: "Claims waiting", measurable_condition: "claim waiting time", baseline: "9 days", target: "3 days", affected_population: "eligible claims", operating_boundaries: "read-only shadow first", proof_required: "live claims timestamps", co_creator: "00000000-0000-4000-8000-000000000002", builder: "00000000-0000-4000-8000-000000000003", decision_authority: "claims decision mandate", stop_conditions: "privacy breach", maximum_investment: 200, review_date: "2026-11-01", value_hypothesis: "less waiting" };
 describe("Phase 11 operating rules", () => {
@@ -24,4 +24,7 @@ describe("Phase 11 operating rules", () => {
   it("simulation portrays all seven specified roles", () => expect(SIMULATION_ROLES).toHaveLength(7));
   it("scenario adapts to an outcome-first response", () => { expect(nextScenario("", 0).prompt).toMatch(/observable condition/); expect(nextScenario("agree outcome condition", 1).prompt).toMatch(/evidence and baseline/); });
   it("a requested app receives outcome-first challenge", () => expect(behaviouralChallenge("Build a new customer-service application")).toMatch(/measurable condition/));
+  it("subscriptions cannot follow people", () => expect(FollowInput.safeParse({ kind: "person", value: base.co_creator, following: true }).success).toBe(false));
+  it("a simulation run can never count as a substantive burst output", () => expect(substantiveBurstOutput({ type: "SimulationRun", lifecycle_state: "recorded", body: { adapter_mode: "live" } })).toBe(false));
+  it("a production outcome carrying simulated provenance cannot count", () => expect(substantiveBurstOutput({ type: "ProductionOutcome", lifecycle_state: "recorded", body: { adapter_mode: "live", provenance: { simulated: true } } })).toBe(false));
 });
