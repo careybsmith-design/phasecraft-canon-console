@@ -2711,6 +2711,10 @@ export type Database = {
         Args: { p: Json; p_actor: Json }
         Returns: number
       }
+      thread_record_rendition_download: {
+        Args: { p_actor: Json; p_id: string; p_purpose: string }
+        Returns: Json
+      }
       thread_record_risk: {
         Args: { p: Json; p_actor: Json; p_id: string }
         Returns: {
