@@ -9,3 +9,6 @@
 - Mission, cell and burst inputs use the human-surface schemas and `thread_human_operation`; probe-only simulation records are not executable simulations. Why: callers cannot bypass the bounds or mistake a recorded scenario for a passed test.
 - Notifications fan out from a deferred ledger trigger, so the object exists when permissions are checked.
 - MCP HTTP accepts at most 256 KiB and 20 batch messages before dispatch; session-dependent replies are no-store. Why: resource use must be bounded.
+- Completion errors return `CALL_COMPLETION_FAILED` with call ID and uncertain effects; never issue a second completion or replay automatically. Why: a lost receipt does not prove the operation rolled back.
+- `evaluate_authority` uses the shared action-aware authority core, verified agent ceiling, and actor/action-scoped grants; it only records evaluation or escalation. Why: lookup is not evaluation and confidence never grants execution authority.
+- Published output schemas validate required fields and finite plain JSON before receipts/results; artifact injection scans normalize compatibility and zero-width text. Why: serialization and hidden characters cannot silently bypass the gateway boundary.

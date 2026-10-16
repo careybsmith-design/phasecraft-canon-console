@@ -28,14 +28,15 @@ function errText(e: unknown) {
 }
 type Root = Awaited<ReturnType<typeof listEvidenceRoots>>[number];
 
-function EvidencePage() {
+export function EvidencePage({ capabilityId, onSelect }: { capabilityId?: string; onSelect?: (id: string) => void }) {
   const lr = useServerFn(listEvidenceRoots);
   const roots = useQuery({ queryKey: ["evidence-roots"], queryFn: () => lr() });
-  const [id, setId] = useState<string | null>(null);
+  const [selectedId, setId] = useState<string | null>(null);
+  const id = capabilityId ?? selectedId;
   return (
     <main className="grid gap-4 p-4 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)]">
       <section className="min-w-0 space-y-4">
-        <Picker roots={roots.data ?? []} id={id} setId={setId} />
+        <Picker roots={roots.data ?? []} id={id} setId={onSelect ?? setId} />
         {id ? <Explain id={id} /> : <p className="text-sm text-muted-foreground">Choose a capability, behaviour, decision, exposure, outcome or incident to see its evidence chain.</p>}
       </section>
       <section className="min-w-0 space-y-4">
@@ -56,9 +57,9 @@ function Picker({ roots, id, setId }: { roots: Root[]; id: string | null; setId:
       <ul className="max-h-48 overflow-auto text-sm">
         {shown.map((r) => (
           <li key={r.id}>
-            <button type="button" onClick={() => setId(r.id)} className={`w-full truncate px-1 py-0.5 text-left ${r.id === id ? "bg-accent" : ""}`}>
+            <Button variant="ghost" onClick={() => setId(r.id)} className={`h-auto w-full justify-start truncate px-1 py-0.5 text-left ${r.id === id ? "bg-accent" : ""}`}>
               <span className="ident">{r.human_ref}</span> · {r.title} <span className="text-muted-foreground">({r.type}, {r.lifecycle_state})</span>
-            </button>
+            </Button>
           </li>
         ))}
         {shown.length === 0 && <li className="text-muted-foreground">Nothing visible yet.</li>}
@@ -72,7 +73,8 @@ function Explain({ id }: { id: string }) {
   const q = useQuery({ queryKey: ["explain", id], queryFn: () => ex({ data: { id } }) });
   if (q.isLoading) return <p className="text-sm text-muted-foreground">Tracing…</p>;
   if (q.error) return <p className="text-sm text-destructive">{errText(q.error)}</p>;
-  const d = q.data!;
+  const d = q.data;
+  if (!d) return <p role="alert">Evidence unavailable in your permission context.</p>;
   return (
     <div className="space-y-4">
       <div className="rounded border p-3">
@@ -118,7 +120,8 @@ function Traces({ roots }: { roots: Root[] }) {
   const fits = (input: string | null, r: Root) =>
     input === "any" || r.type === input || (input === "Canon" && ["Guardrail", "Pattern", "Authority", "Rule", "AuthorityGrant"].includes(r.type));
   async function run(n: number) {
-    const t = TRACES.find((x) => x.n === n)!;
+    const t = TRACES.find((x) => x.n === n);
+    if (!t) return;
     try {
       const r = await rt({ data: { fn: t.fn, id: sel[n] } });
       const res = JSON.parse(r.result) as { rows?: unknown; nodes?: unknown; links?: unknown; reaches_decision?: boolean; count?: number };

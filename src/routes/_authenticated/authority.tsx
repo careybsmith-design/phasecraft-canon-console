@@ -106,7 +106,7 @@ function Evaluate() {
   const [objectId, setObjectId] = useState("");
   const [action, setAction] = useState("release to members");
   const [conf, setConf] = useState(0.85);
-  const [refs, setRefs] = useState(true);
+  const [evidenceRefs, setEvidenceRefs] = useState("");
   const [text, setText] = useState("");
   const [busy, setBusy] = useState(false);
   const [out, setOut] = useState<Outcome | null>(null);
@@ -114,7 +114,7 @@ function Evaluate() {
     if (!objectId) { toast.error("Choose the object the action is about."); return; }
     setBusy(true);
     try {
-      const evidence = refs ? [objectId] : [];
+      const evidence = evidenceRefs.split(/[\s,]+/).map((id) => id.trim()).filter(Boolean);
       const dimensions = Object.fromEntries(DIMS.map((k) => [k, { value: conf, evidence_refs: evidence }]));
       const r = await evaluate({ data: { object_id: objectId, action, dimensions, owner_confidence: conf, content_text: text || undefined, flags: {}, agent: true, risk: {} } });
       setOut(r);
@@ -137,7 +137,8 @@ function Evaluate() {
         <Input id="act" value={action} onChange={(e) => setAction(e.target.value)} className="h-8" />
         <Label htmlFor="conf">Evidence strength across all dimensions: {conf.toFixed(2)}</Label>
         <input id="conf" type="range" min={0} max={1} step={0.05} value={conf} onChange={(e) => setConf(Number(e.target.value))} />
-        <label className="flex items-center gap-2 text-xs"><input type="checkbox" checked={refs} onChange={(e) => setRefs(e.target.checked)} /> evidence is attached (without evidence a dimension counts as 0)</label>
+        <Label htmlFor="authority-evidence">Current evidence references</Label>
+        <Textarea id="authority-evidence" rows={2} value={evidenceRefs} onChange={(e) => setEvidenceRefs(e.target.value)} placeholder="Evidence object IDs" />
         <Label htmlFor="txt">Content the action would send (optional, never stored)</Label>
         <Textarea id="txt" rows={2} value={text} onChange={(e) => setText(e.target.value)} />
         <Button onClick={run} disabled={busy} className="justify-self-start">{busy ? "Evaluating…" : "Evaluate"}</Button>

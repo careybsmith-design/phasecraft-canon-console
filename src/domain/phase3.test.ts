@@ -42,9 +42,16 @@ describe("21.2 authority test matrix (risk × confidence × consequence)", () =>
   it.each(["none", "reversible", "costly_reversible"] as Consequence[])("moderate confidence, %s → limited exposure with observation", (c) => {
     expect(evaluateAuthority(ctx(c), bundle(0.6), GR).treatment).toBe("limited_exposure_with_observation");
   });
-  it("low confidence, low consequence → limited exposure or recommend", () => {
-    expect(evaluateAuthority(ctx("none"), bundle(0.2), GR).treatment).toBe("limited_exposure_with_observation");
-    expect(evaluateAuthority(ctx("none", { actor: { kind: "agent", id: "a", authority: "recommend" } }), bundle(0.2), GR).treatment).toBe("recommend");
+  it("Part 6.4: low confidence always requires an accountable-human decision", () => {
+    expect(evaluateAuthority(ctx("none"), bundle(0.2), GR).decision).toBe("escalate_human_decision");
+    expect(evaluateAuthority(ctx("none", { actor: { kind: "agent", id: "a", authority: "recommend" } }), bundle(0.2), GR).treatment).toBe("explicit_human_decision");
+  });
+  it("moderate confidence cannot execute with observe authority or without an encoded grant", () => {
+    expect(evaluateAuthority(ctx("none", { actor: { kind: "agent", id: "a", authority: "observe" } }), bundle(0.6), GR).decision).toBe("proceed_with_confirmation");
+    expect(evaluateAuthority(ctx("none", { grant: null }), bundle(0.6), GR).decision).toBe("proceed_with_confirmation");
+  });
+  it("high confidence cannot manufacture execution authority for an observer", () => {
+    expect(evaluateAuthority(ctx("none", { actor: { kind: "agent", id: "a", authority: "observe" } }), bundle(0.99), GR).decision).toBe("proceed_with_confirmation");
   });
   it("high confidence, irreversible → explicit human decision", () => {
     const r = evaluateAuthority(ctx("irreversible", { tier: 3 }), bundle(0.95), GR);

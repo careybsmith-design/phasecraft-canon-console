@@ -7,9 +7,10 @@ import { PROHIBITED_TYPE_PATTERN } from "@/domain/registry";
 import { APPROVAL_STATE_PATTERN } from "@/domain/lifecycle";
 import { detectChangeClass, scopeSmuggled, GOVERNANCE, type IterationDiff } from "@/domain/creation";
 import { prohibitedInference, type RenditionKind } from "@/domain/generation";
+import { EvalInput } from "@/domain/authority-input";
 import { scanForInjection } from "@/domain/mcp";
 
-export type AgentCtx = OpCtx & { agentId: string; ownerId: string };
+export type AgentCtx = OpCtx & { agentId: string; ownerId: string; authorityCeiling?: import("@/domain/mcp").AuthorityLevel };
 type Handler = (ctx: AgentCtx, a: Json) => Promise<unknown>;
 
 async function call<T = unknown>(q: PromiseLike<{ data: unknown; error: { message: string } | null }>): Promise<T> {
@@ -195,9 +196,8 @@ export const HANDLERS: Record<string, Handler> = {
   },
 
   async evaluate_authority(ctx, a) {
-    const o = await visible(ctx, S(a["object_id"]), "id,human_ref,authority_level,risk_tier");
-    const { data } = await ctx.sb.from("authority_history").select("from_level,to_level,cause,trigger,at").eq("object_id", S(a["object_id"])).order("id", { ascending: false }).limit(20);
-    return { ...o, history: data ?? [] };
+    const { evaluateActionCore } = await import("@/server/ops/authority.server");
+    return evaluateActionCore(ctx, EvalInput.parse({ ...a, agent: true }), { agentCeiling: ctx.authorityCeiling ?? "observe" });
   },
   async request_human_decision(ctx, a) {
     const subj = await visible(ctx, S(a["subject_id"]), "id,human_ref,owner_id,authority_level");

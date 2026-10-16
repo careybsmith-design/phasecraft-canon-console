@@ -51,11 +51,14 @@ export const runTrace = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: { fn: string; id?: string | undefined }) => z.object({ fn: z.enum(traceFns), id: uuid.optional() }).parse(d))
   .handler(async ({ data, context }) => {
-    const t = TRACES.find((x) => x.fn === data.fn)!;
+    const t = TRACES.find((x) => x.fn === data.fn);
+    if (!t) throw err("UNKNOWN_TRACE: no registered query");
     const args: Record<string, unknown> = {};
     if (t.input) {
       if (!data.id) throw err("INPUT_REQUIRED: choose a starting object for this query");
-      const key = { trace_blast_radius: "p_behavior", trace_canon_change_impact: "p_id", trace_incident_to_decision: "p_incident", trace_retirement_impact: "p_capability", trace_full_chain: "p_id" }[data.fn as string]!;
+      const keys: Record<string, string> = { trace_blast_radius: "p_behavior", trace_canon_change_impact: "p_id", trace_incident_to_decision: "p_incident", trace_retirement_impact: "p_capability", trace_full_chain: "p_id" };
+      const key = keys[data.fn];
+      if (!key) throw err("UNKNOWN_TRACE: missing input mapping");
       args[key] = data.id;
     }
     const t0 = Date.now();

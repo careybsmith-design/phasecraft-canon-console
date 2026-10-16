@@ -105,7 +105,8 @@ export function computeOverall(b: BundleInput, tier: Tier): { overall: number; b
   let overall = 1;
   let weakest: Dimension | null = null;
   for (const d of CONFIDENCE_RULE.required[tier]) {
-    const v = b[d] && b[d]!.evidence_refs.length > 0 ? Math.max(0, Math.min(1, b[d]!.value)) : 0;
+    const dimension = b[d];
+    const v = dimension && dimension.evidence_refs.length > 0 ? Math.max(0, Math.min(1, dimension.value)) : 0;
     if (v < overall) { overall = v; weakest = d; }
   }
   if (tier === 4) {
@@ -351,18 +352,16 @@ export function evaluateAuthority(ctx: ActionContext, bundle: BundleInput, guard
     return out("escalate_human_decision", "explicit_human_decision", ["DM-consequential"], "Irreversible consequence: an accountable human decides.", { conditions: withAdv(gf) });
   if (failedEnforcing.length) return out("block", "cannot_proceed", failedEnforcing.map((r) => `GR-${r.evaluator}`), `Enforcing guardrail failed: ${failedEnforcing.map((r) => r.finding).join("; ")}.`);
 
+  const canExecute = rank(ctx.actor.authority) >= rank("act_bounded") && !!ctx.grant && rank(ctx.grant.level) >= rank("act_bounded");
   if (conf.band === "moderate")
-    return out("proceed", "limited_exposure_with_observation", ["DM-moderate"], `Moderate confidence (${conf.overall}): limited exposure with observation.`, { conditions: withAdv(["limited_exposure", "enhanced_observation"]) });
+    return canExecute
+      ? out("proceed", "limited_exposure_with_observation", ["DM-moderate"], `Moderate confidence (${conf.overall}): limited exposure with observation.`, { conditions: withAdv(["limited_exposure", "enhanced_observation"]) })
+      : out("proceed_with_confirmation", "limited_exposure_with_observation", ["DM-moderate-authority"], "Limited exposure requires a human confirmation because encoded execution authority is absent.", { conditions: withAdv(["limited_exposure", "enhanced_observation", "human_confirmation"]) });
   if (conf.band === "low") {
-    if (!LOW_CONSEQUENCE.includes(ctx.object.consequence_class))
-      return out("escalate_human_decision", "explicit_human_decision", ["DM-low-consequential"], `Low confidence (${conf.overall}) with a consequential outcome: an accountable human decides.`, { conditions: withAdv([]) });
-    const bounded = rank(ctx.actor.authority) >= rank("act_bounded");
-    return bounded
-      ? out("proceed", "limited_exposure_with_observation", ["DM-low"], `Low confidence (${conf.overall}), low consequence: limited exposure with observation.`, { conditions: withAdv(["limited_exposure", "enhanced_observation"]) })
-      : out("proceed_with_confirmation", "recommend", ["DM-low"], `Low confidence (${conf.overall}), low consequence: recommend to a human.`, { conditions: withAdv(["recommend_only"]) });
+    return out("escalate_human_decision", "explicit_human_decision", ["DM-low"], `Low confidence (${conf.overall}): an accountable human decides (Part 6.4).`, { conditions: withAdv([]) });
   }
   // high confidence
-  const encoded = !!ctx.grant && rank(ctx.grant.level) >= rank("act_bounded") && ctx.object.risk_tier <= 3;
+  const encoded = canExecute && ctx.object.risk_tier <= 3;
   if (LOW_CONSEQUENCE.includes(ctx.object.consequence_class) && encoded && ctx.object.risk_tier <= 2)
     return out("proceed", "automatic_release", ["DM-high-encoded"], `High confidence (${conf.overall}), low consequence, encoded authority: automatic release.`, { conditions: withAdv([]) });
   return out("proceed_with_confirmation", "act_with_confirmation", [encoded ? "DM-tier3-owner" : "DM-high-no-encoded"],

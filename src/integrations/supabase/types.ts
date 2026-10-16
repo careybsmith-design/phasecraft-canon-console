@@ -291,6 +291,7 @@ export type Database = {
           replay_of: string | null
           replay_result: Json | null
           repro_key: Json
+          result_payload_hash: string | null
           status: string
         }
         Insert: {
@@ -311,6 +312,7 @@ export type Database = {
           replay_of?: string | null
           replay_result?: Json | null
           repro_key: Json
+          result_payload_hash?: string | null
           status?: string
         }
         Update: {
@@ -331,6 +333,7 @@ export type Database = {
           replay_of?: string | null
           replay_result?: Json | null
           repro_key?: Json
+          result_payload_hash?: string | null
           status?: string
         }
         Relationships: [
@@ -2271,6 +2274,14 @@ export type Database = {
         Args: { p_actor: Json; p_capability: string; p_judgment: string }
         Returns: undefined
       }
+      _audit_current_evidence: {
+        Args: { o: Database["public"]["Tables"]["objects"]["Row"] }
+        Returns: boolean
+      }
+      _audit_tier4_judgment: {
+        Args: { p_actor: Json; p_capability: string; p_judgment: string }
+        Returns: undefined
+      }
       _authority_rank: {
         Args: { _l: Database["public"]["Enums"]["authority_level"] }
         Returns: number
@@ -2750,6 +2761,7 @@ export type Database = {
         }
         Returns: number
       }
+      thread_audit_security_selftest: { Args: never; Returns: Json }
       thread_authority_event: {
         Args: {
           p_actor: Json
@@ -2762,6 +2774,10 @@ export type Database = {
       thread_authority_sweep: { Args: { p_actor: Json }; Returns: Json }
       thread_authorize_exposure: {
         Args: { p: Json; p_actor: Json; p_capability: string }
+        Returns: Json
+      }
+      thread_bind_external_build: {
+        Args: { p_actor: Json; p_external: string; p_run: string }
         Returns: Json
       }
       thread_compile_creation_prompt: {
@@ -3065,6 +3081,10 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      thread_receive_build_result: {
+        Args: { p: Json; p_actor: Json; p_platform: string }
+        Returns: Json
       }
       thread_record_assurance: {
         Args: { p: Json; p_actor: Json }
