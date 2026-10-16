@@ -1441,6 +1441,8 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      thread_phase1_selftest: { Args: never; Returns: Json }
+      thread_record_phase1_evidence: { Args: { p_actor: Json }; Returns: Json }
       thread_restore_rehearsal: { Args: never; Returns: Json }
       thread_revise_object: {
         Args: {
