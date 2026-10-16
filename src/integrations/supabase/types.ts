@@ -2060,6 +2060,7 @@ export type Database = {
       thread_phase1_selftest: { Args: never; Returns: Json }
       thread_phase2_selftest: { Args: never; Returns: Json }
       thread_phase2b_selftest: { Args: never; Returns: Json }
+      thread_phase3_selftest: { Args: never; Returns: Json }
       thread_propose_canon_change: {
         Args: { p: Json; p_actor: Json }
         Returns: {
@@ -2089,6 +2090,10 @@ export type Database = {
       thread_record_phase1_evidence: { Args: { p_actor: Json }; Returns: Json }
       thread_record_phase2_evidence: { Args: { p_actor: Json }; Returns: Json }
       thread_record_phase2b_evidence: {
+        Args: { p: Json; p_actor: Json }
+        Returns: Json
+      }
+      thread_record_phase3_evidence: {
         Args: { p: Json; p_actor: Json }
         Returns: Json
       }

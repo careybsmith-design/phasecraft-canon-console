@@ -71,6 +71,13 @@
       "when": 1792123954471,
       "tag": "0009_thread_phase3_authority",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1792124020094,
+      "tag": "0010_thread_phase3_selftest_evidence",
+      "breakpoints": true
     }
   ]
 }
