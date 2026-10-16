@@ -147,7 +147,7 @@ export const REGISTRY: RegistryEntry[] = [
 
 /** Phrases that may never be an object type (Part 2.4 withdrawn objects, Part 16.2 no document type). */
 export const PROHIBITED_TYPE_PATTERN =
-  /(document|wiki|project|programme|squad|epic|user.?story|backlog|sprint|test.?phase|design.?review|approval|status.?report|release.?completion|ownership|job.?title|seniority|personal.?output|traceability.?matrix|readiness|sign.?off|requirement)/i;
+  /(document|wiki|project|programme|squad|epic|user.?story|backlog|sprint|test.?phase|design.?review|approval|status.?report|release.?completion|ownership|job.?title|seniority|personal.?output|traceability.?matrix|readiness|sign.?off)/i;
 
 export function discoveryDescriptor(entry: RegistryEntry) {
   return {
