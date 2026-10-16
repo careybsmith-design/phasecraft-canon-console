@@ -105,7 +105,7 @@ function Prompts({ d }: { d: Data }) {
     setBusy(id);
     try {
       const out = await fn({ data: { prompt_id: id, platforms: picked, cost_ceiling: Number(ceiling), estimated_cost: 0 } });
-      for (const r of out) r.ok ? toast.success(`${PLATFORM_REGISTRY[r.platform].label}: dispatched`) : toast.error(`${PLATFORM_REGISTRY[r.platform].label}: ${errText(new Error(r.error))}`);
+      for (const r of out) r.ok ? toast.success(`${PLATFORM_REGISTRY[r.platform].label}: dispatched`) : toast.error(`${PLATFORM_REGISTRY[r.platform].label}: ${errText(new Error(r.error ?? ""))}`);
       qc.invalidateQueries({ queryKey: ["creation"] });
     } catch (e) { toast.error(errText(e)); } finally { setBusy(null); }
   }

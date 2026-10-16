@@ -88,7 +88,7 @@ export const compilePrompt = createServerFn({ method: "POST" })
       template: { id: tpl.id, human_ref: tpl.human_ref, version: String(tb["version"] ?? "1"), stack: String(tb["stack"] ?? ""), instructions: String(tb["instructions"] ?? "") },
       guardrails: (gr.data ?? []).map((g) => ({ id: g.id, category: g.category, version: g.version, enforcement: g.enforcement as "advisory" | "enforcing" })),
       capabilities: capRefs.map((c) => ({ id: c.capability_id!, human_ref: c.human_ref ?? c.capability_id!, title: c.title ?? "" })),
-      platform: data.target_platform, quoted_reference: data.quoted_reference,
+      platform: data.target_platform, ...(data.quoted_reference ? { quoted_reference: data.quoted_reference } : {}),
     });
     const { data: o, error } = await (await admin()).rpc("thread_compile_creation_prompt", {
       p_actor: human(context.userId),
@@ -146,10 +146,10 @@ export const dispatchBuild = createServerFn({ method: "POST" })
     cost_ceiling: z.number().positive().max(100000), estimated_cost: z.number().min(0).max(100000).default(0),
   }).parse(d))
   .handler(async ({ data, context }) => {
-    const out: Array<{ platform: Platform; ok: boolean; result?: unknown; error?: string }> = [];
+    const out: Array<{ platform: Platform; ok: boolean; result: Json | null; error: string | null }> = [];
     for (const platform of data.platforms) {
-      try { out.push({ platform, ok: true, result: await runOnPlatform(context.userId, { prompt_id: data.prompt_id, platform, cost_ceiling: data.cost_ceiling, estimated_cost: data.estimated_cost }) }); }
-      catch (e) { out.push({ platform, ok: false, error: e instanceof Error ? e.message : String(e) }); }
+      try { out.push({ platform, ok: true, error: null, result: await runOnPlatform(context.userId, { prompt_id: data.prompt_id, platform, cost_ceiling: data.cost_ceiling, estimated_cost: data.estimated_cost }) }); }
+      catch (e) { out.push({ platform, ok: false, result: null, error: e instanceof Error ? e.message : String(e) }); }
     }
     return out;
   });

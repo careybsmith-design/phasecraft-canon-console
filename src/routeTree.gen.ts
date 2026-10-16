@@ -14,6 +14,7 @@ import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedAuthorityRouteImport } from './routes/_authenticated/authority'
 import { Route as AuthenticatedCanonRouteImport } from './routes/_authenticated/canon'
+import { Route as AuthenticatedCreationRouteImport } from './routes/_authenticated/creation'
 import { Route as AuthenticatedDecisionsRouteImport } from './routes/_authenticated/decisions'
 import { Route as AuthenticatedEvidenceRouteImport } from './routes/_authenticated/evidence'
 import { Route as AuthenticatedFabricRouteImport } from './routes/_authenticated/fabric'
@@ -21,6 +22,7 @@ import { Route as AuthenticatedGraphRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedFramingIndexRouteImport } from './routes/_authenticated/framing.index'
 import { Route as AuthenticatedFramingSessionIdRouteImport } from './routes/_authenticated/framing.$sessionId'
 import { Route as AuthenticatedFramingViewsRouteImport } from './routes/_authenticated/framing.views'
+import { Route as ApiPublicHooksBuildPlatformRouteImport } from './routes/api/public/hooks/build.$platform'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -44,6 +46,11 @@ const AuthenticatedAuthorityRoute = AuthenticatedAuthorityRouteImport.update({
 const AuthenticatedCanonRoute = AuthenticatedCanonRouteImport.update({
   id: '/canon',
   path: '/canon',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedCreationRoute = AuthenticatedCreationRouteImport.update({
+  id: '/creation',
+  path: '/creation',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedDecisionsRoute = AuthenticatedDecisionsRouteImport.update({
@@ -84,12 +91,19 @@ const AuthenticatedFramingViewsRoute =
     path: '/framing/views',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const ApiPublicHooksBuildPlatformRoute =
+  ApiPublicHooksBuildPlatformRouteImport.update({
+    id: '/api/public/hooks/build/$platform',
+    path: '/api/public/hooks/build/$platform',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/authority': typeof AuthenticatedAuthorityRoute
   '/canon': typeof AuthenticatedCanonRoute
+  '/creation': typeof AuthenticatedCreationRoute
   '/decisions': typeof AuthenticatedDecisionsRoute
   '/evidence': typeof AuthenticatedEvidenceRoute
   '/fabric': typeof AuthenticatedFabricRoute
@@ -97,12 +111,14 @@ export interface FileRoutesByFullPath {
   '/framing/$sessionId': typeof AuthenticatedFramingSessionIdRoute
   '/framing/views': typeof AuthenticatedFramingViewsRoute
   '/framing/': typeof AuthenticatedFramingIndexRoute
+  '/api/public/hooks/build/$platform': typeof ApiPublicHooksBuildPlatformRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/authority': typeof AuthenticatedAuthorityRoute
   '/canon': typeof AuthenticatedCanonRoute
+  '/creation': typeof AuthenticatedCreationRoute
   '/decisions': typeof AuthenticatedDecisionsRoute
   '/evidence': typeof AuthenticatedEvidenceRoute
   '/fabric': typeof AuthenticatedFabricRoute
@@ -110,6 +126,7 @@ export interface FileRoutesByTo {
   '/framing/$sessionId': typeof AuthenticatedFramingSessionIdRoute
   '/framing/views': typeof AuthenticatedFramingViewsRoute
   '/framing': typeof AuthenticatedFramingIndexRoute
+  '/api/public/hooks/build/$platform': typeof ApiPublicHooksBuildPlatformRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -118,6 +135,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/_authenticated/authority': typeof AuthenticatedAuthorityRoute
   '/_authenticated/canon': typeof AuthenticatedCanonRoute
+  '/_authenticated/creation': typeof AuthenticatedCreationRoute
   '/_authenticated/decisions': typeof AuthenticatedDecisionsRoute
   '/_authenticated/evidence': typeof AuthenticatedEvidenceRoute
   '/_authenticated/fabric': typeof AuthenticatedFabricRoute
@@ -125,6 +143,7 @@ export interface FileRoutesById {
   '/_authenticated/framing/$sessionId': typeof AuthenticatedFramingSessionIdRoute
   '/_authenticated/framing/views': typeof AuthenticatedFramingViewsRoute
   '/_authenticated/framing/': typeof AuthenticatedFramingIndexRoute
+  '/api/public/hooks/build/$platform': typeof ApiPublicHooksBuildPlatformRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -133,6 +152,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/authority'
     | '/canon'
+    | '/creation'
     | '/decisions'
     | '/evidence'
     | '/fabric'
@@ -140,12 +160,14 @@ export interface FileRouteTypes {
     | '/framing/$sessionId'
     | '/framing/views'
     | '/framing/'
+    | '/api/public/hooks/build/$platform'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/auth'
     | '/authority'
     | '/canon'
+    | '/creation'
     | '/decisions'
     | '/evidence'
     | '/fabric'
@@ -153,6 +175,7 @@ export interface FileRouteTypes {
     | '/framing/$sessionId'
     | '/framing/views'
     | '/framing'
+    | '/api/public/hooks/build/$platform'
   id:
     | '__root__'
     | '/'
@@ -160,6 +183,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/_authenticated/authority'
     | '/_authenticated/canon'
+    | '/_authenticated/creation'
     | '/_authenticated/decisions'
     | '/_authenticated/evidence'
     | '/_authenticated/fabric'
@@ -167,12 +191,14 @@ export interface FileRouteTypes {
     | '/_authenticated/framing/$sessionId'
     | '/_authenticated/framing/views'
     | '/_authenticated/framing/'
+    | '/api/public/hooks/build/$platform'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   AuthRoute: typeof AuthRoute
+  ApiPublicHooksBuildPlatformRoute: typeof ApiPublicHooksBuildPlatformRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -210,6 +236,13 @@ declare module '@tanstack/react-router' {
       path: '/canon'
       fullPath: '/canon'
       preLoaderRoute: typeof AuthenticatedCanonRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/creation': {
+      id: '/_authenticated/creation'
+      path: '/creation'
+      fullPath: '/creation'
+      preLoaderRoute: typeof AuthenticatedCreationRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/decisions': {
@@ -261,12 +294,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedFramingViewsRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/api/public/hooks/build/$platform': {
+      id: '/api/public/hooks/build/$platform'
+      path: '/api/public/hooks/build/$platform'
+      fullPath: '/api/public/hooks/build/$platform'
+      preLoaderRoute: typeof ApiPublicHooksBuildPlatformRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 interface AuthenticatedRouteChildren {
   AuthenticatedAuthorityRoute: typeof AuthenticatedAuthorityRoute
   AuthenticatedCanonRoute: typeof AuthenticatedCanonRoute
+  AuthenticatedCreationRoute: typeof AuthenticatedCreationRoute
   AuthenticatedDecisionsRoute: typeof AuthenticatedDecisionsRoute
   AuthenticatedEvidenceRoute: typeof AuthenticatedEvidenceRoute
   AuthenticatedFabricRoute: typeof AuthenticatedFabricRoute
@@ -279,6 +320,7 @@ interface AuthenticatedRouteChildren {
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedAuthorityRoute: AuthenticatedAuthorityRoute,
   AuthenticatedCanonRoute: AuthenticatedCanonRoute,
+  AuthenticatedCreationRoute: AuthenticatedCreationRoute,
   AuthenticatedDecisionsRoute: AuthenticatedDecisionsRoute,
   AuthenticatedEvidenceRoute: AuthenticatedEvidenceRoute,
   AuthenticatedFabricRoute: AuthenticatedFabricRoute,
@@ -296,6 +338,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
   AuthRoute: AuthRoute,
+  ApiPublicHooksBuildPlatformRoute: ApiPublicHooksBuildPlatformRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
