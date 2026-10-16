@@ -14,6 +14,7 @@ import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedCanonRouteImport } from './routes/_authenticated/canon'
 import { Route as AuthenticatedGraphRouteImport } from './routes/_authenticated/graph'
+import { Route as AuthenticatedFramingIndexRouteImport } from './routes/_authenticated/framing.index'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -39,18 +40,26 @@ const AuthenticatedGraphRoute = AuthenticatedGraphRouteImport.update({
   path: '/graph',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedFramingIndexRoute =
+  AuthenticatedFramingIndexRouteImport.update({
+    id: '/framing/',
+    path: '/framing/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/canon': typeof AuthenticatedCanonRoute
   '/graph': typeof AuthenticatedGraphRoute
+  '/framing/': typeof AuthenticatedFramingIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/canon': typeof AuthenticatedCanonRoute
   '/graph': typeof AuthenticatedGraphRoute
+  '/framing': typeof AuthenticatedFramingIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -59,12 +68,13 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/_authenticated/canon': typeof AuthenticatedCanonRoute
   '/_authenticated/graph': typeof AuthenticatedGraphRoute
+  '/_authenticated/framing/': typeof AuthenticatedFramingIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/canon' | '/graph'
+  fullPaths: '/' | '/auth' | '/canon' | '/graph' | '/framing/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/canon' | '/graph'
+  to: '/' | '/auth' | '/canon' | '/graph' | '/framing'
   id:
     | '__root__'
     | '/'
@@ -72,6 +82,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/_authenticated/canon'
     | '/_authenticated/graph'
+    | '/_authenticated/framing/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -117,17 +128,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedGraphRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/framing/': {
+      id: '/_authenticated/framing/'
+      path: '/framing'
+      fullPath: '/framing/'
+      preLoaderRoute: typeof AuthenticatedFramingIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
   }
 }
 
 interface AuthenticatedRouteChildren {
   AuthenticatedCanonRoute: typeof AuthenticatedCanonRoute
   AuthenticatedGraphRoute: typeof AuthenticatedGraphRoute
+  AuthenticatedFramingIndexRoute: typeof AuthenticatedFramingIndexRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedCanonRoute: AuthenticatedCanonRoute,
   AuthenticatedGraphRoute: AuthenticatedGraphRoute,
+  AuthenticatedFramingIndexRoute: AuthenticatedFramingIndexRoute,
 }
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
