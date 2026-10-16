@@ -4,7 +4,7 @@
  * browser never solves a large layout (Part 16.5 rule 1).
  * Colours are read from the design tokens at runtime, never hardcoded.
  */
-import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
 
 export interface CanvasNode { id: string; label: string; x: number; y: number; size?: number; token: string; tombstone?: boolean }
 export interface CanvasEdge { id: string; source: string; target: string; inferred?: boolean; highlight?: boolean; label?: string }
@@ -25,51 +25,79 @@ export function tokenColour(token: string): string {
   return out;
 }
 
+export type CanvasStatus = { state: "loading" } | { state: "ready"; ms: number } | { state: "error"; message: string };
+
+/** True when the browser can create a WebGL context (sigma needs one). */
+function webglAvailable(): string | null {
+  try {
+    const c = document.createElement("canvas");
+    const gl = c.getContext("webgl2") ?? c.getContext("webgl");
+    if (!gl) return "This browser could not start WebGL, which the graph needs. Turn on hardware acceleration (Edge: Settings → System and performance → Use graphics acceleration) and reload.";
+    (gl as WebGLRenderingContext).getExtension("WEBGL_lose_context")?.loseContext();
+    return null;
+  } catch (e) { return `WebGL check failed: ${(e as Error).message}`; }
+}
+
 interface Props {
   nodes: CanvasNode[];
   edges: CanvasEdge[];
   onNode?: (id: string) => void;
   onEdge?: (id: string) => void;
+  onStatus?: (s: CanvasStatus) => void;
   labels?: boolean;
   className?: string;
   ariaLabel: string;
 }
 
-export const GraphCanvas = forwardRef<GraphCanvasHandle, Props>(function GraphCanvas({ nodes, edges, onNode, onEdge, labels = true, className, ariaLabel }, ref) {
+export const GraphCanvas = forwardRef<GraphCanvasHandle, Props>(function GraphCanvas({ nodes, edges, onNode, onEdge, onStatus, labels = true, className, ariaLabel }, ref) {
   const el = useRef<HTMLDivElement>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const sigmaRef = useRef<any>(null);
-  const handlers = useRef({ onNode, onEdge });
-  handlers.current = { onNode, onEdge };
+  const handlers = useRef({ onNode, onEdge, onStatus });
+  handlers.current = { onNode, onEdge, onStatus };
+  const [status, setStatusState] = useState<CanvasStatus>({ state: "loading" });
+  const setStatus = (s: CanvasStatus) => { setStatusState(s); handlers.current.onStatus?.(s); };
 
   useEffect(() => {
     let killed = false;
+    const t0 = performance.now();
+    setStatus({ state: "loading" });
     (async () => {
-      const [{ default: Sigma }, { default: Graph }] = await Promise.all([import("sigma"), import("graphology")]);
-      if (killed || !el.current) return;
-      const g = new Graph({ multi: true, type: "directed" });
-      for (const n of nodes) {
-        if (g.hasNode(n.id)) continue;
-        g.addNode(n.id, { x: n.x, y: n.y, size: n.size ?? 4, label: n.label, color: tokenColour(n.tombstone ? "tombstone" : n.token) });
-      }
-      const edgeColour = tokenColour("muted-foreground");
-      const inferredColour = tokenColour("border");
-      const hiColour = tokenColour("primary");
-      for (const e of edges) {
-        if (!g.hasNode(e.source) || !g.hasNode(e.target) || g.hasEdge(e.id)) continue;
-        g.addEdgeWithKey(e.id, e.source, e.target, {
-          size: e.highlight ? 2.5 : 1, color: e.highlight ? hiColour : e.inferred ? inferredColour : edgeColour, label: e.label, type: "arrow",
+      try {
+        const noGl = webglAvailable();
+        if (noGl) throw new Error(noGl);
+        const [{ default: Sigma }, { default: Graph }] = await Promise.all([import("sigma"), import("graphology")]);
+        if (killed || !el.current) return;
+        const g = new Graph({ multi: true, type: "directed" });
+        for (const n of nodes) {
+          if (g.hasNode(n.id)) continue;
+          g.addNode(n.id, { x: n.x, y: n.y, size: n.size ?? 4, label: n.label, color: tokenColour(n.tombstone ? "tombstone" : n.token) });
+        }
+        const edgeColour = tokenColour("muted-foreground");
+        const inferredColour = tokenColour("border");
+        const hiColour = tokenColour("primary");
+        for (const e of edges) {
+          if (!g.hasNode(e.source) || !g.hasNode(e.target) || g.hasEdge(e.id)) continue;
+          g.addEdgeWithKey(e.id, e.source, e.target, {
+            size: e.highlight ? 2.5 : 1, color: e.highlight ? hiColour : e.inferred ? inferredColour : edgeColour, label: e.label, type: "arrow",
+          });
+        }
+        const s = new Sigma(g, el.current, {
+          renderLabels: labels, renderEdgeLabels: false, enableEdgeEvents: true, labelRenderedSizeThreshold: 6,
+          labelColor: { color: tokenColour("foreground") }, defaultEdgeType: "arrow", allowInvalidContainer: true,
         });
+        if (killed) { s.kill(); return; }
+        s.on("clickNode", ({ node }: { node: string }) => handlers.current.onNode?.(node));
+        s.on("clickEdge", ({ edge }: { edge: string }) => handlers.current.onEdge?.(edge));
+        sigmaRef.current = s;
+        setStatus({ state: "ready", ms: performance.now() - t0 });
+      } catch (e) {
+        console.error("GraphCanvas failed to start", e);
+        if (!killed) setStatus({ state: "error", message: (e as Error)?.message || String(e) });
       }
-      const s = new Sigma(g, el.current, {
-        renderLabels: labels, renderEdgeLabels: false, enableEdgeEvents: true, labelRenderedSizeThreshold: 6,
-        labelColor: { color: tokenColour("foreground") }, defaultEdgeType: "arrow", allowInvalidContainer: true,
-      });
-      s.on("clickNode", ({ node }: { node: string }) => handlers.current.onNode?.(node));
-      s.on("clickEdge", ({ edge }: { edge: string }) => handlers.current.onEdge?.(edge));
-      sigmaRef.current = s;
     })();
     return () => { killed = true; sigmaRef.current?.kill(); sigmaRef.current = null; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [nodes, edges, labels]);
 
   useImperativeHandle(ref, () => ({
@@ -103,5 +131,16 @@ export const GraphCanvas = forwardRef<GraphCanvasHandle, Props>(function GraphCa
     },
   }), []);
 
-  return <div ref={el} role="img" aria-label={ariaLabel} className={className ?? "h-[560px] w-full rounded-md border bg-panel"} />;
+  return (
+    <div className="relative">
+      <div ref={el} role="img" aria-label={ariaLabel} className={className ?? "h-[560px] w-full rounded-md border bg-panel"} />
+      {status.state !== "ready" && (
+        <div role="status" className="absolute inset-0 flex items-center justify-center p-6 text-center text-sm">
+          {status.state === "loading"
+            ? <span className="text-muted-foreground">Drawing {nodes.length.toLocaleString("en-US")} nodes…</span>
+            : <span className="text-destructive">The graph could not be drawn. {status.message}</span>}
+        </div>
+      )}
+    </div>
+  );
 });
