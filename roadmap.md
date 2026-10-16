@@ -9,4 +9,6 @@
 - [ ] Phase 2B open: human relabelling of the extraction quality set
 - [x] Phase 3 — Authority, guardrails and decisions (waiting for user approval); exit evidence ledger #1788
 - [ ] Phase 3 open: human relabel of the PHI/PAN corpus; steward to confirm provisional promotion thresholds
-- [ ] Phase 4 … Phase 12 per Section 16
+- [x] Phase 4 — Capability Fabric (waiting for user approval); exit evidence ledger #3674
+- [ ] Phase 4 open: meaning-based (embedding) discovery; live usage telemetry (Phase 7)
+- [ ] Phase 5 … Phase 12 per Section 16
