@@ -8,3 +8,4 @@
 - Shared operation cores live in `src/server/ops`; pages and the gateway both call them.
 - Mission, cell and burst inputs use the human-surface schemas and `thread_human_operation`; probe-only simulation records are not executable simulations. Why: callers cannot bypass the bounds or mistake a recorded scenario for a passed test.
 - Notifications fan out from a deferred ledger trigger, so the object exists when permissions are checked.
+- MCP HTTP accepts at most 256 KiB and 20 batch messages before dispatch; session-dependent replies are no-store. Why: resource use must be bounded.

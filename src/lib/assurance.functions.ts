@@ -1,0 +1,45 @@
+import { createServerFn } from "@tanstack/react-start";
+import { z } from "zod";
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { AssuranceInput } from "@/domain/hardening";
+
+export const assuranceQuery = createServerFn({ method: "GET" }).middleware([requireSupabaseAuth]).handler(async ({ context }) => {
+  const [checks, sources, role] = await Promise.all([
+    context.supabase.rpc("phase12_assurance_checks"),
+    context.supabase.from("objects").select("id,human_ref,type,title,data_classification,version").eq("is_tombstone", false).order("updated_at", { ascending: false }).limit(200),
+    context.supabase.from("user_roles").select("role").eq("user_id", context.userId),
+  ]);
+  if (checks.error || sources.error || role.error) throw new Error("Assurance evidence could not be read.");
+  return { checks: checks.data as unknown as Array<{ id: string; human_ref: string; title: string; body: { assurance_kind: string; result: string; evidence: string[]; rationale: string }; review_date: string }>, sources: sources.data ?? [], can_record: role.data?.some((r) => r.role === "steward" || r.role === "compliance") ?? false };
+});
+
+export const recordAssurance = createServerFn({ method: "POST" }).middleware([requireSupabaseAuth])
+  .inputValidator((input: unknown) => AssuranceInput.parse(input)).handler(async ({ data, context }) => {
+    const { data: roles, error } = await context.supabase.from("user_roles").select("role").eq("user_id", context.userId);
+    if (error || !roles?.some((r) => r.role === "steward" || r.role === "compliance")) throw new Error("Assurance requires a steward or compliance authority.");
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { recordAssuranceCore } = await import("@/server/ops/assurance.server");
+    return recordAssuranceCore({ sb: context.supabase, db: supabaseAdmin, userId: context.userId, actor: { kind: "human", id: context.userId, authority_used: "observe" } }, data);
+  });
+
+export const runHardeningChecks = createServerFn({ method: "POST" }).middleware([requireSupabaseAuth]).handler(async ({ context }) => {
+  const { data: roles, error: roleError } = await context.supabase.from("user_roles").select("role").eq("user_id", context.userId);
+  if (roleError || !roles?.some((r) => r.role === "steward" || r.role === "compliance")) throw new Error("Assurance requires a steward or compliance authority.");
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const { data, error } = await supabaseAdmin.rpc("thread_hardening_checks", { p_actor: { kind: "human", id: context.userId, authority_used: "observe" } });
+  if (error) throw new Error("Internal checks could not be recorded.");
+  return data as unknown as { passed_internal_checks: boolean; exposed_privileged_writes: number; tables_without_rls: number; live_objects_without_expiration: number; ledger_seq: number; ledger: { ok: boolean; entries_checked: number }; snapshot_replay: { ok: boolean; mode: string; objects: number } };
+});
+
+export const assessorPack = createServerFn({ method: "POST" }).middleware([requireSupabaseAuth])
+  .inputValidator((input: unknown) => z.object({ subject_id: z.string().uuid() }).parse(input)).handler(async ({ data, context }) => {
+    const start = Date.now();
+    const { data: subject, error } = await context.supabase.from("objects").select("id,human_ref,type,title,version,content_hash").eq("id", data.subject_id).maybeSingle();
+    if (error || !subject) throw new Error("This subject is outside your permissions.");
+    const [answers, chain, checks] = await Promise.all([
+      context.supabase.rpc("explain_capability_all", { p_id: subject.id }), context.supabase.rpc("trace_full_chain", { p_id: subject.id }),
+      context.supabase.from("objects").select("id,human_ref,body,evidence_refs,content_hash,version").eq("type", "ControlCheck").eq("body->>subject_ref", subject.id).eq("is_tombstone", false).limit(100),
+    ]);
+    if (answers.error || chain.error || checks.error) throw new Error("The assessor query could not be completed.");
+    return { subject, answers: answers.data, chain: chain.data, checks: checks.data, elapsed_ms: Date.now() - start, generated_at: new Date().toISOString(), marker: "Query evidence, not canon or a certification", limitation: "THREAD records decisions, evidence, authority and observed outcomes. It cannot prove evidence is true, controls are effective, or decisions are wise." };
+  });
