@@ -1,4 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
+import { validateGenericBody } from "@/domain/generic-body";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { CreateObjectInput, ReviseInput, TransitionInput, TombstoneInput } from "@/domain/types/envelope";
@@ -66,6 +67,7 @@ export const createObject = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => CreateObjectInput.parse(d))
   .handler(async ({ data, context }) => {
+    validateGenericBody(data.type, data.body);
     const db = await admin();
     const { data: row, error } = await db.rpc("thread_create_object", { p_actor: humanActor(context.userId), p: data as never });
     if (error) throw toThreadError(error.message);
