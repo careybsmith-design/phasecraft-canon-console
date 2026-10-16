@@ -2588,6 +2588,10 @@ export type Database = {
         }
         Returns: Json
       }
+      get_intent_to_value_time: {
+        Args: { p_capability: string }
+        Returns: Json
+      }
       graph_closure: {
         Args: { p_depth?: number; p_root: string }
         Returns: Json
@@ -2658,10 +2662,12 @@ export type Database = {
         Args: { o: Database["public"]["Tables"]["objects"]["Row"] }
         Returns: string
       }
+      phase10_action_ratios: { Args: never; Returns: Json }
       phase10_elapsed_hours: {
         Args: { p_end: string; p_start: string }
         Returns: number
       }
+      phase10_measurements: { Args: never; Returns: Json }
       phase10_schema_check: { Args: never; Returns: Json }
       show_limit: { Args: never; Returns: number }
       show_trgm: { Args: { "": string }; Returns: string[] }
