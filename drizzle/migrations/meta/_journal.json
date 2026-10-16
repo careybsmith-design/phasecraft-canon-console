@@ -253,6 +253,13 @@
       "when": 1792176532904,
       "tag": "0035_phase6_selftest_lovable_confidential_fix",
       "breakpoints": true
+    },
+    {
+      "idx": 36,
+      "version": "7",
+      "when": 1792177785637,
+      "tag": "0036_rendition_download",
+      "breakpoints": true
     }
   ]
 }

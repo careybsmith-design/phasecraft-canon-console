@@ -69,3 +69,5 @@ Phase 8
 - [ ] Regeneration queue is recorded but stale renditions are not regenerated automatically (regenerated on request)
 - [ ] Prohibited-inference detector is a fixed phrase list (agent-authored); needs human review and a query-side check (Phase 9/10)
 - [ ] Test leftovers: practice renditions RN-2026-0005 and RN-2026-0008 (expire on their own)
+
+- [x] Rendition PDF download (user request, after Phase 8): open-permission checks, ledger entry per download (e.g. #10440), confidential allowed, restricted follows source permissions. Verified in browser with RN-2026-0009.
