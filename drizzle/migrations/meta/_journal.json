@@ -239,6 +239,13 @@
       "when": 1792176447236,
       "tag": "0033_phase8_citations_shape",
       "breakpoints": true
+    },
+    {
+      "idx": 34,
+      "version": "7",
+      "when": 1792176506504,
+      "tag": "0034_phase6_selftest_lovable_confidential",
+      "breakpoints": true
     }
   ]
 }

@@ -2251,6 +2251,7 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      _thread_phase6_selftest_v1: { Args: never; Returns: Json }
       artifact_modality: { Args: { _kind: string }; Returns: string }
       assert_transition: {
         Args: { _from: string; _to: string; _type: string }
