@@ -1,0 +1,3 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { ValueFeed } from "@/components/human-surfaces";
+export const Route = createFileRoute("/_authenticated/feed")({ head: () => ({ meta: [{ title: "Live Value Feed · THREAD" }, { name: "description", content: "Act on permission-scoped signals, reusable capabilities and production evidence." }, { property: "og:title", content: "Live Value Feed · THREAD" }, { property: "og:description", content: "Reuse and remix capabilities grounded in enterprise evidence." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }), component: ValueFeed });

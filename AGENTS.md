@@ -20,7 +20,7 @@
 - WorkingCapability, ExposurePopulation and AuthorityGrant are registered because Part 4.2 verbs reference them although Part 4.3 has no row for them.
 - The first account to sign up becomes `steward`; everyone is `member`. DESIGN DECISION until the IdentityProvider adapter exists.
 - Restore rehearsal is a snapshot-replay check (`thread_restore_rehearsal`) recorded as simulated; a platform backup restore stays `pending_live_adapter`.
-- `/` redirects to `/canon` until the Feed surface (Phase 11) exists.
+- `/` redirects to the protected `/feed` surface and sign-in opens it. Why: home is a place to act without duplicating the root route.
 - Relationship verbs are data in `src/domain/relationships.ts`; the DB seed (`scripts/gen-phase2-seed.ts`) must mirror it. Why: edge type checks in `thread_create_edge` and the UI agree.
 - Edges are written only via `thread_create_edge` / `thread_retire_edge`; `edges_guard` requires a same-transaction ledger entry and allows only retirement. Why: P9 applies to relationships too.
 - DESIGN DECISION: each verb has an `impact` direction (forward/reverse/both/none) for blast radius; Part 4.2 does not state propagation. `derives_from` is registered because Part 4.5 rule 6 names it.
@@ -37,3 +37,4 @@
 - Shadow/exposure rules: see src/server/shadow/AGENTS.md.
 - Generation (renditions) rules: see src/server/generation/AGENTS.md.
 - Detection and measurement: read src/server/detection/AGENTS.md before changing phase10 SQL or domain rules. Why: observations, live evidence and time-based reconciliation must stay distinct.
+- Shared human-surface operations: read src/server/ops/AGENTS.md before changing those operations. Why: human and agent execution share schemas and ledger-first writes.

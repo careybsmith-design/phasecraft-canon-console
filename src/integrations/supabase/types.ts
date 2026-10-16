@@ -2173,6 +2173,27 @@ export type Database = {
         }
         Relationships: []
       }
+      surface_follows: {
+        Row: {
+          created_at: string
+          kind: string
+          user_id: string
+          value: string
+        }
+        Insert: {
+          created_at?: string
+          kind: string
+          user_id: string
+          value: string
+        }
+        Update: {
+          created_at?: string
+          kind?: string
+          user_id?: string
+          value?: string
+        }
+        Relationships: []
+      }
       tool_contracts: {
         Row: {
           contract: Json
@@ -2646,6 +2667,7 @@ export type Database = {
         Args: { _role: Database["public"]["Enums"]["app_role"]; _uid: string }
         Returns: boolean
       }
+      human_surface_context: { Args: { p_root?: string }; Returns: Json }
       least_auth: {
         Args: {
           a: Database["public"]["Enums"]["authority_level"]
@@ -2903,6 +2925,10 @@ export type Database = {
         Returns: Json
       }
       thread_graph_sweep: { Args: { p_actor: Json }; Returns: Json }
+      thread_human_operation: {
+        Args: { p: Json; p_actor: Json; p_operation: string }
+        Returns: Json
+      }
       thread_issue_confirmation: {
         Args: {
           p_actor: Json
@@ -2944,6 +2970,7 @@ export type Database = {
       thread_phase10_graph_test: { Args: never; Returns: Json }
       thread_phase10_risk_test: { Args: never; Returns: Json }
       thread_phase10_selftest: { Args: never; Returns: Json }
+      thread_phase11_selftest: { Args: never; Returns: Json }
       thread_phase2_selftest: { Args: never; Returns: Json }
       thread_phase2b_selftest: { Args: never; Returns: Json }
       thread_phase3_selftest: { Args: never; Returns: Json }

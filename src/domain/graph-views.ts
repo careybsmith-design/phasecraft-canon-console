@@ -6,13 +6,14 @@
 import { REGISTRY } from "./registry";
 
 export const EXPLORER_VIEWS = [
-  "navigator", "nebula", "focus", "path", "impact",
+  "navigator", "mission", "nebula", "focus", "path", "impact",
   "need_web", "dependency_web", "decomposition", "contradictions", "integrity",
 ] as const;
 export type ExplorerView = (typeof EXPLORER_VIEWS)[number];
 
 export const VIEW_LABELS: Record<ExplorerView, string> = {
   navigator: "Canon Navigator",
+  mission: "Mission Constellation",
   nebula: "Nebula",
   focus: "Focus",
   path: "Path Finder",

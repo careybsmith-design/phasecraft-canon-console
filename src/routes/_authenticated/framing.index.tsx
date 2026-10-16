@@ -60,7 +60,7 @@ type P = {
   email: string;
 };
 
-function FramingHome() {
+export function FramingHome() {
   const list = useServerFn(listFramingSessions);
   const sessions = useQuery({ queryKey: ["framing-sessions"], queryFn: () => list() });
   return (

@@ -15,18 +15,25 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedAgentsRouteImport } from './routes/_authenticated/agents'
 import { Route as AuthenticatedAuthorityRouteImport } from './routes/_authenticated/authority'
 import { Route as AuthenticatedCanonRouteImport } from './routes/_authenticated/canon'
+import { Route as AuthenticatedCaptureRouteImport } from './routes/_authenticated/capture'
+import { Route as AuthenticatedCompanionRouteImport } from './routes/_authenticated/companion'
 import { Route as AuthenticatedCreationRouteImport } from './routes/_authenticated/creation'
 import { Route as AuthenticatedDecisionsRouteImport } from './routes/_authenticated/decisions'
 import { Route as AuthenticatedDetectorsRouteImport } from './routes/_authenticated/detectors'
 import { Route as AuthenticatedEvidenceRouteImport } from './routes/_authenticated/evidence'
 import { Route as AuthenticatedFabricRouteImport } from './routes/_authenticated/fabric'
+import { Route as AuthenticatedFeedRouteImport } from './routes/_authenticated/feed'
 import { Route as AuthenticatedGenerationRouteImport } from './routes/_authenticated/generation'
 import { Route as AuthenticatedGraphRouteImport } from './routes/_authenticated/graph'
 import { Route as AuthenticatedMeasurementRouteImport } from './routes/_authenticated/measurement'
+import { Route as AuthenticatedMissionsRouteImport } from './routes/_authenticated/missions'
 import { Route as AuthenticatedShadowRouteImport } from './routes/_authenticated/shadow'
+import { Route as AuthenticatedSimulateRouteImport } from './routes/_authenticated/simulate'
 import { Route as AuthenticatedFramingIndexRouteImport } from './routes/_authenticated/framing.index'
 import { Route as AuthenticatedFramingSessionIdRouteImport } from './routes/_authenticated/framing.$sessionId'
 import { Route as AuthenticatedFramingViewsRouteImport } from './routes/_authenticated/framing.views'
+import { Route as AuthenticatedMissionsIndexRouteImport } from './routes/_authenticated/missions.index'
+import { Route as AuthenticatedMissionsMissionIdRouteImport } from './routes/_authenticated/missions.$missionId'
 import { Route as ApiPublicMcpRouteImport } from './routes/api/public/mcp'
 import { Route as ApiPublicA2aDotwellKnownAgentDotjsonRouteImport } from './routes/api/public/a2a/[.]well-known/agent[.]json'
 import { Route as ApiPublicHooksBuildPlatformRouteImport } from './routes/api/public/hooks/build.$platform'
@@ -60,6 +67,16 @@ const AuthenticatedCanonRoute = AuthenticatedCanonRouteImport.update({
   path: '/canon',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedCaptureRoute = AuthenticatedCaptureRouteImport.update({
+  id: '/capture',
+  path: '/capture',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedCompanionRoute = AuthenticatedCompanionRouteImport.update({
+  id: '/companion',
+  path: '/companion',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedCreationRoute = AuthenticatedCreationRouteImport.update({
   id: '/creation',
   path: '/creation',
@@ -85,6 +102,11 @@ const AuthenticatedFabricRoute = AuthenticatedFabricRouteImport.update({
   path: '/fabric',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedFeedRoute = AuthenticatedFeedRouteImport.update({
+  id: '/feed',
+  path: '/feed',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedGenerationRoute = AuthenticatedGenerationRouteImport.update({
   id: '/generation',
   path: '/generation',
@@ -101,9 +123,19 @@ const AuthenticatedMeasurementRoute =
     path: '/measurement',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const AuthenticatedMissionsRoute = AuthenticatedMissionsRouteImport.update({
+  id: '/missions',
+  path: '/missions',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedShadowRoute = AuthenticatedShadowRouteImport.update({
   id: '/shadow',
   path: '/shadow',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedSimulateRoute = AuthenticatedSimulateRouteImport.update({
+  id: '/simulate',
+  path: '/simulate',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedFramingIndexRoute =
@@ -123,6 +155,18 @@ const AuthenticatedFramingViewsRoute =
     id: '/framing/views',
     path: '/framing/views',
     getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedMissionsIndexRoute =
+  AuthenticatedMissionsIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedMissionsRoute,
+  } as any)
+const AuthenticatedMissionsMissionIdRoute =
+  AuthenticatedMissionsMissionIdRouteImport.update({
+    id: '/$missionId',
+    path: '/$missionId',
+    getParentRoute: () => AuthenticatedMissionsRoute,
   } as any)
 const ApiPublicMcpRoute = ApiPublicMcpRouteImport.update({
   id: '/api/public/mcp',
@@ -148,19 +192,26 @@ export interface FileRoutesByFullPath {
   '/agents': typeof AuthenticatedAgentsRoute
   '/authority': typeof AuthenticatedAuthorityRoute
   '/canon': typeof AuthenticatedCanonRoute
+  '/capture': typeof AuthenticatedCaptureRoute
+  '/companion': typeof AuthenticatedCompanionRoute
   '/creation': typeof AuthenticatedCreationRoute
   '/decisions': typeof AuthenticatedDecisionsRoute
   '/detectors': typeof AuthenticatedDetectorsRoute
   '/evidence': typeof AuthenticatedEvidenceRoute
   '/fabric': typeof AuthenticatedFabricRoute
+  '/feed': typeof AuthenticatedFeedRoute
   '/generation': typeof AuthenticatedGenerationRoute
   '/graph': typeof AuthenticatedGraphRoute
   '/measurement': typeof AuthenticatedMeasurementRoute
+  '/missions': typeof AuthenticatedMissionsRouteWithChildren
   '/shadow': typeof AuthenticatedShadowRoute
+  '/simulate': typeof AuthenticatedSimulateRoute
   '/framing/$sessionId': typeof AuthenticatedFramingSessionIdRoute
   '/framing/views': typeof AuthenticatedFramingViewsRoute
+  '/missions/$missionId': typeof AuthenticatedMissionsMissionIdRoute
   '/api/public/mcp': typeof ApiPublicMcpRoute
   '/framing/': typeof AuthenticatedFramingIndexRoute
+  '/missions/': typeof AuthenticatedMissionsIndexRoute
   '/api/public/a2a/.well-known/agent.json': typeof ApiPublicA2aDotwellKnownAgentDotjsonRoute
   '/api/public/hooks/build/$platform': typeof ApiPublicHooksBuildPlatformRoute
 }
@@ -170,19 +221,25 @@ export interface FileRoutesByTo {
   '/agents': typeof AuthenticatedAgentsRoute
   '/authority': typeof AuthenticatedAuthorityRoute
   '/canon': typeof AuthenticatedCanonRoute
+  '/capture': typeof AuthenticatedCaptureRoute
+  '/companion': typeof AuthenticatedCompanionRoute
   '/creation': typeof AuthenticatedCreationRoute
   '/decisions': typeof AuthenticatedDecisionsRoute
   '/detectors': typeof AuthenticatedDetectorsRoute
   '/evidence': typeof AuthenticatedEvidenceRoute
   '/fabric': typeof AuthenticatedFabricRoute
+  '/feed': typeof AuthenticatedFeedRoute
   '/generation': typeof AuthenticatedGenerationRoute
   '/graph': typeof AuthenticatedGraphRoute
   '/measurement': typeof AuthenticatedMeasurementRoute
   '/shadow': typeof AuthenticatedShadowRoute
+  '/simulate': typeof AuthenticatedSimulateRoute
   '/framing/$sessionId': typeof AuthenticatedFramingSessionIdRoute
   '/framing/views': typeof AuthenticatedFramingViewsRoute
+  '/missions/$missionId': typeof AuthenticatedMissionsMissionIdRoute
   '/api/public/mcp': typeof ApiPublicMcpRoute
   '/framing': typeof AuthenticatedFramingIndexRoute
+  '/missions': typeof AuthenticatedMissionsIndexRoute
   '/api/public/a2a/.well-known/agent.json': typeof ApiPublicA2aDotwellKnownAgentDotjsonRoute
   '/api/public/hooks/build/$platform': typeof ApiPublicHooksBuildPlatformRoute
 }
@@ -194,19 +251,26 @@ export interface FileRoutesById {
   '/_authenticated/agents': typeof AuthenticatedAgentsRoute
   '/_authenticated/authority': typeof AuthenticatedAuthorityRoute
   '/_authenticated/canon': typeof AuthenticatedCanonRoute
+  '/_authenticated/capture': typeof AuthenticatedCaptureRoute
+  '/_authenticated/companion': typeof AuthenticatedCompanionRoute
   '/_authenticated/creation': typeof AuthenticatedCreationRoute
   '/_authenticated/decisions': typeof AuthenticatedDecisionsRoute
   '/_authenticated/detectors': typeof AuthenticatedDetectorsRoute
   '/_authenticated/evidence': typeof AuthenticatedEvidenceRoute
   '/_authenticated/fabric': typeof AuthenticatedFabricRoute
+  '/_authenticated/feed': typeof AuthenticatedFeedRoute
   '/_authenticated/generation': typeof AuthenticatedGenerationRoute
   '/_authenticated/graph': typeof AuthenticatedGraphRoute
   '/_authenticated/measurement': typeof AuthenticatedMeasurementRoute
+  '/_authenticated/missions': typeof AuthenticatedMissionsRouteWithChildren
   '/_authenticated/shadow': typeof AuthenticatedShadowRoute
+  '/_authenticated/simulate': typeof AuthenticatedSimulateRoute
   '/_authenticated/framing/$sessionId': typeof AuthenticatedFramingSessionIdRoute
   '/_authenticated/framing/views': typeof AuthenticatedFramingViewsRoute
+  '/_authenticated/missions/$missionId': typeof AuthenticatedMissionsMissionIdRoute
   '/api/public/mcp': typeof ApiPublicMcpRoute
   '/_authenticated/framing/': typeof AuthenticatedFramingIndexRoute
+  '/_authenticated/missions/': typeof AuthenticatedMissionsIndexRoute
   '/api/public/a2a/.well-known/agent.json': typeof ApiPublicA2aDotwellKnownAgentDotjsonRoute
   '/api/public/hooks/build/$platform': typeof ApiPublicHooksBuildPlatformRoute
 }
@@ -218,19 +282,26 @@ export interface FileRouteTypes {
     | '/agents'
     | '/authority'
     | '/canon'
+    | '/capture'
+    | '/companion'
     | '/creation'
     | '/decisions'
     | '/detectors'
     | '/evidence'
     | '/fabric'
+    | '/feed'
     | '/generation'
     | '/graph'
     | '/measurement'
+    | '/missions'
     | '/shadow'
+    | '/simulate'
     | '/framing/$sessionId'
     | '/framing/views'
+    | '/missions/$missionId'
     | '/api/public/mcp'
     | '/framing/'
+    | '/missions/'
     | '/api/public/a2a/.well-known/agent.json'
     | '/api/public/hooks/build/$platform'
   fileRoutesByTo: FileRoutesByTo
@@ -240,19 +311,25 @@ export interface FileRouteTypes {
     | '/agents'
     | '/authority'
     | '/canon'
+    | '/capture'
+    | '/companion'
     | '/creation'
     | '/decisions'
     | '/detectors'
     | '/evidence'
     | '/fabric'
+    | '/feed'
     | '/generation'
     | '/graph'
     | '/measurement'
     | '/shadow'
+    | '/simulate'
     | '/framing/$sessionId'
     | '/framing/views'
+    | '/missions/$missionId'
     | '/api/public/mcp'
     | '/framing'
+    | '/missions'
     | '/api/public/a2a/.well-known/agent.json'
     | '/api/public/hooks/build/$platform'
   id:
@@ -263,19 +340,26 @@ export interface FileRouteTypes {
     | '/_authenticated/agents'
     | '/_authenticated/authority'
     | '/_authenticated/canon'
+    | '/_authenticated/capture'
+    | '/_authenticated/companion'
     | '/_authenticated/creation'
     | '/_authenticated/decisions'
     | '/_authenticated/detectors'
     | '/_authenticated/evidence'
     | '/_authenticated/fabric'
+    | '/_authenticated/feed'
     | '/_authenticated/generation'
     | '/_authenticated/graph'
     | '/_authenticated/measurement'
+    | '/_authenticated/missions'
     | '/_authenticated/shadow'
+    | '/_authenticated/simulate'
     | '/_authenticated/framing/$sessionId'
     | '/_authenticated/framing/views'
+    | '/_authenticated/missions/$missionId'
     | '/api/public/mcp'
     | '/_authenticated/framing/'
+    | '/_authenticated/missions/'
     | '/api/public/a2a/.well-known/agent.json'
     | '/api/public/hooks/build/$platform'
   fileRoutesById: FileRoutesById
@@ -333,6 +417,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCanonRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/capture': {
+      id: '/_authenticated/capture'
+      path: '/capture'
+      fullPath: '/capture'
+      preLoaderRoute: typeof AuthenticatedCaptureRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/companion': {
+      id: '/_authenticated/companion'
+      path: '/companion'
+      fullPath: '/companion'
+      preLoaderRoute: typeof AuthenticatedCompanionRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/creation': {
       id: '/_authenticated/creation'
       path: '/creation'
@@ -368,6 +466,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedFabricRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/feed': {
+      id: '/_authenticated/feed'
+      path: '/feed'
+      fullPath: '/feed'
+      preLoaderRoute: typeof AuthenticatedFeedRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/generation': {
       id: '/_authenticated/generation'
       path: '/generation'
@@ -389,11 +494,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedMeasurementRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/missions': {
+      id: '/_authenticated/missions'
+      path: '/missions'
+      fullPath: '/missions'
+      preLoaderRoute: typeof AuthenticatedMissionsRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/shadow': {
       id: '/_authenticated/shadow'
       path: '/shadow'
       fullPath: '/shadow'
       preLoaderRoute: typeof AuthenticatedShadowRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/simulate': {
+      id: '/_authenticated/simulate'
+      path: '/simulate'
+      fullPath: '/simulate'
+      preLoaderRoute: typeof AuthenticatedSimulateRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/framing/': {
@@ -416,6 +535,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/framing/views'
       preLoaderRoute: typeof AuthenticatedFramingViewsRouteImport
       parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/missions/': {
+      id: '/_authenticated/missions/'
+      path: '/'
+      fullPath: '/missions/'
+      preLoaderRoute: typeof AuthenticatedMissionsIndexRouteImport
+      parentRoute: typeof AuthenticatedMissionsRoute
+    }
+    '/_authenticated/missions/$missionId': {
+      id: '/_authenticated/missions/$missionId'
+      path: '/$missionId'
+      fullPath: '/missions/$missionId'
+      preLoaderRoute: typeof AuthenticatedMissionsMissionIdRouteImport
+      parentRoute: typeof AuthenticatedMissionsRoute
     }
     '/api/public/mcp': {
       id: '/api/public/mcp'
@@ -441,19 +574,39 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AuthenticatedMissionsRouteChildren {
+  AuthenticatedMissionsMissionIdRoute: typeof AuthenticatedMissionsMissionIdRoute
+  AuthenticatedMissionsIndexRoute: typeof AuthenticatedMissionsIndexRoute
+}
+
+const AuthenticatedMissionsRouteChildren: AuthenticatedMissionsRouteChildren = {
+  AuthenticatedMissionsMissionIdRoute: AuthenticatedMissionsMissionIdRoute,
+  AuthenticatedMissionsIndexRoute: AuthenticatedMissionsIndexRoute,
+}
+
+const AuthenticatedMissionsRouteWithChildren =
+  AuthenticatedMissionsRoute._addFileChildren(
+    AuthenticatedMissionsRouteChildren,
+  )
+
 interface AuthenticatedRouteChildren {
   AuthenticatedAgentsRoute: typeof AuthenticatedAgentsRoute
   AuthenticatedAuthorityRoute: typeof AuthenticatedAuthorityRoute
   AuthenticatedCanonRoute: typeof AuthenticatedCanonRoute
+  AuthenticatedCaptureRoute: typeof AuthenticatedCaptureRoute
+  AuthenticatedCompanionRoute: typeof AuthenticatedCompanionRoute
   AuthenticatedCreationRoute: typeof AuthenticatedCreationRoute
   AuthenticatedDecisionsRoute: typeof AuthenticatedDecisionsRoute
   AuthenticatedDetectorsRoute: typeof AuthenticatedDetectorsRoute
   AuthenticatedEvidenceRoute: typeof AuthenticatedEvidenceRoute
   AuthenticatedFabricRoute: typeof AuthenticatedFabricRoute
+  AuthenticatedFeedRoute: typeof AuthenticatedFeedRoute
   AuthenticatedGenerationRoute: typeof AuthenticatedGenerationRoute
   AuthenticatedGraphRoute: typeof AuthenticatedGraphRoute
   AuthenticatedMeasurementRoute: typeof AuthenticatedMeasurementRoute
+  AuthenticatedMissionsRoute: typeof AuthenticatedMissionsRouteWithChildren
   AuthenticatedShadowRoute: typeof AuthenticatedShadowRoute
+  AuthenticatedSimulateRoute: typeof AuthenticatedSimulateRoute
   AuthenticatedFramingSessionIdRoute: typeof AuthenticatedFramingSessionIdRoute
   AuthenticatedFramingViewsRoute: typeof AuthenticatedFramingViewsRoute
   AuthenticatedFramingIndexRoute: typeof AuthenticatedFramingIndexRoute
@@ -463,15 +616,20 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedAgentsRoute: AuthenticatedAgentsRoute,
   AuthenticatedAuthorityRoute: AuthenticatedAuthorityRoute,
   AuthenticatedCanonRoute: AuthenticatedCanonRoute,
+  AuthenticatedCaptureRoute: AuthenticatedCaptureRoute,
+  AuthenticatedCompanionRoute: AuthenticatedCompanionRoute,
   AuthenticatedCreationRoute: AuthenticatedCreationRoute,
   AuthenticatedDecisionsRoute: AuthenticatedDecisionsRoute,
   AuthenticatedDetectorsRoute: AuthenticatedDetectorsRoute,
   AuthenticatedEvidenceRoute: AuthenticatedEvidenceRoute,
   AuthenticatedFabricRoute: AuthenticatedFabricRoute,
+  AuthenticatedFeedRoute: AuthenticatedFeedRoute,
   AuthenticatedGenerationRoute: AuthenticatedGenerationRoute,
   AuthenticatedGraphRoute: AuthenticatedGraphRoute,
   AuthenticatedMeasurementRoute: AuthenticatedMeasurementRoute,
+  AuthenticatedMissionsRoute: AuthenticatedMissionsRouteWithChildren,
   AuthenticatedShadowRoute: AuthenticatedShadowRoute,
+  AuthenticatedSimulateRoute: AuthenticatedSimulateRoute,
   AuthenticatedFramingSessionIdRoute: AuthenticatedFramingSessionIdRoute,
   AuthenticatedFramingViewsRoute: AuthenticatedFramingViewsRoute,
   AuthenticatedFramingIndexRoute: AuthenticatedFramingIndexRoute,

@@ -7,6 +7,7 @@
 import { z } from "zod/v4";
 import type { AuthorityLevel, ContentOrigin } from "./mcp";
 import { PLATFORMS } from "./creation";
+import { MissionInput, CellInput, BurstInput } from "./human-surfaces";
 
 const id = z.uuid();
 const txt = (n: number) => z.string().trim().min(1).max(n);
@@ -35,7 +36,7 @@ const D = (name: string, kernel: string, purpose: string, input: z.ZodObject, o:
     failure_modes: o.failure_modes ?? ["VALIDATION_FAILED", "AUTHORITY_EXCEEDED", "NOT_FOUND", "QUOTA_EXCEEDED"], per_minute: o.per_minute ?? 60,
   };
 };
-const P11 = { status: "pending_kernel" as const, pending: "Phase 11 Human surfaces (missions, cells, bursts, simulation)" };
+const P11 = { status: "pending_kernel" as const, pending: "Capability execution harness: probe recording is available, live simulation execution is not" };
 const P12 = { status: "pending_kernel" as const, pending: "Phase 12 Hardening and assurance (live assurance adapters)" };
 const HUMAN = { status: "human_only" as const, pending: "consent-gated framing capture (P13): performed by a consented person in the session" };
 
@@ -58,10 +59,10 @@ export const TOOLS: ToolDef[] = [
   D("score_value_signal", "K2", "Score magnitude, urgency, value and confidence from the signal's typed fields", z.object({ signal_id: id }).strict(), { origin: "computed", output: "{magnitude, urgency, value, confidence_bundle}" }),
   D("find_related_missions", "K2", "Locate missions and capabilities related to a condition", z.object({ condition: txt(500), limit: z.number().int().min(1).max(50).default(10) }).strict(), { output: "{missions[], capabilities[]}" }),
   D("create_value_mission", "K2", "Establish a bounded mission from a signal; a named Co-Creator is required",
-    z.object({ signal_id: id, co_creator_id: id, outcome: txt(1000), bounds: z.object({ evidence: txt(500), time: txt(200), risk: txt(200), authority: txt(200) }).strict() }).strict(),
+    MissionInput,
     { side_effects: "creates_objects", output: "ValueMission envelope" }),
-  D("recommend_value_cell", "K2", "Propose Co-Creator + Builder + agent configuration", z.object({ mission_id: id }).strict(), P11),
-  D("start_value_burst", "K2", "Open a burst session with phase timers and capture", z.object({ cell_id: id, phases: z.array(txt(80)).min(1).max(10) }).strict(), { ...P11, side_effects: "creates_objects" }),
+  D("recommend_value_cell", "K2", "Form the mission's named Co-Creator + Builder + governed agents", CellInput, { side_effects: "creates_objects" }),
+  D("start_value_burst", "K2", "Open a bounded burst; consented capture remains a separate human action", BurstInput, { side_effects: "creates_objects" }),
   D("search_capability_fabric", "K4", "Intent-shaped capability discovery (also records nothing)", intentShape.strict(), { output: "ReuseResult[]" }),
   D("run_adversarial_simulation", "K6", "Adversarial / misuse testing against a capability", z.object({ capability_id: id, scenario: txt(1000) }).strict(), { ...P11, side_effects: "creates_objects" }),
   D("request_exposure_authority", "K3", "Request productive exposure; the authority engine decides and a person is asked through the Human Decision Queue",

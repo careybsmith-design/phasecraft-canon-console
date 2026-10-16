@@ -1,16 +1,16 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 
-// Phase 1: home opens the canon console. The Live Value Feed replaces this in Phase 11 (Section 12).
+// Home opens the permission-scoped Feed; its named route preserves the existing root URL.
 export const Route = createFileRoute("/")({
   beforeLoad: () => {
-    throw redirect({ to: "/canon" });
+    throw redirect({ to: "/feed" });
   },
   head: () => ({
     meta: [
-      { title: "THREAD · MASA Global operating graph" },
-      { name: "description", content: "THREAD: the canonical, versioned operating and evidence graph for MASA Global." },
-      { property: "og:title", content: "THREAD · MASA Global operating graph" },
-      { property: "og:description", content: "The canonical, versioned operating and evidence graph for MASA Global." },
+      { title: "THREAD · Live enterprise value" },
+      { name: "description", content: "Reuse and remix capabilities from permission-scoped signals and enterprise value evidence." },
+      { property: "og:title", content: "THREAD · Live enterprise value" },
+      { property: "og:description", content: "Act on signals, current mission decisions and reusable capabilities." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],

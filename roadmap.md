@@ -11,7 +11,8 @@
 - [x] Phase 8 — Generation layer (waiting for user approval); exit evidence ledger #10434
 - [x] Phase 9 — Agent-executable surface (waiting for user approval); exit evidence ledger #10660
 - [ ] Phase 10 — Detection and measurement implemented; signed-in validation and remaining exit evidence below
-- [ ] Phase 11 … Phase 12 per Section 16
+- [ ] Phase 11 — Human surfaces added; partial implementation, validation and exit blockers below; awaiting user review
+- [ ] Phase 12 — Hardening, assurance and scale
 
 ## Open items — keep until addressed at the end (never delete without resolving)
 
@@ -97,3 +98,16 @@ Phase 10
 - [ ] Target-scale sweep cost, performance and independent human-labelled false-positive/false-negative tests. Blocker: representative corpus/live integrations; full sweeps currently run transactionally on object, edge and rendition changes.
 - [ ] AW-5 aggregate session recording completeness and Carey’s recorded thresholds remain unresolved; ratios are computed only from available permission-scoped usage evidence and return THRESHOLD_UNSET without a decided setting.
 - [ ] Extend canonical Detector/DetectorFinding envelope objects alongside operational registry/findings and reconcile finding statuses; currently operational findings preserve Phase 1 open/resolved/accepted_risk states. Blocker: specification reconciliation needed without breaking existing finding consumers.
+
+Phase 11
+- [x] Required Section 2, Appendix A and cited Parts 5.3–5.5, 11, 18 and 21.4 re-read; Feed, Companion, Mission Runtime, Simulation Studio and direct Capture entry added. Existing Fabric, Canon, Decision Queue and graph/evidence surfaces remain available.
+- [x] 195 domain/routing tests passed, including 19 Phase 11 rules. Build OK. Migration 0052 ran 11 rollback-only database checks: distinct humans, proof, burst lower/upper bounds, ledger-backed burst edge, substantive-output refusal, simulated/not-executed probe, simulated-output refusal, cited guidance, wrong-purpose refusal and source-change staleness. No persistent fixture objects were created.
+- [ ] Signed-in end-to-end checks and accessibility review of every new surface. Blocker: requester has no matching account for session mint; all seven new destinations were tested signed out and reached Sign in without browser errors. User must sign in or authorize an identified account. WCAG 2.2 AA is not claimed verified.
+- [ ] Real two-person mission → cell → burst → substantive outcome acceptance. Blocker: no second human account available; agent accounts are explicitly excluded from human Co-Creator/Builder roles. Single-identity rollback fixtures exercise negative rules, not a two-person operating loop.
+- [ ] Complete Part 21.4 exit suite, live intent-to-working-evidence compression, participation evidence and action ratios. Blockers: real human usage, live build/telemetry/exposure adapters, Carey's AW-5 decision (no threshold default set). Phase 11 exit is not claimed passed.
+- [ ] Companion is evidence-grounded but rule-based, not a full conversational planning agent; contextual mission recommendation and automatic action selection remain unimplemented. Simulation Studio is rule-based adaptive feedback, not independently assessed or model-driven. Blocker: human validation of behaviour and scenario quality, followed by agreed scope for a conversational implementation.
+- [ ] Companion signal creation currently opens Canon rather than creating directly; a multi-source permission-intersection write is required before enabling the shortcut. Blocker: permission-preserving action integration.
+- [ ] Capability simulation/adversarial execution remains pending: probes can be recorded with simulated provenance and `not_executed`; MCP simulation tools intentionally remain `pending_kernel` rather than claiming recorded probes passed. Blocker: capability execution harness and live artifacts.
+- [ ] Full Feed event coverage (reuse events and stopped-mission narratives), continuous push updates and evidence-linked generated mission panels remain incomplete. Current Feed is a permission-scoped recent-object list, capped at 200; Mission Runtime shows canon evidence and connected requests. Blocker: representative operating events and complete event/rendering integration.
+- [ ] Mission Constellation entry added as three-hop Focus over the mission, but mission-specific precomputed layouts, historical graph replay, dedicated `/evidence/$capabilityId` and `/sessions/$sessionId` destinations remain unimplemented. Existing `/evidence` and `/framing/$sessionId` remain unchanged. Blocker: Phase 11 graph/route completion, not Phase 12 authorization.
+- [ ] Human account selection currently uses account IDs; authenticated account directory/invitation UX remains incomplete. Burst clocks record the planned end and phases but do not orchestrate phase transitions, capture or automatic expiry. Blocker: consent-aware session integration and real two-person workflow validation.

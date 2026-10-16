@@ -31,7 +31,7 @@ function AuthPage() {
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    if (session) navigate({ to: "/canon" });
+    if (session) navigate({ to: "/feed" });
   }, [session, navigate]);
 
   async function submit(e: React.FormEvent) {
