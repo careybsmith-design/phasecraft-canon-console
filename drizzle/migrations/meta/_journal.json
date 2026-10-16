@@ -57,6 +57,13 @@
       "when": 1792121050198,
       "tag": "0007_thread_phase2b_fixture_owner",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1792121176211,
+      "tag": "0008_thread_phase2b_adapter_mode_related",
+      "breakpoints": true
     }
   ]
 }

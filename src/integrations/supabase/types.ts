@@ -1796,6 +1796,15 @@ export type Database = {
       }
       can_read_session: { Args: { _s: string }; Returns: boolean }
       canon_drift_report: { Args: never; Returns: Json }
+      framing_related_objects: {
+        Args: {
+          p_limit?: number
+          p_session: string
+          p_text: string
+          p_types: string[]
+        }
+        Returns: Json
+      }
       graph_closure: {
         Args: { p_depth?: number; p_root: string }
         Returns: Json
