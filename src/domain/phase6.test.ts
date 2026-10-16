@@ -33,10 +33,10 @@ describe("Phase 6 creation loop", () => {
     expect(containsRawText(text, [RAW])).toBeNull();
     expect(text.length).toBeLessThan(compileCreationPrompt(base).text.length + QUOTE_MAX + 200);
   });
-  it("Lovable never receives confidential or restricted content", () => {
-    expect(platformRefusal("lovable", "confidential")).toMatch(/PLATFORM_NOT_CLEARED/);
-    expect(platformRefusal("lovable", "restricted")).toMatch(/PLATFORM_NOT_CLEARED/);
+  it("Lovable is cleared up to confidential; restricted content goes to no builder (user-confirmed 16 Oct 2026)", () => {
+    expect(platformRefusal("lovable", "confidential")).toBeNull();
     expect(platformRefusal("lovable", "internal")).toBeNull();
+    expect(platformRefusal("lovable", "restricted")).toMatch(/PLATFORM_NOT_CLEARED/);
     for (const p of PLATFORMS) expect(platformRefusal(p, "restricted")).toMatch(/PLATFORM_NOT_CLEARED/);
   });
   it("cost ceilings are enforced at dispatch", () => {
