@@ -15,6 +15,13 @@
       "when": 1792113032296,
       "tag": "0001_thread_phase1_selftest",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1792113091807,
+      "tag": "0002_thread_phase1_registry_seed",
+      "breakpoints": true
     }
   ]
 }
