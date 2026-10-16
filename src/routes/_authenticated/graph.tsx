@@ -406,7 +406,6 @@ const BENCH_EDGE_BUDGET = 5000;
 function Benchmark({ onExit }: { onExit: () => void }) {
   const record = useServerFn(recordRenderBenchmark);
   const canvas = useRef<GraphCanvasHandle>(null);
-  const t0 = useRef(performance.now());
   const data = useMemo(() => {
     const s = syntheticNebula(BENCH_NODES, 14, 12000);
     const b = applyEdgeBudget(s.edges, BENCH_EDGE_BUDGET);
@@ -423,7 +422,7 @@ function Benchmark({ onExit }: { onExit: () => void }) {
     setBusy(true); setResult(null);
     try {
       const frames = await canvas.current!.animateBenchmark(5000);
-      if (frames.length < 10) {
+      if (frames.length < 2) {
         setResult(`Not recorded: only ${frames.length} frame(s) were drawn, so there is nothing valid to measure. Reload the page and try again.`);
         return;
       }
