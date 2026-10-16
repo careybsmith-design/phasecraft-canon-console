@@ -12,7 +12,7 @@
 # THREAD build rules
 
 - The spec lives in `docs/THREAD-spec.md` (full) and `docs/THREAD-build-directives.md` (Sections 1–19). Re-read Section 2, Appendix A and the cited Appendix C parts before every phase; build one phase at a time and wait for user approval.
-- All writes to `objects` go through the `thread_*` security-definer functions (service role only), called from `src/lib/canon.functions.ts` with the actor taken from the verified session. Why: triggers then guarantee ledger-first provenance (P9).
+- Privileged `thread_*` writes and trigger helpers are service-role-only; actors come from verified sessions. Authenticated RLS predicates remain callable. Why: public keys cannot forge writes (P9).
 - `enforce_provenance` requires a ledger row in the same transaction with matching chain, version and content hash. Why: a provenance gap or forged entry is impossible, not just discouraged.
 - Ledger and `object_versions` are append-only (revoked grants plus rejecting triggers). Objects are tombstoned, never deleted.
 - Lifecycle families are ordered ranks in `src/domain/lifecycle.ts`; a transition may go only to a strictly later rank. DESIGN DECISION: Part 4.4 lists sequences; reversals become new versions (P15), never state regressions. Types without a Part 4.4 family use `canon`, `evidence_record` (recorded→superseded→retired) or `framing_extract` (draft→confirmed→superseded).
@@ -37,4 +37,4 @@
 - Shadow/exposure rules: see src/server/shadow/AGENTS.md.
 - Generation (renditions) rules: see src/server/generation/AGENTS.md.
 - Detection and measurement: read src/server/detection/AGENTS.md before changing phase10 SQL or domain rules. Why: observations, live evidence and time-based reconciliation must stay distinct.
-- Shared human-surface operations: read src/server/ops/AGENTS.md before changing those operations. Why: human and agent execution share schemas and ledger-first writes.
+- Human surfaces and Phase 12 assurance: read src/server/ops/AGENTS.md first. Why: shared schemas, caller RLS and ledger-first writes distinguish simulated checks from live assurance.

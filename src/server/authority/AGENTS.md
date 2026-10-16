@@ -5,3 +5,4 @@
 - DESIGN DECISION: risk tier = max of per-input floors; confidence rule cr-1.0.0 = weakest required dimension; promotion thresholds are provisional values in the `human_oversight` guardrail params; reset-to-observe vs step-down split for demotion triggers. Part 6 gives none of these numbers.
 - `decision_queue_guard` enforces the exact Part 6.5 field set on HumanDecisionRequest and the four responses (decide, one clarification, reduce authority, stop) on Decision. Council engagements are ConfirmedDecision with source governance_council.
 - The Phase 3 seed (`scripts/seed-phase3.ts`) is generated from engine constants; change both together.
+- Tier 4 grants and exposure validate a current capability-linked human judgment in SQL, with authorizer distinct from the named Builder and creator. Why: a reference alone is not independent assurance.
