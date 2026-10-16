@@ -39,7 +39,10 @@ function ShadowPage() {
   const refresh = useCallback(async () => {
     setOv(await load());
     const ev = await getPhase7Evidence();
-    if (ev) setEvidence({ ledger_seq: ev.seq, selftest: (ev.payload as { selftest: typeof ev.payload.selftest }).selftest });
+    if (ev) {
+      const payload = ev.payload as unknown as { selftest: { passed: boolean; checks: { name: string; pass: boolean; detail: string }[] } };
+      setEvidence({ ledger_seq: ev.seq, selftest: payload.selftest });
+    }
   }, [load]);
   useEffect(() => { void refresh(); }, [refresh]);
 
