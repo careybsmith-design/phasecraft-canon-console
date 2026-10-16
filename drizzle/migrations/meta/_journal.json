@@ -421,6 +421,13 @@
       "when": 1792188826594,
       "tag": "0059_audit_authority_evidence_and_regressions",
       "breakpoints": true
+    },
+    {
+      "idx": 60,
+      "version": "7",
+      "when": 1792188935757,
+      "tag": "0060_audit_access_and_callback_acceptance",
+      "breakpoints": true
     }
   ]
 }

@@ -2761,6 +2761,7 @@ export type Database = {
         }
         Returns: number
       }
+      thread_audit_security_selftest: { Args: never; Returns: Json }
       thread_authority_event: {
         Args: {
           p_actor: Json
