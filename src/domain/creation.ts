@@ -21,7 +21,7 @@ export const PLATFORM_REGISTRY: Record<Platform, {
   grok: { label: "Grok Bots", hosting: "self_hosted", cleared: ["public", "internal", "confidential"], live_determinism: "best_effort", model_route: "route.build.high", capture: "bot traces" },
 };
 
-/** Part 13.2: restricted content never leaves the boundary; Lovable never sees restricted/confidential. */
+/** Part 13.2: restricted content never leaves the boundary. Lovable is cleared up to confidential (user-confirmed 16 Oct 2026). */
 export function platformRefusal(platform: Platform, cls: Classification): string | null {
   const p = PLATFORM_REGISTRY[platform];
   if (!p.cleared.includes(cls)) return `PLATFORM_NOT_CLEARED: ${p.label} is not cleared for ${cls} content (Part 8.3)`;
