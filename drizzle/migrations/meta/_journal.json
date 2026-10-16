@@ -78,6 +78,55 @@
       "when": 1792124020094,
       "tag": "0010_thread_phase3_selftest_evidence",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1792124658707,
+      "tag": "0011_thread_phase4_fabric",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1792124734833,
+      "tag": "0012_thread_phase4_selftest_evidence",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1792124776557,
+      "tag": "0013_thread_phase4_compose_owner",
+      "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1792124811742,
+      "tag": "0014_thread_phase4_sweep_fix",
+      "breakpoints": true
+    },
+    {
+      "idx": 15,
+      "version": "7",
+      "when": 1792125010600,
+      "tag": "0015_thread_phase4_selftest_fixtures",
+      "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "7",
+      "when": 1792125046972,
+      "tag": "0016_thread_selftest_refs_session",
+      "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1792125122057,
+      "tag": "0017_thread_phase1_selftest_helpers",
+      "breakpoints": true
     }
   ]
 }
