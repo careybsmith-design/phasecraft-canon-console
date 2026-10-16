@@ -291,6 +291,57 @@ export type Database = {
         }
         Relationships: []
       }
+      capability_usage: {
+        Row: {
+          adapter_mode: string
+          at: string
+          capability_id: string
+          composition_id: string | null
+          consumer: string
+          cost: number
+          id: number
+          latency_ms: number | null
+          outcome: string
+        }
+        Insert: {
+          adapter_mode?: string
+          at?: string
+          capability_id: string
+          composition_id?: string | null
+          consumer: string
+          cost?: number
+          id?: number
+          latency_ms?: number | null
+          outcome: string
+        }
+        Update: {
+          adapter_mode?: string
+          at?: string
+          capability_id?: string
+          composition_id?: string | null
+          consumer?: string
+          cost?: number
+          id?: number
+          latency_ms?: number | null
+          outcome?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "capability_usage_capability_id_fkey"
+            columns: ["capability_id"]
+            isOneToOne: false
+            referencedRelation: "objects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "capability_usage_composition_id_fkey"
+            columns: ["composition_id"]
+            isOneToOne: false
+            referencedRelation: "objects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       classification_corrections: {
         Row: {
           by_actor: string
@@ -1516,6 +1567,7 @@ export type Database = {
       }
       reuse_checks: {
         Row: {
+          behavior_statement_id: string | null
           checked_at: string
           checked_by: Json
           decision: string
@@ -1526,6 +1578,7 @@ export type Database = {
           results: Json
         }
         Insert: {
+          behavior_statement_id?: string | null
           checked_at?: string
           checked_by: Json
           decision: string
@@ -1536,6 +1589,7 @@ export type Database = {
           results: Json
         }
         Update: {
+          behavior_statement_id?: string | null
           checked_at?: string
           checked_by?: Json
           decision?: string
@@ -1545,7 +1599,15 @@ export type Database = {
           rationale?: string
           results?: Json
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "reuse_checks_behavior_statement_id_fkey"
+            columns: ["behavior_statement_id"]
+            isOneToOne: false
+            referencedRelation: "objects"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       risk_assessments: {
         Row: {
@@ -1707,6 +1769,7 @@ export type Database = {
         }
         Returns: undefined
       }
+      _capability_gaps: { Args: { _body: Json }; Returns: string[] }
       _demotion_target: {
         Args: {
           _from: Database["public"]["Enums"]["authority_level"]
@@ -1790,6 +1853,16 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      _p4_cap_body: {
+        Args: { _ins: string[]; _outs: string[]; _title: string }
+        Returns: Json
+      }
+      _selftest_body: { Args: { _refs: Json; _type: string }; Returns: Json }
+      _selftest_next_state: {
+        Args: { _family: string; _from: string }
+        Returns: string
+      }
+      _selftest_refs: { Args: { _actor: Json }; Returns: Json }
       _thread_apply: {
         Args: {
           _action: string
@@ -1862,6 +1935,20 @@ export type Database = {
       }
       can_read_session: { Args: { _s: string }; Returns: boolean }
       canon_drift_report: { Args: never; Returns: Json }
+      composition_effective_authority: {
+        Args: { p_id: string }
+        Returns: Database["public"]["Enums"]["authority_level"]
+      }
+      fabric_search: {
+        Args: {
+          p_domain: string
+          p_inputs: string[]
+          p_limit?: number
+          p_outcome: string
+          p_outputs: string[]
+        }
+        Returns: Json
+      }
       framing_related_objects: {
         Args: {
           p_limit?: number
@@ -1969,6 +2056,15 @@ export type Database = {
         Returns: Json
       }
       thread_authority_sweep: { Args: { p_actor: Json }; Returns: Json }
+      thread_compose_capabilities: {
+        Args: {
+          p_actor: Json
+          p_ids: string[]
+          p_scenario: string
+          p_title: string
+        }
+        Returns: Json
+      }
       thread_create_edge: {
         Args: { p: Json; p_actor: Json }
         Returns: {
@@ -2055,12 +2151,21 @@ export type Database = {
         }
         Returns: Json
       }
+      thread_fabric_sweep: {
+        Args: { p_actor: Json; p_now?: string }
+        Returns: Json
+      }
+      thread_fabric_sweep_scoped: {
+        Args: { p_actor: Json; p_now: string; p_only: string[] }
+        Returns: Json
+      }
       thread_framing_sweep: { Args: { p_actor: Json }; Returns: Json }
       thread_graph_sweep: { Args: { p_actor: Json }; Returns: Json }
       thread_phase1_selftest: { Args: never; Returns: Json }
       thread_phase2_selftest: { Args: never; Returns: Json }
       thread_phase2b_selftest: { Args: never; Returns: Json }
       thread_phase3_selftest: { Args: never; Returns: Json }
+      thread_phase4_selftest: { Args: never; Returns: Json }
       thread_propose_canon_change: {
         Args: { p: Json; p_actor: Json }
         Returns: {
@@ -2087,6 +2192,63 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      thread_publish_capability: {
+        Args: { p_actor: Json; p_contract_id: string; p_id: string }
+        Returns: {
+          authority_level: Database["public"]["Enums"]["authority_level"]
+          body: Json
+          builder_id: string | null
+          citations: Json
+          co_creator_id: string | null
+          confidence_bundle: Json | null
+          consequence_class: Database["public"]["Enums"]["consequence_class"]
+          content_hash: string
+          created_at: string
+          created_by: Json
+          data_classification: Database["public"]["Enums"]["data_classification"]
+          derived_from: string[]
+          effective_from: string
+          evidence_refs: string[]
+          expiration_condition: Json
+          expires_at: string | null
+          human_ref: string
+          id: string
+          is_tombstone: boolean
+          lifecycle_state: string
+          machine_description: string
+          open_questions: string[]
+          owner_id: string
+          permission: Json
+          permitted_uses: string[]
+          provenance_chain_id: string
+          retired_at: string | null
+          retirement_path: Json
+          retirement_reason: string | null
+          review_date: string
+          risk_tier: Database["public"]["Enums"]["risk_tier"]
+          schema_version: string
+          search: unknown
+          statement: string
+          steward_id: string | null
+          superseded_by: string[]
+          supersedes: string[]
+          title: string
+          type: string
+          updated_at: string
+          updated_by: Json
+          version: number
+        }
+        SetofOptions: {
+          from: "*"
+          to: "objects"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      thread_record_capability_use: {
+        Args: { p: Json; p_actor: Json; p_id: string }
+        Returns: number
+      }
       thread_record_phase1_evidence: { Args: { p_actor: Json }; Returns: Json }
       thread_record_phase2_evidence: { Args: { p_actor: Json }; Returns: Json }
       thread_record_phase2b_evidence: {
@@ -2094,6 +2256,10 @@ export type Database = {
         Returns: Json
       }
       thread_record_phase3_evidence: {
+        Args: { p: Json; p_actor: Json }
+        Returns: Json
+      }
+      thread_record_phase4_evidence: {
         Args: { p: Json; p_actor: Json }
         Returns: Json
       }
