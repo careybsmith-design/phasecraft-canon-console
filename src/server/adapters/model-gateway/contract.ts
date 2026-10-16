@@ -1,5 +1,6 @@
 /** ModelGateway contract (Section 3.4). Provider-agnostic; data classification gates the route. */
-export type ContentPart = { type: "input_text"; text: string } | { type: "input_image"; image_url: string };
+export type ContentPart =
+  { type: "input_text"; text: string } | { type: "input_image"; image_url: string };
 export interface CompleteRequest {
   route: string;
   messages: Array<{ role: "system" | "user"; content: string | ContentPart[] }>;
@@ -17,8 +18,15 @@ export interface CompleteResult {
   latency_ms: number;
   adapter_mode: "live" | "simulated";
 }
-export interface ModelGateway { complete(req: CompleteRequest): Promise<CompleteResult> }
+export interface ModelGateway {
+  complete(req: CompleteRequest): Promise<CompleteResult>;
+}
 
 export class ModelGatewayError extends Error {
-  constructor(public status: number, message: string) { super(message); }
+  constructor(
+    public status: number,
+    message: string,
+  ) {
+    super(message);
+  }
 }

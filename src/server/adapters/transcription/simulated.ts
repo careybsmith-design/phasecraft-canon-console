@@ -22,12 +22,24 @@ export function simulatedTranscription(): Transcription {
       for (const u of segment(chunk.text)) {
         const before = chunk.text.slice(0, u.start).split(/\s+/).filter(Boolean).length;
         const words = u.text.split(/\s+/).filter(Boolean).length;
-        const seg: Segment = { speaker_id: chunk.speaker_id, t_start: chunk.t_offset_ms + before * 330, t_end: chunk.t_offset_ms + (before + words) * 330, text: u.text, confidence: 0.99 };
+        const seg: Segment = {
+          speaker_id: chunk.speaker_id,
+          t_start: chunk.t_offset_ms + before * 330,
+          t_end: chunk.t_offset_ms + (before + words) * 330,
+          text: u.text,
+          confidence: 0.99,
+        };
         s.segments.push(seg);
         s.cbs.forEach((cb) => cb(seg));
       }
     },
-    onSegment(streamId, cb) { streams.get(streamId)?.cbs.push(cb); },
-    finalize(streamId) { const s = streams.get(streamId); streams.delete(streamId); return s?.segments ?? []; },
+    onSegment(streamId, cb) {
+      streams.get(streamId)?.cbs.push(cb);
+    },
+    finalize(streamId) {
+      const s = streams.get(streamId);
+      streams.delete(streamId);
+      return s?.segments ?? [];
+    },
   };
 }
