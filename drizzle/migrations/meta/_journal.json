@@ -141,6 +141,27 @@
       "when": 1792161137288,
       "tag": "0019_thread_phase5_selftest_evidence",
       "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1792166011853,
+      "tag": "0020_phase6_creation_loop",
+      "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1792166100204,
+      "tag": "0021_phase6_selftest",
+      "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "7",
+      "when": 1792166162823,
+      "tag": "0022_phase6_owner_fix",
+      "breakpoints": true
     }
   ]
 }

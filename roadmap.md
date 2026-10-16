@@ -5,8 +5,9 @@
 - [x] Phase 2B — Framing session capture and extraction
 - [x] Phase 3 — Authority, guardrails and decisions; exit evidence ledger #1788
 - [x] Phase 4 — Capability Fabric; exit evidence ledger #3674
-- [x] Phase 5 — Evidence graph (waiting for user approval); exit evidence ledger #4906
-- [ ] Phase 6 … Phase 12 per Section 16
+- [x] Phase 5 — Evidence graph; exit evidence ledger #4906
+- [x] Phase 6 — Creation loop and platform integration (waiting for user approval); exit evidence ledger #7282
+- [ ] Phase 7 … Phase 12 per Section 16
 
 ## Open items — keep until addressed at the end (never delete without resolving)
 
@@ -44,3 +45,10 @@ Phase 5
 - [ ] Confirm the three added chain verbs: decided_from, built, renews
 - [ ] MCP exposure of explain_capability / trace_* (contracts recorded; endpoint arrives in Phase 9)
 - [ ] Real chains: no live object yet has a full signal-to-value chain (builds Phase 6, production/value Phase 7)
+
+Phase 6
+- [ ] Live builds on all five platforms (`pending_live_adapter`): needs URL + token + webhook secret per platform; simulated evidence attached
+- [ ] Confirm DESIGN DECISION: live replays are `best_effort` on every platform (none guarantees determinism)
+- [ ] Confirm platform clearance: Lovable gets public/internal only; self-hosted get up to confidential; restricted goes nowhere
+- [ ] Iteration class is detected from a described diff (obligations / results / contracts / wording); real diff analysis needs live artifacts
+- [ ] Test leftovers: practice chain BS-2026-0018, EO-2026-0001, TP-2026-0001, CP-2026-0001, BR-2026-0001…0006, IT-2026-0001
