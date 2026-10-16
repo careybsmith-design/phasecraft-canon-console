@@ -320,8 +320,8 @@ const LOW_CONSEQUENCE: Consequence[] = ["none", "reversible"];
 const INDEPENDENT: Consequence[] = ["rights_affecting", "safety", "lifeline"];
 
 /**
- * Order (first match wins): Tier C → prohibited → lapsed authority → enforcing guardrail failure →
- * rights/safety/life or Tier 4 → irreversible → moderate confidence → low confidence → high confidence.
+ * Order (first match wins): Tier C → prohibited → lapsed authority → rights/safety/life or Tier 4 → irreversible →
+ * enforcing guardrail failure → moderate confidence → low confidence → high confidence.
  */
 export function evaluateAuthority(ctx: ActionContext, bundle: BundleInput, guardrails: GuardrailRow[]): AuthorityOutcome {
   const tier = ctx.content_text ? classifyContent(ctx.content_text).tier : "A";
@@ -342,13 +342,15 @@ export function evaluateAuthority(ctx: ActionContext, bundle: BundleInput, guard
   }
   const failedEnforcing = results.filter((r) => r.enforcement === "enforcing" && !r.passed);
   const advisory = results.filter((r) => r.enforcement === "advisory" && !r.passed).map((r) => `advisory: ${r.finding}`);
-  if (failedEnforcing.length) return out("block", "cannot_proceed", failedEnforcing.map((r) => `GR-${r.evaluator}`), `Enforcing guardrail failed: ${failedEnforcing.map((r) => r.finding).join("; ")}.`);
+  // Escalation to an accountable human is never blocked by an automation guardrail; failures travel as conditions.
   const withAdv = (c: string[]) => [...c, ...advisory];
-
+  const gf = failedEnforcing.map((r) => `guardrail: ${r.finding}`);
   if (INDEPENDENT.includes(ctx.object.consequence_class) || ctx.object.risk_tier === 4)
-    return out("escalate_human_decision", "explicit_human_decision_independent", ["DM-independent"], "Rights-, safety- or life-affecting, or Tier 4: an independent accountable human decides.", { independent: true, conditions: withAdv([]) });
+    return out("escalate_human_decision", "explicit_human_decision_independent", ["DM-independent"], "Rights-, safety- or life-affecting, or Tier 4: an independent accountable human decides.", { independent: true, conditions: withAdv(gf) });
   if (ctx.object.consequence_class === "irreversible")
-    return out("escalate_human_decision", "explicit_human_decision", ["DM-consequential"], "Irreversible consequence: an accountable human decides.", { conditions: withAdv([]) });
+    return out("escalate_human_decision", "explicit_human_decision", ["DM-consequential"], "Irreversible consequence: an accountable human decides.", { conditions: withAdv(gf) });
+  if (failedEnforcing.length) return out("block", "cannot_proceed", failedEnforcing.map((r) => `GR-${r.evaluator}`), `Enforcing guardrail failed: ${failedEnforcing.map((r) => r.finding).join("; ")}.`);
+
   if (conf.band === "moderate")
     return out("proceed", "limited_exposure_with_observation", ["DM-moderate"], `Moderate confidence (${conf.overall}): limited exposure with observation.`, { conditions: withAdv(["limited_exposure", "enhanced_observation"]) });
   if (conf.band === "low") {
