@@ -14,6 +14,7 @@ export const AssuranceInput = z.object({
   evidence_refs: z.array(z.string().uuid()).min(1).max(20),
   rationale: z.string().trim().min(1).max(2000),
 }).strict();
+export type AssuranceInput = z.infer<typeof AssuranceInput>;
 
 export function rpcBatch(body: unknown): unknown[] {
   const messages = Array.isArray(body) ? body : [body];
@@ -22,7 +23,7 @@ export function rpcBatch(body: unknown): unknown[] {
 }
 
 /** Read incrementally; Content-Length is not trusted and chunked payloads are also bounded. */
-export async function boundedJson(request: Request): Promise<unknown> {
+export async function boundedText(request: Request): Promise<string> {
   const length = request.headers.get("content-length");
   if (length && Number(length) > MCP_BODY_BYTES) throw new Error("BODY_LIMIT");
   const reader = request.body?.getReader();
@@ -39,8 +40,9 @@ export async function boundedJson(request: Request): Promise<unknown> {
   } finally { reader.releaseLock(); }
   const bytes = new Uint8Array(total); let offset = 0;
   for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.byteLength; }
-  return JSON.parse(new TextDecoder().decode(bytes));
+  return new TextDecoder().decode(bytes);
 }
+export async function boundedJson(request: Request): Promise<unknown> { return JSON.parse(await boundedText(request)); }
 
 export function recoveryWithinTarget(rpo: number, rto: number, ledgerVerified: boolean) {
   return Number.isFinite(rpo) && Number.isFinite(rto) && rpo >= 0 && rto >= 0 && rpo <= RECOVERY_TARGET.rpo_minutes && rto <= RECOVERY_TARGET.rto_minutes && ledgerVerified;

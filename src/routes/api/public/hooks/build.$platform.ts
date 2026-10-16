@@ -4,6 +4,7 @@
  */
 import { createFileRoute } from "@tanstack/react-router";
 import { PLATFORMS, type Platform } from "@/domain/creation";
+import { boundedText } from "@/domain/hardening";
 
 async function hmacHex(secret: string, body: string) {
   const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
@@ -25,7 +26,8 @@ export const Route = createFileRoute("/api/public/hooks/build/$platform")({
         if (!PLATFORMS.includes(platform)) return new Response("unknown platform", { status: 404 });
         const secret = process.env[`BUILD_WEBHOOK_SECRET_${platform.toUpperCase()}`];
         if (!secret) return new Response("platform not connected", { status: 503 });
-        const body = await request.text();
+        let body: string;
+        try { body = await boundedText(request); } catch { return new Response("payload exceeds transport limit", { status: 413 }); }
         const sig = request.headers.get("x-thread-signature") ?? "";
         if (!same(sig, await hmacHex(secret, body))) return new Response("bad signature", { status: 401 });
         let j: { run_id?: string; external_run_id?: string; status?: string; cost?: number; duration_ms?: number; secrets_scan?: string; failure_reason?: string; artifacts?: unknown[] };
@@ -34,6 +36,7 @@ export const Route = createFileRoute("/api/public/hooks/build/$platform")({
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
         const { data: run } = await supabaseAdmin.from("build_runs").select("platform,external_run_id,adapter_mode").eq("object_id", j.run_id).maybeSingle();
         if (!run || run.platform !== platform || run.adapter_mode !== "live") return new Response("unknown run", { status: 404 });
+        if (j.external_run_id !== run.external_run_id) return new Response("external run mismatch", { status: 409 });
         const { error } = await supabaseAdmin.rpc("thread_record_build_result", {
           p_actor: { kind: "agent", id: `build-platform:${platform}`, authority_used: "observe" },
           p: { run_id: j.run_id, external_run_id: j.external_run_id, status: j.status, cost_actual: j.cost, duration_ms: j.duration_ms, secrets_scan: j.secrets_scan, failure_reason: j.failure_reason, artifacts: j.artifacts ?? [] },
