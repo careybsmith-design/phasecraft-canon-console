@@ -13,7 +13,7 @@ import { listObjects } from "@/lib/canon.functions";
 import { EXPLORER_VIEWS, VIEW_LABELS, OVERLAYS, type Overlay, decompositionLayer } from "@/domain/graph-views";
 import { applyEdgeBudget, radialByDepth, layered, spiralOffset, clusterCentre, syntheticNebula } from "@/domain/graph";
 import { edgeAllowed, ORIGINS, DEPENDENCY_KINDS } from "@/domain/relationships";
-import { GraphCanvas, type CanvasNode, type CanvasEdge, type GraphCanvasHandle } from "@/components/graph/GraphCanvas";
+import { GraphCanvas, type CanvasNode, type CanvasEdge, type CanvasStatus, type GraphCanvasHandle } from "@/components/graph/GraphCanvas";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -417,29 +417,35 @@ function Benchmark({ onExit }: { onExit: () => void }) {
   }, []);
   const [result, setResult] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [status, setStatus] = useState<CanvasStatus>({ state: "loading" });
   async function run() {
-    setBusy(true);
-    const firstPaint = performance.now() - t0.current;
-    const frames = await canvas.current!.animateBenchmark(5000);
-    const fps = frames.map((f) => 1000 / f).sort((a, b) => a - b);
-    const median = fps[Math.floor(fps.length / 2)] ?? 0;
-    const p5 = fps[Math.floor(fps.length * 0.05)] ?? 0;
+    if (status.state !== "ready") return;
+    setBusy(true); setResult(null);
     try {
+      const frames = await canvas.current!.animateBenchmark(5000);
+      if (frames.length < 10) {
+        setResult(`Not recorded: only ${frames.length} frame(s) were drawn, so there is nothing valid to measure. Reload the page and try again.`);
+        return;
+      }
+      const fps = frames.map((f) => 1000 / f).sort((a, b) => a - b);
+      const median = fps[Math.floor(fps.length / 2)]!;
+      const p5 = fps[Math.floor(fps.length * 0.05)]!;
       const r = await record({ data: { dataset: "synthetic", nodes: BENCH_NODES, edges_rendered: data.edges.length, edges_total: data.total,
-        fps_median: Math.round(median * 10) / 10, fps_p5: Math.round(p5 * 10) / 10, duration_ms: 5000, first_paint_ms: Math.round(firstPaint),
+        fps_median: Math.round(median * 10) / 10, fps_p5: Math.round(p5 * 10) / 10, duration_ms: 5000, first_paint_ms: Math.round(status.ms),
         user_agent: navigator.userAgent.slice(0, 400), device_pixel_ratio: window.devicePixelRatio } });
-      setResult(`Median ${median.toFixed(1)} fps, slowest 5% ${p5.toFixed(1)} fps at ${BENCH_NODES.toLocaleString("en-US")} nodes (${median >= 30 ? "meets" : "misses"} the 30 fps target). Recorded as ledger #${r.seq}.`);
+      setResult(`Median ${median.toFixed(1)} fps, slowest 5% ${p5.toFixed(1)} fps over ${frames.length} frames at ${BENCH_NODES.toLocaleString("en-US")} nodes (${median >= 30 ? "meets" : "misses"} the 30 fps target). Recorded as ledger #${r.seq}.`);
     } catch (e) { toast.error(errText(e)); } finally { setBusy(false); }
   }
+  const ready = status.state === "ready";
   return (
     <div className="space-y-2">
       <div className="flex flex-wrap items-center gap-2">
         <Button size="sm" variant="outline" onClick={onExit}>← Back to Nebula</Button>
-        <p className="ident text-xs text-muted-foreground">Synthetic dataset · {BENCH_NODES.toLocaleString("en-US")} nodes · {data.label}</p>
-        <Button size="sm" className="ml-auto" disabled={busy} onClick={run}>{busy ? "Measuring for 5 s…" : "Measure and record"}</Button>
+        <p className="ident text-xs text-muted-foreground">Synthetic dataset · {BENCH_NODES.toLocaleString("en-US")} nodes · {data.label}{ready ? ` · drawn in ${(status.ms / 1000).toFixed(1)} s` : ""}</p>
+        <Button size="sm" className="ml-auto" disabled={busy || !ready} onClick={run}>{busy ? "Measuring for 5 s… (the graph zooms and turns)" : ready ? "Measure and record" : "Waiting for the graph…"}</Button>
       </div>
       {result && <p role="status" className="text-sm">{result}</p>}
-      <GraphCanvas ref={canvas} nodes={data.nodes} edges={data.edges} labels={false} ariaLabel="Render benchmark, 20,000 synthetic nodes" />
+      <GraphCanvas ref={canvas} nodes={data.nodes} edges={data.edges} labels={false} onStatus={setStatus} ariaLabel="Render benchmark, 20,000 synthetic nodes" />
     </div>
   );
 }
