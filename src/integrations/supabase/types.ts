@@ -1674,43 +1674,117 @@ export type Database = {
         }
         Relationships: []
       }
+      rendition_kinds: {
+        Row: {
+          kind: string
+          label: string
+          media: string
+        }
+        Insert: {
+          kind: string
+          label: string
+          media: string
+        }
+        Update: {
+          kind?: string
+          label?: string
+          media?: string
+        }
+        Relationships: []
+      }
+      rendition_regen_queue: {
+        Row: {
+          done_at: string | null
+          enqueued_at: string
+          id: number
+          reason: string
+          rendition_id: string
+        }
+        Insert: {
+          done_at?: string | null
+          enqueued_at?: string
+          id?: number
+          reason: string
+          rendition_id: string
+        }
+        Update: {
+          done_at?: string | null
+          enqueued_at?: string
+          id?: number
+          reason?: string
+          rendition_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rendition_regen_queue_rendition_id_fkey"
+            columns: ["rendition_id"]
+            isOneToOne: false
+            referencedRelation: "renditions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       renditions: {
         Row: {
           body: Json | null
           citations: Json
+          delete_after: string | null
+          deleted_at: string | null
           expires_at: string
           generated_at: string
           generated_from: Json
           generator: Json
+          human_ref: string | null
           id: string
           kind: string
+          marker: string
           permission_context: Json
+          request: Json
+          sources_hash: string | null
+          stale_at: string | null
+          stale_reason: string | null
           state: string
           storage_path: string | null
         }
         Insert: {
           body?: Json | null
           citations: Json
+          delete_after?: string | null
+          deleted_at?: string | null
           expires_at: string
           generated_at?: string
           generated_from: Json
           generator: Json
+          human_ref?: string | null
           id: string
           kind: string
+          marker?: string
           permission_context: Json
+          request?: Json
+          sources_hash?: string | null
+          stale_at?: string | null
+          stale_reason?: string | null
           state?: string
           storage_path?: string | null
         }
         Update: {
           body?: Json | null
           citations?: Json
+          delete_after?: string | null
+          deleted_at?: string | null
           expires_at?: string
           generated_at?: string
           generated_from?: Json
           generator?: Json
+          human_ref?: string | null
           id?: string
           kind?: string
+          marker?: string
           permission_context?: Json
+          request?: Json
+          sources_hash?: string | null
+          stale_at?: string | null
+          stale_reason?: string | null
           state?: string
           storage_path?: string | null
         }
@@ -1910,6 +1984,14 @@ export type Database = {
         }
         Returns: undefined
       }
+      _can_read_as: {
+        Args: {
+          _cls: Database["public"]["Enums"]["data_classification"]
+          _perm: Json
+          _uid: string
+        }
+        Returns: boolean
+      }
       _canon_challenge_agent: { Args: { p_change: string }; Returns: number }
       _canon_ledger: {
         Args: {
@@ -2088,6 +2170,11 @@ export type Database = {
           isOneToOne: false
           isSetofReturn: true
         }
+      }
+      _prohibited_inference: { Args: { t: string }; Returns: Json }
+      _rendition_ledger: {
+        Args: { _action: string; _actor: Json; _mode: string; _payload: Json }
+        Returns: number
       }
       _rev: { Args: { _ids: string[]; _verb: string }; Returns: string[] }
       _selftest_body: { Args: { _refs: Json; _type: string }; Returns: Json }
@@ -2470,6 +2557,12 @@ export type Database = {
         Returns: Json
       }
       thread_framing_sweep: { Args: { p_actor: Json }; Returns: Json }
+      thread_generate_morning_brief: { Args: { p_user: string }; Returns: Json }
+      thread_generate_morning_briefs: { Args: never; Returns: Json }
+      thread_generate_rendition: {
+        Args: { p: Json; p_actor: Json }
+        Returns: Json
+      }
       thread_graph_sweep: { Args: { p_actor: Json }; Returns: Json }
       thread_kill_switch: {
         Args: { p?: Json; p_actor: Json; p_capability: string }
@@ -2699,6 +2792,7 @@ export type Database = {
         Returns: Json
       }
       thread_refresh_graph_layout: { Args: never; Returns: Json }
+      thread_rendition_sweep: { Args: { p_now?: string }; Returns: Json }
       thread_restore_rehearsal: { Args: never; Returns: Json }
       thread_retire_edge: {
         Args: { p_actor: Json; p_edge_id: string; p_reason: string }
@@ -2782,6 +2876,10 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      thread_serve_rendition: {
+        Args: { p_actor: Json; p_id: string; p_purpose: string }
+        Returns: Json
       }
       thread_set_authority: {
         Args: {
