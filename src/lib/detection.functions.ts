@@ -26,7 +26,7 @@ export const observeDetection = createServerFn({ method: 'POST' }).middleware([r
     const { data: member } = await context.supabase.from('user_roles').select('role').eq('user_id', context.userId).limit(1);
     if (!member?.length) throw new Error('Membership required.');
     const { supabaseAdmin } = await import('@/integrations/supabase/client.server');
-    const r = await supabaseAdmin.rpc('thread_observe_detection', { p_actor: actor(context.userId), p_subject: data.subject_id, p_facts: { [data.fact]: true }, p_evidence: data.evidence_refs, p_rationale: data.rationale });
+    const r = await supabaseAdmin.rpc('thread_observe_detection', { p_actor: actor(context.userId), p_subject: data.subject_id, p_facts: { [data.fact]: true }, p_evidence: data.evidence_refs, p_rationale: data.rationale } as never);
     if (r.error) throw new Error(r.error.message); return r.data;
   });
 export const resolveDetection = createServerFn({ method: 'POST' }).middleware([requireSupabaseAuth])
@@ -37,7 +37,7 @@ export const resolveDetection = createServerFn({ method: 'POST' }).middleware([r
     const { data: steward } = await context.supabase.rpc('has_role', { _uid: context.userId, _role: 'steward' });
     if (f.owner_id !== context.userId && !steward) throw new Error('Finding owner or steward required.');
     const { supabaseAdmin } = await import('@/integrations/supabase/client.server');
-    const r = await supabaseAdmin.rpc('thread_resolve_finding', { p_actor: actor(context.userId), p_finding: data.finding_id, p_resolution: data.resolution, p_accept_until: data.accept_until ?? undefined });
+    const r = await supabaseAdmin.rpc('thread_resolve_finding', { p_actor: actor(context.userId), p_finding: data.finding_id, p_resolution: data.resolution, ...(data.accept_until ? { p_accept_until: data.accept_until } : {}) });
     if (r.error) throw new Error(r.error.message); return r.data;
   });
 export const recordDetectionEvidence = createServerFn({ method: 'POST' }).middleware([requireSupabaseAuth]).handler(async ({ context }) => {
