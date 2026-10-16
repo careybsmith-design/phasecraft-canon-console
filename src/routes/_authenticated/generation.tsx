@@ -7,7 +7,10 @@ import { useCallback, useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { CANON_MARKER, RENDITION_KINDS, type RenditionKind } from "@/domain/generation";
 import {
-  generateMyBrief, generateRendition, getPhase8Evidence, listGeneration, runPhase8Evidence, serveRendition,
+  generateMyBrief, generateRendition, getPhase8Evidence, listGeneration, runPhase8Evidence, serveRendition, recordRenditionDownload,
+} from "@/lib/generation.functions";
+import { buildRenditionPdf, deliverFile } from "@/lib/rendition-pdf";
+import {
 } from "@/lib/generation.functions";
 
 export const Route = createFileRoute("/_authenticated/generation")({
@@ -38,6 +41,9 @@ function GenerationPage() {
   const serve = useServerFn(serveRendition);
   const brief = useServerFn(generateMyBrief);
   const runEv = useServerFn(runPhase8Evidence);
+  const recordDl = useServerFn(recordRenditionDownload);
+  const [pdf, setPdf] = useState<{ blob: Blob; name: string; seq: number } | null>(null);
+  const [preparing, setPreparing] = useState(false);
   const getEv = useServerFn(getPhase8Evidence);
   const [list, setList] = useState<List | null>(null);
   const [msg, setMsg] = useState("");
@@ -63,6 +69,7 @@ function GenerationPage() {
   };
   const open = async (id: string, p: string) => {
     setMsg("");
+    setPdf(null);
     try { setShown(await serve({ data: { id, purpose: p } })); } catch (e) { setShown(null); setMsg(parseErr(e)); }
   };
   const objs = (list?.objects ?? []).filter((o) => !filter || `${o.human_ref} ${o.title} ${o.type}`.toLowerCase().includes(filter.toLowerCase()));
@@ -150,6 +157,27 @@ function GenerationPage() {
             From {shown.generated_from.map((g) => `${g.human_ref} v${g.version}`).join(", ")} · {shown.generator.model} via {shown.generator.route} ({shown.generator.adapter_mode}) · {new Date(shown.generated_at).toLocaleString()} · for "{shown.permission_context.purpose}".
             {" "}To change what it says, <Link to="/canon" className="underline">propose a canon change</Link>; renditions are read-only.
           </p>
+          <div className="flex flex-wrap items-center gap-3 border-t pt-3">
+            {!pdf ? (
+              <button type="button" className="rounded border px-3 py-1 text-sm" disabled={preparing} onClick={async () => {
+                setPreparing(true); setMsg("");
+                try {
+                  const purposeText = shown.permission_context.purpose;
+                  const d = await recordDl({ data: { id: shown.id, purpose: purposeText } });
+                  const blob = await buildRenditionPdf({
+                    human_ref: shown.human_ref, marker: shown.marker ?? CANON_MARKER, title: shown.body?.title ?? shown.human_ref,
+                    note: shown.body?.note, sections: (shown.body?.sections ?? []) as never, generated_from: shown.generated_from,
+                    generator: shown.generator, generated_at: shown.generated_at, expires_at: d.rendition.expires_at, purpose: purposeText,
+                    reader: d.reader, classification: d.classification, ledger_seq: d.ledger_seq, downloaded_at: d.downloaded_at,
+                  });
+                  setPdf({ blob, name: `${shown.human_ref}.pdf`, seq: d.ledger_seq });
+                } catch (e) { setMsg(parseErr(e)); } finally { setPreparing(false); }
+              }}>{preparing ? "Preparing PDF…" : "Prepare PDF"}</button>
+            ) : (
+              <button type="button" className="rounded bg-primary px-3 py-1 text-sm text-primary-foreground" onClick={() => void deliverFile(pdf.blob, pdf.name)}>Download {pdf.name}</button>
+            )}
+            <p className="text-xs text-muted-foreground">{pdf ? `Download recorded as ledger #${pdf.seq}. ` : ""}A downloaded copy doesn't update or expire, so it may go out of date.</p>
+          </div>
         </section>
       )}
 

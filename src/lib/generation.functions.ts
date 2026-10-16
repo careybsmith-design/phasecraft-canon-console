@@ -120,7 +120,8 @@ export const recordRenditionDownload = createServerFn({ method: "POST" })
     const db = (await import("@/integrations/supabase/client.server")).supabaseAdmin;
     const { data: r, error } = await db.rpc("thread_record_rendition_download", { p_actor: human(context.userId), p_id: data.id, p_purpose: data.purpose });
     if (error) throw err(error.message);
-    return r as unknown as { classification: string; ledger_seq: number; downloaded_at: string; rendition: { expires_at: string } };
+    const reader = String((context.claims as { email?: string }).email ?? context.userId);
+    return { ...(r as object), reader } as unknown as { reader: string; classification: string; ledger_seq: number; downloaded_at: string; rendition: { expires_at: string } };
   });
 
 export const generateMyBrief = createServerFn({ method: "POST" })
