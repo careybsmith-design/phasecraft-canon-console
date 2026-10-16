@@ -45,7 +45,8 @@ export const INJECTION_RULES: Array<{ key: string; re: RegExp }> = [
 
 export function scanForInjection(value: unknown, path = "$", out: Array<{ path: string; rule: string }> = []) {
   if (typeof value === "string") {
-    for (const r of INJECTION_RULES) if (r.re.test(value)) out.push({ path, rule: r.key });
+    const normalized = value.normalize("NFKC").replace(/[\u200B-\u200D\u2060\uFEFF]/g, "");
+    for (const r of INJECTION_RULES) if (r.re.test(normalized)) out.push({ path, rule: r.key });
   } else if (Array.isArray(value)) value.forEach((v, i) => scanForInjection(v, `${path}[${i}]`, out));
   else if (value && typeof value === "object") for (const [k, v] of Object.entries(value)) scanForInjection(v, `${path}.${k}`, out);
   return out;

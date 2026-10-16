@@ -3,3 +3,4 @@
 - Measurement reads run as the caller via phase10_measurements/get_intent_to_value_time, shared by pages and MCP; null means missing live evidence. Why: outcomes cannot be replaced by manual reports or activity measures.
 - Object, edge and rendition triggers run sweeps with recursion protection; hourly reconciliation handles time-based conditions. Why: no permanent event polling.
 - Finding resolution and accepted risk go through thread_resolve_finding; accepted risk requires a human approver and future expiry. Why: owned, auditable exceptions never become permanent exemptions.
+- Each sweep materializes the current candidate set once for reconciliation and insertion. Why: repeating the complete detector query for every finding caused the canon self-test to time out.
