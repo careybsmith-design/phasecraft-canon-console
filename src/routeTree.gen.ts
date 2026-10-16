@@ -15,6 +15,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedAgentsRouteImport } from './routes/_authenticated/agents'
 import { Route as AuthenticatedAssuranceRouteImport } from './routes/_authenticated/assurance'
 import { Route as AuthenticatedAuthorityRouteImport } from './routes/_authenticated/authority'
+import { Route as AuthenticatedBuildAuditRouteImport } from './routes/_authenticated/build-audit'
 import { Route as AuthenticatedCanonRouteImport } from './routes/_authenticated/canon'
 import { Route as AuthenticatedCaptureRouteImport } from './routes/_authenticated/capture'
 import { Route as AuthenticatedCompanionRouteImport } from './routes/_authenticated/companion'
@@ -68,6 +69,11 @@ const AuthenticatedAssuranceRoute = AuthenticatedAssuranceRouteImport.update({
 const AuthenticatedAuthorityRoute = AuthenticatedAuthorityRouteImport.update({
   id: '/authority',
   path: '/authority',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedBuildAuditRoute = AuthenticatedBuildAuditRouteImport.update({
+  id: '/build-audit',
+  path: '/build-audit',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedCanonRoute = AuthenticatedCanonRouteImport.update({
@@ -212,6 +218,7 @@ export interface FileRoutesByFullPath {
   '/agents': typeof AuthenticatedAgentsRoute
   '/assurance': typeof AuthenticatedAssuranceRoute
   '/authority': typeof AuthenticatedAuthorityRoute
+  '/build-audit': typeof AuthenticatedBuildAuditRoute
   '/canon': typeof AuthenticatedCanonRoute
   '/capture': typeof AuthenticatedCaptureRoute
   '/companion': typeof AuthenticatedCompanionRoute
@@ -244,6 +251,7 @@ export interface FileRoutesByTo {
   '/agents': typeof AuthenticatedAgentsRoute
   '/assurance': typeof AuthenticatedAssuranceRoute
   '/authority': typeof AuthenticatedAuthorityRoute
+  '/build-audit': typeof AuthenticatedBuildAuditRoute
   '/canon': typeof AuthenticatedCanonRoute
   '/capture': typeof AuthenticatedCaptureRoute
   '/companion': typeof AuthenticatedCompanionRoute
@@ -277,6 +285,7 @@ export interface FileRoutesById {
   '/_authenticated/agents': typeof AuthenticatedAgentsRoute
   '/_authenticated/assurance': typeof AuthenticatedAssuranceRoute
   '/_authenticated/authority': typeof AuthenticatedAuthorityRoute
+  '/_authenticated/build-audit': typeof AuthenticatedBuildAuditRoute
   '/_authenticated/canon': typeof AuthenticatedCanonRoute
   '/_authenticated/capture': typeof AuthenticatedCaptureRoute
   '/_authenticated/companion': typeof AuthenticatedCompanionRoute
@@ -311,6 +320,7 @@ export interface FileRouteTypes {
     | '/agents'
     | '/assurance'
     | '/authority'
+    | '/build-audit'
     | '/canon'
     | '/capture'
     | '/companion'
@@ -343,6 +353,7 @@ export interface FileRouteTypes {
     | '/agents'
     | '/assurance'
     | '/authority'
+    | '/build-audit'
     | '/canon'
     | '/capture'
     | '/companion'
@@ -375,6 +386,7 @@ export interface FileRouteTypes {
     | '/_authenticated/agents'
     | '/_authenticated/assurance'
     | '/_authenticated/authority'
+    | '/_authenticated/build-audit'
     | '/_authenticated/canon'
     | '/_authenticated/capture'
     | '/_authenticated/companion'
@@ -453,6 +465,13 @@ declare module '@tanstack/react-router' {
       path: '/authority'
       fullPath: '/authority'
       preLoaderRoute: typeof AuthenticatedAuthorityRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/build-audit': {
+      id: '/_authenticated/build-audit'
+      path: '/build-audit'
+      fullPath: '/build-audit'
+      preLoaderRoute: typeof AuthenticatedBuildAuditRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/canon': {
@@ -652,6 +671,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedAgentsRoute: typeof AuthenticatedAgentsRoute
   AuthenticatedAssuranceRoute: typeof AuthenticatedAssuranceRoute
   AuthenticatedAuthorityRoute: typeof AuthenticatedAuthorityRoute
+  AuthenticatedBuildAuditRoute: typeof AuthenticatedBuildAuditRoute
   AuthenticatedCanonRoute: typeof AuthenticatedCanonRoute
   AuthenticatedCaptureRoute: typeof AuthenticatedCaptureRoute
   AuthenticatedCompanionRoute: typeof AuthenticatedCompanionRoute
@@ -678,6 +698,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedAgentsRoute: AuthenticatedAgentsRoute,
   AuthenticatedAssuranceRoute: AuthenticatedAssuranceRoute,
   AuthenticatedAuthorityRoute: AuthenticatedAuthorityRoute,
+  AuthenticatedBuildAuditRoute: AuthenticatedBuildAuditRoute,
   AuthenticatedCanonRoute: AuthenticatedCanonRoute,
   AuthenticatedCaptureRoute: AuthenticatedCaptureRoute,
   AuthenticatedCompanionRoute: AuthenticatedCompanionRoute,
