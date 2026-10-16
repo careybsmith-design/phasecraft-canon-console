@@ -7,3 +7,4 @@
 - `human_surface_context` bounds breadth-first expansion with RLS before frontier admission and exposes truncation. Why: a small response must not hide unbounded traversal work.
 - Evidence/session deep links reuse their existing surfaces with explicit IDs; metadata reads require current parent visibility. Why: alternate URLs and historical snapshots must not bypass access.
 - Authority evaluations share `authority.server.ts` and `authority-input.ts`; missing policy context or failed risk writes stop evaluation. Why: human and MCP policy outcomes must agree and fail closed.
+- Whole-build audit report is a bundled Markdown artifact at `/build-audit`, linked from Assurance; acceptance status distinguishes implementation, rollback fixtures and live proof. Why: green unit tests cannot conceal release blockers.

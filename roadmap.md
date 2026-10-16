@@ -1,11 +1,13 @@
 # THREAD roadmap
 
 ## Whole-build audit — Sections 1–19 (authorized 16 October 2026)
-- [ ] Re-read the full specification and Appendices A–C; inventory built, missing and mismatched requirements section by section.
-- [ ] Run full automated tests and all AW-1–AW-15 checks; explicitly retain unexecutable or undecided gates.
-- [ ] Inspect live database layout, access rules, every Section 19 function and MCP tool.
-- [ ] Fix safe implementation gaps and failures; preserve evidence and blockers in docs/THREAD-build-audit.md.
-- [ ] Verify fixes and report proof without representing simulations as live acceptance.
+- [x] Re-read full specification and Appendices A–C; all 19 sections inventoried in docs/THREAD-build-audit.md.
+- [x] Run complete automated suite and available database groups; report every AW-1–AW-15 as pass/fail/blocked, not full execution. Full release FAIL.
+- [x] Inspect live database layout/grants and static API inventory: 126 human operations, 95 MCP tools (75 advertised live / 10 pending / 10 human-only). Not all executed.
+- [x] Apply verified forward-only safety fixes; proof and remaining engineering gaps in docs/THREAD-build-audit.md and /build-audit.
+- [ ] Complete every remaining gap and full acceptance. Blockers: engineering gaps listed below, requester sign-in, trusted organizational authority, execution/Factory adapters, isolated test/load environment, independent humans and Carey's AW-5 decision.
+
+**Phase checkmarks below mean implemented, not all live exit evidence accepted; full build release remains FAIL.**
 
 - [x] Phase 1 — Canon and envelope
 - [x] Phase 2 — Operating Graph core; 20,000-node benchmark met (median 30.1 fps, ledger #1150)
@@ -60,8 +62,8 @@ Phase 5
 
 Phase 6
 - [ ] Live builds on all five platforms (`pending_live_adapter`): needs URL + token + webhook secret per platform; simulated evidence attached
-- [ ] Confirm DESIGN DECISION: live replays are `best_effort` on every platform (none guarantees determinism)
-- [ ] Confirm platform clearance: Lovable gets public/internal only; self-hosted get up to confidential; restricted goes nowhere
+- [x] Live best_effort replay confirmed by user 16 Oct 2026 (see confirmation below).
+- [x] Confidential clearance for all five builders confirmed by user 16 Oct 2026; restricted goes nowhere (supersedes original narrower Lovable choice).
 - [ ] Iteration class is detected from a described diff (obligations / results / contracts / wording); real diff analysis needs live artifacts
 - [ ] Test leftovers: practice chain BS-2026-0018, EO-2026-0001, TP-2026-0001, CP-2026-0001, BR-2026-0001…0006, IT-2026-0001
 - [x] CONFIRMED 16 Oct 2026: live replays are best_effort on all five platforms; iteration class from described diff
@@ -139,3 +141,15 @@ Phase 12
 - [ ] Complete per-class canon-owned retention schedules, six-year compliance retention/legal hold by default, personal-data erasure disposition, physical storage purge and restricted-read audit completeness. Blocker: approved policy/lawful disposition and storage execution integration. Existing hourly rendition purge and 05:00 briefs remain unchanged/provisional; no evidence/ledger physical purge introduced. Scheduled-job execution health remains unverified.
 - [ ] Factory-inherited controls/attestations, SSO-only transition (local accounts still exist), production credentials isolation, safe observability and platform availability targets (99.9% reads/writes/tools; 99.5% generation). Blocker: organizational identity/control owners and live hosting evidence; source code does not establish hosted settings.
 - [ ] Full AW-1…AW-15 release-blocking acceptance and operating-model dogfooding; Carey AW-5 action thresholds remain NULL/open with no default. Blocker: real usage, unfinished Phase 10/11 items, live builds/telemetry and human decisions. Phase 12 exit is not claimed passed.
+
+Whole-build audit — permanent open items
+- [ ] Full registered body-schema/type/version parity and validation of every write/revision; generic human creation is protected for seven contracts only. No external blocker; unfinished engineering.
+- [ ] Trusted domain-scoped participant decision authority and actual ConfirmedDecision source existence/type/authority/provenance; current declarations/nonempty references insufficient. Blocker: organizational identity/authority integration plus engineering.
+- [ ] Purpose/context/attribute/permitted-use predicate compiler, every-hop dynamic composition permissions and all-query two-identity leakage tests. Blocker: trusted organizational claims and isolated acceptance environment; engineering remains.
+- [ ] Section19 request/response parity for every function/tool; nested typed output schemas, combined fabric search/reuse, real legacy finding, scopes/windows, complete HDR/evidence fields, contract reconciliation. No external blocker for interface correction; execution adapters still required for pending kernels.
+- [ ] Privacy-safe semantic usage sessions and safe aggregate measurement, set/open vs decided status correction, actual intent-to-first-evidence publication. AW-5 stays NULL/open until Carey decides; do not infer defaults. Engineering plus real usage.
+- [ ] All remaining graph/path/closure work bounds and depth-truncation disclosure; Phase1 current database suite exceeds 30 seconds from repeated full graph/framing sweeps. Candidate materialization improved one source but did not solve total cost. No pass claimed.
+- [ ] Orphan remediation with real source relationships/retirement disposition; current 92 non-draft orphans. No invented edges or silent evidence deletion. Preserve audit-created legacy regression leftovers and prior practice records until accountable cleanup.
+- [ ] Full P1–P15 runtime acceptance, guardrail positive/negative, native detector induction/recurrence, isolated schema mutation, independent test-route/human-review evidence, authenticated Mission Runtime OCR/surface flows and dogfooding. Blocker: isolated environment, requester/second human, independent reviewer and live adapters.
+- [ ] Generic live evidence receipts/assessor execution verification; JSON adapter_mode='live' is not verified execution. Compliance walkthrough passing intentionally blocked without execution proof; full real assurance remains pending.
+- [ ] Complete regeneration/orchestrated burst/accessible surface/account onboarding workflows; lifecycle adjacency/evidence shortcut and source inconsistencies reconciliation. No invented policy values; engineering plus real workflow review.
