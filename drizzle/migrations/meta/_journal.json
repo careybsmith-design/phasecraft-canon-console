@@ -22,6 +22,13 @@
       "when": 1792113091807,
       "tag": "0002_thread_phase1_registry_seed",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1792117495294,
+      "tag": "0003_thread_phase2_graph_core",
+      "breakpoints": true
     }
   ]
 }

@@ -154,6 +154,113 @@ export type Database = {
           },
         ]
       }
+      canon_challenges: {
+        Row: {
+          argument: string
+          author: Json
+          change_id: string
+          created_at: string
+          evidence_refs: string[]
+          id: string
+          origin: string
+        }
+        Insert: {
+          argument: string
+          author: Json
+          change_id: string
+          created_at?: string
+          evidence_refs?: string[]
+          id: string
+          origin: string
+        }
+        Update: {
+          argument?: string
+          author?: Json
+          change_id?: string
+          created_at?: string
+          evidence_refs?: string[]
+          id?: string
+          origin?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canon_challenges_change_id_fkey"
+            columns: ["change_id"]
+            isOneToOne: false
+            referencedRelation: "canon_changes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      canon_changes: {
+        Row: {
+          applied_version: number | null
+          base_version: number
+          challenge_closes_at: string
+          decided_at: string | null
+          decided_by: Json | null
+          decision_object_id: string | null
+          decision_rationale: string | null
+          evidence_refs: string[]
+          id: string
+          object_id: string
+          patch: Json
+          proposed_at: string
+          proposed_by: Json
+          rationale: string
+          state: string
+        }
+        Insert: {
+          applied_version?: number | null
+          base_version: number
+          challenge_closes_at: string
+          decided_at?: string | null
+          decided_by?: Json | null
+          decision_object_id?: string | null
+          decision_rationale?: string | null
+          evidence_refs: string[]
+          id: string
+          object_id: string
+          patch: Json
+          proposed_at?: string
+          proposed_by: Json
+          rationale: string
+          state?: string
+        }
+        Update: {
+          applied_version?: number | null
+          base_version?: number
+          challenge_closes_at?: string
+          decided_at?: string | null
+          decided_by?: Json | null
+          decision_object_id?: string | null
+          decision_rationale?: string | null
+          evidence_refs?: string[]
+          id?: string
+          object_id?: string
+          patch?: Json
+          proposed_at?: string
+          proposed_by?: Json
+          rationale?: string
+          state?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canon_changes_decision_object_id_fkey"
+            columns: ["decision_object_id"]
+            isOneToOne: false
+            referencedRelation: "objects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "canon_changes_object_id_fkey"
+            columns: ["object_id"]
+            isOneToOne: false
+            referencedRelation: "objects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       canon_settings: {
         Row: {
           decided_by: string | null
@@ -399,6 +506,8 @@ export type Database = {
           evidence_refs: string[]
           from_id: string
           id: string
+          kind: string | null
+          rationale: string | null
           retired_at: string | null
           source: string
           to_id: string
@@ -412,6 +521,8 @@ export type Database = {
           evidence_refs?: string[]
           from_id: string
           id: string
+          kind?: string | null
+          rationale?: string | null
           retired_at?: string | null
           source: string
           to_id: string
@@ -425,6 +536,8 @@ export type Database = {
           evidence_refs?: string[]
           from_id?: string
           id?: string
+          kind?: string | null
+          rationale?: string | null
           retired_at?: string | null
           source?: string
           to_id?: string
@@ -487,6 +600,38 @@ export type Database = {
             foreignKeyName: "extraction_spans_object_id_fkey"
             columns: ["object_id"]
             isOneToOne: false
+            referencedRelation: "objects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      graph_layouts: {
+        Row: {
+          cluster: string
+          computed_at: string
+          object_id: string
+          x: number
+          y: number
+        }
+        Insert: {
+          cluster: string
+          computed_at?: string
+          object_id: string
+          x: number
+          y: number
+        }
+        Update: {
+          cluster?: string
+          computed_at?: string
+          object_id?: string
+          x?: number
+          y?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "graph_layouts_object_id_fkey"
+            columns: ["object_id"]
+            isOneToOne: true
             referencedRelation: "objects"
             referencedColumns: ["id"]
           },
@@ -1044,20 +1189,32 @@ export type Database = {
       }
       relationship_verbs: {
         Row: {
+          acyclic: boolean
+          computed: boolean
           directed: boolean
           from_types: string[]
+          impact: string
+          signatures: Json
           to_types: string[]
           verb: string
         }
         Insert: {
+          acyclic?: boolean
+          computed?: boolean
           directed?: boolean
           from_types: string[]
+          impact?: string
+          signatures?: Json
           to_types: string[]
           verb: string
         }
         Update: {
+          acyclic?: boolean
+          computed?: boolean
           directed?: boolean
           from_types?: string[]
+          impact?: string
+          signatures?: Json
           to_types?: string[]
           verb?: string
         }
@@ -1241,6 +1398,21 @@ export type Database = {
         }
         Returns: undefined
       }
+      _canon_challenge_agent: { Args: { p_change: string }; Returns: number }
+      _canon_ledger: {
+        Args: {
+          o: Database["public"]["Tables"]["objects"]["Row"]
+          p_action: string
+          p_actor: Json
+          p_payload: Json
+        }
+        Returns: undefined
+      }
+      _edge_signature_ok: {
+        Args: { _from: string; _to: string; _verb: string }
+        Returns: boolean
+      }
+      _expand_type_group: { Args: { _name: string }; Returns: string[] }
       _ledger_write: {
         Args: {
           _action: string
@@ -1373,6 +1545,57 @@ export type Database = {
         }
         Returns: boolean
       }
+      canon_drift_report: { Args: never; Returns: Json }
+      graph_closure: {
+        Args: { p_depth?: number; p_root: string }
+        Returns: Json
+      }
+      graph_contradictions: { Args: never; Returns: Json }
+      graph_cycles: { Args: { p_verbs?: string[] }; Returns: Json }
+      graph_edge_json: {
+        Args: { e: Database["public"]["Tables"]["edges"]["Row"] }
+        Returns: Json
+      }
+      graph_nebula: {
+        Args: {
+          p_cluster?: string
+          p_edge_budget?: number
+          p_node_budget?: number
+        }
+        Returns: Json
+      }
+      graph_neighbourhood: {
+        Args: {
+          p_depth?: number
+          p_edge_budget?: number
+          p_root: string
+          p_verbs?: string[]
+        }
+        Returns: Json
+      }
+      graph_node_json: {
+        Args: { o: Database["public"]["Tables"]["objects"]["Row"] }
+        Returns: Json
+      }
+      graph_orphans: { Args: { p_limit?: number }; Returns: Json }
+      graph_paths: {
+        Args: {
+          p_from: string
+          p_limit?: number
+          p_max_depth?: number
+          p_to: string
+        }
+        Returns: Json
+      }
+      graph_subgraph: {
+        Args: {
+          p_edge_budget?: number
+          p_node_budget?: number
+          p_types: string[]
+          p_verbs: string[]
+        }
+        Returns: Json
+      }
       has_role: {
         Args: { _role: Database["public"]["Enums"]["app_role"]; _uid: string }
         Returns: boolean
@@ -1388,6 +1611,53 @@ export type Database = {
       }
       show_limit: { Args: never; Returns: number }
       show_trgm: { Args: { "": string }; Returns: string[] }
+      thread_add_canon_challenge: {
+        Args: {
+          p_actor: Json
+          p_argument: string
+          p_change_id: string
+          p_evidence_refs?: Json
+        }
+        Returns: {
+          argument: string
+          author: Json
+          change_id: string
+          created_at: string
+          evidence_refs: string[]
+          id: string
+          origin: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "canon_challenges"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      thread_create_edge: {
+        Args: { p: Json; p_actor: Json }
+        Returns: {
+          authority_used: Database["public"]["Enums"]["authority_level"]
+          confidence: number | null
+          created_at: string
+          created_by: Json
+          evidence_refs: string[]
+          from_id: string
+          id: string
+          kind: string | null
+          rationale: string | null
+          retired_at: string | null
+          source: string
+          to_id: string
+          verb: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "edges"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       thread_create_object: {
         Args: { p: Json; p_actor: Json }
         Returns: {
@@ -1441,9 +1711,76 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      thread_decide_canon_change: {
+        Args: {
+          p_actor: Json
+          p_change_id: string
+          p_decision: string
+          p_rationale: string
+        }
+        Returns: Json
+      }
+      thread_graph_sweep: { Args: { p_actor: Json }; Returns: Json }
       thread_phase1_selftest: { Args: never; Returns: Json }
+      thread_phase2_selftest: { Args: never; Returns: Json }
+      thread_propose_canon_change: {
+        Args: { p: Json; p_actor: Json }
+        Returns: {
+          applied_version: number | null
+          base_version: number
+          challenge_closes_at: string
+          decided_at: string | null
+          decided_by: Json | null
+          decision_object_id: string | null
+          decision_rationale: string | null
+          evidence_refs: string[]
+          id: string
+          object_id: string
+          patch: Json
+          proposed_at: string
+          proposed_by: Json
+          rationale: string
+          state: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "canon_changes"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       thread_record_phase1_evidence: { Args: { p_actor: Json }; Returns: Json }
+      thread_record_phase2_evidence: { Args: { p_actor: Json }; Returns: Json }
+      thread_record_render_benchmark: {
+        Args: { p: Json; p_actor: Json }
+        Returns: number
+      }
+      thread_refresh_graph_layout: { Args: never; Returns: Json }
       thread_restore_rehearsal: { Args: never; Returns: Json }
+      thread_retire_edge: {
+        Args: { p_actor: Json; p_edge_id: string; p_reason: string }
+        Returns: {
+          authority_used: Database["public"]["Enums"]["authority_level"]
+          confidence: number | null
+          created_at: string
+          created_by: Json
+          evidence_refs: string[]
+          from_id: string
+          id: string
+          kind: string | null
+          rationale: string | null
+          retired_at: string | null
+          source: string
+          to_id: string
+          verb: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "edges"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       thread_revise_object: {
         Args: {
           p_actor: Json
