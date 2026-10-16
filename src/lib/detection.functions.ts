@@ -48,6 +48,6 @@ export const recordDetectionEvidence = createServerFn({ method: 'POST' }).middle
   if (r.error) throw new Error(r.error.message); return r.data;
 });
 export const readMeasurements = createServerFn({ method: 'GET' }).middleware([requireSupabaseAuth]).handler(async ({ context }) => {
-  const r = await context.supabase.rpc('phase10_measurements');
+  const r = await context.supabase.rpc('phase10_measurements_extended');
   if (r.error) throw new Error(r.error.message); return r.data;
 });

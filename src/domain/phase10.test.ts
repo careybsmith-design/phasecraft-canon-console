@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { actionRatios, DETECTION_RULES, elapsedHours, evaluateFacts, median, rejectedMeasure, VALUEOS_DETECTORS } from "./detection";
+import { TOOL_BY_NAME } from "./mcp-tools";
+import { prohibitedInference } from "./generation";
 describe("Phase 10 deterministic detectors", () => {
   it("registers all fifteen ValueOS failure modes", () => expect(VALUEOS_DETECTORS).toHaveLength(15));
   for (const [key, fact] of DETECTION_RULES) it(`induces ${key} and clears its evidence condition`, () => {
@@ -17,4 +19,7 @@ describe("Phase 10 deterministic detectors", () => {
   it("rejects backwards temporal evidence", () => expect(elapsedHours("2026-10-03T18:00:00Z", "2026-10-01T12:00:00Z")).toBeNull());
   it("reports an unmeasured median as null", () => expect(median([])).toBeNull());
   it("computes the median, not the mean", () => expect(median([54, 2, 100, 4])).toBe(29));
+  for (const tool of ["resolve_finding", "measure_flow", "measure_value", "measure_capability_health", "measure_community", "get_intent_to_value_time"])
+    it(`${tool} is available to the agent gateway`, () => expect(TOOL_BY_NAME.get(tool)?.status).toBe("live"));
+  it("refuses a query ranking employees by activity", () => expect(prohibitedInference("rank employees by message volume")).not.toBeNull());
 });
