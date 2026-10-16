@@ -10,7 +10,7 @@
 - [x] Phase 7 — Shadow, exposure and production outcome (waiting for user approval); exit evidence ledger #7462
 - [x] Phase 8 — Generation layer (waiting for user approval); exit evidence ledger #10434
 - [x] Phase 9 — Agent-executable surface (waiting for user approval); exit evidence ledger #10660
-- [ ] Phase 10 — Detection and measurement (in progress)
+- [ ] Phase 10 — Detection and measurement implemented; signed-in validation and remaining exit evidence below
 - [ ] Phase 11 … Phase 12 per Section 16
 
 ## Open items — keep until addressed at the end (never delete without resolving)
@@ -83,3 +83,17 @@ Phase 9
 - [ ] One shared implementation exists for compile, dispatch, reuse check, fabric search and rendition generation; the remaining tools mirror the page logic through the same database functions rather than a single shared schema.
 - [ ] Older tool_contracts rows from Phases 1–8 (e.g. create_object, graph_*) remain with short contracts; reconcile names with Part 12.2.
 - [ ] Test leftovers: agent "Claims intake agent"; VS-2026-0002…0005; BS-2026-0022 (confirmed by the agent before the people-only rule existed — retire it), BS-2026-0023…0025; CP-2026-0002…0003; build runs from the agent; HD-2026-0009…0012.
+
+Phase 10
+- [x] Required Section 2, full Appendix A, Parts 1.3.11, 8A.12, 11.9, 14.3, 15 and Phase 10 source re-read. Detection and Measurement surfaces added; six Phase 10 MCP operations connected.
+- [x] 176 domain/routing tests passed, including 62 Phase 10 checks; preview build OK. Database acceptance checked during migrations 0044–0048: 37 explicit-observation inductions with assigned owners, schema guard, 54-hour connected-graph intent-to-value fixture, native unframed-signal detection, rejected/draft measure refusal, accepted-risk approver/expiry/refused-past-expiry/reopening. Fixtures roll back; no persistent test observations.
+- [x] CanonFragmentation detector implemented for conflicting active definitions with identical type, title and scope; broader semantic conflicts remain below.
+- [x] Query-side surveillance/rejected-measure refusal added across MCP read-only tools, with hash-only owned finding; the human-review item for the fixed phrase corpus remains open from Phase 8.
+- [ ] Signed-in end-to-end validation: observation → owned finding → resolve/accept risk → refresh; Measure and record; measurement drill-through; external MCP calls. Blocker: browser is signed out, session mint found multiple accounts and no account matching the requester. User must sign in or identify an account for an approved test session. Signed-out pages were tested and correctly reached Sign in with no browser errors.
+- [ ] Native operating failure induction for every ValueOS mode, beyond the 37 explicit-observation fixtures. Blocker: mission/feed/mechanical-work evidence kernels and live adapters; current semantic conditions require explicit observations or typed fields, not inferred personal activity. The exit gate is not claimed fully met.
+- [ ] Full live intent-to-value chain and independently sourced production measurements. Blocker: live Telemetry/FeatureFlags/build adapters from earlier phases; simulated data must not become realised value. Connected graph calculation proved 54 hours in rollback-only fixtures, not real production.
+- [ ] Remaining community/compounding measures (bounded mission ownership, business participation, future creation-time reduction) and cross-object stage timing where links are absent. Blocker: Phase 11 mission/cell evidence; missing evidence is displayed rather than guessed.
+- [ ] Steward review of provisional detection choices: same-title/scope definition comparison, explicit semantic observations expiring after 7 days, and hourly reconciliation (24/day; event checks immediate, time-based conditions within 1 hour). No AW-5 threshold was supplied.
+- [ ] Target-scale sweep cost, performance and independent human-labelled false-positive/false-negative tests. Blocker: representative corpus/live integrations; full sweeps currently run transactionally on object, edge and rendition changes.
+- [ ] AW-5 aggregate session recording completeness and Carey’s recorded thresholds remain unresolved; ratios are computed only from available permission-scoped usage evidence and return THRESHOLD_UNSET without a decided setting.
+- [ ] Extend canonical Detector/DetectorFinding envelope objects alongside operational registry/findings and reconcile finding statuses; currently operational findings preserve Phase 1 open/resolved/accepted_risk states. Blocker: specification reconciliation needed without breaking existing finding consumers.
