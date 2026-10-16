@@ -197,6 +197,13 @@
       "when": 1792174667098,
       "tag": "0027_phase7_discrepancies_array_guard",
       "breakpoints": true
+    },
+    {
+      "idx": 28,
+      "version": "7",
+      "when": 1792174696804,
+      "tag": "0028_phase7_kill_switch_system_actor",
+      "breakpoints": true
     }
   ]
 }
