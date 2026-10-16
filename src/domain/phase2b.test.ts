@@ -1,30 +1,95 @@
 import { describe, expect, it } from "vitest";
-import { applyPostRules, segment, ruleClassify, isMaterial, entryTestComplete, mergeEntryTest, EMPTY_ENTRY_TEST, statedDependency, polarityConflict, precisionRecall, p95, type Participant } from "./framing";
+import {
+  applyPostRules,
+  segment,
+  ruleClassify,
+  isMaterial,
+  entryTestComplete,
+  mergeEntryTest,
+  EMPTY_ENTRY_TEST,
+  statedDependency,
+  polarityConflict,
+  precisionRecall,
+  p95,
+  type Participant,
+} from "./framing";
 import { classifyContent, luhnValid } from "./content-tier";
 import { LIFECYCLE_FAMILIES, canTransition } from "./lifecycle";
 
-const coCreator: Participant = { id: "a", name: "Dana", role: "co_creator", decision_authority: true, authority_domain: "Claims Operations Lead" };
+const coCreator: Participant = {
+  id: "a",
+  name: "Dana",
+  role: "co_creator",
+  decision_authority: true,
+  authority_domain: "Claims Operations Lead",
+};
 const builder: Participant = { id: "b", name: "Sam", role: "builder", decision_authority: false };
 
 describe("8A.5 authority-aware classification", () => {
   it("an offhand rule from a non-authority speaker becomes a suggestion and the mismatch is surfaced", () => {
-    const r = applyPostRules({ classification: "decision", object_type: "ConfirmedDecision", kind: null, materiality_uncertain: false, confidence: 0.9, title: "x" }, builder, [coCreator, builder]);
+    const r = applyPostRules(
+      {
+        classification: "decision",
+        object_type: "ConfirmedDecision",
+        kind: null,
+        materiality_uncertain: false,
+        confidence: 0.9,
+        title: "x",
+      },
+      builder,
+      [coCreator, builder],
+    );
     expect(r.classification).toBe("suggestion");
-    expect(r.authority_mismatch).toBe("Recorded as a suggestion — the decision authority for this belongs to Dana (Claims Operations Lead).");
+    expect(r.authority_mismatch).toBe(
+      "Recorded as a suggestion — the decision authority for this belongs to Dana (Claims Operations Lead).",
+    );
     expect(r.material).toBe(false);
   });
   it("the same decision from the authority holder stays a material decision", () => {
-    const r = applyPostRules({ classification: "decision", object_type: "ConfirmedDecision", kind: null, materiality_uncertain: false, confidence: 0.9, title: "x" }, coCreator, [coCreator, builder]);
+    const r = applyPostRules(
+      {
+        classification: "decision",
+        object_type: "ConfirmedDecision",
+        kind: null,
+        materiality_uncertain: false,
+        confidence: 0.9,
+        title: "x",
+      },
+      coCreator,
+      [coCreator, builder],
+    );
     expect(r.classification).toBe("decision");
     expect(r.material).toBe(true);
     expect(r.authority_mismatch).toBeNull();
   });
   it("context never becomes an object", () => {
-    const r = applyPostRules({ classification: "context", object_type: "BehaviorStatement", kind: "rule", materiality_uncertain: false, confidence: 0.5, title: "x" }, coCreator, [coCreator]);
+    const r = applyPostRules(
+      {
+        classification: "context",
+        object_type: "BehaviorStatement",
+        kind: "rule",
+        materiality_uncertain: false,
+        confidence: 0.5,
+        title: "x",
+      },
+      coCreator,
+      [coCreator],
+    );
     expect(r.object_type).toBeNull();
   });
   it("an uncertain rule asks in the session instead of guessing", () => {
-    const r = applyPostRules({ classification: "suggestion", object_type: "BehaviorStatement", kind: "rule", materiality_uncertain: true, confidence: 0.5, title: "x" }, coCreator, [coCreator]);
+    const r = applyPostRules(
+      {
+        classification: "suggestion",
+        object_type: "BehaviorStatement",
+        kind: "rule",
+        materiality_uncertain: true,
+        confidence: 0.5,
+        title: "x",
+      },
+      coCreator,
+      [coCreator],
+    );
     expect(r.materiality_question).toMatch(/should I record it as one\?/);
   });
   it("material items are exactly rules, exceptions, consequences, decisions and confirmed behaviour", () => {
@@ -40,18 +105,34 @@ describe("8A.3 segmentation and rules", () => {
     const u = segment("We need members to see coverage. Should it include family totals?");
     expect(u).toHaveLength(2);
     expect(u[1]!.text).toBe("Should it include family totals?");
-    expect("We need members to see coverage. Should it include family totals?".slice(u[1]!.start, u[1]!.end)).toBe(u[1]!.text);
+    expect(
+      "We need members to see coverage. Should it include family totals?".slice(
+        u[1]!.start,
+        u[1]!.end,
+      ),
+    ).toBe(u[1]!.text);
   });
-  it("in-boundary rules classify a question", () => expect(ruleClassify("Who owns the directory?").classification).toBe("question"));
-  it("detects a stated dependency", () => expect(statedDependency("Coverage view depends on the eligibility feed")?.kind).toBe("data"));
+  it("in-boundary rules classify a question", () =>
+    expect(ruleClassify("Who owns the directory?").classification).toBe("question"));
+  it("detects a stated dependency", () =>
+    expect(statedDependency("Coverage view depends on the eligibility feed")?.kind).toBe("data"));
   it("flags opposite polarity on the same subject", () => {
-    expect(polarityConflict("Claims over ten thousand dollars go to a human adjuster", "Claims over ten thousand dollars do not go to a human adjuster")).toBe(true);
+    expect(
+      polarityConflict(
+        "Claims over ten thousand dollars go to a human adjuster",
+        "Claims over ten thousand dollars do not go to a human adjuster",
+      ),
+    ).toBe(true);
   });
 });
 
 describe("8A.1 entry test", () => {
   it("is complete only with all four parts", () => {
-    const e = mergeEntryTest(EMPTY_ENTRY_TEST, { person: "members", outcome: "calls", ability: "self-serve" });
+    const e = mergeEntryTest(EMPTY_ENTRY_TEST, {
+      person: "members",
+      outcome: "calls",
+      ability: "self-serve",
+    });
     expect(entryTestComplete(e)).toBe(false);
     expect(entryTestComplete(mergeEntryTest(e, { evidence: "call volume" }))).toBe(true);
   });
@@ -63,8 +144,10 @@ describe("8A.3 tier gate", () => {
     expect(classifyContent("card 4111 1111 1111 1111").tier).toBe("C");
   });
   it("an SSN is Tier C", () => expect(classifyContent("SSN 123-45-6789").tier).toBe("C"));
-  it("health content without identifiers is Tier B", () => expect(classifyContent("the diagnosis drives the claim").tier).toBe("B"));
-  it("plain business talk is Tier A", () => expect(classifyContent("members want to see coverage").tier).toBe("A"));
+  it("health content without identifiers is Tier B", () =>
+    expect(classifyContent("the diagnosis drives the claim").tier).toBe("B"));
+  it("plain business talk is Tier A", () =>
+    expect(classifyContent("members want to see coverage").tier).toBe("A"));
 });
 
 describe("lifecycles", () => {
@@ -81,7 +164,14 @@ describe("lifecycles", () => {
 
 describe("8A.13 measurement", () => {
   it("precision and recall per label", () => {
-    const pr = precisionRecall([{ expected: "a", predicted: "a" }, { expected: "a", predicted: "b" }, { expected: "b", predicted: "a" }], ["a", "b"]);
+    const pr = precisionRecall(
+      [
+        { expected: "a", predicted: "a" },
+        { expected: "a", predicted: "b" },
+        { expected: "b", predicted: "a" },
+      ],
+      ["a", "b"],
+    );
     expect(pr[0]).toMatchObject({ tp: 1, fp: 1, fn: 1, precision: 0.5, recall: 0.5 });
   });
   it("p95 nearest rank", () => expect(p95([1, 2, 3, 4, 5, 6, 7, 8, 9, 100])).toBe(100));

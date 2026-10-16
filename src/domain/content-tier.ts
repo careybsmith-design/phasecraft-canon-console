@@ -5,7 +5,13 @@
  * Tier B routes in-boundary only (no external model call).
  */
 export type ContentTier = "A" | "B" | "C";
-export interface TierResult { tier: ContentTier; phi: boolean; pan: boolean; reasons: string[]; spans: Array<{ start: number; end: number; kind: string }> }
+export interface TierResult {
+  tier: ContentTier;
+  phi: boolean;
+  pan: boolean;
+  reasons: string[];
+  spans: Array<{ start: number; end: number; kind: string }>;
+}
 
 export function luhnValid(digits: string): boolean {
   if (!/^\d{13,19}$/.test(digits)) return false;
@@ -13,7 +19,10 @@ export function luhnValid(digits: string): boolean {
   let dbl = false;
   for (let i = digits.length - 1; i >= 0; i--) {
     let d = digits.charCodeAt(i) - 48;
-    if (dbl) { d *= 2; if (d > 9) d -= 9; }
+    if (dbl) {
+      d *= 2;
+      if (d > 9) d -= 9;
+    }
     sum += d;
     dbl = !dbl;
   }
@@ -26,7 +35,8 @@ const HARD: Array<[RegExp, string]> = [
   [/\b(?:member|subscriber|policy)\s*(?:id|number|#)\s*[:#]?\s*[A-Z0-9]{6,}\b/gi, "member_id"],
   [/\b(?:dob|date of birth|born on)\s*[:]?\s*\d{1,4}[/-]\d{1,2}[/-]\d{1,4}\b/gi, "dob"],
 ];
-const SOFT = /\b(diagnos\w*|prescri\w*|claim(?:s)? (?:amount|history)|patient|condition of|treatment|icd-?10|cpt)\b/i;
+const SOFT =
+  /\b(diagnos\w*|prescri\w*|claim(?:s)? (?:amount|history)|patient|condition of|treatment|icd-?10|cpt)\b/i;
 
 export function classifyContent(text: string): TierResult {
   const spans: TierResult["spans"] = [];
@@ -35,7 +45,10 @@ export function classifyContent(text: string): TierResult {
   let phi = false;
   for (const m of text.matchAll(/\b(?:\d[ -]?){13,19}\b/g)) {
     const digits = m[0].replace(/[ -]/g, "");
-    if (luhnValid(digits)) { pan = true; spans.push({ start: m.index ?? 0, end: (m.index ?? 0) + m[0].length, kind: "pan" }); }
+    if (luhnValid(digits)) {
+      pan = true;
+      spans.push({ start: m.index ?? 0, end: (m.index ?? 0) + m[0].length, kind: "pan" });
+    }
   }
   if (pan) reasons.push("A payment card number (passes the Luhn check)");
   for (const [re, kind] of HARD) {
@@ -46,7 +59,14 @@ export function classifyContent(text: string): TierResult {
   }
   if (phi) reasons.push("A direct personal or health identifier");
   if (pan || phi) return { tier: "C", phi, pan, reasons, spans };
-  if (SOFT.test(text)) return { tier: "B", phi: false, pan: false, reasons: ["Health-related content without identifiers"], spans };
+  if (SOFT.test(text))
+    return {
+      tier: "B",
+      phi: false,
+      pan: false,
+      reasons: ["Health-related content without identifiers"],
+      spans,
+    };
   return { tier: "A", phi: false, pan: false, reasons: [], spans };
 }
 

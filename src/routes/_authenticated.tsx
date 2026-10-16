@@ -22,6 +22,7 @@ function AuthedLayout() {
           <Link to="/canon" className="ident text-primary">THREAD</Link>
           <Link to="/canon" className="text-muted-foreground" activeProps={{ className: "text-foreground" }}>Canon</Link>
           <Link to="/graph" className="text-muted-foreground" activeProps={{ className: "text-foreground" }}>Graph</Link>
+          <Link to="/framing" className="text-muted-foreground" activeProps={{ className: "text-foreground" }}>Framing</Link>
         </nav>
         <div className="flex items-center gap-3 text-xs text-muted-foreground">
           <span className="ident">{user?.email}</span>
