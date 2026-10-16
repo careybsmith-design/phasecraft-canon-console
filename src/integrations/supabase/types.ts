@@ -1657,6 +1657,10 @@ export type Database = {
         Args: { _actor: string; _session: string }
         Returns: boolean
       }
+      _fx_payload: {
+        Args: { _body: Json; _title: string; _type: string }
+        Returns: Json
+      }
       _ledger_write: {
         Args: {
           _action: string
@@ -1966,9 +1970,11 @@ export type Database = {
         }
         Returns: Json
       }
+      thread_framing_sweep: { Args: { p_actor: Json }; Returns: Json }
       thread_graph_sweep: { Args: { p_actor: Json }; Returns: Json }
       thread_phase1_selftest: { Args: never; Returns: Json }
       thread_phase2_selftest: { Args: never; Returns: Json }
+      thread_phase2b_selftest: { Args: never; Returns: Json }
       thread_propose_canon_change: {
         Args: { p: Json; p_actor: Json }
         Returns: {
@@ -1997,6 +2003,10 @@ export type Database = {
       }
       thread_record_phase1_evidence: { Args: { p_actor: Json }; Returns: Json }
       thread_record_phase2_evidence: { Args: { p_actor: Json }; Returns: Json }
+      thread_record_phase2b_evidence: {
+        Args: { p: Json; p_actor: Json }
+        Returns: Json
+      }
       thread_record_render_benchmark: {
         Args: { p: Json; p_actor: Json }
         Returns: number
