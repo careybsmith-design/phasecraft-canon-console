@@ -23,6 +23,7 @@ function AuthedLayout() {
           <Link to="/canon" className="text-muted-foreground" activeProps={{ className: "text-foreground" }}>Canon</Link>
           <Link to="/graph" className="text-muted-foreground" activeProps={{ className: "text-foreground" }}>Graph</Link>
           <Link to="/framing" className="text-muted-foreground" activeProps={{ className: "text-foreground" }}>Framing</Link>
+          <Link to="/fabric" className="text-muted-foreground" activeProps={{ className: "text-foreground" }}>Fabric</Link>
           <Link to="/authority" className="text-muted-foreground" activeProps={{ className: "text-foreground" }}>Authority</Link>
           <Link to="/decisions" className="text-muted-foreground" activeProps={{ className: "text-foreground" }}>Decisions</Link>
         </nav>
