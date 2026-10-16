@@ -169,6 +169,13 @@
       "when": 1792174495168,
       "tag": "0023_phase7_shadow_exposure",
       "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1792174549864,
+      "tag": "0024_phase7_selftest_evidence",
+      "breakpoints": true
     }
   ]
 }
