@@ -19,7 +19,7 @@ export default defineConfig({
     server: { entry: "server" },
   },
   vite: {
-    resolve: { alias: [{ find: /^events$/, replacement: eventsShim }] },
+    resolve: { alias: [{ find: /^(node:)?events$/, replacement: eventsShim }] },
     // The graph renderer is imported lazily; pre-bundle it so the dev server never re-optimizes mid-session.
     optimizeDeps: { include: ["sigma", "graphology"] },
   },
