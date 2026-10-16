@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
@@ -8,6 +8,7 @@ import {
   listObjects, getRegistry, getObjectDetail, createObject, reviseObject, transitionObject, tombstoneObject,
   verifyLedger, getExitEvidence, runExitEvidence,
 } from "@/lib/canon.functions";
+import { getObjectEdges, getCanonChanges, proposeCanonChange, addCanonChallenge, decideCanonChange } from "@/lib/graph.functions";
 import { LABEL_ALIASES } from "@/domain/types/envelope";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -175,7 +176,85 @@ function LedgerPanel() {
   );
 }
 
-function Detail({ id, transitions, types }: { id: string; transitions: { lifecycle_family: string; from_state: string; to_state: string }[]; types: { type: string; lifecycle_family: string }[] }) {
+function Links({ id }: { id: string }) {
+  const get = useServerFn(getObjectEdges);
+  const q = useQuery({ queryKey: ["object-edges", id], queryFn: () => get({ data: { id } }) });
+  const ref = (x: string) => q.data?.nodes.find((n) => n.id === x)?.ref ?? x.slice(0, 8);
+  return (
+    <div className="rounded-md border bg-panel p-3">
+      <h3 className="label-caps">Connections</h3>
+      {q.data && q.data.edges.length === 0 && <p className="text-xs text-warn">No connections. An object with no edges is unreachable (Part 4.5 rule 1); link it in the graph.</p>}
+      <ul className="mt-1 space-y-1 text-xs">
+        {q.data?.edges.map((e) => (
+          <li key={e.id} className="ident">
+            <Link to="/canon" search={{ id: e.from }} className="underline">{ref(e.from)}</Link> <span className="text-primary">{e.verb}</span>{" "}
+            <Link to="/canon" search={{ id: e.to }} className="underline">{ref(e.to)}</Link>
+            <span className="text-muted-foreground"> · {e.source}{e.kind ? ` · ${e.kind}` : ""} · {e.rationale}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function CanonChanges({ objectId, version, statement }: { objectId: string; version: number; statement: string }) {
+  const get = useServerFn(getCanonChanges);
+  const propose = useServerFn(proposeCanonChange);
+  const challenge = useServerFn(addCanonChallenge);
+  const decide = useServerFn(decideCanonChange);
+  const qc = useQueryClient();
+  const q = useQuery({ queryKey: ["canon-changes", objectId], queryFn: () => get({ data: { objectId } }) });
+  const [f, setF] = useState({ statement, rationale: "", evidence: "", hours: 72 });
+  const [arg, setArg] = useState("");
+  const [why, setWhy] = useState("");
+  async function act(fn: () => Promise<unknown>, ok: string) {
+    try { await fn(); toast.success(ok); setArg(""); setWhy(""); qc.invalidateQueries(); } catch (e) { toast.error(errText(e)); }
+  }
+  const open = q.data?.find((c) => c.state === "challenge_open");
+  return (
+    <div className="space-y-3 rounded-md border bg-card p-3">
+      <h3 className="text-sm font-semibold">Canon change</h3>
+      <p className="text-xs text-muted-foreground">Active canon changes only through a recorded path: proposal with evidence, a challenge window, then a steward decision. The old version is kept.</p>
+      {!open && (
+        <form className="space-y-2" onSubmit={(e) => { e.preventDefault(); act(() => propose({ data: {
+          object_id: objectId, base_version: version, patch: { statement: f.statement }, rationale: f.rationale,
+          evidence: f.evidence.split(/[\s,]+/).filter(Boolean), challenge_hours: f.hours } }), "Change proposed; challenge window open"); }}>
+          <Label htmlFor="cc-st">Proposed statement</Label>
+          <Textarea id="cc-st" rows={2} value={f.statement} onChange={(e) => setF({ ...f, statement: e.target.value })} />
+          <div className="grid gap-2 sm:grid-cols-[1fr_1fr_7rem]">
+            <div className="space-y-1"><Label htmlFor="cc-why">Rationale</Label><Input id="cc-why" required value={f.rationale} onChange={(e) => setF({ ...f, rationale: e.target.value })} /></div>
+            <div className="space-y-1"><Label htmlFor="cc-ev">Evidence (references, e.g. TR-2026-0001)</Label><Input id="cc-ev" required value={f.evidence} onChange={(e) => setF({ ...f, evidence: e.target.value })} /></div>
+            <div className="space-y-1"><Label htmlFor="cc-h">Window (hours)</Label><Input id="cc-h" type="number" min={24} value={f.hours} onChange={(e) => setF({ ...f, hours: Number(e.target.value) })} /></div>
+          </div>
+          <Button type="submit" size="sm" disabled={!f.rationale || !f.evidence || f.statement === statement}>Propose change</Button>
+        </form>
+      )}
+      {q.data?.map((c) => {
+        const closes = new Date(c.challenge_closes_at);
+        const windowOpen = c.state === "challenge_open" && closes.getTime() > Date.now();
+        return (
+          <section key={c.id} className="space-y-2 rounded-md border bg-panel p-2 text-xs">
+            <p><span className="ident">{c.state}</span> · from v{c.base_version} · proposed {new Date(c.proposed_at).toLocaleString()} · {c.state === "challenge_open" ? `challenge window ${windowOpen ? "closes" : "closed"} ${closes.toLocaleString()}` : `decided ${c.decided_at ? new Date(c.decided_at).toLocaleString() : ""}`}</p>
+            <p><span className="label-caps">Change</span> {JSON.stringify(c.patch)}</p>
+            <p><span className="label-caps">Rationale</span> {c.rationale}</p>
+            <p><span className="label-caps">Evidence</span> {c.evidence.map((e) => <Link key={e.id} to="/canon" search={{ id: e.id }} className="ident underline mr-2">{e.human_ref}</Link>)}</p>
+            <h4 className="label-caps">Challenge thread</h4>
+            <ul className="space-y-1">{c.challenges.map((x) => <li key={x.id}><span className="ident text-muted-foreground">{x.origin === "challenge_agent" ? "Challenge Agent" : "Human"}:</span> {x.argument}</li>)}</ul>
+            {windowOpen && <div className="flex gap-2"><Input className="h-7" aria-label="Counter-argument" placeholder="Add a counter-argument" value={arg} onChange={(e) => setArg(e.target.value)} />
+              <Button size="sm" className="h-7" disabled={!arg} onClick={() => act(() => challenge({ data: { change_id: c.id, argument: arg } }), "Challenge recorded")}>Challenge</Button></div>}
+            {c.state === "challenge_open" && !windowOpen && <div className="flex flex-wrap gap-2">
+              <Input className="h-7 max-w-sm" aria-label="Decision rationale" placeholder="Steward decision rationale" value={why} onChange={(e) => setWhy(e.target.value)} />
+              <Button size="sm" className="h-7" disabled={!why} onClick={() => act(() => decide({ data: { change_id: c.id, decision: "accept", rationale: why } }), "Accepted; new version recorded")}>Accept</Button>
+              <Button size="sm" variant="secondary" className="h-7" disabled={!why} onClick={() => act(() => decide({ data: { change_id: c.id, decision: "reject", rationale: why } }), "Rejected; decision recorded")}>Reject</Button></div>}
+            {c.decision_rationale && <p><span className="label-caps">Decision</span> {c.decision_rationale} {c.decision_object_id && <Link to="/canon" search={{ id: c.decision_object_id }} className="underline">(decision record)</Link>}</p>}
+          </section>
+        );
+      })}
+    </div>
+  );
+}
+
+function Detail({ id, transitions, types }: { id: string; transitions: { lifecycle_family: string; from_state: string; to_state: string }[]; types: { type: string; lifecycle_family: string; family?: string }[] }) {
   const get = useServerFn(getObjectDetail);
   const revise = useServerFn(reviseObject);
   const transition = useServerFn(transitionObject);
@@ -192,6 +271,8 @@ function Detail({ id, transitions, types }: { id: string; transitions: { lifecyc
   const o = d.data.object as any;
   const fam = types.find((t) => t.type === o.type)?.lifecycle_family;
   const next = transitions.filter((t) => t.lifecycle_family === fam && t.from_state === o.lifecycle_state).map((t) => t.to_state);
+  // P15: active Canon-family objects change only through the canon change path.
+  const activeCanon = types.find((t) => t.type === o.type)?.family === "Canon" && o.lifecycle_state !== "draft";
 
   async function act(fn: () => Promise<unknown>, ok: string) {
     try { await fn(); toast.success(ok); setWhy(""); setStatement(null); qc.invalidateQueries(); } catch (e) { toast.error(errText(e)); }
@@ -220,17 +301,20 @@ function Detail({ id, transitions, types }: { id: string; transitions: { lifecyc
         <div className="space-y-2 rounded-md border bg-card p-3">
           <Label htmlFor="why2">Rationale for the change</Label>
           <Input id="why2" value={why} onChange={(e) => setWhy(e.target.value)} placeholder="Required for every change" />
-          <Textarea aria-label="Revised statement" rows={2} value={statement ?? o.statement} onChange={(e) => setStatement(e.target.value)} />
+          {!activeCanon && <Textarea aria-label="Revised statement" rows={2} value={statement ?? o.statement} onChange={(e) => setStatement(e.target.value)} />}
           <div className="flex flex-wrap gap-2">
-            <Button size="sm" disabled={!why || statement === null} onClick={() => act(() => revise({ data: { id, expected_version: o.version, patch: { statement: statement ?? o.statement }, rationale: why } }), "New version recorded")}>Revise statement</Button>
+            {!activeCanon && <Button size="sm" disabled={!why || statement === null} onClick={() => act(() => revise({ data: { id, expected_version: o.version, patch: { statement: statement ?? o.statement }, rationale: why } }), "New version recorded")}>Revise statement</Button>}
             <select aria-label="Next state" value={to} onChange={(e) => setTo(e.target.value)} className="h-8 rounded-md border bg-background px-2 text-sm">
               <option value="">Move to…</option>{next.map((s) => <option key={s}>{s}</option>)}
             </select>
             <Button size="sm" variant="secondary" disabled={!why || !to} onClick={() => act(() => transition({ data: { id, expected_version: o.version, to_state: to, rationale: why } }), `Moved to ${to}`)}>Transition</Button>
             <Button size="sm" variant="destructive" disabled={!why} onClick={() => act(() => tomb({ data: { id, expected_version: o.version, reason: why } }), "Tombstoned")}>Tombstone</Button>
+            <Link to="/graph" search={{ view: "focus", root: id }} className="self-center text-xs underline">Link and explore in the graph</Link>
           </div>
         </div>
       )}
+      {activeCanon && !o.is_tombstone && <CanonChanges objectId={id} version={o.version} statement={o.statement} />}
+      <Links id={id} />
 
       <div className="rounded-md border bg-panel p-3">
         <h3 className="label-caps">Versions</h3>

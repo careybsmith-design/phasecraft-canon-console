@@ -18,7 +18,11 @@ function AuthedLayout() {
   return (
     <div className="min-h-screen">
       <header className="flex items-center justify-between border-b px-4 py-2">
-        <Link to="/canon" className="ident text-primary">THREAD</Link>
+        <nav aria-label="Surfaces" className="flex items-center gap-4 text-sm">
+          <Link to="/canon" className="ident text-primary">THREAD</Link>
+          <Link to="/canon" className="text-muted-foreground" activeProps={{ className: "text-foreground" }}>Canon</Link>
+          <Link to="/graph" className="text-muted-foreground" activeProps={{ className: "text-foreground" }}>Graph</Link>
+        </nav>
         <div className="flex items-center gap-3 text-xs text-muted-foreground">
           <span className="ident">{user?.email}</span>
           <button type="button" className="underline" onClick={() => supabase.auth.signOut()}>Sign out</button>
