@@ -30,4 +30,5 @@
 - Graph-integrity detectors (GraphOrphan, DependencyCycle, CanonDrift, CanonWithoutSteward) are owned by the first steward and swept after writes; Phase 10 owns the full detector suite.
 - The browser build pins the bare `events` / `node:events` import to the `events` npm package (plugin in `vite.config.ts`). Why: the toolchain otherwise stubs it, breaking sigma's EventEmitter base class.
 
-- Subdirectories have their own `AGENTS.md` (src/server/framing, src/server/authority); read it before changing files there or the DB functions they name.
+- Subdirectories have their own `AGENTS.md` (src/server/framing, src/server/authority); read it before changing files there or the DB functions they name.- Fabric rules are pure in `src/domain/fabric.ts`, mirrored in SQL (`_capability_gaps`, `reuse_checks_guard`, `fabric_search`, `thread_fabric_sweep_scoped`); change both together. Creation (CreationPrompt/BuildRun objects, `creation_prompts`) is blocked in the DB without a reuse check that allows it. Why: P11 by system, not convention.
+- Self-test fixtures for every registered type come from `_selftest_body` / `_selftest_refs` / `_selftest_next_state`; extend these when a new guard is added, not the phase self-tests.

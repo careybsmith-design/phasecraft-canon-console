@@ -66,7 +66,7 @@ export const searchCapabilityFabric = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const { data: rows, error } = await context.supabase.rpc("fabric_search", { p_outcome: data.outcome, p_inputs: data.inputs, p_outputs: data.outputs, p_domain: data.domain, p_limit: 10 } as never);
     if (error) throw err(error.message);
-    return (rows ?? []) as Array<ReuseResult & { human_ref: string; title: string; statement: string; lifecycle_state: string; authority_level: string }>;
+    return (rows ?? []) as unknown as Array<ReuseResult & { human_ref: string; title: string; statement: string; lifecycle_state: string; authority_level: string }>;
   });
 
 export const recordReuseCheck = createServerFn({ method: "POST" })
@@ -82,7 +82,7 @@ export const recordReuseCheck = createServerFn({ method: "POST" })
     // Results are recomputed on the server, never trusted from the browser.
     const { data: rows, error } = await context.supabase.rpc("fabric_search", { p_outcome: data.intent_shape.outcome, p_inputs: data.intent_shape.inputs, p_outputs: data.intent_shape.outputs, p_domain: data.intent_shape.domain, p_limit: 10 } as never);
     if (error) throw err(error.message);
-    const results = ((rows ?? []) as ReuseResult[]).map((r) => ({ capability_id: r.capability_id, match_score: r.match_score, reuse_mode: r.reuse_mode, gaps: [...r.gaps, ...(data.extra_gaps[r.capability_id] ?? [])] }));
+    const results = ((rows ?? []) as unknown as ReuseResult[]).map((r) => ({ capability_id: r.capability_id, match_score: r.match_score, reuse_mode: r.reuse_mode, gaps: [...r.gaps, ...(data.extra_gaps[r.capability_id] ?? [])] }));
     const bad = reuseDecisionError(results, data.decision, data.rationale);
     if (bad) throw err(bad);
     if (data.behavior_statement_id) {
@@ -115,7 +115,7 @@ export const createCapability = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) => CapInput.parse(d))
   .handler(async ({ data, context }) => {
     const db = await admin();
-    const b = { ...data.body, is_machine_discoverable: false };
+    const b: Json = { ...data.body, is_machine_discoverable: false };
     const { data: row, error } = await db.rpc("thread_create_object", { p_actor: human(context.userId), p: {
       type: "ComposableCapability", title: data.title, statement: data.statement, machine_description: data.machine_description, body: b,
       review_date: data.review_date, expiration_condition: { kind: "min_use_below_threshold", params: (b["minimum_use_threshold"] as Json) ?? {} },
