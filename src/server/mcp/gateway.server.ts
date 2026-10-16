@@ -85,7 +85,7 @@ export async function callTool(tokenHash: string, name: string, rawArgs: unknown
     return { isError: true, code: "INJECTION_SUSPECTED", explanation: "Arguments contain instruction-shaped text. Values are data; nothing was run.", findings: hits, call_id: bb.call_id, ledger_seq: seq };
   }
   if (t.status !== "live") {
-    const { data: seq } = await finish("refused", null, `PENDING_KERNEL: ${t.pending}`, []);
+    const { data: seq } = await finish("refused", null, `${t.status === "human_only" ? "HUMAN_ONLY" : "PENDING_KERNEL"}: ${t.pending}`, []);
     return { isError: true, code: t.status === "human_only" ? "HUMAN_ONLY" : "PENDING_KERNEL", explanation: `${name} is registered with its contract; ${t.pending}.`, call_id: bb.call_id, ledger_seq: seq };
   }
   if (!agent.auth_user_id) { await finish("error", null, "AGENT_IDENTITY_MISSING", []); return { isError: true, code: "AGENT_IDENTITY_MISSING", explanation: "agent has no identity" }; }
