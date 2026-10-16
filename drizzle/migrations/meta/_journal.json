@@ -260,6 +260,48 @@
       "when": 1792177785637,
       "tag": "0036_rendition_download",
       "breakpoints": true
+    },
+    {
+      "idx": 37,
+      "version": "7",
+      "when": 1792178332486,
+      "tag": "0037_phase9_agent_surface",
+      "breakpoints": true
+    },
+    {
+      "idx": 38,
+      "version": "7",
+      "when": 1792178774679,
+      "tag": "0038_phase9_evidence",
+      "breakpoints": true
+    },
+    {
+      "idx": 39,
+      "version": "7",
+      "when": 1792178955126,
+      "tag": "0039_agents_cannot_confirm",
+      "breakpoints": true
+    },
+    {
+      "idx": 40,
+      "version": "7",
+      "when": 1792179109440,
+      "tag": "0040_agent_calls_guard_ledger_link",
+      "breakpoints": true
+    },
+    {
+      "idx": 41,
+      "version": "7",
+      "when": 1792179203639,
+      "tag": "0041_fix_notify_topic",
+      "breakpoints": true
+    },
+    {
+      "idx": 42,
+      "version": "7",
+      "when": 1792179233201,
+      "tag": "0042_notify_deferred",
+      "breakpoints": true
     }
   ]
 }

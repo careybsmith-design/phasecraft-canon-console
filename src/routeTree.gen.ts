@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedAgentsRouteImport } from './routes/_authenticated/agents'
 import { Route as AuthenticatedAuthorityRouteImport } from './routes/_authenticated/authority'
 import { Route as AuthenticatedCanonRouteImport } from './routes/_authenticated/canon'
 import { Route as AuthenticatedCreationRouteImport } from './routes/_authenticated/creation'
@@ -24,6 +25,8 @@ import { Route as AuthenticatedShadowRouteImport } from './routes/_authenticated
 import { Route as AuthenticatedFramingIndexRouteImport } from './routes/_authenticated/framing.index'
 import { Route as AuthenticatedFramingSessionIdRouteImport } from './routes/_authenticated/framing.$sessionId'
 import { Route as AuthenticatedFramingViewsRouteImport } from './routes/_authenticated/framing.views'
+import { Route as ApiPublicMcpRouteImport } from './routes/api/public/mcp'
+import { Route as ApiPublicA2aDotwellKnownAgentDotjsonRouteImport } from './routes/api/public/a2a/[.]well-known/agent[.]json'
 import { Route as ApiPublicHooksBuildPlatformRouteImport } from './routes/api/public/hooks/build.$platform'
 
 const IndexRoute = IndexRouteImport.update({
@@ -39,6 +42,11 @@ const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedAgentsRoute = AuthenticatedAgentsRouteImport.update({
+  id: '/agents',
+  path: '/agents',
+  getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedAuthorityRoute = AuthenticatedAuthorityRouteImport.update({
   id: '/authority',
@@ -103,6 +111,17 @@ const AuthenticatedFramingViewsRoute =
     path: '/framing/views',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const ApiPublicMcpRoute = ApiPublicMcpRouteImport.update({
+  id: '/api/public/mcp',
+  path: '/api/public/mcp',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicA2aDotwellKnownAgentDotjsonRoute =
+  ApiPublicA2aDotwellKnownAgentDotjsonRouteImport.update({
+    id: '/api/public/a2a/.well-known/agent.json',
+    path: '/api/public/a2a/.well-known/agent.json',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicHooksBuildPlatformRoute =
   ApiPublicHooksBuildPlatformRouteImport.update({
     id: '/api/public/hooks/build/$platform',
@@ -113,6 +132,7 @@ const ApiPublicHooksBuildPlatformRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/agents': typeof AuthenticatedAgentsRoute
   '/authority': typeof AuthenticatedAuthorityRoute
   '/canon': typeof AuthenticatedCanonRoute
   '/creation': typeof AuthenticatedCreationRoute
@@ -124,12 +144,15 @@ export interface FileRoutesByFullPath {
   '/shadow': typeof AuthenticatedShadowRoute
   '/framing/$sessionId': typeof AuthenticatedFramingSessionIdRoute
   '/framing/views': typeof AuthenticatedFramingViewsRoute
+  '/api/public/mcp': typeof ApiPublicMcpRoute
   '/framing/': typeof AuthenticatedFramingIndexRoute
+  '/api/public/a2a/.well-known/agent.json': typeof ApiPublicA2aDotwellKnownAgentDotjsonRoute
   '/api/public/hooks/build/$platform': typeof ApiPublicHooksBuildPlatformRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/agents': typeof AuthenticatedAgentsRoute
   '/authority': typeof AuthenticatedAuthorityRoute
   '/canon': typeof AuthenticatedCanonRoute
   '/creation': typeof AuthenticatedCreationRoute
@@ -141,7 +164,9 @@ export interface FileRoutesByTo {
   '/shadow': typeof AuthenticatedShadowRoute
   '/framing/$sessionId': typeof AuthenticatedFramingSessionIdRoute
   '/framing/views': typeof AuthenticatedFramingViewsRoute
+  '/api/public/mcp': typeof ApiPublicMcpRoute
   '/framing': typeof AuthenticatedFramingIndexRoute
+  '/api/public/a2a/.well-known/agent.json': typeof ApiPublicA2aDotwellKnownAgentDotjsonRoute
   '/api/public/hooks/build/$platform': typeof ApiPublicHooksBuildPlatformRoute
 }
 export interface FileRoutesById {
@@ -149,6 +174,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/auth': typeof AuthRoute
+  '/_authenticated/agents': typeof AuthenticatedAgentsRoute
   '/_authenticated/authority': typeof AuthenticatedAuthorityRoute
   '/_authenticated/canon': typeof AuthenticatedCanonRoute
   '/_authenticated/creation': typeof AuthenticatedCreationRoute
@@ -160,7 +186,9 @@ export interface FileRoutesById {
   '/_authenticated/shadow': typeof AuthenticatedShadowRoute
   '/_authenticated/framing/$sessionId': typeof AuthenticatedFramingSessionIdRoute
   '/_authenticated/framing/views': typeof AuthenticatedFramingViewsRoute
+  '/api/public/mcp': typeof ApiPublicMcpRoute
   '/_authenticated/framing/': typeof AuthenticatedFramingIndexRoute
+  '/api/public/a2a/.well-known/agent.json': typeof ApiPublicA2aDotwellKnownAgentDotjsonRoute
   '/api/public/hooks/build/$platform': typeof ApiPublicHooksBuildPlatformRoute
 }
 export interface FileRouteTypes {
@@ -168,6 +196,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/agents'
     | '/authority'
     | '/canon'
     | '/creation'
@@ -179,12 +208,15 @@ export interface FileRouteTypes {
     | '/shadow'
     | '/framing/$sessionId'
     | '/framing/views'
+    | '/api/public/mcp'
     | '/framing/'
+    | '/api/public/a2a/.well-known/agent.json'
     | '/api/public/hooks/build/$platform'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/auth'
+    | '/agents'
     | '/authority'
     | '/canon'
     | '/creation'
@@ -196,13 +228,16 @@ export interface FileRouteTypes {
     | '/shadow'
     | '/framing/$sessionId'
     | '/framing/views'
+    | '/api/public/mcp'
     | '/framing'
+    | '/api/public/a2a/.well-known/agent.json'
     | '/api/public/hooks/build/$platform'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/_authenticated/agents'
     | '/_authenticated/authority'
     | '/_authenticated/canon'
     | '/_authenticated/creation'
@@ -214,7 +249,9 @@ export interface FileRouteTypes {
     | '/_authenticated/shadow'
     | '/_authenticated/framing/$sessionId'
     | '/_authenticated/framing/views'
+    | '/api/public/mcp'
     | '/_authenticated/framing/'
+    | '/api/public/a2a/.well-known/agent.json'
     | '/api/public/hooks/build/$platform'
   fileRoutesById: FileRoutesById
 }
@@ -222,6 +259,8 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   AuthRoute: typeof AuthRoute
+  ApiPublicMcpRoute: typeof ApiPublicMcpRoute
+  ApiPublicA2aDotwellKnownAgentDotjsonRoute: typeof ApiPublicA2aDotwellKnownAgentDotjsonRoute
   ApiPublicHooksBuildPlatformRoute: typeof ApiPublicHooksBuildPlatformRoute
 }
 
@@ -247,6 +286,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/agents': {
+      id: '/_authenticated/agents'
+      path: '/agents'
+      fullPath: '/agents'
+      preLoaderRoute: typeof AuthenticatedAgentsRouteImport
+      parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/authority': {
       id: '/_authenticated/authority'
@@ -332,6 +378,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedFramingViewsRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/api/public/mcp': {
+      id: '/api/public/mcp'
+      path: '/api/public/mcp'
+      fullPath: '/api/public/mcp'
+      preLoaderRoute: typeof ApiPublicMcpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/a2a/.well-known/agent.json': {
+      id: '/api/public/a2a/.well-known/agent.json'
+      path: '/api/public/a2a/.well-known/agent.json'
+      fullPath: '/api/public/a2a/.well-known/agent.json'
+      preLoaderRoute: typeof ApiPublicA2aDotwellKnownAgentDotjsonRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/hooks/build/$platform': {
       id: '/api/public/hooks/build/$platform'
       path: '/api/public/hooks/build/$platform'
@@ -343,6 +403,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteChildren {
+  AuthenticatedAgentsRoute: typeof AuthenticatedAgentsRoute
   AuthenticatedAuthorityRoute: typeof AuthenticatedAuthorityRoute
   AuthenticatedCanonRoute: typeof AuthenticatedCanonRoute
   AuthenticatedCreationRoute: typeof AuthenticatedCreationRoute
@@ -358,6 +419,7 @@ interface AuthenticatedRouteChildren {
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedAgentsRoute: AuthenticatedAgentsRoute,
   AuthenticatedAuthorityRoute: AuthenticatedAuthorityRoute,
   AuthenticatedCanonRoute: AuthenticatedCanonRoute,
   AuthenticatedCreationRoute: AuthenticatedCreationRoute,
@@ -380,6 +442,9 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
   AuthRoute: AuthRoute,
+  ApiPublicMcpRoute: ApiPublicMcpRoute,
+  ApiPublicA2aDotwellKnownAgentDotjsonRoute:
+    ApiPublicA2aDotwellKnownAgentDotjsonRoute,
   ApiPublicHooksBuildPlatformRoute: ApiPublicHooksBuildPlatformRoute,
 }
 export const routeTree = rootRouteImport
