@@ -33,9 +33,9 @@ export function RenditionView({ rendition }: { rendition: Rendition }) {
   const sections = rendition.body["sections"] as Array<{ heading: string; text: string; cites: string[] }> | undefined;
   return <section aria-label="Generated guidance" aria-live="polite" className="space-y-3 border-y py-3 text-sm">
     <div className="text-xs text-muted-foreground"><p className="font-medium text-foreground">{rendition.marker ?? "Generated from canon. Not canon."}</p><p><span className="ident">{rendition.human_ref}</span> · {new Date(rendition.generated_at).toLocaleString()} · {rendition.generator.model}</p><p>Expires on source change or {rendition.expires_at ? new Date(rendition.expires_at).toLocaleString() : "its recorded expiry"}.</p></div>
-    {rendition.body["challenge"] && <p className="font-medium">{String(rendition.body["challenge"])}</p>}
+    {Boolean(rendition.body["challenge"]) && <p className="font-medium">{String(rendition.body["challenge"])}</p>}
     {sections?.map((s, i) => <div key={i}><h3 className="font-medium">{s.heading}</h3><p className="whitespace-pre-wrap">{s.text}</p><div className="mt-1 flex flex-wrap gap-3 text-xs">{s.cites.map((id) => { const source = rendition.generated_from.find((r) => r.id === id); return source ? <Link key={id} to="/canon" search={{ id }} className="ident underline">{source.human_ref} · v{source.version}</Link> : null; })}</div></div>)}
-    {rendition.body["note"] && <p className="text-xs text-muted-foreground">{String(rendition.body["note"])}</p>}
+    {Boolean(rendition.body["note"]) && <p className="text-xs text-muted-foreground">{String(rendition.body["note"])}</p>}
   </section>;
 }
 export function CompanionPanel({ docked = false, onClose }: { docked?: boolean; onClose?: () => void }) {

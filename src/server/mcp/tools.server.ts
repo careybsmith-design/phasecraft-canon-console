@@ -61,15 +61,11 @@ export const HANDLERS: Record<string, Handler> = {
     return { missions: m.data ?? [], capabilities: c.data ?? [] };
   },
   async create_value_mission(ctx, a) {
-    const sig = await visible(ctx, S(a["signal_id"]));
-    if (sig["type"] !== "ValueSignal") throw err("NOT_A_SIGNAL: a mission is established from a value signal");
-    const b = a["bounds"] as Json;
-    const m = await create(ctx, "ValueMission", `Mission: ${S(a["outcome"]).slice(0, 150)}`, S(a["outcome"]), {
-      signal_ref: sig["id"], measurable_condition: a["outcome"], co_creator: a["co_creator_id"], operating_boundaries: b, proof_required: b["evidence"],
-    });
-    await call(ctx.db.rpc("thread_create_edge", { p_actor: ctx.actor, p: { from_id: m.id, to_id: sig["id"], verb: "derives_from", origin: "stated", rationale: "mission established from signal" } } as never)).catch(() => null);
-    return m;
+    const { humanOperation } = await import("@/server/ops/human-surfaces.server");
+    return humanOperation(ctx, "mission", a);
   },
+  async recommend_value_cell(ctx, a) { const { humanOperation } = await import("@/server/ops/human-surfaces.server"); return humanOperation(ctx, "cell", a); },
+  async start_value_burst(ctx, a) { const { humanOperation } = await import("@/server/ops/human-surfaces.server"); return humanOperation(ctx, "burst", a); },
   async search_capability_fabric(ctx, a) {
     const { searchFabricCore } = await import("@/server/ops/fabric.server");
     return searchFabricCore(ctx, a as never);

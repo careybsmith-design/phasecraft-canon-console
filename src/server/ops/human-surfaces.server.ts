@@ -1,8 +1,9 @@
 import { type OpCtx, type Json, opErr } from "./context";
 import { MissionInput, CellInput, BurstInput, FinishBurstInput, CapabilitySimulationInput, behaviouralChallenge, nextScenario } from "@/domain/human-surfaces";
 import { prohibitedInference } from "@/domain/generation";
+import type { Json as DbJson } from "@/integrations/supabase/types";
 
-export type SurfaceObject = { id: string; human_ref: string; type: string; title: string; statement: string; body: Json; version: number; lifecycle_state: string; risk_tier: string; authority_level: string; confidence_bundle: unknown; review_date: string; expiration_condition: unknown; data_classification: string; content_hash: string; owner_id: string; co_creator_id: string | null; builder_id: string | null; updated_at: string };
+export type SurfaceObject = { id: string; human_ref: string; type: string; title: string; statement: string; body: Record<string, DbJson>; version: number; lifecycle_state: string; risk_tier: string; authority_level: string; confidence_bundle: DbJson; review_date: string; expiration_condition: DbJson; data_classification: string; content_hash: string; owner_id: string; co_creator_id: string | null; builder_id: string | null; updated_at: string };
 export type SurfaceContext = { objects: SurfaceObject[]; edges: Array<{ id: string; from_id: string; to_id: string; verb: string }> };
 export async function humanOperation(ctx: OpCtx, operation: string, input: unknown) {
   const schemas = { mission: MissionInput, cell: CellInput, burst: BurstInput, finish_burst: FinishBurstInput, simulation: CapabilitySimulationInput, adversarial: CapabilitySimulationInput };
@@ -34,7 +35,7 @@ export async function surfaceRendition(ctx: OpCtx, purpose: string, sources: str
 export async function openSurfaceRendition(ctx: OpCtx, id: string, purpose: string) {
   const { data, error } = await ctx.db.rpc("thread_serve_rendition", { p_actor: ctx.actor, p_id: id, p_purpose: purpose });
   if (error) throw opErr(error.message);
-  return data as unknown as { id: string; human_ref: string; marker: string; body: Json; generated_at: string; expires_at: string; generated_from: Array<{ id: string; human_ref: string; version: number; content_hash: string }>; generator: { model: string; route: string } };
+  return data as unknown as { id: string; human_ref: string; marker: string; body: Record<string, DbJson>; generated_at: string; expires_at: string; generated_from: Array<{ id: string; human_ref: string; version: number; content_hash: string }>; generator: { model: string; route: string } };
 }
 export async function companionResponse(ctx: OpCtx, statement: string, sourceIds: string[]) {
   if (prohibitedInference(statement)) throw opErr("PROHIBITED_INFERENCE");
