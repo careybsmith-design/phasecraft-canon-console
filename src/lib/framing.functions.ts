@@ -55,7 +55,7 @@ async function load(db: Db, id: string): Promise<Row> {
   if (!data) throw threadError("NOT_FOUND: " + id);
   return data;
 }
-async function reviseBody(db: Db, actor: Json, id: string, mut: (b: Json, o: Row) => Json, rationale: string, extra: Json = {}): Promise<Row> {
+async function reviseBody(db: Db, actor: Json, id: string, mut: (b: Row, o: Row) => Json, rationale: string, extra: Json = {}): Promise<Row> {
   for (let attempt = 0; attempt < 3; attempt++) {
     const o = await load(db, id);
     const { data, error } = await db.rpc("thread_revise_object", { p_actor: actor as never, p_id: id, p_expected_version: o.version, p_patch: { body: mut({ ...(o.body ?? {}) }, o), ...extra } as never, p_rationale: rationale });
