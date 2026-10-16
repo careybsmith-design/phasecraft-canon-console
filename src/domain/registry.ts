@@ -135,7 +135,7 @@ export const REGISTRY: RegistryEntry[] = [
   e("DetectorFinding", "Detection", "DF", "detector_finding", "detector_ref, subject_refs, evidence, severity, first_seen, assigned_to, resolution", "A finding with an owner"),
   e("Rendition", "Generation", "RN", "rendition", "source_object_ref, kind, generator, generated_at, expires_when, permission_context", "Generated from canon. Not canon."),
   // Part 8A.4 framing types
-  e("FramingSession", "Framing", "FS", "canon", "mission_ref, co_creator, builder, participants, purpose, opened_at, closed_at, consent_ref, content_tier, artifacts, extraction_revision, entry_test_result", "A consented co-creation session"),
+  e("FramingSession", "Framing", "FS", "framing_session", "mission_ref, co_creator, builder, participants, purpose, opened_at, closed_at, consent_ref, content_tier, artifacts, extraction_revision, entry_test_result", "A consented co-creation session"),
   e("CoCreationArtifact", "Framing", "CA", "evidence_record", "session_ref, kind, content_tier, consent_basis, storage_ref", "Captured material. Evidence, not canon"),
   e("ExtractedStatement", "Framing", "XS", "framing_extract", "session_ref, classification, provenance_spans, extractor_version, model_version, confidence", "A classified segment with provenance spans"),
   e("NeedStatement", "Framing", "NS", "framing_extract", "need, affected_people, provenance_spans", "A business need (the COO's named unit)"),
