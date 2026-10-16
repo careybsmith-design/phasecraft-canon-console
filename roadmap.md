@@ -9,7 +9,8 @@
 - [x] Phase 6 — Creation loop and platform integration (waiting for user approval); exit evidence ledger #7282
 - [x] Phase 7 — Shadow, exposure and production outcome (waiting for user approval); exit evidence ledger #7462
 - [x] Phase 8 — Generation layer (waiting for user approval); exit evidence ledger #10434
-- [ ] Phase 9 … Phase 12 per Section 16
+- [x] Phase 9 — Agent-executable surface (waiting for user approval); exit evidence ledger #10660
+- [ ] Phase 10 … Phase 12 per Section 16
 
 ## Open items — keep until addressed at the end (never delete without resolving)
 
@@ -45,7 +46,7 @@ Phase 5
 - [ ] Performance budgets proven at target scale (measured only at current small corpus; `pending_live_adapter`)
 - [ ] Steward to set the "last review period" (90 days provisional) and confirm the question mapping (decision = why it exists, authority = which decision authorised it)
 - [ ] Confirm the three added chain verbs: decided_from, built, renews
-- [ ] MCP exposure of explain_capability / trace_* (contracts recorded; endpoint arrives in Phase 9)
+- [x] MCP exposure of explain_capability / trace_* — live through /api/public/mcp (Phase 9, ledger #10660)
 - [ ] Real chains: no live object yet has a full signal-to-value chain (builds Phase 6, production/value Phase 7)
 
 Phase 6
@@ -70,4 +71,14 @@ Phase 8
 - [ ] Prohibited-inference detector is a fixed phrase list (agent-authored); needs human review and a query-side check (Phase 9/10)
 - [ ] Test leftovers: practice renditions RN-2026-0005 and RN-2026-0008 (expire on their own)
 
-- [x] Rendition PDF download (user request, after Phase 8): open-permission checks, ledger entry per download (e.g. #10440), confidential allowed, restricted follows source permissions. Verified in browser with RN-2026-0009.
+- [x] Rendition PDF download (user request, after Phase 8): open-permission checks, ledger entry per download (e.g. #10440), confidential allowed, restricted allowed whenever the person may open it (confirmed by user 16 Oct 2026). Verified in browser with RN-2026-0009.
+
+Phase 9
+- [ ] 27 tools are registered with contracts but not yet runnable: 18 wait for later kernels (missions/cells/bursts and simulation in Phase 11, detectors and measures in Phase 10, live assurance adapters in Phase 12, council adapter, artifact webhooks) and 9 are people-only (consented framing capture, confirming intent, recording decisions). AW-13 is only partly met until they run.
+- [ ] DESIGN DECISIONS to confirm: agents cannot confirm, decide or grant (enforced on the ledger); members may register agents up to "recommend", stewards up to "act_bounded", never autonomous; K3 confirmation tokens are single-use, 15 minutes, bound to agent + tool + exact arguments; high-consequence tools = production effects, publishing and dispatch_build; signal scores stay empty when the signal lacks the field; default quota 60/min, 2000/day, cost cap 10 units/day; tool cost units are provisional.
+- [ ] MCP latency: p50 ~690 ms, p95 ~1.3 s on simulated builds versus the Part 16.4 budget p95 < 300 ms (non-generation). Needs session caching across isolates and fewer round trips.
+- [ ] Injection detection recall 0.88, precision 1.00 on an agent-authored 50-item corpus; needs human relabelling and a larger corpus. Paraphrased attempts are missed (blocking still holds by typed schemas).
+- [ ] Notifications are taken by polling (list_notifications); no server push stream yet.
+- [ ] One shared implementation exists for compile, dispatch, reuse check, fabric search and rendition generation; the remaining tools mirror the page logic through the same database functions rather than a single shared schema.
+- [ ] Older tool_contracts rows from Phases 1–8 (e.g. create_object, graph_*) remain with short contracts; reconcile names with Part 12.2.
+- [ ] Test leftovers: agent "Claims intake agent"; VS-2026-0002…0005; BS-2026-0022 (confirmed by the agent before the people-only rule existed — retire it), BS-2026-0023…0025; CP-2026-0002…0003; build runs from the agent; HD-2026-0009…0012.

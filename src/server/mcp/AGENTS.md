@@ -1,0 +1,9 @@
+# MCP gateway rules (Phase 9)
+
+- `src/domain/mcp-tools.ts` is the single tool catalogue; contracts in `tool_contracts` are generated from it (`thread_sync_tool_contracts`, on initialize). Add a tool there and a handler in `tools.server.ts`. Why: one schema drives validation and the published contract.
+- Every tools/call goes begin (`thread_agent_begin_call`: token, ceiling, quota, cost cap, K3 token) -> schema -> injection scan -> handler -> end (`thread_agent_end_call` writes the provenance ledger entry). Never call a handler outside `callTool`.
+- Agents are their own sign-in-less accounts; reads use `agentReadClient` so row permissions apply at retrieval. Writes use thread_* with actor kind agent plus agent_id and call_id.
+- Agents cannot confirm, decide or grant: the `ledger_agent_human_only` trigger refuses it. Why: confirmation and authority belong to people (K3).
+- K3 token input hash = sha-256 of `canonicalJson` of the schema-parsed arguments minus `confirmation_token`; `issueConfirmation` must hash the same way.
+- Shared operation cores live in `src/server/ops`; pages and the gateway both call them.
+- Notifications fan out from a deferred ledger trigger, so the object exists when permissions are checked.
