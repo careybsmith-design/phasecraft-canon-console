@@ -109,39 +109,96 @@ export type Database = {
           },
         ]
       }
+      build_platforms: {
+        Row: {
+          capture: string
+          cleared_classes: Database["public"]["Enums"]["data_classification"][]
+          hosting: string
+          label: string
+          live_determinism: string
+          model_route: string
+          platform: string
+        }
+        Insert: {
+          capture: string
+          cleared_classes: Database["public"]["Enums"]["data_classification"][]
+          hosting: string
+          label: string
+          live_determinism: string
+          model_route: string
+          platform: string
+        }
+        Update: {
+          capture?: string
+          cleared_classes?: Database["public"]["Enums"]["data_classification"][]
+          hosting?: string
+          label?: string
+          live_determinism?: string
+          model_route?: string
+          platform?: string
+        }
+        Relationships: []
+      }
       build_runs: {
         Row: {
           adapter_mode: string
+          artifacts: Json
+          completed_at: string | null
           cost_actual: number | null
           cost_ceiling: number
+          dispatched_at: string
+          duration_ms: number | null
+          estimated_cost: number | null
           external_run_id: string | null
+          failure_reason: string | null
           object_id: string
           platform: string
           prompt_id: string
           replay_mode: string | null
+          replay_of: string | null
+          replay_result: Json | null
           repro_key: Json
+          status: string
         }
         Insert: {
           adapter_mode: string
+          artifacts?: Json
+          completed_at?: string | null
           cost_actual?: number | null
           cost_ceiling: number
+          dispatched_at?: string
+          duration_ms?: number | null
+          estimated_cost?: number | null
           external_run_id?: string | null
+          failure_reason?: string | null
           object_id: string
           platform: string
           prompt_id: string
           replay_mode?: string | null
+          replay_of?: string | null
+          replay_result?: Json | null
           repro_key: Json
+          status?: string
         }
         Update: {
           adapter_mode?: string
+          artifacts?: Json
+          completed_at?: string | null
           cost_actual?: number | null
           cost_ceiling?: number
+          dispatched_at?: string
+          duration_ms?: number | null
+          estimated_cost?: number | null
           external_run_id?: string | null
+          failure_reason?: string | null
           object_id?: string
           platform?: string
           prompt_id?: string
           replay_mode?: string | null
+          replay_of?: string | null
+          replay_result?: Json | null
           repro_key?: Json
+          status?: string
         }
         Relationships: [
           {
@@ -156,6 +213,13 @@ export type Database = {
             columns: ["prompt_id"]
             isOneToOne: false
             referencedRelation: "creation_prompts"
+            referencedColumns: ["object_id"]
+          },
+          {
+            foreignKeyName: "build_runs_replay_of_fkey"
+            columns: ["replay_of"]
+            isOneToOne: false
+            referencedRelation: "build_runs"
             referencedColumns: ["object_id"]
           },
         ]
@@ -479,6 +543,38 @@ export type Database = {
           withdrawn_at?: string | null
         }
         Relationships: []
+      }
+      cost_ceilings: {
+        Row: {
+          ceiling: number
+          scope: string
+          scope_id: string
+          set_at: string
+          set_by: Json
+        }
+        Insert: {
+          ceiling: number
+          scope: string
+          scope_id: string
+          set_at?: string
+          set_by: Json
+        }
+        Update: {
+          ceiling?: number
+          scope?: string
+          scope_id?: string
+          set_at?: string
+          set_by?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cost_ceilings_scope_id_fkey"
+            columns: ["scope_id"]
+            isOneToOne: false
+            referencedRelation: "objects"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       creation_prompts: {
         Row: {
@@ -966,6 +1062,61 @@ export type Database = {
           version?: string
         }
         Relationships: []
+      }
+      iterations: {
+        Row: {
+          at: string
+          declared_class: string
+          detected_class: string
+          diff: Json
+          from_run: string
+          object_id: string
+          scope_change_flag: boolean
+          to_run: string
+        }
+        Insert: {
+          at?: string
+          declared_class: string
+          detected_class: string
+          diff: Json
+          from_run: string
+          object_id: string
+          scope_change_flag: boolean
+          to_run: string
+        }
+        Update: {
+          at?: string
+          declared_class?: string
+          detected_class?: string
+          diff?: Json
+          from_run?: string
+          object_id?: string
+          scope_change_flag?: boolean
+          to_run?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "iterations_from_run_fkey"
+            columns: ["from_run"]
+            isOneToOne: false
+            referencedRelation: "build_runs"
+            referencedColumns: ["object_id"]
+          },
+          {
+            foreignKeyName: "iterations_object_id_fkey"
+            columns: ["object_id"]
+            isOneToOne: true
+            referencedRelation: "objects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "iterations_to_run_fkey"
+            columns: ["to_run"]
+            isOneToOne: false
+            referencedRelation: "build_runs"
+            referencedColumns: ["object_id"]
+          },
+        ]
       }
       ledger: {
         Row: {
@@ -1772,6 +1923,7 @@ export type Database = {
       _capability_gaps: { Args: { _body: Json }; Returns: string[] }
       _chain_obj: { Args: { _ids: string[] }; Returns: Json }
       _cite: { Args: { _objs: Json }; Returns: Json }
+      _classify_iteration: { Args: { d: Json }; Returns: string }
       _demotion_target: {
         Args: {
           _from: Database["public"]["Enums"]["authority_level"]
@@ -1794,6 +1946,7 @@ export type Database = {
         Args: { _body: Json; _title: string; _type: string }
         Returns: Json
       }
+      _guardrail_set_version: { Args: never; Returns: string }
       _is_current_member: { Args: { _u: string }; Returns: boolean }
       _ledger_write: {
         Args: {
@@ -1858,6 +2011,10 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      _max_classification: {
+        Args: { _ids: string[] }
+        Returns: Database["public"]["Enums"]["data_classification"]
       }
       _of_type: {
         Args: { _ids: string[]; _types: string[] }
@@ -1927,6 +2084,16 @@ export type Database = {
         Returns: string
       }
       _selftest_refs: { Args: { _actor: Json }; Returns: Json }
+      _sim_build_digest: {
+        Args: {
+          _compiled_hash: string
+          _gsv: string
+          _model_version: string
+          _platform: string
+          _template_version: string
+        }
+        Returns: string
+      }
       _thread_apply: {
         Args: {
           _action: string
@@ -2129,6 +2296,59 @@ export type Database = {
         Returns: Json
       }
       thread_authority_sweep: { Args: { p_actor: Json }; Returns: Json }
+      thread_compile_creation_prompt: {
+        Args: { p: Json; p_actor: Json }
+        Returns: {
+          authority_level: Database["public"]["Enums"]["authority_level"]
+          body: Json
+          builder_id: string | null
+          citations: Json
+          co_creator_id: string | null
+          confidence_bundle: Json | null
+          consequence_class: Database["public"]["Enums"]["consequence_class"]
+          content_hash: string
+          created_at: string
+          created_by: Json
+          data_classification: Database["public"]["Enums"]["data_classification"]
+          derived_from: string[]
+          effective_from: string
+          evidence_refs: string[]
+          expiration_condition: Json
+          expires_at: string | null
+          human_ref: string
+          id: string
+          is_tombstone: boolean
+          lifecycle_state: string
+          machine_description: string
+          open_questions: string[]
+          owner_id: string
+          permission: Json
+          permitted_uses: string[]
+          provenance_chain_id: string
+          retired_at: string | null
+          retirement_path: Json
+          retirement_reason: string | null
+          review_date: string
+          risk_tier: Database["public"]["Enums"]["risk_tier"]
+          schema_version: string
+          search: unknown
+          statement: string
+          steward_id: string | null
+          superseded_by: string[]
+          supersedes: string[]
+          title: string
+          type: string
+          updated_at: string
+          updated_by: Json
+          version: number
+        }
+        SetofOptions: {
+          from: "*"
+          to: "objects"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       thread_compose_capabilities: {
         Args: {
           p_actor: Json
@@ -2224,6 +2444,7 @@ export type Database = {
         }
         Returns: Json
       }
+      thread_dispatch_build: { Args: { p: Json; p_actor: Json }; Returns: Json }
       thread_fabric_sweep: {
         Args: { p_actor: Json; p_now?: string }
         Returns: Json
@@ -2319,9 +2540,17 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      thread_record_build_result: {
+        Args: { p: Json; p_actor: Json }
+        Returns: Json
+      }
       thread_record_capability_use: {
         Args: { p: Json; p_actor: Json; p_id: string }
         Returns: number
+      }
+      thread_record_iteration: {
+        Args: { p: Json; p_actor: Json }
+        Returns: Json
       }
       thread_record_phase1_evidence: { Args: { p_actor: Json }; Returns: Json }
       thread_record_phase2_evidence: { Args: { p_actor: Json }; Returns: Json }
@@ -2362,6 +2591,59 @@ export type Database = {
         SetofOptions: {
           from: "*"
           to: "risk_assessments"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      thread_record_skeleton: {
+        Args: { p: Json; p_actor: Json }
+        Returns: {
+          authority_level: Database["public"]["Enums"]["authority_level"]
+          body: Json
+          builder_id: string | null
+          citations: Json
+          co_creator_id: string | null
+          confidence_bundle: Json | null
+          consequence_class: Database["public"]["Enums"]["consequence_class"]
+          content_hash: string
+          created_at: string
+          created_by: Json
+          data_classification: Database["public"]["Enums"]["data_classification"]
+          derived_from: string[]
+          effective_from: string
+          evidence_refs: string[]
+          expiration_condition: Json
+          expires_at: string | null
+          human_ref: string
+          id: string
+          is_tombstone: boolean
+          lifecycle_state: string
+          machine_description: string
+          open_questions: string[]
+          owner_id: string
+          permission: Json
+          permitted_uses: string[]
+          provenance_chain_id: string
+          retired_at: string | null
+          retirement_path: Json
+          retirement_reason: string | null
+          review_date: string
+          risk_tier: Database["public"]["Enums"]["risk_tier"]
+          schema_version: string
+          search: unknown
+          statement: string
+          steward_id: string | null
+          superseded_by: string[]
+          supersedes: string[]
+          title: string
+          type: string
+          updated_at: string
+          updated_by: Json
+          version: number
+        }
+        SetofOptions: {
+          from: "*"
+          to: "objects"
           isOneToOne: true
           isSetofReturn: false
         }
@@ -2511,6 +2793,10 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      thread_set_cost_ceiling: {
+        Args: { p: Json; p_actor: Json }
+        Returns: undefined
       }
       thread_tombstone_object: {
         Args: {
