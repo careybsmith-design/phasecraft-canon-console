@@ -69,6 +69,8 @@ export const createObject = createServerFn({ method: "POST" })
     const db = await admin();
     const { data: row, error } = await db.rpc("thread_create_object", { p_actor: humanActor(context.userId), p: data as never });
     if (error) throw toThreadError(error.message);
+    // Keep the precomputed graph layout and integrity findings current (best effort).
+    try { await db.rpc("thread_refresh_graph_layout"); await db.rpc("thread_graph_sweep", { p_actor: humanActor(context.userId) as never }); } catch { /* best effort */ }
     return row as { id: string; human_ref: string };
   });
 

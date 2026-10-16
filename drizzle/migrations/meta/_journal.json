@@ -29,6 +29,13 @@
       "when": 1792117495294,
       "tag": "0003_thread_phase2_graph_core",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1792117961028,
+      "tag": "0004_thread_phase2_selftest_path_target",
+      "breakpoints": true
     }
   ]
 }
