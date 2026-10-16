@@ -211,6 +211,48 @@
       "when": 1792174832543,
       "tag": "0029_lovable_clearance_confidential",
       "breakpoints": true
+    },
+    {
+      "idx": 30,
+      "version": "7",
+      "when": 1792176309629,
+      "tag": "0030_phase8_generation_layer",
+      "breakpoints": true
+    },
+    {
+      "idx": 31,
+      "version": "7",
+      "when": 1792176338229,
+      "tag": "0031_phase8_schedules",
+      "breakpoints": true
+    },
+    {
+      "idx": 32,
+      "version": "7",
+      "when": 1792176387375,
+      "tag": "0032_phase8_selftest_evidence",
+      "breakpoints": true
+    },
+    {
+      "idx": 33,
+      "version": "7",
+      "when": 1792176447236,
+      "tag": "0033_phase8_citations_shape",
+      "breakpoints": true
+    },
+    {
+      "idx": 34,
+      "version": "7",
+      "when": 1792176506504,
+      "tag": "0034_phase6_selftest_lovable_confidential",
+      "breakpoints": true
+    },
+    {
+      "idx": 35,
+      "version": "7",
+      "when": 1792176532904,
+      "tag": "0035_phase6_selftest_lovable_confidential_fix",
+      "breakpoints": true
     }
   ]
 }

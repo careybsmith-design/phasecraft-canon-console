@@ -18,6 +18,7 @@ import { Route as AuthenticatedCreationRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedDecisionsRouteImport } from './routes/_authenticated/decisions'
 import { Route as AuthenticatedEvidenceRouteImport } from './routes/_authenticated/evidence'
 import { Route as AuthenticatedFabricRouteImport } from './routes/_authenticated/fabric'
+import { Route as AuthenticatedGenerationRouteImport } from './routes/_authenticated/generation'
 import { Route as AuthenticatedGraphRouteImport } from './routes/_authenticated/graph'
 import { Route as AuthenticatedShadowRouteImport } from './routes/_authenticated/shadow'
 import { Route as AuthenticatedFramingIndexRouteImport } from './routes/_authenticated/framing.index'
@@ -69,6 +70,11 @@ const AuthenticatedFabricRoute = AuthenticatedFabricRouteImport.update({
   path: '/fabric',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedGenerationRoute = AuthenticatedGenerationRouteImport.update({
+  id: '/generation',
+  path: '/generation',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedGraphRoute = AuthenticatedGraphRouteImport.update({
   id: '/graph',
   path: '/graph',
@@ -113,6 +119,7 @@ export interface FileRoutesByFullPath {
   '/decisions': typeof AuthenticatedDecisionsRoute
   '/evidence': typeof AuthenticatedEvidenceRoute
   '/fabric': typeof AuthenticatedFabricRoute
+  '/generation': typeof AuthenticatedGenerationRoute
   '/graph': typeof AuthenticatedGraphRoute
   '/shadow': typeof AuthenticatedShadowRoute
   '/framing/$sessionId': typeof AuthenticatedFramingSessionIdRoute
@@ -129,6 +136,7 @@ export interface FileRoutesByTo {
   '/decisions': typeof AuthenticatedDecisionsRoute
   '/evidence': typeof AuthenticatedEvidenceRoute
   '/fabric': typeof AuthenticatedFabricRoute
+  '/generation': typeof AuthenticatedGenerationRoute
   '/graph': typeof AuthenticatedGraphRoute
   '/shadow': typeof AuthenticatedShadowRoute
   '/framing/$sessionId': typeof AuthenticatedFramingSessionIdRoute
@@ -147,6 +155,7 @@ export interface FileRoutesById {
   '/_authenticated/decisions': typeof AuthenticatedDecisionsRoute
   '/_authenticated/evidence': typeof AuthenticatedEvidenceRoute
   '/_authenticated/fabric': typeof AuthenticatedFabricRoute
+  '/_authenticated/generation': typeof AuthenticatedGenerationRoute
   '/_authenticated/graph': typeof AuthenticatedGraphRoute
   '/_authenticated/shadow': typeof AuthenticatedShadowRoute
   '/_authenticated/framing/$sessionId': typeof AuthenticatedFramingSessionIdRoute
@@ -165,6 +174,7 @@ export interface FileRouteTypes {
     | '/decisions'
     | '/evidence'
     | '/fabric'
+    | '/generation'
     | '/graph'
     | '/shadow'
     | '/framing/$sessionId'
@@ -181,6 +191,7 @@ export interface FileRouteTypes {
     | '/decisions'
     | '/evidence'
     | '/fabric'
+    | '/generation'
     | '/graph'
     | '/shadow'
     | '/framing/$sessionId'
@@ -198,6 +209,7 @@ export interface FileRouteTypes {
     | '/_authenticated/decisions'
     | '/_authenticated/evidence'
     | '/_authenticated/fabric'
+    | '/_authenticated/generation'
     | '/_authenticated/graph'
     | '/_authenticated/shadow'
     | '/_authenticated/framing/$sessionId'
@@ -278,6 +290,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedFabricRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/generation': {
+      id: '/_authenticated/generation'
+      path: '/generation'
+      fullPath: '/generation'
+      preLoaderRoute: typeof AuthenticatedGenerationRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/graph': {
       id: '/_authenticated/graph'
       path: '/graph'
@@ -330,6 +349,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedDecisionsRoute: typeof AuthenticatedDecisionsRoute
   AuthenticatedEvidenceRoute: typeof AuthenticatedEvidenceRoute
   AuthenticatedFabricRoute: typeof AuthenticatedFabricRoute
+  AuthenticatedGenerationRoute: typeof AuthenticatedGenerationRoute
   AuthenticatedGraphRoute: typeof AuthenticatedGraphRoute
   AuthenticatedShadowRoute: typeof AuthenticatedShadowRoute
   AuthenticatedFramingSessionIdRoute: typeof AuthenticatedFramingSessionIdRoute
@@ -344,6 +364,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedDecisionsRoute: AuthenticatedDecisionsRoute,
   AuthenticatedEvidenceRoute: AuthenticatedEvidenceRoute,
   AuthenticatedFabricRoute: AuthenticatedFabricRoute,
+  AuthenticatedGenerationRoute: AuthenticatedGenerationRoute,
   AuthenticatedGraphRoute: AuthenticatedGraphRoute,
   AuthenticatedShadowRoute: AuthenticatedShadowRoute,
   AuthenticatedFramingSessionIdRoute: AuthenticatedFramingSessionIdRoute,

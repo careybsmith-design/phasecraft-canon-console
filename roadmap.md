@@ -8,7 +8,8 @@
 - [x] Phase 5 — Evidence graph; exit evidence ledger #4906
 - [x] Phase 6 — Creation loop and platform integration (waiting for user approval); exit evidence ledger #7282
 - [x] Phase 7 — Shadow, exposure and production outcome (waiting for user approval); exit evidence ledger #7462
-- [ ] Phase 8 … Phase 12 per Section 16
+- [x] Phase 8 — Generation layer (waiting for user approval); exit evidence ledger #10434
+- [ ] Phase 9 … Phase 12 per Section 16
 
 ## Open items — keep until addressed at the end (never delete without resolving)
 
@@ -60,3 +61,11 @@ Phase 7
 - [ ] Live Telemetry and FeatureFlags adapters (`pending_live_adapter`; simulated today, so no real authority can be earned yet)
 - [ ] Steward to confirm provisional exposure steps 1→5→25→50→100% and the 60 s kill-switch bound
 - [ ] Test leftovers: SH-2026-0001…0007, EA-2026-0001…0002, PO-2026-0001…0002, IN-2026-0001…0002, VA-2026-0001…0002, RB-2026-0001…0002 (self-test runs)
+
+Phase 8
+- [ ] Steward to confirm provisional timings: renditions live 7 days, stale ones are purged 24 h later; hourly deletion sweep; brief at 05:00 UTC
+- [ ] Audio, video, interactive and live-demonstration kinds produce a script only (`pending_live_adapter`: no media adapter)
+- [ ] CanonFragmentation finding (conflicting definitions across agents) — detector arrives with Phase 10
+- [ ] Regeneration queue is recorded but stale renditions are not regenerated automatically (regenerated on request)
+- [ ] Prohibited-inference detector is a fixed phrase list (agent-authored); needs human review and a query-side check (Phase 9/10)
+- [ ] Test leftovers: practice renditions RN-2026-0005 and RN-2026-0008 (expire on their own)
