@@ -50,6 +50,13 @@
       "when": 1792121026298,
       "tag": "0006_thread_phase2b_selftest_sweep",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1792121050198,
+      "tag": "0007_thread_phase2b_fixture_owner",
+      "breakpoints": true
     }
   ]
 }
