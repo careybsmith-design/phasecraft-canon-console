@@ -285,6 +285,54 @@ export type Database = {
         }
         Relationships: []
       }
+      classification_corrections: {
+        Row: {
+          by_actor: string
+          created_at: string
+          from_class: string
+          id: string
+          note: string | null
+          session_id: string
+          statement_id: string
+          to_class: string
+        }
+        Insert: {
+          by_actor: string
+          created_at?: string
+          from_class: string
+          id?: string
+          note?: string | null
+          session_id: string
+          statement_id: string
+          to_class: string
+        }
+        Update: {
+          by_actor?: string
+          created_at?: string
+          from_class?: string
+          id?: string
+          note?: string | null
+          session_id?: string
+          statement_id?: string
+          to_class?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "classification_corrections_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "objects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "classification_corrections_statement_id_fkey"
+            columns: ["statement_id"]
+            isOneToOne: false
+            referencedRelation: "objects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       confidence_history: {
         Row: {
           at: string
@@ -567,6 +615,89 @@ export type Database = {
           },
         ]
       }
+      extraction_eval_items: {
+        Row: {
+          created_at: string
+          expected_classification: string
+          expected_object_type: string | null
+          id: string
+          label_source: string
+          speaker_has_decision_authority: boolean
+          text: string
+        }
+        Insert: {
+          created_at?: string
+          expected_classification: string
+          expected_object_type?: string | null
+          id?: string
+          label_source: string
+          speaker_has_decision_authority: boolean
+          text: string
+        }
+        Update: {
+          created_at?: string
+          expected_classification?: string
+          expected_object_type?: string | null
+          id?: string
+          label_source?: string
+          speaker_has_decision_authority?: boolean
+          text?: string
+        }
+        Relationships: []
+      }
+      extraction_revisions: {
+        Row: {
+          adapter_mode: string
+          extractor_version: string
+          finished_at: string | null
+          id: string
+          model: string | null
+          model_route: string
+          preserved_confirmations: number
+          revision: number
+          session_id: string
+          started_at: string
+          statements: number
+          superseded_drafts: number
+        }
+        Insert: {
+          adapter_mode: string
+          extractor_version: string
+          finished_at?: string | null
+          id?: string
+          model?: string | null
+          model_route: string
+          preserved_confirmations?: number
+          revision: number
+          session_id: string
+          started_at?: string
+          statements?: number
+          superseded_drafts?: number
+        }
+        Update: {
+          adapter_mode?: string
+          extractor_version?: string
+          finished_at?: string | null
+          id?: string
+          model?: string | null
+          model_route?: string
+          preserved_confirmations?: number
+          revision?: number
+          session_id?: string
+          started_at?: string
+          statements?: number
+          superseded_drafts?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "extraction_revisions_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "objects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       extraction_spans: {
         Row: {
           char_end: number | null
@@ -599,6 +730,115 @@ export type Database = {
           {
             foreignKeyName: "extraction_spans_object_id_fkey"
             columns: ["object_id"]
+            isOneToOne: false
+            referencedRelation: "objects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      extraction_timings: {
+        Row: {
+          created_at: string
+          id: number
+          latency_ms: number
+          session_id: string
+          stage: string
+          statement_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          latency_ms: number
+          session_id: string
+          stage: string
+          statement_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          latency_ms?: number
+          session_id?: string
+          stage?: string
+          statement_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "extraction_timings_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "objects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "extraction_timings_statement_id_fkey"
+            columns: ["statement_id"]
+            isOneToOne: false
+            referencedRelation: "objects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      framing_live_findings: {
+        Row: {
+          created_at: string
+          id: string
+          kind: string
+          latency_ms: number | null
+          message: string
+          payload: Json
+          related_object_id: string | null
+          resolution: Json | null
+          resolved_at: string | null
+          session_id: string
+          state: string
+          statement_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          kind: string
+          latency_ms?: number | null
+          message: string
+          payload?: Json
+          related_object_id?: string | null
+          resolution?: Json | null
+          resolved_at?: string | null
+          session_id: string
+          state?: string
+          statement_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          kind?: string
+          latency_ms?: number | null
+          message?: string
+          payload?: Json
+          related_object_id?: string | null
+          resolution?: Json | null
+          resolved_at?: string | null
+          session_id?: string
+          state?: string
+          statement_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "framing_live_findings_related_object_id_fkey"
+            columns: ["related_object_id"]
+            isOneToOne: false
+            referencedRelation: "objects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "framing_live_findings_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "objects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "framing_live_findings_statement_id_fkey"
+            columns: ["statement_id"]
             isOneToOne: false
             referencedRelation: "objects"
             referencedColumns: ["id"]
@@ -1413,6 +1653,14 @@ export type Database = {
         Returns: boolean
       }
       _expand_type_group: { Args: { _name: string }; Returns: string[] }
+      _framing_confirmer_ok: {
+        Args: { _actor: string; _session: string }
+        Returns: boolean
+      }
+      _fx_payload: {
+        Args: { _body: Json; _title: string; _type: string }
+        Returns: Json
+      }
       _ledger_write: {
         Args: {
           _action: string
@@ -1534,6 +1782,7 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      artifact_modality: { Args: { _kind: string }; Returns: string }
       assert_transition: {
         Args: { _from: string; _to: string; _type: string }
         Returns: undefined
@@ -1545,7 +1794,17 @@ export type Database = {
         }
         Returns: boolean
       }
+      can_read_session: { Args: { _s: string }; Returns: boolean }
       canon_drift_report: { Args: never; Returns: Json }
+      framing_related_objects: {
+        Args: {
+          p_limit?: number
+          p_session: string
+          p_text: string
+          p_types: string[]
+        }
+        Returns: Json
+      }
       graph_closure: {
         Args: { p_depth?: number; p_root: string }
         Returns: Json
@@ -1720,9 +1979,11 @@ export type Database = {
         }
         Returns: Json
       }
+      thread_framing_sweep: { Args: { p_actor: Json }; Returns: Json }
       thread_graph_sweep: { Args: { p_actor: Json }; Returns: Json }
       thread_phase1_selftest: { Args: never; Returns: Json }
       thread_phase2_selftest: { Args: never; Returns: Json }
+      thread_phase2b_selftest: { Args: never; Returns: Json }
       thread_propose_canon_change: {
         Args: { p: Json; p_actor: Json }
         Returns: {
@@ -1751,6 +2012,10 @@ export type Database = {
       }
       thread_record_phase1_evidence: { Args: { p_actor: Json }; Returns: Json }
       thread_record_phase2_evidence: { Args: { p_actor: Json }; Returns: Json }
+      thread_record_phase2b_evidence: {
+        Args: { p: Json; p_actor: Json }
+        Returns: Json
+      }
       thread_record_render_benchmark: {
         Args: { p: Json; p_actor: Json }
         Returns: number

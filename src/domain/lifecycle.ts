@@ -54,7 +54,9 @@ export const LIFECYCLE_FAMILIES = {
   detector_finding: [["new"], ["acknowledged"], ["remediated", "accepted_risk", "false_positive"]],
   opportunity_stream: [["now"], ["next"], ["observing"], ["expired"]],
   // DESIGN DECISION: Part 8A.7 draft-vs-confirmed for extracted framing objects
-  framing_extract: [["draft"], ["confirmed"], ["superseded"]],
+  framing_extract: [["draft"], ["confirmed", "rejected"], ["superseded"]],
+  // DESIGN DECISION: Part 8A.13 consent gate — a session opens capture only once consent exists; no approval state
+  framing_session: [["planned"], ["capturing"], ["closed"], ["retired"]],
   // DESIGN DECISION: evidence and assurance records are immutable once recorded
   evidence_record: [["recorded"], ["superseded"], ["retired"]],
 } as const satisfies Record<string, readonly (readonly string[])[]>;
