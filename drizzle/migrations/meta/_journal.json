@@ -176,6 +176,13 @@
       "when": 1792174549864,
       "tag": "0024_phase7_selftest_evidence",
       "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "7",
+      "when": 1792174603098,
+      "tag": "0025_phase7_selftest_fix",
+      "breakpoints": true
     }
   ]
 }
