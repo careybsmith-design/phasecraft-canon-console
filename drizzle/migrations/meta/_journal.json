@@ -330,6 +330,13 @@
       "when": 1792181861000,
       "tag": "0046_phase10_extended_measures",
       "breakpoints": true
+    },
+    {
+      "idx": 47,
+      "version": "7",
+      "when": 1792181943647,
+      "tag": "0047_phase10_acceptance_and_ownership_checks",
+      "breakpoints": true
     }
   ]
 }
