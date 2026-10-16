@@ -10,7 +10,8 @@
 - [x] Phase 7 — Shadow, exposure and production outcome (waiting for user approval); exit evidence ledger #7462
 - [x] Phase 8 — Generation layer (waiting for user approval); exit evidence ledger #10434
 - [x] Phase 9 — Agent-executable surface (waiting for user approval); exit evidence ledger #10660
-- [ ] Phase 10 … Phase 12 per Section 16
+- [ ] Phase 10 — Detection and measurement (in progress)
+- [ ] Phase 11 … Phase 12 per Section 16
 
 ## Open items — keep until addressed at the end (never delete without resolving)
 
