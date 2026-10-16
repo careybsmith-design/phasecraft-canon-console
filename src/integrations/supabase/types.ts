@@ -2970,6 +2970,7 @@ export type Database = {
       thread_phase10_graph_test: { Args: never; Returns: Json }
       thread_phase10_risk_test: { Args: never; Returns: Json }
       thread_phase10_selftest: { Args: never; Returns: Json }
+      thread_phase11_selftest: { Args: never; Returns: Json }
       thread_phase2_selftest: { Args: never; Returns: Json }
       thread_phase2b_selftest: { Args: never; Returns: Json }
       thread_phase3_selftest: { Args: never; Returns: Json }

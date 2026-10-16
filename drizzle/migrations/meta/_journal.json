@@ -365,6 +365,13 @@
       "when": 1792183707945,
       "tag": "0051_phase11_probe_adapter_provenance",
       "breakpoints": true
+    },
+    {
+      "idx": 52,
+      "version": "7",
+      "when": 1792183736529,
+      "tag": "0052_phase11_rollback_acceptance",
+      "breakpoints": true
     }
   ]
 }
