@@ -372,6 +372,13 @@
       "when": 1792183736529,
       "tag": "0052_phase11_rollback_acceptance",
       "breakpoints": true
+    },
+    {
+      "idx": 53,
+      "version": "7",
+      "when": 1792185234701,
+      "tag": "0053_phase12_security_and_bounded_context",
+      "breakpoints": true
     }
   ]
 }
