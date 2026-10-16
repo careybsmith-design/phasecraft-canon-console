@@ -435,6 +435,13 @@
       "when": 1792189031140,
       "tag": "0061_audit_detector_candidate_materialization",
       "breakpoints": true
+    },
+    {
+      "idx": 62,
+      "version": "7",
+      "when": 1792189282005,
+      "tag": "0062_audit_least_privilege_table_grants",
+      "breakpoints": true
     }
   ]
 }
