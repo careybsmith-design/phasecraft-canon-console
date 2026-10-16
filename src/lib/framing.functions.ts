@@ -971,6 +971,8 @@ async function surface(
   for (const o of related.slice(0, 3)) {
     const k = kindFor(o);
     if (!k) continue;
+    const { data: seen } = await db.from("framing_live_findings").select("id").eq("session_id", session.id).eq("related_object_id", o.id).eq("kind", k).limit(1);
+    if (seen?.length) continue;
     const when = new Date(o.created_at).toLocaleDateString("en-GB", {
       day: "numeric",
       month: "long",
