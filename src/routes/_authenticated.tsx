@@ -17,8 +17,8 @@ function AuthedLayout() {
   if (loading || !session) return <p className="p-6 text-muted-foreground">Checking session…</p>;
   return (
     <div className="min-h-screen">
-      <header className="flex items-center justify-between border-b px-4 py-2">
-        <nav aria-label="Surfaces" className="flex items-center gap-4 text-sm">
+      <header className="flex flex-wrap items-center justify-between gap-3 border-b px-4 py-2">
+        <nav aria-label="Surfaces" className="flex min-w-0 flex-wrap items-center gap-x-4 gap-y-2 text-sm">
           <Link to="/canon" className="ident text-primary">THREAD</Link>
           <Link to="/canon" className="text-muted-foreground" activeProps={{ className: "text-foreground" }}>Canon</Link>
           <Link to="/graph" className="text-muted-foreground" activeProps={{ className: "text-foreground" }}>Graph</Link>

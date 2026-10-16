@@ -14,6 +14,8 @@ export const Route = createFileRoute("/auth")({
       { name: "description", content: "Sign in to THREAD, the MASA Global operating graph." },
       { property: "og:title", content: "Sign in · THREAD" },
       { property: "og:description", content: "Sign in to THREAD, the MASA Global operating graph." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: AuthPage,

@@ -274,19 +274,19 @@ export const HANDLERS: Record<string, Handler> = {
   },
   async measure_flow(ctx, a) {
     if (prohibitedInference(S(a["scope"]))) throw err("PROHIBITED_INFERENCE");
-    const s = await call<Json>(ctx.sb.rpc("phase10_measurements")); return s["flow"];
+    const s = await call<Json>(ctx.sb.rpc("phase10_measurements_extended")); return s["flow"];
   },
   async measure_value(ctx, a) {
     if (prohibitedInference(S(a["scope"]))) throw err("PROHIBITED_INFERENCE");
-    const s = await call<Json>(ctx.sb.rpc("phase10_measurements")); return s["value"];
+    const s = await call<Json>(ctx.sb.rpc("phase10_measurements_extended")); return s["value"];
   },
   async measure_community(ctx, a) {
     if (prohibitedInference(S(a["scope"]))) throw err("PROHIBITED_INFERENCE");
-    const s = await call<Json>(ctx.sb.rpc("phase10_measurements")); return s["community"];
+    const s = await call<Json>(ctx.sb.rpc("phase10_measurements_extended")); return s["community"];
   },
   async measure_capability_health(ctx, a) {
     await visible(ctx, S(a["capability_id"]), "id");
-    const s = await call<Json>(ctx.sb.rpc("phase10_measurements"));
+    const s = await call<Json>(ctx.sb.rpc("phase10_measurements_extended"));
     return (Array.isArray(s["capability"]) ? s["capability"] as Json[] : []).filter(c => c["id"] === a["capability_id"]);
   },
   async get_intent_to_value_time(ctx, a) {
