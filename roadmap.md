@@ -1,6 +1,7 @@
 # THREAD roadmap
 
 ## Whole-build audit — Sections 1–19 (authorized 16 October 2026)
+- [ ] 17 October 00:18 renewed request: recheck all sections/Appendices A–C, fresh tests/access/operation evidence, repair further verified gaps and show proof; keep remaining acceptance explicitly open.
 - [x] Renewed audit 17 October: full source/Appendices A–C reviewed; all 19 sections and 34 specified operations compared; 1,653 tests/23 files passed; full catalog 53 tables/54 policies/368 functions saved; 2,754 ledger hashes valid; nine linter warnings retained. Migration 0063 reran rollback-only security/callback checks. Prompt/dispatch fail-closed, evidence read errors, historical reads, search states, withdrawal evidence, setting-status and honest AW statuses repaired. Full Section17/live acceptance remains incomplete; see report and evidence downloads.
 - [x] Re-read full specification and Appendices A–C; all 19 sections inventoried in docs/THREAD-build-audit.md.
 - [x] Run complete automated suite and available database groups; report every AW-1–AW-15 as pass/fail/blocked, not full execution. Full release FAIL.
