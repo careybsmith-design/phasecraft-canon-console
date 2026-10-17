@@ -28,10 +28,12 @@ export const acceptanceBlockers = createServerFn({ method: "GET" }).middleware([
   ]);
   if (orphans.error || ratio.error || setting.error) throw new Error("Acceptance blockers could not be read.");
   const nodes = (orphans.data as { nodes?: AcceptanceBlockers["orphans"]["nodes"] })?.nodes ?? [];
+  const rawRatio = ratio.data as { action_pct: number | null; read_only_pct: number | null; status: string; thresholds?: unknown; evidence?: { sessions: number } };
+  const rawSetting = setting.data as { key: string; value: unknown; status: string } | null;
   return {
     orphans: { count: (orphans.data as { count?: number })?.count ?? 0, nodes },
-    action_ratio: ratio.data as unknown as AcceptanceBlockers["action_ratio"],
-    aw5_setting: (setting.data as AcceptanceBlockers["aw5_setting"]) ?? null,
+    action_ratio: { action_pct: rawRatio.action_pct, read_only_pct: rawRatio.read_only_pct, status: rawRatio.status, thresholds: rawRatio.thresholds == null ? null : JSON.stringify(rawRatio.thresholds), evidence: { sessions: rawRatio.evidence?.sessions ?? 0 } },
+    aw5_setting: rawSetting ? { key: rawSetting.key, status: rawSetting.status, value: rawSetting.value == null ? null : JSON.stringify(rawSetting.value) } : null,
   };
 });
 
