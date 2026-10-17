@@ -1,12 +1,12 @@
 # THREAD whole-build audit
 
-**Audit refreshed:** 17 October 2026, 00:51 UTC (third renewal). **Release verdict: FAIL — not fully compliant.**
+**Audit refreshed:** 17 October 2026, 01:02 UTC (fourth renewal). **Release verdict: FAIL — not fully compliant.**
 
 This audit reviews Sections 1–19, the full canonical specification and Appendices A–C. It does not relabel unfinished phases as accepted. Passing local tests, rollback-only fixture checks and catalog scans are identified separately from real production proof. All prior open items remain in the roadmap.
 
 ## Verified summary
 
-- The expanded automated suite passes: **1,671 tests across 25 files**, including 1,008 authority matrix and 380 lifecycle cases. The complete transcript is in `docs/audit/full-suite.txt`; the text extension ensures it persists with the app rather than being excluded as a log. This does not establish every Section 17 runtime acceptance.
+- The expanded automated suite passes: **1,675 tests across 26 files**, including 1,008 authority matrix and 380 lifecycle cases. The complete transcript is in `docs/audit/full-suite.txt`; the text extension ensures it persists with the app rather than being excluded as a log. This does not establish every Section 17 runtime acceptance.
 - 1,008 parameterized authority cases now exercise risk × confidence × consequence × reversibility × novelty; 380 lifecycle cases exercise every currently declared state-pair rule. Those prove the declared implementation, not resolution of the specification's lifecycle ambiguity.
 - Historical database regression groups: Phase 2, 2B, 3, 4, 5, 6, 7, 8, 10, 11 and Phase 12 behavioral checks passed in the previous audit; they were not all rerun here. Earlier migration 0063 reran the rollback-only audit security/callback suite and ledger integrity successfully. No migration or privileged mutation suite ran in the 00:18 renewal. Direct read-tool calls to privileged tests are denied; privileges were not weakened to run tests. Phase 1's historical ten/thirty-second timeouts remain failed/unverified.
 - Fresh catalogue covers **53 public tables, 54 policies and 368 public functions**: zero tables without RLS; zero anonymous table SELECT grants; authenticated canonical INSERT revoked. Two authenticated-callable `thread_*` functions are read-only integrity/snapshot checks (`thread_verify_ledger`, `thread_restore_rehearsal`), not exposed writes. Nine linter warnings remain: two public extensions and seven intentionally callable RLS/read helpers. This is not independent security certification.
