@@ -113,6 +113,8 @@ export const getIntegrity = createServerFn({ method: "GET" })
       context.supabase.rpc("canon_drift_report"),
     ]);
     if (orph.error) throw new Error(orph.error.message);
+    if (cyc.error) throw new Error(cyc.error.message);
+    if (drift.error) throw new Error(drift.error.message);
     return {
       orphans: orph.data as unknown as { count: number; live_objects: number; nodes: GraphNode[] },
       cycles: (cyc.data ?? []) as unknown as { verb: string; path: string[]; refs: string[] }[],
