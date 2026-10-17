@@ -63,6 +63,7 @@ export const getClosure = createServerFn({ method: "GET" })
       context.supabase.rpc("graph_neighbourhood", { p_root: data.root, p_depth: 1, p_edge_budget: 1 }),
     ]);
     if (c.error) throw new Error(c.error.message);
+    if (rootQ.error) throw new Error(rootQ.error.message);
     const root = ((rootQ.data as unknown as Subgraph | null)?.nodes ?? []).find((n) => n.id === data.root);
     return { ...(c.data as unknown as { count: number; depth: number; nodes: GraphNode[]; edges: GraphEdge[]; by_type: Record<string, number>; by_owner: Record<string, number> }), rootNode: root ?? null };
   });

@@ -3,6 +3,7 @@ import { validateGenericBody } from "@/domain/generic-body";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { CreateObjectInput, ReviseInput, TransitionInput, TombstoneInput } from "@/domain/types/envelope";
+import { ObjectLookupInput, GraphSearchInput } from "@/domain/object-read";
 
 // Human actor derived from the verified session, never from client input.
 function humanActor(userId: string) {
@@ -46,6 +47,8 @@ export const getRegistry = createServerFn({ method: "GET" })
       context.supabase.from("lifecycle_initial_states").select("lifecycle_family,state"),
     ]);
     if (reg.error) throw new Error(reg.error.message);
+    if (tr.error) throw new Error(tr.error.message);
+    if (init.error) throw new Error(init.error.message);
     return { types: reg.data ?? [], transitions: tr.data ?? [], initial: init.data ?? [] };
   });
 
@@ -53,14 +56,31 @@ export const getObjectDetail = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: { id: string }) => z.object({ id: z.string().uuid() }).parse(d))
   .handler(async ({ data, context }) => {
-    const [obj, versions, ledger] = await Promise.all([
-      context.supabase.from("objects").select("id,human_ref,type,title,statement,machine_description,version,lifecycle_state,risk_tier,authority_level,data_classification,review_date,expiration_condition,retirement_path,created_by,permission,content_hash,provenance_chain_id,is_tombstone,retirement_reason").eq("id", data.id).maybeSingle(),
+    const { lookupObjectCore } = await import("@/server/ops/object-read.server");
+    const object = await lookupObjectCore(context.supabase, data);
+    const [versions, ledger] = await Promise.all([
       context.supabase.from("object_versions").select("version,title,statement,lifecycle_state,content_hash,updated_at,updated_by,is_tombstone,risk_tier").eq("id", data.id).order("version", { ascending: false }),
       context.supabase.from("ledger").select("seq,occurred_at,actor,action,object_version,payload,prev_hash,hash,adapter_mode").eq("object_id", data.id).order("seq", { ascending: false }),
     ]);
-    if (obj.error) throw new Error(obj.error.message);
-    if (!obj.data) return null;
-    return { object: obj.data, versions: versions.data ?? [], ledger: ledger.data ?? [] };
+    if (versions.error) throw new Error(versions.error.message);
+    if (ledger.error) throw new Error(ledger.error.message);
+    return { object, versions: versions.data ?? [], ledger: ledger.data ?? [] };
+  });
+
+export const getObject = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: unknown) => ObjectLookupInput.parse(data))
+  .handler(async ({ data, context }) => {
+    const { lookupObjectCore } = await import("@/server/ops/object-read.server");
+    return lookupObjectCore(context.supabase, data);
+  });
+
+export const searchGraph = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: unknown) => GraphSearchInput.parse(data))
+  .handler(async ({ data, context }) => {
+    const { searchGraphCore } = await import("@/server/ops/object-read.server");
+    return searchGraphCore(context.supabase, data);
   });
 
 export const createObject = createServerFn({ method: "POST" })

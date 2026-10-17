@@ -9,6 +9,7 @@ import { detectChangeClass, scopeSmuggled, GOVERNANCE, type IterationDiff } from
 import { prohibitedInference, type RenditionKind } from "@/domain/generation";
 import { EvalInput } from "@/domain/authority-input";
 import { scanForInjection } from "@/domain/mcp";
+import { ObjectLookupInput, GraphSearchInput } from "@/domain/object-read";
 
 export type AgentCtx = OpCtx & { agentId: string; ownerId: string; authorityCeiling?: import("@/domain/mcp").AuthorityLevel };
 type Handler = (ctx: AgentCtx, a: Json) => Promise<unknown>;
@@ -104,22 +105,12 @@ export const HANDLERS: Record<string, Handler> = {
   },
 
   async get_object(ctx, a) {
-    let q = ctx.sb.from("objects").select(OBJ);
-    q = a["id"] ? q.eq("id", S(a["id"])) : q.eq("human_ref", S(a["human_ref"]));
-    const data = await call<Json | null>(q.maybeSingle());
-    if (!data) throw err("NOT_FOUND: not visible to this agent");
-    if (a["version"] !== undefined) {
-      const snapshot = await call<Json | null>(ctx.sb.from("object_versions").select(OBJ).eq("id", S(data["id"])).eq("version", Number(a["version"])).maybeSingle());
-      if (!snapshot) throw err("NOT_FOUND: version not visible to this agent");
-      return snapshot;
-    }
-    return data;
+    const { lookupObjectCore } = await import("@/server/ops/object-read.server");
+    return lookupObjectCore(ctx.sb, ObjectLookupInput.parse(a));
   },
   async search_graph(ctx, a) {
-    let q = ctx.sb.from("objects").select("id,human_ref,type,title,statement,lifecycle_state,version").eq("is_tombstone", false).textSearch("search", S(a["q"]), { type: "websearch" }).limit(Number(a["limit"] ?? 20));
-    if (Array.isArray(a["types"]) && a["types"].length) q = q.in("type", a["types"] as string[]);
-    if (Array.isArray(a["states"]) && a["states"].length) q = q.in("lifecycle_state", a["states"] as string[]);
-    return call(q);
+    const { searchGraphCore } = await import("@/server/ops/object-read.server");
+    return searchGraphCore(ctx.sb, GraphSearchInput.parse(a));
   },
   async traverse_graph(ctx, a) {
     return call(ctx.sb.rpc("graph_neighbourhood", { p_root: S(a["root"]), p_depth: Number(a["depth"] ?? 2), p_edge_budget: 300, p_verbs: (a["verbs"] as string[] | undefined) ?? null } as never));
