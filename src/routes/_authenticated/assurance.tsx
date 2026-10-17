@@ -55,7 +55,7 @@ function Assurance() {
       <div className="space-y-1 border-y py-3">
         <h3 className="font-medium">AW-5 action-ratio decision</h3>
         {blockers.aw5_setting?.status === "set" && blockers.aw5_setting.value
-          ? <p>Decided: {JSON.stringify(blockers.aw5_setting.value)}. Measured: {blockers.action_ratio.action_pct ?? "—"}% action sessions, {blockers.action_ratio.read_only_pct ?? "—"}% read-only over {blockers.action_ratio.evidence.sessions} sessions.</p>
+          ? <p>Decided: {blockers.aw5_setting.value}. Measured: {blockers.action_ratio.action_pct ?? "—"}% action sessions, {blockers.action_ratio.read_only_pct ?? "—"}% read-only over {blockers.action_ratio.evidence.sessions} sessions.</p>
           : <p className="text-warn">Threshold unset ({blockers.action_ratio.status}). Proposed: ≥60% of sessions with an action, ≤25% read-only. Recording the decision requires a steward canon change; it can be revised later the same way.</p>}
       </div>
       <div className="space-y-1">
