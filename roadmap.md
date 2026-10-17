@@ -30,7 +30,8 @@
 
 Phase 1
 - [ ] Real platform-backup restore (`pending_live_adapter`; only snapshot-replay rehearsal done)
-- [ ] AW-5 action-ratio thresholds — OPEN for Carey Smith; no default may be set
+- [ ] AW-5 action-ratio thresholds — OPEN for Carey Smith; no default may be set. Tracked live on Assurance → Acceptance blockers (proposed ≥60% action / ≤25% read-only; user declined to set it 17 Oct 2026)
+- [ ] Orphan objects (88, mostly Phase 2B/3/7 test leftovers) — user declined auto-retirement 17 Oct 2026; listed for per-item human review on Assurance → Acceptance blockers
 
 Phase 2
 - [ ] Spec discrepancy: exit summary says 15 Canon-family types, Part 4.3 lists 9
