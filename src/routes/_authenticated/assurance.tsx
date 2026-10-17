@@ -18,8 +18,20 @@ export const Route = createFileRoute("/_authenticated/assurance")({
   head: () => ({ meta: [{ title: "Assurance and recovery · THREAD" }, { name: "description", content: "Cited assurance evidence, ledger integrity, recovery conditions and independent verification in THREAD." }, { property: "og:title", content: "Assurance and recovery · THREAD" }, { property: "og:description", content: "Evidence-linked hardening with explicit live assurance gaps and recovery checks." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }), component: Assurance,
 });
 
+const EXIT_BLOCKERS: Array<{ item: string; needs: string }> = [
+  { item: "AW-5 action-ratio threshold", needs: "Steward decision (proposed: ≥60% action sessions, ≤25% read-only; changeable later via canon change)" },
+  { item: "Orphan objects", needs: "Human reconciliation — connect, retire, or keep each with a recorded reason" },
+  { item: "Live builds on all five platforms", needs: "Platform URL, token and webhook secret per builder" },
+  { item: "Real backup restore", needs: "Timed platform restore with post-restore ledger verification" },
+  { item: "Independent penetration test and WCAG 2.2 AA audit", needs: "External assessors" },
+  { item: "Two-person acceptance tests", needs: "A second authorized person" },
+  { item: "Human relabeling of extraction and PHI/PAN test corpora", needs: "Human reviewers" },
+  { item: "Target-scale performance proof", needs: "Tenfold load rehearsal" },
+  { item: "Retention and legal-hold policy; SSO/org identity", needs: "Policy decision and identity provider" },
+];
+
 function Assurance() {
-  const { data } = useSuspenseQuery(options); const qc = useQueryClient();
+  const { data } = useSuspenseQuery(options); const { data: blockers } = useSuspenseQuery(blockerOptions); const qc = useQueryClient();
   const run = useServerFn(runHardeningChecks); const record = useServerFn(recordAssurance); const query = useServerFn(assessorPack);
   const [subject, setSubject] = useState(""); const [kind, setKind] = useState<(typeof ASSURANCE_KINDS)[number]>("penetration");
   const [result, setResult] = useState<AssuranceInput["result"]>("pending_live_adapter");
