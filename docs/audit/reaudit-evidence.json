@@ -1,19 +1,14 @@
 {
   "round": 4,
   "date": "2026-10-17",
-  "tests": { "files": 25, "passed": 1671, "failed": 0 },
-  "database": {
-    "tables": 53,
-    "functions": 368,
-    "policies": 54,
-    "ledger_entries": 2754,
-    "live_objects": 153,
-    "tables_without_rls": 0
-  },
-  "anti_wiki_state": {
-    "aw5_threshold": "open (unset, canon_settings anti_wiki.action_ratio)",
-    "orphan_objects": 93,
-    "usage_sessions": 0
-  },
-  "verdict": "FAIL — same unresolved items: AW-5 decision pending, 93 orphans pending human reconciliation, remaining checks need live services or people"
+  "tests": { "files": 26, "passed": 1675, "failed": 0 },
+  "database": { "tables": 53, "functions": 368, "policies": 54, "ledger_entries": 2754, "live_objects": 153, "tables_without_rls": 0 },
+  "fixes_this_round": [
+    "0064: NULL assertions in thread_phase10_selftest/graph_test/risk_test now fail (IS DISTINCT FROM 'true') instead of being skipped by three-valued logic",
+    "0064: thread_record_phase10_evidence now aggregates all three suite verdicts fail-closed; a failed risk check can no longer accompany a passed receipt",
+    "0064: native signal-detector check now requires the finding's object_id to equal the fixture signal it created",
+    "graph.functions.ts getIntegrity now rejects on cycle and drift query errors instead of displaying fabricated zero cycles or crashing"
+  ],
+  "anti_wiki_state": { "aw5_threshold": "open (unset)", "orphan_objects": 93, "usage_sessions": 0 },
+  "verdict": "FAIL — unresolved: AW-5 decision pending, 93 orphans pending human reconciliation, remaining checks need live services or people"
 }
