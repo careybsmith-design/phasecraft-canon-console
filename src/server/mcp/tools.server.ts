@@ -89,8 +89,7 @@ export const HANDLERS: Record<string, Handler> = {
   async monitor_outcome_evidence(ctx, a) {
     const cap = await visible(ctx, S(a["capability_id"]), "id,human_ref");
     const all = await call<Array<{ type: string }>>(ctx.sb.from("objects").select("id,human_ref,type,title,statement,lifecycle_state,body,created_at")
-      .in("type", ["ProductionOutcome", "ValueMeasure", "Incident"]).eq("is_tombstone", false).contains("body", { capability_ref: cap["id"] }).limit(100);
-    );
+      .in("type", ["ProductionOutcome", "ValueMeasure", "Incident"]).eq("is_tombstone", false).contains("body", { capability_ref: cap["id"] }).limit(100));
     return { capability: cap["human_ref"], production_outcomes: all.filter((r) => r.type === "ProductionOutcome"), value_measures: all.filter((r) => r.type === "ValueMeasure"), incidents: all.filter((r) => r.type === "Incident") };
   },
   async publish_reusable_capability(ctx, a) {
