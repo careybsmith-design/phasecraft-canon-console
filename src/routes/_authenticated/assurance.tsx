@@ -50,6 +50,26 @@ function Assurance() {
     <div><Label htmlFor="assurance-kind">Condition</Label><select id="assurance-kind" className={selectClass} value={kind} onChange={(e) => setKind(e.target.value as typeof kind)}>{ASSURANCE_KINDS.map((k) => <option key={k} value={k}>{k.replaceAll("_", " ")}</option>)}</select></div><div><Label htmlFor="assurance-result">Evidence result</Label><select id="assurance-result" className={selectClass} value={result} onChange={(e) => setResult(e.target.value as typeof result)}><option value="pending_live_adapter">Pending live evidence</option><option value="failed">Failed</option><option value="passed">Passed with live evidence</option></select></div>
     <fieldset className="space-y-2 sm:col-span-2"><legend className="text-sm font-medium">Cited evidence</legend><div className="max-h-48 overflow-auto border-y py-2">{data.sources.map((s) => <label key={s.id} className="flex items-start gap-2 py-1 text-sm"><input type="checkbox" checked={evidence.includes(s.id)} disabled={!evidence.includes(s.id) && evidence.length >= 20} onChange={(e) => setEvidence(e.target.checked ? [...evidence, s.id] : evidence.filter((id) => id !== s.id))} /><span>{s.human_ref} · {s.title}</span></label>)}</div></fieldset><div className="sm:col-span-2"><Label htmlFor="assurance-rationale">Evidence interpretation</Label><Textarea id="assurance-rationale" required maxLength={2000} value={rationale} onChange={(e) => setRationale(e.target.value)} /></div><Button disabled={busy || !subject || !evidence.length} className="justify-self-start">Record cited condition</Button></form></section>}
     <section className="space-y-2 border-t pt-4"><h2 className="text-lg font-semibold">Recorded conditions</h2>{data.checks.length === 0 && <p className="text-sm text-muted-foreground">No assurance conditions recorded.</p>}<ul className="divide-y">{data.checks.map((c) => <li key={c.id} className="space-y-2 py-3 text-sm"><Link to="/canon" search={{ id: c.id }} className="underline">{c.human_ref} · {c.title}</Link><p>{c.body.result} · Review {c.review_date}</p><p>{c.body.rationale}</p><div className="flex flex-wrap gap-2">{c.body.evidence.map((id) => <Link key={id} to="/canon" search={{ id }} className="ident underline">{data.sources.find((s) => s.id === id)?.human_ref ?? "Cited evidence"}</Link>)}</div></li>)}</ul></section>
+    <section className="space-y-3 border-t pt-4 text-sm" aria-label="Acceptance blockers">
+      <h2 className="text-lg font-semibold">Acceptance blockers</h2>
+      <div className="space-y-1 border-y py-3">
+        <h3 className="font-medium">AW-5 action-ratio decision</h3>
+        {blockers.aw5_setting?.status === "set" && blockers.aw5_setting.value
+          ? <p>Decided: {JSON.stringify(blockers.aw5_setting.value)}. Measured: {blockers.action_ratio.action_pct ?? "—"}% action sessions, {blockers.action_ratio.read_only_pct ?? "—"}% read-only over {blockers.action_ratio.evidence.sessions} sessions.</p>
+          : <p className="text-warn">Threshold unset ({blockers.action_ratio.status}). Proposed: ≥60% of sessions with an action, ≤25% read-only. Recording the decision requires a steward canon change; it can be revised later the same way.</p>}
+      </div>
+      <div className="space-y-1">
+        <h3 className="font-medium">Orphan objects — {blockers.orphans.count} without an active relationship</h3>
+        {blockers.orphans.count === 0
+          ? <p>No orphans. Every live object is connected.</p>
+          : <><p>Each needs a human decision: connect it, retire it with a reason, or keep it deliberately. Nothing is retired automatically.</p>
+          <ul className="max-h-64 divide-y overflow-auto border-y">{blockers.orphans.nodes.map((n) => <li key={n.id} className="flex flex-wrap items-baseline gap-2 py-1"><Link to="/canon" search={{ id: n.id }} className="ident underline">{n.human_ref}</Link><span className="text-muted-foreground">{n.type} · {n.lifecycle_state}</span><span>{n.title}</span></li>)}</ul></>}
+      </div>
+      <div className="space-y-1">
+        <h3 className="font-medium">Remaining exit requirements</h3>
+        <ul className="divide-y border-y">{EXIT_BLOCKERS.map((b) => <li key={b.item} className="py-1"><span className="font-medium">{b.item}.</span> <span className="text-muted-foreground">{b.needs}</span></li>)}</ul>
+      </div>
+    </section>
     <section className="space-y-2 border-t pt-4 text-sm"><h2 className="text-lg font-semibold">Live exit evidence still required</h2><p>Independent penetration test; timed backup restore and post-restore ledger verification; WCAG 2.2 AA audit; compliance-officer walkthrough; independent verification; tenfold load rehearsal.</p><p>Recovery targets: no more than 15 minutes of data loss and 4 hours to recover. These are targets, not measured results.</p><details><summary className="cursor-pointer">Tenfold scale targets</summary><pre className="mt-2 overflow-auto text-xs">{JSON.stringify(SCALE_TARGET, null, 2)}</pre></details></section>
   </main>;
 }
