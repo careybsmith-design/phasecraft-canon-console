@@ -1,11 +1,11 @@
 # THREAD roadmap
 
 ## Whole-build audit — Sections 1–19 (authorized 16 October 2026)
-- [ ] 17 October 00:18 renewed request: recheck all sections/Appendices A–C, fresh tests/access/operation evidence, repair further verified gaps and show proof; keep remaining acceptance explicitly open.
+- [x] 17 October 00:18 comparison/proof pass: all 19 sections and 34 specified operations rechecked against relevant Appendices A–C; 1,671 tests/25 files pass. Shared human/MCP lookup/search with complete envelope outputs, current-parent history, partial-read refusal and explicit three-hop input fixed. Fresh 53-table/54-policy/368-function catalog, 2,754 verified ledger hashes, 128 human operations/95 tools saved. Complete Section17 acceptance and every engineering gap remain OPEN below; no full completion claimed.
 - [x] Renewed audit 17 October: full source/Appendices A–C reviewed; all 19 sections and 34 specified operations compared; 1,653 tests/23 files passed; full catalog 53 tables/54 policies/368 functions saved; 2,754 ledger hashes valid; nine linter warnings retained. Migration 0063 reran rollback-only security/callback checks. Prompt/dispatch fail-closed, evidence read errors, historical reads, search states, withdrawal evidence, setting-status and honest AW statuses repaired. Full Section17/live acceptance remains incomplete; see report and evidence downloads.
 - [x] Re-read full specification and Appendices A–C; all 19 sections inventoried in docs/THREAD-build-audit.md.
 - [x] Run complete automated suite and available database groups; report every AW-1–AW-15 as pass/fail/blocked, not full execution. Full release FAIL.
-- [x] Inspect live database layout/grants and static API inventory: 126 human operations, 95 MCP tools (75 advertised live / 10 pending / 10 human-only). Not all executed.
+- [x] Inspect live database layout/grants and static API inventory: now 128 human operations, 95 MCP tools (75 advertised live / 10 pending / 10 human-only). Not all executed.
 - [x] Apply verified forward-only safety fixes; proof and remaining engineering gaps in docs/THREAD-build-audit.md and /build-audit.
 - [ ] Complete every remaining gap and full acceptance. Blockers: engineering gaps listed below, requester sign-in, trusted organizational authority, execution/Factory adapters, isolated test/load environment, independent humans and Carey's AW-5 decision.
 
@@ -149,6 +149,10 @@ Whole-build audit — permanent open items
 - [ ] Trusted domain-scoped participant decision authority and actual ConfirmedDecision source existence/type/authority/provenance; current declarations/nonempty references insufficient. Blocker: organizational identity/authority integration plus engineering.
 - [ ] Purpose/context/attribute/permitted-use predicate compiler, every-hop dynamic composition permissions and all-query two-identity leakage tests. Blocker: trusted organizational claims and isolated acceptance environment; engineering remains.
 - [ ] Section19 request/response parity for every function/tool; nested typed output schemas, combined fabric search/reuse, real legacy finding, scopes/windows, complete HDR/evidence fields, contract reconciliation. No external blocker for interface correction; execution adapters still required for pending kernels.
+- [x] Shared human/agent object identity/version lookup and type/state/limit search; full envelope selection/output validation and failed partial reads guarded. Eight shared-read/eight human-handler regressions plus envelope/depth cases pass in the 1,671-test suite; real two-user flow remains unverified.
+- [ ] Decision-source resolution (reject blank/dangling/wrong-type/tombstoned sources), usable decision states, correct ancestor selection and required mission ancestry; preserve legitimate session/canon paths with rollback-only regression proof. Unfinished engineering plus trusted authority integration.
+- [ ] Live BuildPlatform binding without usable endpoint/token must fail clearly, never silently simulate; actual external builds still need credentials/adapters.
+- [ ] SQL graph budget validation at the direct RPC boundary (negative/zero limits), Nebula effective node-budget metadata, truthful truncation and bounded traversal work. Input depth-four mismatch fixed by explicit rejection only; dense-graph work remains unresolved.
 - [x] Set/open vs decided reader mismatch corrected in domain and SQL, migration 0063, with boundary regressions; no threshold value changed.
 - [ ] Privacy-safe semantic usage sessions and safe aggregate measurement, actual intent-to-first-evidence publication. AW-5 stays NULL/open until Carey decides; do not infer defaults. Engineering plus real usage.
 - [ ] All remaining graph/path/closure work bounds and depth-truncation disclosure; Phase1 current database suite exceeds 30 seconds from repeated full graph/framing sweeps. Candidate materialization improved one source but did not solve total cost. No pass claimed.
