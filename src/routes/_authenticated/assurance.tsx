@@ -4,7 +4,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { toast } from "sonner";
 import { ClipboardCheck, Search, ShieldCheck } from "lucide-react";
-import { assuranceQuery, acceptanceBlockers, recordAssurance, runHardeningChecks, assessorPack } from "@/lib/assurance.functions";
+import { assuranceQuery, acceptanceBlockers, recordAssurance, runHardeningChecks, assessorPack, type AcceptanceBlockers } from "@/lib/assurance.functions";
 import { ASSURANCE_KINDS, SCALE_TARGET, type AssuranceInput } from "@/domain/hardening";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -31,7 +31,7 @@ const EXIT_BLOCKERS: Array<{ item: string; needs: string }> = [
 ];
 
 function Assurance() {
-  const { data } = useSuspenseQuery(options); const { data: blockers } = useSuspenseQuery(blockerOptions); const qc = useQueryClient();
+  const { data } = useSuspenseQuery(options); const { data: blockers } = useSuspenseQuery(blockerOptions) as { data: AcceptanceBlockers }; const qc = useQueryClient();
   const run = useServerFn(runHardeningChecks); const record = useServerFn(recordAssurance); const query = useServerFn(assessorPack);
   const [subject, setSubject] = useState(""); const [kind, setKind] = useState<(typeof ASSURANCE_KINDS)[number]>("penetration");
   const [result, setResult] = useState<AssuranceInput["result"]>("pending_live_adapter");
