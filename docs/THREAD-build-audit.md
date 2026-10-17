@@ -46,7 +46,20 @@ The complete source and Appendices A–C were reviewed again. All 19 section ent
 | AW-5 setting status | Readers expected impossible `decided`, while Section 18 permits `set/open` | Domain boundary test; migration 0063 checks SQL status and open/null returns `THRESHOLD_UNSET` | **No threshold set**; usage writer/aggregate still missing |
 | Honest current AW verdicts | AW-7/8 were unconditional passes from historical results | Two regressions now require blocked status without current execution evidence | Historical DB-boundary passes retained only as historical proof |
 
-Fresh evidence downloads on this page contain the complete suite transcript, all AW-1–15 results, database catalog/access policies, ledger check, public browser outcomes, 95 generated contracts and 128 human-operation names/paths. Nine linter warnings are retained as historical observations, not a fresh scan. Names/paths are not full human request/response contracts. Full automated suite **1,671/1,671** passes; full Section 17 acceptance does **not**.
+Fresh evidence downloads on this page contain the complete suite transcript, all AW-1–15 results, database catalog/access policies, ledger check, public browser outcomes, 95 generated contracts and 128 human-operation names/paths. Nine linter warnings are retained as historical observations, not a fresh scan. Names/paths are not full human request/response contracts. Full automated suite **1,675/1,675** passes; full Section 17 acceptance does **not**.
+
+## 01:02 renewal — fourth recheck fixes
+
+A fresh section-by-section scan found four more verifiable gaps, all in Phase 10 acceptance wiring and graph integrity. All four are fixed and proven.
+
+| Fix | Failure prevented | Executed proof |
+|---|---|---|
+| NULL assertions fail in all three Phase 10 suites (migration 0064) | `r->>'pass'<>'true'` excluded NULL under three-valued logic, so a missing measurement output could report `"passed":true` | `audit4-acceptance.test.ts`: three `IS DISTINCT FROM 'true'` aggregations, no `<>'true'` remaining |
+| Recorded Phase 10 evidence aggregates all three verdicts (0064) | `thread_record_phase10_evidence` appended risk-test checks but ignored its `passed` flag — a failed risk check could accompany a passed receipt | Test asserts the three-way `AND` aggregation; the recorder now runs all three suites once and fails closed |
+| Signal-detector check matches its own fixture (0064) | The check accepted any pre-existing `RequestedSolutionWithoutCondition` finding, so broken detection could pass | Test asserts `object_id=sig2.id`; the function retains the created signal and requires the finding to reference it |
+| Graph integrity rejects all query errors (`graph.functions.ts`) | Failed cycle/drift queries displayed fabricated zero cycles or crashed the surface | `getIntegrity` now throws on orphan, cycle and drift errors before returning |
+
+Live database verification of the three suites requires the service role, which is not available from this environment; the fix is proven by the regression tests and the migration's fail-closed logic, matching the pattern Phase 12 already used (migration 0055). Full suite after fixes: **1,675/1,675 passing, build clean**.
 
 ## Section-by-section result
 
