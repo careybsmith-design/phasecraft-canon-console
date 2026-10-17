@@ -13,6 +13,30 @@ export const assuranceQuery = createServerFn({ method: "GET" }).middleware([requ
   return { checks: checks.data as unknown as Array<{ id: string; human_ref: string; title: string; body: { assurance_kind: string; result: string; evidence: string[]; rationale: string }; review_date: string }>, sources: sources.data ?? [], can_record: role.data?.some((r) => r.role === "steward" || r.role === "compliance") ?? false };
 });
 
+export type AcceptanceBlockers = {
+  orphans: { count: number; nodes: Array<{ id: string; human_ref: string; type: string; title: string; lifecycle_state: string }> };
+  action_ratio: { action_pct: number | null; read_only_pct: number | null; status: string; thresholds: string | null; evidence: { sessions: number } };
+  aw5_setting: { key: string; value: string | null; status: string } | null;
+};
+
+/** Acceptance blockers: orphan reconciliation list, AW-5 decision state, and the tracked exit checklist. */
+export const acceptanceBlockers = createServerFn({ method: "GET" }).middleware([requireSupabaseAuth]).handler(async ({ context }): Promise<AcceptanceBlockers> => {
+  const [orphans, ratio, setting] = await Promise.all([
+    context.supabase.rpc("graph_orphans", { p_limit: 500 }),
+    context.supabase.rpc("phase10_action_ratios"),
+    context.supabase.from("canon_settings").select("key,value,status").eq("key", "anti_wiki.action_ratio").maybeSingle(),
+  ]);
+  if (orphans.error || ratio.error || setting.error) throw new Error("Acceptance blockers could not be read.");
+  const nodes = (orphans.data as { nodes?: AcceptanceBlockers["orphans"]["nodes"] })?.nodes ?? [];
+  const rawRatio = ratio.data as { action_pct: number | null; read_only_pct: number | null; status: string; thresholds?: unknown; evidence?: { sessions: number } };
+  const rawSetting = setting.data as { key: string; value: unknown; status: string } | null;
+  return {
+    orphans: { count: (orphans.data as { count?: number })?.count ?? 0, nodes },
+    action_ratio: { action_pct: rawRatio.action_pct, read_only_pct: rawRatio.read_only_pct, status: rawRatio.status, thresholds: rawRatio.thresholds == null ? null : JSON.stringify(rawRatio.thresholds), evidence: { sessions: rawRatio.evidence?.sessions ?? 0 } },
+    aw5_setting: rawSetting ? { key: rawSetting.key, status: rawSetting.status, value: rawSetting.value == null ? null : JSON.stringify(rawSetting.value) } : null,
+  };
+});
+
 export const recordAssurance = createServerFn({ method: "POST" }).middleware([requireSupabaseAuth])
   .inputValidator((input: unknown) => AssuranceInput.parse(input)).handler(async ({ data, context }) => {
     const { data: roles, error } = await context.supabase.from("user_roles").select("role").eq("user_id", context.userId);
