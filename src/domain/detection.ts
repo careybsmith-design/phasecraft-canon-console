@@ -52,7 +52,7 @@ export function actionRatios(rows: Array<{ mutating_actions: number; reads: numb
   const total = rows.length;
   const action_pct = total ? 100 * rows.filter(r => r.mutating_actions > 0).length / total : null;
   const read_only_pct = total ? 100 * rows.filter(r => r.reads > 0 && r.mutating_actions === 0).length / total : null;
-  if (setting.status !== "decided" || !setting.value) return { action_pct, read_only_pct, status: "THRESHOLD_UNSET", pass: false };
+  if (setting.status !== "set" || !setting.value) return { action_pct, read_only_pct, status: "THRESHOLD_UNSET", pass: false };
   return { action_pct, read_only_pct, status: total ? "measured" : "NO_EVIDENCE", pass: action_pct !== null && read_only_pct !== null && action_pct >= setting.value.min_action_pct && read_only_pct <= setting.value.max_read_only_pct };
 }
 export function elapsedHours(start: string, end: string) {
