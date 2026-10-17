@@ -1,4 +1,5 @@
 import { z } from "zod/v4";
+import { ENVELOPE_COLUMNS } from "./object-read";
 
 // JSON only: undefined/functions/class instances/non-finite numbers must never disappear in serialization.
 function validJson(value: unknown, seen = new Set<object>()): boolean {
@@ -13,6 +14,15 @@ function validJson(value: unknown, seen = new Set<object>()): boolean {
 }
 const json = z.json().refine((value) => validJson(value), "Output must be finite plain JSON");
 const object = (keys: string[]) => z.object(Object.fromEntries(keys.map((key) => [key, json]))).catchall(json);
+const envelope = object(ENVELOPE_COLUMNS.split(",")).extend({
+  id: z.uuid(), human_ref: z.string().min(1), type: z.string().min(1), schema_version: z.string().min(1),
+  version: z.number().int().positive(), lifecycle_state: z.string().min(1),
+  body: z.record(z.string(), json), permission: z.record(z.string(), json),
+  expiration_condition: z.record(z.string(), json), retirement_path: z.record(z.string(), json),
+  evidence_refs: z.array(z.uuid()), provenance_chain_id: z.uuid(), content_hash: z.string().min(1),
+  supersedes: z.array(z.uuid()), superseded_by: z.array(z.uuid()), derived_from: z.array(z.uuid()),
+  permitted_uses: z.array(z.string()), open_questions: z.array(z.string()), is_tombstone: z.boolean(),
+});
 const arrays = new Set(["search_capability_fabric", "search_graph", "list_renditions", "check_data_use_permission", "list_detector_findings", "measure_value", "measure_capability_health", "find_contradictions", "render_unresolved_frontier", "list_notifications"]);
 const arrayFields: Record<string, string[]> = {
   search_capability_fabric: ["capability_id", "match_score", "reuse_mode", "gaps"], search_graph: ["id", "human_ref", "type"], list_renditions: ["id", "kind", "state"], check_data_use_permission: ["id", "body"],
@@ -36,6 +46,8 @@ const fields: Record<string, string[]> = {
   link_need_to_behavior: ["id", "verb", "from_id", "to_id"], propose_dependency: ["id", "verb", "from_id", "to_id"],
 };
 export function outputSchema(name: string) {
+  if (name === "get_object") return envelope;
+  if (name === "search_graph") return z.array(envelope);
   if (arrays.has(name)) return z.array(object(arrayFields[name] ?? []));
   if (name.startsWith("generate_")) return z.union([
     object(["refused", "rendition_id", "human_ref", "ledger_seq"]).extend({ refused: z.literal(false) }),
