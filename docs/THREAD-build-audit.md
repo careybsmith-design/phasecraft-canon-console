@@ -1,6 +1,6 @@
 # THREAD whole-build audit
 
-**Audit refreshed:** 17 October 2026, 00:25 UTC. **Release verdict: FAIL — not fully compliant.**
+**Audit refreshed:** 17 October 2026, 00:51 UTC (third renewal). **Release verdict: FAIL — not fully compliant.**
 
 This audit reviews Sections 1–19, the full canonical specification and Appendices A–C. It does not relabel unfinished phases as accepted. Passing local tests, rollback-only fixture checks and catalog scans are identified separately from real production proof. All prior open items remain in the roadmap.
 
