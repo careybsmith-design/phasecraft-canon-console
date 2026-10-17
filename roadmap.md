@@ -1,6 +1,7 @@
 # THREAD roadmap
 
 ## Whole-build audit — Sections 1–19 (authorized 16 October 2026)
+- [ ] Repeat full source review, fresh automated/database evidence and operation-by-operation gap review for the renewed audit request; repair verified gaps and update fix proofs without declaring blocked acceptance passed.
 - [x] Re-read full specification and Appendices A–C; all 19 sections inventoried in docs/THREAD-build-audit.md.
 - [x] Run complete automated suite and available database groups; report every AW-1–AW-15 as pass/fail/blocked, not full execution. Full release FAIL.
 - [x] Inspect live database layout/grants and static API inventory: 126 human operations, 95 MCP tools (75 advertised live / 10 pending / 10 human-only). Not all executed.
