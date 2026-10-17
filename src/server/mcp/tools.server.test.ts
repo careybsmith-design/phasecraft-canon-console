@@ -46,8 +46,10 @@ describe("Section 19 read and evidence contracts", () => {
     const f = fixture({ objects: { data: { id }, error: null } });
     const hidden = fixture({ objects: { data: null, error: null } });
     const currentRead = f.from.getMockImplementation();
-    f.from.mockImplementationOnce((table: string) => currentRead?.(table));
-    f.from.mockImplementationOnce(() => hidden.ctx.sb.from("objects"));
+    const hiddenRead = hidden.from.getMockImplementation();
+    if (!currentRead || !hiddenRead) throw new Error("Missing fixture implementation");
+    f.from.mockImplementationOnce((table: string) => currentRead(table));
+    f.from.mockImplementationOnce((table: string) => hiddenRead(table));
     await expect(run("withdraw_authority", f.ctx, { object_id: id, reason: "Changed evidence", evidence_refs: [id] })).rejects.toThrow("NOT_FOUND");
     expect(f.rpc).not.toHaveBeenCalled();
   });
