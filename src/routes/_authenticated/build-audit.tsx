@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import report from "../../../docs/THREAD-build-audit.md?raw";
-import testTranscript from "../../../docs/audit/full-suite.log?raw";
+import testTranscript from "../../../docs/audit/full-suite.txt?raw";
 import evidenceBundle from "../../../docs/audit/reaudit-evidence.json?raw";
 import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";

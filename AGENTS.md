@@ -39,3 +39,4 @@
 - Detection and measurement: read src/server/detection/AGENTS.md before changing phase10 SQL or domain rules. Why: observations, live evidence and time-based reconciliation must stay distinct.
 - Human surfaces and Phase 12 assurance: read src/server/ops/AGENTS.md first. Why: shared schemas, caller RLS and ledger-first writes distinguish simulated checks from live assurance.
 - Generic human creation accepts only `generic-body.ts` contracts; other types require dedicated operations. Why: placeholder registry schemas cannot authorize arbitrary bodies.
+- Bundle downloadable audit test transcripts as `.txt`, never ignored `.log` files. Why: ignored files disappear from deployment source and break raw imports.
