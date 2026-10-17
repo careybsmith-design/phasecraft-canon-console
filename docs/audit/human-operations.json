@@ -76,6 +76,14 @@
     "path": "src/lib/canon.functions.ts"
   },
   {
+    "name": "getObject",
+    "path": "src/lib/canon.functions.ts"
+  },
+  {
+    "name": "searchGraph",
+    "path": "src/lib/canon.functions.ts"
+  },
+  {
     "name": "createObject",
     "path": "src/lib/canon.functions.ts"
   },
