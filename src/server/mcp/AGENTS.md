@@ -13,3 +13,4 @@
 - `evaluate_authority` uses the shared action-aware authority core, verified agent ceiling, and actor/action-scoped grants; it only records evaluation or escalation. Why: lookup is not evaluation and confidence never grants execution authority.
 - Published output schemas validate required fields and finite plain JSON before receipts/results; artifact injection scans normalize compatibility and zero-width text. Why: serialization and hidden characters cannot silently bypass the gateway boundary.
 - Object reads require one identity; historical snapshots require current-parent visibility, search honors state filters, and withdrawal preserves caller-readable evidence. All multi-read handlers reject read errors. Why: missing access or failed retrieval must not masquerade as empty successful evidence.
+- Traversal input supports the database's three-hop maximum, rejecting a fourth hop explicitly. Why: silent depth clamping must not imply a complete answer.

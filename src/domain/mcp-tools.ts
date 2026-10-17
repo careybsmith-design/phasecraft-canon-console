@@ -9,6 +9,7 @@ import type { AuthorityLevel, ContentOrigin } from "./mcp";
 import { PLATFORMS } from "./creation";
 import { MissionInput, CellInput, BurstInput } from "./human-surfaces";
 import { outputSchema } from "./mcp-output";
+import { ObjectLookupInput, GraphSearchInput } from "./object-read";
 
 const id = z.uuid();
 const txt = (n: number) => z.string().trim().min(1).max(n);
@@ -74,9 +75,9 @@ export const TOOLS: ToolDef[] = [
   D("detect_legacy_behavior", "K8", "Evaluate observed behaviour text against the withdrawn-object anti-pattern set (Part 2.4)", z.object({ text: txt(4000) }).strict(), { origin: "computed", output: "{matches[]}" }),
 
   // Operating Graph
-  D("get_object", "K1", "Read one canon object by id or human_ref, optionally at a visible historical version", z.object({ id: id.optional(), human_ref: z.string().regex(/^[A-Z]{2}-\d{4}-\d{4}$/).optional(), version: z.number().int().positive().optional() }).strict().refine((a) => Boolean(a.id) !== Boolean(a.human_ref), "Provide exactly one of id or human_ref"), { output: "ObjectEnvelope" }),
-  D("search_graph", "K1", "Full-text search of canon objects you may read", z.object({ q: txt(200), types: z.array(txt(60)).max(10).optional(), states: z.array(txt(40)).max(20).optional(), limit: z.number().int().min(1).max(50).default(20) }).strict(), { output: "Envelope[]" }),
-  D("traverse_graph", "K1", "Neighbourhood of an object with an edge budget", z.object({ root: id, depth: z.number().int().min(1).max(4).default(2), verbs: z.array(txt(60)).max(20).optional() }).strict(), { output: "{nodes, edges, truncated}" }),
+  D("get_object", "K1", "Read one canon object by id or human_ref, optionally at a visible historical version", ObjectLookupInput, { output: "ObjectEnvelope" }),
+  D("search_graph", "K1", "Full-text search of canon objects you may read", GraphSearchInput, { output: "Envelope[]" }),
+  D("traverse_graph", "K1", "Neighbourhood of an object with an edge budget (up to three hops)", z.object({ root: id, depth: z.number().int().min(1).max(3).default(2), verbs: z.array(txt(60)).max(20).optional() }).strict(), { output: "{nodes, edges, edge_budget}; full truncation disclosure pending" }),
   D("get_rendition", "K9", "Open a rendition made for this agent and purpose", z.object({ id, purpose: txt(200) }).strict(), { origin: "generated" }),
   D("list_renditions", "K9", "List renditions made for this agent", z.object({}).strict(), { origin: "generated" }),
   D("propose_canon_change", "K1", "Propose a new version of an active canon object (challenge window applies, P15)",
@@ -193,7 +194,7 @@ export const TOOLS: ToolDef[] = [
 ];
 
 export const TOOL_BY_NAME = new Map(TOOLS.map((t) => [t.name, t]));
-export const TOOL_CONTRACT_VERSION = "audit-2";
+export const TOOL_CONTRACT_VERSION = "audit-3";
 
 export function toolContract(t: ToolDef) {
   return {

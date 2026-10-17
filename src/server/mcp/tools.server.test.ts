@@ -53,9 +53,13 @@ describe("Section 19 read and evidence contracts", () => {
     await expect(run("withdraw_authority", f.ctx, { object_id: id, reason: "Changed evidence", evidence_refs: [id] })).rejects.toThrow("NOT_FOUND");
     expect(f.rpc).not.toHaveBeenCalled();
   });
-  it.each(["find_related_missions", "get_object", "get_canon_history", "evaluate_policy", "surface_prior_objects"])("%s never reports failed reads as an empty success", async (name) => {
+  it.each(["find_related_missions", "get_canon_history", "evaluate_policy", "surface_prior_objects"])("%s never reports failed reads as an empty success", async (name) => {
     const f = fixture({ objects: { data: { id }, error: { message: "permission denied" } } });
     await expect(run(name, f.ctx, { id, object_id: id, condition: "claims", statement: "claims" })).rejects.toThrow("permission denied");
+  });
+  it("object lookup reports a failed read rather than an empty success", async () => {
+    const f = fixture({ objects: { data: null, error: { message: "permission denied" } } });
+    await expect(run("get_object", f.ctx, { id })).rejects.toThrow("permission denied");
   });
   it("outcome evidence retrieval refuses failed reads", async () => {
     const f = fixture({ objects: { data: { id, human_ref: "CC-2026-0001" }, error: null } });

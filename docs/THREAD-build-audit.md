@@ -1,20 +1,35 @@
 # THREAD whole-build audit
 
-**Audit refreshed:** 17 October 2026, 00:07 UTC. **Release verdict: FAIL — not fully compliant.**
+**Audit refreshed:** 17 October 2026, 00:25 UTC. **Release verdict: FAIL — not fully compliant.**
 
 This audit reviews Sections 1–19, the full canonical specification and Appendices A–C. It does not relabel unfinished phases as accepted. Passing local tests, rollback-only fixture checks and catalog scans are identified separately from real production proof. All prior open items remain in the roadmap.
 
 ## Verified summary
 
-- The expanded automated suite passes: **1,653 tests across 23 files**, including 1,008 authority matrix and 380 lifecycle cases. The complete transcript is in `docs/audit/full-suite.txt`; the text extension ensures it persists with the app rather than being excluded as a log. This does not establish every Section 17 runtime acceptance.
+- The expanded automated suite passes: **1,671 tests across 25 files**, including 1,008 authority matrix and 380 lifecycle cases. The complete transcript is in `docs/audit/full-suite.txt`; the text extension ensures it persists with the app rather than being excluded as a log. This does not establish every Section 17 runtime acceptance.
 - 1,008 parameterized authority cases now exercise risk × confidence × consequence × reversibility × novelty; 380 lifecycle cases exercise every currently declared state-pair rule. Those prove the declared implementation, not resolution of the specification's lifecycle ambiguity.
-- Historical database regression groups: Phase 2, 2B, 3, 4, 5, 6, 7, 8, 10, 11 and Phase 12 behavioral checks passed in the previous audit; they were not all rerun here. Fresh migration 0063 reran the rollback-only audit security/callback suite and ledger integrity successfully. Direct read-tool calls to privileged tests are denied; privileges were not weakened to run tests. Phase 1's historical ten/thirty-second timeouts remain failed/unverified.
+- Historical database regression groups: Phase 2, 2B, 3, 4, 5, 6, 7, 8, 10, 11 and Phase 12 behavioral checks passed in the previous audit; they were not all rerun here. Earlier migration 0063 reran the rollback-only audit security/callback suite and ledger integrity successfully. No migration or privileged mutation suite ran in the 00:18 renewal. Direct read-tool calls to privileged tests are denied; privileges were not weakened to run tests. Phase 1's historical ten/thirty-second timeouts remain failed/unverified.
 - Fresh catalogue covers **53 public tables, 54 policies and 368 public functions**: zero tables without RLS; zero anonymous table SELECT grants; authenticated canonical INSERT revoked. Two authenticated-callable `thread_*` functions are read-only integrity/snapshot checks (`thread_verify_ledger`, `thread_restore_rehearsal`), not exposed writes. Nine linter warnings remain: two public extensions and seven intentionally callable RLS/read helpers. This is not independent security certification.
 - Fresh independent SQL hash recomputation verified **2,754 ledger entries**, no bad sequence. Version snapshot rehearsal is historical and simulated, not a platform backup restore.
 - Current snapshot: 534 stored objects, 153 non-tombstoned objects, **93 non-draft orphans**, zero notifications lacking an event/decision trigger, zero live objects missing review/expiration fields. The previous 92-orphan count is superseded; no relationships or objects were altered to force a pass.
 - AW-5 is correctly **THRESHOLD_UNSET**: open/null decision, zero recorded usage sessions, no invented threshold. AW-13 lacks real adversarial execution. AW-14 has no published actual intent-to-first-working-evidence measurement.
-- Inventory: **126 exported human server operations; 95 MCP tools: 75 advertised live, 10 pending execution, 10 human-only.** “Live” is catalogue status, not proof that each verb ran end-to-end.
-- Fresh browser: `/build-audit`, `/assurance` and required evidence/session deep links redirect signed-out to Sign in; zero page errors; unauthenticated MCP returns 401. Authenticated workflows were not verified: requester-session mint again failed because no matching account existed. No unrelated account was selected.
+- Inventory: **128 exported human server operations; 95 MCP tools: 75 advertised live, 10 pending execution, 10 human-only.** “Live” is catalogue status, not proof that each verb ran end-to-end.
+- Fresh browser: `/build-audit`, `/assurance` and `/canon` redirect signed-out to Sign in; zero page errors; unauthenticated MCP returns 401. Evidence/session deep-link outcomes are historical from the preceding check. Authenticated workflows were not verified: requester-session mint again failed because no matching account existed. No unrelated account was selected.
+
+## 00:18 renewal — scope, further fixes and unresolved work
+
+Sections 1–19 were compared again, using Appendix A/B constraints and relevant Appendix C source passages. The source is available in full; this is **not a new line-by-line or transitive proof of every Appendix C requirement**. Every specified Section 19 operation and all catalogue tools were inventoried, but neither every tool nor the complete Section 17 acceptance suite was executed. The request to fix **every** gap is not complete: unfinished engineering below remains unfinished, not merely externally blocked.
+
+| Further fix | Proof executed in this renewal | Remaining boundary |
+|---|---|---|
+| Shared human/MCP `getObject` input and read core | `object-read.server.test.ts`: XOR ID/ref, positive version, ID/ref resolution, missing/failed version and hidden-parent refusal | Caller-filtered mocked reads, not two-account end-to-end acceptance |
+| Complete object envelopes for lookup and search | Both read cores select all 41 envelope columns, excluding internal search vector; output schema rejects partial identity and missing expiration; tests assert provenance/body preservation | Nested business body schemas still incomplete |
+| Shared human/MCP `searchGraph` | Same schema/core, type/state/limit checks tested, retrieval errors refuse instead of empty results | Existing list UI remains a separate listing operation; real relevance/load unverified |
+| Human object detail and registry fail closed | Eight `canon.functions.test.ts` cases: each object/history/ledger/registry/lifecycle read error refuses; hidden parent never reads history/ledger; genuinely empty history succeeds | Tests invoke captured authenticated handler with mocks, not real session execution |
+| Closure refuses failed root lookup | `getClosure` checks both query errors before constructing a result | Source check only; path/closure workload bounds remain incomplete |
+| Traversal no longer accepts a silently ignored fourth hop | Phase 9 regression accepts depth 3 and rejects depth 4; catalogue `audit-3` describes supported three-hop limit | Does not fix SQL negative limits, work bounds or missing truthful truncation metadata |
+
+Additional confirmed gaps retained openly: decision sources can be blank/dangling/wrong-type; decision ancestry does not validate usable source/state; live adapter binding without usable live configuration still selects simulation; graph SQL accepts negative limits through direct RPC; Nebula omits effective node-budget metadata; creation lacks mandatory mission ancestry; outcome window/combined fabric reuse/HDR contracts remain incomplete. These require further implementation and regression proof. No unsafe authority expansion, fabricated source, orphan connection or policy default was applied.
 
 ## Renewed audit — additional fixes and fresh proof
 
@@ -31,7 +46,7 @@ The complete source and Appendices A–C were reviewed again. All 19 section ent
 | AW-5 setting status | Readers expected impossible `decided`, while Section 18 permits `set/open` | Domain boundary test; migration 0063 checks SQL status and open/null returns `THRESHOLD_UNSET` | **No threshold set**; usage writer/aggregate still missing |
 | Honest current AW verdicts | AW-7/8 were unconditional passes from historical results | Two regressions now require blocked status without current execution evidence | Historical DB-boundary passes retained only as historical proof |
 
-Fresh evidence downloads on this page contain the complete suite transcript, all AW-1–15 results, database catalog/access policies, ledger check, linter warnings, public browser outcomes, 95 generated contracts and 126 human-operation names/paths. Names/paths are not full human request/response contracts. Full automated suite **1,653/1,653** passes; full Section 17 acceptance does **not**.
+Fresh evidence downloads on this page contain the complete suite transcript, all AW-1–15 results, database catalog/access policies, ledger check, public browser outcomes, 95 generated contracts and 128 human-operation names/paths. Nine linter warnings are retained as historical observations, not a fresh scan. Names/paths are not full human request/response contracts. Full automated suite **1,671/1,671** passes; full Section 17 acceptance does **not**.
 
 ## Section-by-section result
 
@@ -53,6 +68,7 @@ Fresh evidence downloads on this page contain the complete suite transcript, all
 **Built:** TanStack server functions, caller-filtered database reads, service-role-only controlled writes, provider-agnostic adapter contracts, human/MCP shared operation cores.
 
 **Fixed:** human and MCP action evaluation share one core; failed guardrail/grant/risk reads stop evaluation. Live dispatch carries THREAD's immutable run ID and persists external identity through a ledgered operation. Tool completion failures no longer produce fake success.
+Human/MCP lookup and graph search now share schemas and caller-filtered read cores; complete envelope output contracts reject truncated identity-only results.
 
 **Missing/mismatch:** enterprise Factory adapters, SSO-only identity, governed model attestations, true service ownership boundaries, comprehensive policy predicate compiler. Existing three-hop context and graph closure/path routines still need full bounded-work review and target-scale proof.
 
@@ -122,6 +138,7 @@ Fresh evidence downloads on this page contain the complete suite transcript, all
 **Built:** Feed, Companion, Mission Runtime, Simulation Studio, capture/framing views, evidence and Assurance.
 
 **Fixed:** exact specified evidence/session deep links, route matching tests and current evidence input instead of a fictitious attached-evidence checkbox.
+Human detail and registry now refuse failed history/ledger/lifecycle retrieval, rather than reporting an apparently empty success.
 
 **Missing/mismatch:** signed-in multi-step acceptance, real two-human mission, provenance/history completeness, all graph accessible equivalents, impact previews, burst phase orchestration/expiry, account directory/onboarding, WCAG assistive-technology proof and Mission Runtime screenshot/OCR. Route existence is not workflow acceptance.
 
@@ -171,9 +188,9 @@ Fresh evidence downloads on this page contain the complete suite transcript, all
 
 | Spec operation | Current implementation | Gap / mismatch / proof boundary |
 |---|---|---|
-| getObject | `get_object`, human `getObjectDetail` | **Renewal fix:** XOR ID/ref, positive version, current-parent visibility before historical lookup tested; full envelope and shared human contract remain incomplete |
-| searchGraph | `search_graph`, human graph queries | **Renewal fix:** `states` filter accepted and applied; permission-negative all-query/shared human acceptance pending |
-| traverseGraph | `traverse_graph`, `graph_neighbourhood` | Existing output budgets; full work budget and reliable `truncated` metadata missing |
+| getObject | `get_object`, human `getObject`; separate `getObjectDetail` | **Renewal fix:** shared XOR ID/ref, positive version, current-parent visibility and full 41-field envelope schema/core; real two-caller acceptance pending |
+| searchGraph | `search_graph`, human `searchGraph`; separate list UI | **Renewal fix:** same types/states/limit schema/core and envelope result; permission-negative real-query acceptance pending |
+| traverseGraph | `traverse_graph`, `graph_neighbourhood` | **Renewal fix:** rejects fourth hop instead of silently executing three; SQL negative limit/full work budget/reliable `truncated` metadata still missing |
 | proposeCanonChange | `propose_canon_change` | Version/evidence/challenge-window DB test passed |
 | challengeCanon | `challenge_canon` | Uses change ID; spec object-ID routing semantics need reconciliation |
 | detectValueSignal | `detect_value_signal` | Typed record; complete source/authority evidence needed |
@@ -206,7 +223,7 @@ Fresh evidence downloads on this page contain the complete suite transcript, all
 | detectLegacyBehavior | `detect_legacy_behavior` | Returns regex matches, not persisted owned DetectorFinding[]; mismatch |
 | generateBriefing | `generate_briefing` | Morning brief for agent identity; input purpose/focus not fully honored; individual recipient boundaries retained |
 
-The complete 95-tool current contracts are saved in `docs/audit/tool-contracts.json`. The full 126 human-operation source inventory is in `docs/audit/human-operations.json`. Every catalogue tool was statically inventoried; not every tool was executed successfully. That difference remains a release blocker.
+The complete 95-tool current contracts are saved in `docs/audit/tool-contracts.json`. The full 128 human-operation source inventory is in `docs/audit/human-operations.json`. Every catalogue tool was statically inventoried; not every tool was executed successfully. That difference remains a release blocker.
 
 ## Fix-by-fix proof
 
