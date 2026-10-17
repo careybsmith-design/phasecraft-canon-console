@@ -43,7 +43,10 @@ describe("Section 19 read and evidence contracts", () => {
     expect(f.rpc).toHaveBeenCalledWith("thread_set_authority", expect.objectContaining({ p_evidence: [id] }));
   });
   it("refuses a withdrawal with unreadable evidence before writing", async () => {
-    const f = fixture({ objects: { data: null, error: null } });
+    const f = fixture({ objects: { data: { id }, error: null } });
+    const hidden = fixture({ objects: { data: null, error: null } });
+    f.from.mockImplementationOnce(() => hidden.ctx.sb.from("objects"));
+    f.from.mockImplementationOnce(() => hidden.ctx.sb.from("objects"));
     await expect(run("withdraw_authority", f.ctx, { object_id: id, reason: "Changed evidence", evidence_refs: [id] })).rejects.toThrow("NOT_FOUND");
     expect(f.rpc).not.toHaveBeenCalled();
   });
@@ -53,8 +56,6 @@ describe("Section 19 read and evidence contracts", () => {
   });
   it("outcome evidence retrieval refuses failed reads", async () => {
     const f = fixture({ objects: { data: { id, human_ref: "CC-2026-0001" }, error: null } });
-    const from = vi.fn().mockReturnValueOnce({ select: () => ({ eq: () => ({ maybeSingle: async () => ({ data: { id }, error: null }) }) }) });
-    from.mockImplementationOnce(() => ({ select: () => ({ eq: () => ({ maybeSingle: async () => ({ data: { id }, error: null }) }) }) }));
     // A successful parent lookup followed by a failed evidence query.
     const broken = fixture({ objects: { data: null, error: { message: "evidence unavailable" } } });
     const original = broken.ctx.sb.from.bind(broken.ctx.sb);
