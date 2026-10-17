@@ -1,1 +1,506 @@
-[["listAgentSurface", "src/lib/agents.functions.ts"], ["registerAgent", "src/lib/agents.functions.ts"], ["revokeAgent", "src/lib/agents.functions.ts"], ["issueConfirmation", "src/lib/agents.functions.ts"], ["getPhase9Evidence", "src/lib/agents.functions.ts"], ["runPhase9Evidence", "src/lib/agents.functions.ts"], ["assuranceQuery", "src/lib/assurance.functions.ts"], ["recordAssurance", "src/lib/assurance.functions.ts"], ["runHardeningChecks", "src/lib/assurance.functions.ts"], ["assessorPack", "src/lib/assurance.functions.ts"], ["listObjects", "src/lib/canon.functions.ts"], ["getRegistry", "src/lib/canon.functions.ts"], ["getObjectDetail", "src/lib/canon.functions.ts"], ["createObject", "src/lib/canon.functions.ts"], ["reviseObject", "src/lib/canon.functions.ts"], ["transitionObject", "src/lib/canon.functions.ts"], ["tombstoneObject", "src/lib/canon.functions.ts"], ["verifyLedger", "src/lib/canon.functions.ts"], ["getExitEvidence", "src/lib/canon.functions.ts"], ["runExitEvidence", "src/lib/canon.functions.ts"], ["listCreation", "src/lib/creation.functions.ts"], ["compilePrompt", "src/lib/creation.functions.ts"], ["dispatchBuild", "src/lib/creation.functions.ts"], ["replayBuild", "src/lib/creation.functions.ts"], ["recordIteration", "src/lib/creation.functions.ts"], ["recordSkeleton", "src/lib/creation.functions.ts"], ["setCostCeiling", "src/lib/creation.functions.ts"], ["recordPhase6Evidence", "src/lib/creation.functions.ts"], ["listDetection", "src/lib/detection.functions.ts"], ["sweepDetection", "src/lib/detection.functions.ts"], ["observeDetection", "src/lib/detection.functions.ts"], ["resolveDetection", "src/lib/detection.functions.ts"], ["recordDetectionEvidence", "src/lib/detection.functions.ts"], ["readMeasurements", "src/lib/detection.functions.ts"], ["listFabric", "src/lib/fabric.functions.ts"], ["searchCapabilityFabric", "src/lib/fabric.functions.ts"], ["recordReuseCheck", "src/lib/fabric.functions.ts"], ["createCapability", "src/lib/fabric.functions.ts"], ["updateCapabilityBody", "src/lib/fabric.functions.ts"], ["publishReusableCapability", "src/lib/fabric.functions.ts"], ["composeCapabilities", "src/lib/fabric.functions.ts"], ["recordCapabilityUse", "src/lib/fabric.functions.ts"], ["runFabricSweep", "src/lib/fabric.functions.ts"], ["runPhase4Evidence", "src/lib/fabric.functions.ts"], ["startFramingSession", "src/lib/framing.functions.ts"], ["listFramingSessions", "src/lib/framing.functions.ts"], ["getFramingSession", "src/lib/framing.functions.ts"], ["recordConsent", "src/lib/framing.functions.ts"], ["withdrawConsent", "src/lib/framing.functions.ts"], ["openCapture", "src/lib/framing.functions.ts"], ["captureUtterance", "src/lib/framing.functions.ts"], ["captureImage", "src/lib/framing.functions.ts"], ["getArtifactUrl", "src/lib/framing.functions.ts"], ["classifyStatement", "src/lib/framing.functions.ts"], ["confirmObject", "src/lib/framing.functions.ts"], ["rejectObject", "src/lib/framing.functions.ts"], ["deferObject", "src/lib/framing.functions.ts"], ["resolveFinding", "src/lib/framing.functions.ts"], ["updateEntryTest", "src/lib/framing.functions.ts"], ["reExtractSession", "src/lib/framing.functions.ts"], ["closeFramingSession", "src/lib/framing.functions.ts"], ["publishExtractionQuality", "src/lib/framing.functions.ts"], ["getExtractionQuality", "src/lib/framing.functions.ts"], ["runPhase2bEvidence", "src/lib/framing.functions.ts"], ["getPhase2bEvidence", "src/lib/framing.functions.ts"], ["runFramingSweep", "src/lib/framing.functions.ts"], ["getFramingFindings", "src/lib/framing.functions.ts"], ["getFramingView", "src/lib/framing.functions.ts"], ["listGeneration", "src/lib/generation.functions.ts"], ["generateRendition", "src/lib/generation.functions.ts"], ["serveRendition", "src/lib/generation.functions.ts"], ["recordRenditionDownload", "src/lib/generation.functions.ts"], ["generateMyBrief", "src/lib/generation.functions.ts"], ["getPhase8Evidence", "src/lib/generation.functions.ts"], ["runPhase8Evidence", "src/lib/generation.functions.ts"], ["getNeighbourhood", "src/lib/graph.functions.ts"], ["getPaths", "src/lib/graph.functions.ts"], ["getClosure", "src/lib/graph.functions.ts"], ["getSubgraph", "src/lib/graph.functions.ts"], ["getContradictions", "src/lib/graph.functions.ts"], ["getNebula", "src/lib/graph.functions.ts"], ["getIntegrity", "src/lib/graph.functions.ts"], ["getVerbs", "src/lib/graph.functions.ts"], ["getObjectEdges", "src/lib/graph.functions.ts"], ["createEdge", "src/lib/graph.functions.ts"], ["retireEdge", "src/lib/graph.functions.ts"], ["runGraphSweep", "src/lib/graph.functions.ts"], ["getCanonChanges", "src/lib/graph.functions.ts"], ["proposeCanonChange", "src/lib/graph.functions.ts"], ["addCanonChallenge", "src/lib/graph.functions.ts"], ["decideCanonChange", "src/lib/graph.functions.ts"], ["recordRenderBenchmark", "src/lib/graph.functions.ts"], ["getPhase2Evidence", "src/lib/graph.functions.ts"], ["runPhase2Evidence", "src/lib/graph.functions.ts"], ["refreshSurfaceRendition", "src/lib/human-surfaces.functions.ts"], ["getHumanSurface", "src/lib/human-surfaces.functions.ts"], ["createMission", "src/lib/human-surfaces.functions.ts"], ["formCell", "src/lib/human-surfaces.functions.ts"], ["startBurst", "src/lib/human-surfaces.functions.ts"], ["finishBurst", "src/lib/human-surfaces.functions.ts"], ["probeCapability", "src/lib/human-surfaces.functions.ts"], ["askCompanion", "src/lib/human-surfaces.functions.ts"], ["beginScenario", "src/lib/human-surfaces.functions.ts"], ["respondToScenario", "src/lib/human-surfaces.functions.ts"], ["getFollows", "src/lib/human-surfaces.functions.ts"], ["setFollow", "src/lib/human-surfaces.functions.ts"], ["listShadowOverview", "src/lib/shadow.functions.ts"], ["recordShadowRun", "src/lib/shadow.functions.ts"], ["authorizeExposure", "src/lib/shadow.functions.ts"], ["pullKillSwitch", "src/lib/shadow.functions.ts"], ["recordProductionOutcome", "src/lib/shadow.functions.ts"], ["recordIncident", "src/lib/shadow.functions.ts"], ["recordValueMeasure", "src/lib/shadow.functions.ts"], ["getPhase7Evidence", "src/lib/shadow.functions.ts"], ["runPhase7Evidence", "src/lib/shadow.functions.ts"], ["getAuthorityOverview", "src/lib/authority.functions.ts"], ["evaluateAction", "src/lib/authority.functions.ts"], ["listDecisionQueue", "src/lib/authority.functions.ts"], ["respondToDecision", "src/lib/authority.functions.ts"], ["recordCouncilDecision", "src/lib/authority.functions.ts"], ["runPhase3Evidence", "src/lib/authority.functions.ts"], ["listEvidenceRoots", "src/lib/evidence.functions.ts"], ["explainAll", "src/lib/evidence.functions.ts"], ["runTrace", "src/lib/evidence.functions.ts"], ["getPhase5Evidence", "src/lib/evidence.functions.ts"], ["runPhase5Evidence", "src/lib/evidence.functions.ts"]]
+[
+  {
+    "name": "listAgentSurface",
+    "path": "src/lib/agents.functions.ts"
+  },
+  {
+    "name": "registerAgent",
+    "path": "src/lib/agents.functions.ts"
+  },
+  {
+    "name": "revokeAgent",
+    "path": "src/lib/agents.functions.ts"
+  },
+  {
+    "name": "issueConfirmation",
+    "path": "src/lib/agents.functions.ts"
+  },
+  {
+    "name": "getPhase9Evidence",
+    "path": "src/lib/agents.functions.ts"
+  },
+  {
+    "name": "runPhase9Evidence",
+    "path": "src/lib/agents.functions.ts"
+  },
+  {
+    "name": "assuranceQuery",
+    "path": "src/lib/assurance.functions.ts"
+  },
+  {
+    "name": "recordAssurance",
+    "path": "src/lib/assurance.functions.ts"
+  },
+  {
+    "name": "runHardeningChecks",
+    "path": "src/lib/assurance.functions.ts"
+  },
+  {
+    "name": "assessorPack",
+    "path": "src/lib/assurance.functions.ts"
+  },
+  {
+    "name": "getAuthorityOverview",
+    "path": "src/lib/authority.functions.ts"
+  },
+  {
+    "name": "evaluateAction",
+    "path": "src/lib/authority.functions.ts"
+  },
+  {
+    "name": "listDecisionQueue",
+    "path": "src/lib/authority.functions.ts"
+  },
+  {
+    "name": "respondToDecision",
+    "path": "src/lib/authority.functions.ts"
+  },
+  {
+    "name": "recordCouncilDecision",
+    "path": "src/lib/authority.functions.ts"
+  },
+  {
+    "name": "runPhase3Evidence",
+    "path": "src/lib/authority.functions.ts"
+  },
+  {
+    "name": "listObjects",
+    "path": "src/lib/canon.functions.ts"
+  },
+  {
+    "name": "getRegistry",
+    "path": "src/lib/canon.functions.ts"
+  },
+  {
+    "name": "getObjectDetail",
+    "path": "src/lib/canon.functions.ts"
+  },
+  {
+    "name": "createObject",
+    "path": "src/lib/canon.functions.ts"
+  },
+  {
+    "name": "reviseObject",
+    "path": "src/lib/canon.functions.ts"
+  },
+  {
+    "name": "transitionObject",
+    "path": "src/lib/canon.functions.ts"
+  },
+  {
+    "name": "tombstoneObject",
+    "path": "src/lib/canon.functions.ts"
+  },
+  {
+    "name": "verifyLedger",
+    "path": "src/lib/canon.functions.ts"
+  },
+  {
+    "name": "getExitEvidence",
+    "path": "src/lib/canon.functions.ts"
+  },
+  {
+    "name": "runExitEvidence",
+    "path": "src/lib/canon.functions.ts"
+  },
+  {
+    "name": "listCreation",
+    "path": "src/lib/creation.functions.ts"
+  },
+  {
+    "name": "compilePrompt",
+    "path": "src/lib/creation.functions.ts"
+  },
+  {
+    "name": "dispatchBuild",
+    "path": "src/lib/creation.functions.ts"
+  },
+  {
+    "name": "replayBuild",
+    "path": "src/lib/creation.functions.ts"
+  },
+  {
+    "name": "recordIteration",
+    "path": "src/lib/creation.functions.ts"
+  },
+  {
+    "name": "recordSkeleton",
+    "path": "src/lib/creation.functions.ts"
+  },
+  {
+    "name": "setCostCeiling",
+    "path": "src/lib/creation.functions.ts"
+  },
+  {
+    "name": "recordPhase6Evidence",
+    "path": "src/lib/creation.functions.ts"
+  },
+  {
+    "name": "listDetection",
+    "path": "src/lib/detection.functions.ts"
+  },
+  {
+    "name": "sweepDetection",
+    "path": "src/lib/detection.functions.ts"
+  },
+  {
+    "name": "observeDetection",
+    "path": "src/lib/detection.functions.ts"
+  },
+  {
+    "name": "resolveDetection",
+    "path": "src/lib/detection.functions.ts"
+  },
+  {
+    "name": "recordDetectionEvidence",
+    "path": "src/lib/detection.functions.ts"
+  },
+  {
+    "name": "readMeasurements",
+    "path": "src/lib/detection.functions.ts"
+  },
+  {
+    "name": "listEvidenceRoots",
+    "path": "src/lib/evidence.functions.ts"
+  },
+  {
+    "name": "explainAll",
+    "path": "src/lib/evidence.functions.ts"
+  },
+  {
+    "name": "runTrace",
+    "path": "src/lib/evidence.functions.ts"
+  },
+  {
+    "name": "getPhase5Evidence",
+    "path": "src/lib/evidence.functions.ts"
+  },
+  {
+    "name": "runPhase5Evidence",
+    "path": "src/lib/evidence.functions.ts"
+  },
+  {
+    "name": "listFabric",
+    "path": "src/lib/fabric.functions.ts"
+  },
+  {
+    "name": "searchCapabilityFabric",
+    "path": "src/lib/fabric.functions.ts"
+  },
+  {
+    "name": "recordReuseCheck",
+    "path": "src/lib/fabric.functions.ts"
+  },
+  {
+    "name": "createCapability",
+    "path": "src/lib/fabric.functions.ts"
+  },
+  {
+    "name": "updateCapabilityBody",
+    "path": "src/lib/fabric.functions.ts"
+  },
+  {
+    "name": "publishReusableCapability",
+    "path": "src/lib/fabric.functions.ts"
+  },
+  {
+    "name": "composeCapabilities",
+    "path": "src/lib/fabric.functions.ts"
+  },
+  {
+    "name": "recordCapabilityUse",
+    "path": "src/lib/fabric.functions.ts"
+  },
+  {
+    "name": "runFabricSweep",
+    "path": "src/lib/fabric.functions.ts"
+  },
+  {
+    "name": "runPhase4Evidence",
+    "path": "src/lib/fabric.functions.ts"
+  },
+  {
+    "name": "startFramingSession",
+    "path": "src/lib/framing.functions.ts"
+  },
+  {
+    "name": "listFramingSessions",
+    "path": "src/lib/framing.functions.ts"
+  },
+  {
+    "name": "getFramingSession",
+    "path": "src/lib/framing.functions.ts"
+  },
+  {
+    "name": "recordConsent",
+    "path": "src/lib/framing.functions.ts"
+  },
+  {
+    "name": "withdrawConsent",
+    "path": "src/lib/framing.functions.ts"
+  },
+  {
+    "name": "openCapture",
+    "path": "src/lib/framing.functions.ts"
+  },
+  {
+    "name": "captureUtterance",
+    "path": "src/lib/framing.functions.ts"
+  },
+  {
+    "name": "captureImage",
+    "path": "src/lib/framing.functions.ts"
+  },
+  {
+    "name": "getArtifactUrl",
+    "path": "src/lib/framing.functions.ts"
+  },
+  {
+    "name": "classifyStatement",
+    "path": "src/lib/framing.functions.ts"
+  },
+  {
+    "name": "confirmObject",
+    "path": "src/lib/framing.functions.ts"
+  },
+  {
+    "name": "rejectObject",
+    "path": "src/lib/framing.functions.ts"
+  },
+  {
+    "name": "deferObject",
+    "path": "src/lib/framing.functions.ts"
+  },
+  {
+    "name": "resolveFinding",
+    "path": "src/lib/framing.functions.ts"
+  },
+  {
+    "name": "updateEntryTest",
+    "path": "src/lib/framing.functions.ts"
+  },
+  {
+    "name": "reExtractSession",
+    "path": "src/lib/framing.functions.ts"
+  },
+  {
+    "name": "closeFramingSession",
+    "path": "src/lib/framing.functions.ts"
+  },
+  {
+    "name": "publishExtractionQuality",
+    "path": "src/lib/framing.functions.ts"
+  },
+  {
+    "name": "getExtractionQuality",
+    "path": "src/lib/framing.functions.ts"
+  },
+  {
+    "name": "runPhase2bEvidence",
+    "path": "src/lib/framing.functions.ts"
+  },
+  {
+    "name": "getPhase2bEvidence",
+    "path": "src/lib/framing.functions.ts"
+  },
+  {
+    "name": "runFramingSweep",
+    "path": "src/lib/framing.functions.ts"
+  },
+  {
+    "name": "getFramingFindings",
+    "path": "src/lib/framing.functions.ts"
+  },
+  {
+    "name": "getFramingView",
+    "path": "src/lib/framing.functions.ts"
+  },
+  {
+    "name": "listGeneration",
+    "path": "src/lib/generation.functions.ts"
+  },
+  {
+    "name": "generateRendition",
+    "path": "src/lib/generation.functions.ts"
+  },
+  {
+    "name": "serveRendition",
+    "path": "src/lib/generation.functions.ts"
+  },
+  {
+    "name": "recordRenditionDownload",
+    "path": "src/lib/generation.functions.ts"
+  },
+  {
+    "name": "generateMyBrief",
+    "path": "src/lib/generation.functions.ts"
+  },
+  {
+    "name": "getPhase8Evidence",
+    "path": "src/lib/generation.functions.ts"
+  },
+  {
+    "name": "runPhase8Evidence",
+    "path": "src/lib/generation.functions.ts"
+  },
+  {
+    "name": "getNeighbourhood",
+    "path": "src/lib/graph.functions.ts"
+  },
+  {
+    "name": "getPaths",
+    "path": "src/lib/graph.functions.ts"
+  },
+  {
+    "name": "getClosure",
+    "path": "src/lib/graph.functions.ts"
+  },
+  {
+    "name": "getSubgraph",
+    "path": "src/lib/graph.functions.ts"
+  },
+  {
+    "name": "getContradictions",
+    "path": "src/lib/graph.functions.ts"
+  },
+  {
+    "name": "getNebula",
+    "path": "src/lib/graph.functions.ts"
+  },
+  {
+    "name": "getIntegrity",
+    "path": "src/lib/graph.functions.ts"
+  },
+  {
+    "name": "getVerbs",
+    "path": "src/lib/graph.functions.ts"
+  },
+  {
+    "name": "getObjectEdges",
+    "path": "src/lib/graph.functions.ts"
+  },
+  {
+    "name": "createEdge",
+    "path": "src/lib/graph.functions.ts"
+  },
+  {
+    "name": "retireEdge",
+    "path": "src/lib/graph.functions.ts"
+  },
+  {
+    "name": "runGraphSweep",
+    "path": "src/lib/graph.functions.ts"
+  },
+  {
+    "name": "getCanonChanges",
+    "path": "src/lib/graph.functions.ts"
+  },
+  {
+    "name": "proposeCanonChange",
+    "path": "src/lib/graph.functions.ts"
+  },
+  {
+    "name": "addCanonChallenge",
+    "path": "src/lib/graph.functions.ts"
+  },
+  {
+    "name": "decideCanonChange",
+    "path": "src/lib/graph.functions.ts"
+  },
+  {
+    "name": "recordRenderBenchmark",
+    "path": "src/lib/graph.functions.ts"
+  },
+  {
+    "name": "getPhase2Evidence",
+    "path": "src/lib/graph.functions.ts"
+  },
+  {
+    "name": "runPhase2Evidence",
+    "path": "src/lib/graph.functions.ts"
+  },
+  {
+    "name": "refreshSurfaceRendition",
+    "path": "src/lib/human-surfaces.functions.ts"
+  },
+  {
+    "name": "getHumanSurface",
+    "path": "src/lib/human-surfaces.functions.ts"
+  },
+  {
+    "name": "createMission",
+    "path": "src/lib/human-surfaces.functions.ts"
+  },
+  {
+    "name": "formCell",
+    "path": "src/lib/human-surfaces.functions.ts"
+  },
+  {
+    "name": "startBurst",
+    "path": "src/lib/human-surfaces.functions.ts"
+  },
+  {
+    "name": "finishBurst",
+    "path": "src/lib/human-surfaces.functions.ts"
+  },
+  {
+    "name": "probeCapability",
+    "path": "src/lib/human-surfaces.functions.ts"
+  },
+  {
+    "name": "askCompanion",
+    "path": "src/lib/human-surfaces.functions.ts"
+  },
+  {
+    "name": "beginScenario",
+    "path": "src/lib/human-surfaces.functions.ts"
+  },
+  {
+    "name": "respondToScenario",
+    "path": "src/lib/human-surfaces.functions.ts"
+  },
+  {
+    "name": "getFollows",
+    "path": "src/lib/human-surfaces.functions.ts"
+  },
+  {
+    "name": "setFollow",
+    "path": "src/lib/human-surfaces.functions.ts"
+  },
+  {
+    "name": "listShadowOverview",
+    "path": "src/lib/shadow.functions.ts"
+  },
+  {
+    "name": "recordShadowRun",
+    "path": "src/lib/shadow.functions.ts"
+  },
+  {
+    "name": "authorizeExposure",
+    "path": "src/lib/shadow.functions.ts"
+  },
+  {
+    "name": "pullKillSwitch",
+    "path": "src/lib/shadow.functions.ts"
+  },
+  {
+    "name": "recordProductionOutcome",
+    "path": "src/lib/shadow.functions.ts"
+  },
+  {
+    "name": "recordIncident",
+    "path": "src/lib/shadow.functions.ts"
+  },
+  {
+    "name": "recordValueMeasure",
+    "path": "src/lib/shadow.functions.ts"
+  },
+  {
+    "name": "getPhase7Evidence",
+    "path": "src/lib/shadow.functions.ts"
+  },
+  {
+    "name": "runPhase7Evidence",
+    "path": "src/lib/shadow.functions.ts"
+  }
+]

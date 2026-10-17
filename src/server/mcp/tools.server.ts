@@ -26,7 +26,8 @@ const create = (ctx: AgentCtx, type: string, title: string, statement: string, b
 const OBJ = "id,human_ref,type,title,statement,machine_description,body,version,lifecycle_state,risk_tier,authority_level,data_classification,review_date,owner_id,content_hash,is_tombstone";
 
 async function visible(ctx: AgentCtx, id: string, cols = OBJ) {
-  const { data } = await ctx.sb.from("objects").select(cols).eq("id", id).maybeSingle();
+  const { data, error } = await ctx.sb.from("objects").select(cols).eq("id", id).maybeSingle();
+  if (error) throw err(error.message);
   if (!data) throw err("NOT_FOUND: not visible to this agent");
   return data as unknown as Json;
 }
@@ -59,6 +60,8 @@ export const HANDLERS: Record<string, Handler> = {
     const q = S(a["condition"]); const lim = Number(a["limit"] ?? 10);
     const run = (type: string) => ctx.sb.from("objects").select("id,human_ref,type,title,lifecycle_state").eq("type", type).eq("is_tombstone", false).textSearch("search", q, { type: "websearch" }).limit(lim);
     const [m, c] = await Promise.all([run("ValueMission"), run("ComposableCapability")]);
+    if (m.error) throw err(m.error.message);
+    if (c.error) throw err(c.error.message);
     return { missions: m.data ?? [], capabilities: c.data ?? [] };
   },
   async create_value_mission(ctx, a) {
@@ -85,9 +88,8 @@ export const HANDLERS: Record<string, Handler> = {
   },
   async monitor_outcome_evidence(ctx, a) {
     const cap = await visible(ctx, S(a["capability_id"]), "id,human_ref");
-    const rows = await ctx.sb.from("objects").select("id,human_ref,type,title,statement,lifecycle_state,body,created_at")
-      .in("type", ["ProductionOutcome", "ValueMeasure", "Incident"]).eq("is_tombstone", false).contains("body", { capability_ref: cap["id"] }).limit(100);
-    const all = rows.data ?? [];
+    const all = await call<Array<{ type: string }>>(ctx.sb.from("objects").select("id,human_ref,type,title,statement,lifecycle_state,body,created_at")
+      .in("type", ["ProductionOutcome", "ValueMeasure", "Incident"]).eq("is_tombstone", false).contains("body", { capability_ref: cap["id"] }).limit(100));
     return { capability: cap["human_ref"], production_outcomes: all.filter((r) => r.type === "ProductionOutcome"), value_measures: all.filter((r) => r.type === "ValueMeasure"), incidents: all.filter((r) => r.type === "Incident") };
   },
   async publish_reusable_capability(ctx, a) {
@@ -104,13 +106,19 @@ export const HANDLERS: Record<string, Handler> = {
   async get_object(ctx, a) {
     let q = ctx.sb.from("objects").select(OBJ);
     q = a["id"] ? q.eq("id", S(a["id"])) : q.eq("human_ref", S(a["human_ref"]));
-    const { data } = await q.maybeSingle();
+    const data = await call<Json | null>(q.maybeSingle());
     if (!data) throw err("NOT_FOUND: not visible to this agent");
+    if (a["version"] !== undefined) {
+      const snapshot = await call<Json | null>(ctx.sb.from("object_versions").select(OBJ).eq("id", S(data["id"])).eq("version", Number(a["version"])).maybeSingle());
+      if (!snapshot) throw err("NOT_FOUND: version not visible to this agent");
+      return snapshot;
+    }
     return data;
   },
   async search_graph(ctx, a) {
     let q = ctx.sb.from("objects").select("id,human_ref,type,title,statement,lifecycle_state,version").eq("is_tombstone", false).textSearch("search", S(a["q"]), { type: "websearch" }).limit(Number(a["limit"] ?? 20));
     if (Array.isArray(a["types"]) && a["types"].length) q = q.in("type", a["types"] as string[]);
+    if (Array.isArray(a["states"]) && a["states"].length) q = q.in("lifecycle_state", a["states"] as string[]);
     return call(q);
   },
   async traverse_graph(ctx, a) {
@@ -134,6 +142,8 @@ export const HANDLERS: Record<string, Handler> = {
       ctx.sb.from("object_versions").select("version,title,statement,lifecycle_state,content_hash,updated_at").eq("id", id).order("version", { ascending: false }),
       ctx.sb.from("ledger").select("seq,occurred_at,action,object_version,hash").eq("object_id", id).order("seq", { ascending: false }).limit(100),
     ]);
+    if (v.error) throw err(v.error.message);
+    if (l.error) throw err(l.error.message);
     return { versions: v.data ?? [], ledger: l.data ?? [] };
   },
 
@@ -186,7 +196,7 @@ export const HANDLERS: Record<string, Handler> = {
   },
   async record_build_run(ctx, a) {
     const run = await visible(ctx, S(a["run_id"]), "id,human_ref,lifecycle_state");
-    const { data } = await ctx.sb.from("build_runs").select("*").eq("object_id", S(a["run_id"])).maybeSingle();
+    const data = await call(ctx.sb.from("build_runs").select("*").eq("object_id", S(a["run_id"])).maybeSingle());
     return { ...run, run: data };
   },
   async record_iteration(ctx, a) { return call(ctx.db.rpc("thread_record_iteration", { p_actor: ctx.actor, p: a } as never)); },
@@ -213,7 +223,10 @@ export const HANDLERS: Record<string, Handler> = {
     return call(ctx.db.rpc("thread_authorize_exposure", { p_actor: ctx.actor, p_capability: S(a["capability_id"]), p: { population_pct: a["population_pct"], rationale: a["rationale"] } } as never));
   },
   async withdraw_authority(ctx, a) {
-    return call(ctx.db.rpc("thread_set_authority", { p_actor: ctx.actor, p_id: S(a["object_id"]), p_to: "observe", p_cause: "withdrawal", p_trigger: S(a["reason"]), p_evidence: [], p_conditions: {} } as never));
+    await visible(ctx, S(a["object_id"]), "id");
+    const evidence = (a["evidence_refs"] as string[] | undefined) ?? [];
+    for (const ref of evidence) await visible(ctx, ref, "id");
+    return call(ctx.db.rpc("thread_set_authority", { p_actor: ctx.actor, p_id: S(a["object_id"]), p_to: "observe", p_cause: "withdrawal", p_trigger: S(a["reason"]), p_evidence: evidence, p_conditions: {} } as never));
   },
   async evaluate_policy(ctx, a) {
     await visible(ctx, S(a["object_id"]), "id");
@@ -221,6 +234,8 @@ export const HANDLERS: Record<string, Handler> = {
       ctx.sb.from("guardrails").select("id,category,evaluator,enforcement,version").eq("active", true),
       ctx.sb.from("objects").select("id,human_ref,title,body,created_at").eq("type", "PolicyEvaluation").contains("body", { subject_ref: S(a["object_id"]) }).order("created_at", { ascending: false }).limit(10),
     ]);
+    if (g.error) throw err(g.error.message);
+    if (pe.error) throw err(pe.error.message);
     return { guardrails: g.data ?? [], evaluations: pe.data ?? [] };
   },
   async check_guardrails(_ctx, a) {
@@ -241,7 +256,7 @@ export const HANDLERS: Record<string, Handler> = {
 
   async get_capability_contract(ctx, a) {
     const cap = await visible(ctx, S(a["capability_id"]));
-    const { data } = await ctx.sb.from("objects").select(OBJ).eq("type", "CapabilityContract").contains("body", { capability_ref: cap["id"] }).limit(5);
+    const data = await call(ctx.sb.from("objects").select(OBJ).eq("type", "CapabilityContract").contains("body", { capability_ref: cap["id"] }).limit(5));
     return { capability: cap, contracts: data ?? [] };
   },
   async compose_capabilities(ctx, a) { return call(ctx.db.rpc("thread_compose_capabilities", { p_actor: ctx.actor, p_ids: a["ids"], p_title: S(a["title"]), p_scenario: S(a["scenario"]) } as never)); },
@@ -254,7 +269,7 @@ export const HANDLERS: Record<string, Handler> = {
   },
   async check_capability_usage(ctx, a) {
     await visible(ctx, S(a["capability_id"]), "id");
-    const { data } = await ctx.sb.from("capability_usage").select("*").eq("capability_id", S(a["capability_id"])).limit(200);
+    const data = await call(ctx.sb.from("capability_usage").select("*").eq("capability_id", S(a["capability_id"])).limit(200));
     const rows = (data ?? []) as Json[];
     return { uses: rows.length, consumers: new Set(rows.map((r) => S(r["consumer_ref"] ?? r["consumer"]))).size, note: "aggregate only (Part 14.3)" };
   },
@@ -312,6 +327,9 @@ export const HANDLERS: Record<string, Handler> = {
   async surface_prior_objects(ctx, a) {
     const run = (types: string[]) => ctx.sb.from("objects").select("id,human_ref,type,title").in("type", types).eq("is_tombstone", false).textSearch("search", S(a["statement"]), { type: "websearch" }).limit(10);
     const [n, d, c] = await Promise.all([run(["NeedStatement"]), run(["ConfirmedDecision", "Decision"]), run(["ComposableCapability"])]);
+    if (n.error) throw err(n.error.message);
+    if (d.error) throw err(d.error.message);
+    if (c.error) throw err(c.error.message);
     return { needs: n.data ?? [], decisions: d.data ?? [], capabilities: c.data ?? [] };
   },
   async find_contradictions(ctx) { return call(ctx.sb.rpc("graph_contradictions")); },

@@ -74,8 +74,8 @@ export const TOOLS: ToolDef[] = [
   D("detect_legacy_behavior", "K8", "Evaluate observed behaviour text against the withdrawn-object anti-pattern set (Part 2.4)", z.object({ text: txt(4000) }).strict(), { origin: "computed", output: "{matches[]}" }),
 
   // Operating Graph
-  D("get_object", "K1", "Read one canon object by id or human_ref", z.object({ id: id.optional(), human_ref: z.string().regex(/^[A-Z]{2}-\d{4}-\d{4}$/).optional() }).strict(), { output: "ObjectEnvelope" }),
-  D("search_graph", "K1", "Full-text search of canon objects you may read", z.object({ q: txt(200), types: z.array(txt(60)).max(10).optional(), limit: z.number().int().min(1).max(50).default(20) }).strict(), { output: "Envelope[]" }),
+  D("get_object", "K1", "Read one canon object by id or human_ref, optionally at a visible historical version", z.object({ id: id.optional(), human_ref: z.string().regex(/^[A-Z]{2}-\d{4}-\d{4}$/).optional(), version: z.number().int().positive().optional() }).strict().refine((a) => Boolean(a.id) !== Boolean(a.human_ref), "Provide exactly one of id or human_ref"), { output: "ObjectEnvelope" }),
+  D("search_graph", "K1", "Full-text search of canon objects you may read", z.object({ q: txt(200), types: z.array(txt(60)).max(10).optional(), states: z.array(txt(40)).max(20).optional(), limit: z.number().int().min(1).max(50).default(20) }).strict(), { output: "Envelope[]" }),
   D("traverse_graph", "K1", "Neighbourhood of an object with an edge budget", z.object({ root: id, depth: z.number().int().min(1).max(4).default(2), verbs: z.array(txt(60)).max(20).optional() }).strict(), { output: "{nodes, edges, truncated}" }),
   D("get_rendition", "K9", "Open a rendition made for this agent and purpose", z.object({ id, purpose: txt(200) }).strict(), { origin: "generated" }),
   D("list_renditions", "K9", "List renditions made for this agent", z.object({}).strict(), { origin: "generated" }),
@@ -123,7 +123,7 @@ export const TOOLS: ToolDef[] = [
     z.object({ subject_id: id, exact_decision_required: txt(1000), reason_ai_cannot_safely_decide: txt(1000), ai_recommendation: txt(1000), viable_alternatives: z.array(txt(300)).min(1).max(6), deadline: z.string().regex(/^\d{4}-\d{2}-\d{2}$/), cost_of_waiting: txt(500), reversibility: z.enum(["trivial", "assisted", "difficult", "impossible"]) }).strict(),
     { side_effects: "creates_objects", authority: "observe" }),
   D("grant_exposure_authority", "K3", "Authorise exposure (people only: agents are refused by the database)", z.object({ capability_id: id, population_pct: z.number().min(0).max(100), rationale: txt(1000), ...confirmation }).strict(), { side_effects: "production_effect", authority: "act_with_confirmation", status: "human_only", pending: "only an accountable human may grant exposure authority" }),
-  D("withdraw_authority", "K3", "Withdraw authority from an object", z.object({ object_id: id, reason: txt(1000), ...confirmation }).strict(), { side_effects: "production_effect", authority: "act_with_confirmation" }),
+  D("withdraw_authority", "K3", "Withdraw authority from an object with recorded supporting evidence", z.object({ object_id: id, reason: txt(1000), evidence_refs: z.array(id).max(20).default([]), ...confirmation }).strict(), { side_effects: "production_effect", authority: "act_with_confirmation" }),
   D("evaluate_policy", "K3", "List active guardrails and the latest policy evaluations for an object", z.object({ object_id: id }).strict()),
   D("check_guardrails", "K3", "Scan text against the injection and prohibited-inference guardrails", z.object({ text: txt(4000) }).strict(), { origin: "computed" }),
   D("escalate_to_council", "K3", "Escalate a decision to the council", z.object({ request_id: id, reason: txt(1000) }).strict(), { status: "pending_kernel", pending: "council membership adapter (council decisions are recorded by a steward today)", side_effects: "creates_objects" }),
@@ -193,7 +193,7 @@ export const TOOLS: ToolDef[] = [
 ];
 
 export const TOOL_BY_NAME = new Map(TOOLS.map((t) => [t.name, t]));
-export const TOOL_CONTRACT_VERSION = "audit-1";
+export const TOOL_CONTRACT_VERSION = "audit-2";
 
 export function toolContract(t: ToolDef) {
   return {

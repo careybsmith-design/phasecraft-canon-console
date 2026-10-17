@@ -4,3 +4,4 @@
 - Object, edge and rendition triggers run sweeps with recursion protection; hourly reconciliation handles time-based conditions. Why: no permanent event polling.
 - Finding resolution and accepted risk go through thread_resolve_finding; accepted risk requires a human approver and future expiry. Why: owned, auditable exceptions never become permanent exemptions.
 - Each sweep materializes the current candidate set once for reconciliation and insertion. Why: repeating the complete detector query for every finding caused the canon self-test to time out.
+- Action-ratio readers recognize canon settings status `set`, and require a non-null value; `open` always fails unset. Why: the reader must agree with Section 18 without inventing Carey's thresholds.

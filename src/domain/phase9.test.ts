@@ -3,6 +3,14 @@ import { TOOLS, TOOL_BY_NAME, VALUEOS_TOOLS, toolContract } from "./mcp-tools";
 import { cardConflict, canonicalJson, measureInjectionRecall, registrationRefusal, scanForInjection, withinCeiling } from "./mcp";
 
 describe("Phase 9 agent-executable surface", () => {
+  it("getObject requires exactly one identity and a positive historical version", () => {
+    const schema = TOOL_BY_NAME.get("get_object")?.input;
+    const id = "11111111-1111-4111-8111-111111111111";
+    expect(schema?.safeParse({}).success).toBe(false);
+    expect(schema?.safeParse({ id, human_ref: "VS-2026-0001" }).success).toBe(false);
+    expect(schema?.safeParse({ id, version: 0 }).success).toBe(false);
+    expect(schema?.safeParse({ id, version: 2 }).success).toBe(true);
+  });
   it("exposes the twelve ValueOS tools by exact name", () => {
     for (const n of VALUEOS_TOOLS) expect(TOOL_BY_NAME.has(n)).toBe(true);
   });

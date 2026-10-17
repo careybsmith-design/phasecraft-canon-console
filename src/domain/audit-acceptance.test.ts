@@ -2,6 +2,9 @@ import { describe, expect, it } from "vitest";
 import { antiWikiAudit, auditVerdict } from "./audit-acceptance";
 const observation = { forbidden_types: 0, forbidden_states: 0, invalid_notifications: 0, missing_expiration: 0, orphans: 92, threshold_status: "open", threshold_value: null, usage_sessions: 0, handoff_findings: 0 };
 describe("Release-blocking full AW-1–AW-15 report", () => {
+  it.each(["AW-7", "AW-8"])("%s cannot claim a current pass from historical database results", (id) => {
+    expect(antiWikiAudit(observation).find((c) => c.id === id)?.status).toBe("blocked");
+  });
   it("reports each required test once", () => expect(antiWikiAudit(observation).map((c) => c.id)).toEqual(Array.from({ length: 15 }, (_, i) => `AW-${i+1}`)));
   it("never turns Carey's open action-ratio decision into a default or pass", () => expect(antiWikiAudit(observation).find((c) => c.id === "AW-5")).toMatchObject({ status: "failed", reason: "THRESHOLD_UNSET", observed: 0 }));
   it("fails release for the actual 92 non-draft orphans", () => expect(antiWikiAudit(observation).find((c) => c.id === "AW-11")).toMatchObject({ status: "failed", observed: 92 }));

@@ -15,6 +15,12 @@ describe("Phase 10 deterministic detectors", () => {
     const r = actionRatios([{ mutating_actions: 1, reads: 2 }, { mutating_actions: 0, reads: 1 }], { status: "open", value: null });
     expect(r).toEqual({ action_pct: 50, read_only_pct: 50, status: "THRESHOLD_UNSET", pass: false });
   });
+  it("uses the Section 18 set status without creating a threshold default", () => {
+    const rows = [{ mutating_actions: 1, reads: 2 }, { mutating_actions: 0, reads: 1 }];
+    expect(actionRatios(rows, { status: "set", value: { min_action_pct: 50, max_read_only_pct: 50 } })).toMatchObject({ status: "measured", pass: true });
+    expect(actionRatios(rows, { status: "set", value: { min_action_pct: 51, max_read_only_pct: 50 } }).pass).toBe(false);
+    expect(actionRatios(rows, { status: "open", value: { min_action_pct: 50, max_read_only_pct: 50 } }).status).toBe("THRESHOLD_UNSET");
+  });
   it("computes confirmed intent to value time from exact instants", () => expect(elapsedHours("2026-10-01T12:00:00Z", "2026-10-03T18:00:00Z")).toBe(54));
   it("rejects backwards temporal evidence", () => expect(elapsedHours("2026-10-03T18:00:00Z", "2026-10-01T12:00:00Z")).toBeNull());
   it("reports an unmeasured median as null", () => expect(median([])).toBeNull());

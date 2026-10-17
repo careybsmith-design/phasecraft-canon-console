@@ -1,20 +1,37 @@
 # THREAD whole-build audit
 
-**Audit date:** 16 October 2026. **Release verdict: FAIL — not fully compliant.**
+**Audit refreshed:** 17 October 2026, 00:07 UTC. **Release verdict: FAIL — not fully compliant.**
 
 This audit reviews Sections 1–19, the full canonical specification and Appendices A–C. It does not relabel unfinished phases as accepted. Passing local tests, rollback-only fixture checks and catalog scans are identified separately from real production proof. All prior open items remain in the roadmap.
 
 ## Verified summary
 
-- The expanded automated suite passes: **1,632 tests across 21 files**, including 1,008 authority matrix and 380 lifecycle cases. The complete transcript is in `docs/audit/full-suite.log`. This does not establish every Section 17 runtime acceptance.
+- The expanded automated suite passes: **1,653 tests across 23 files**, including 1,008 authority matrix and 380 lifecycle cases. The fresh complete transcript is in `docs/audit/full-suite.log`, restored after finding the earlier referenced transcript missing. This does not establish every Section 17 runtime acceptance.
 - 1,008 parameterized authority cases now exercise risk × confidence × consequence × reversibility × novelty; 380 lifecycle cases exercise every currently declared state-pair rule. Those prove the declared implementation, not resolution of the specification's lifecycle ambiguity.
-- Current database regression groups: Phase 2, 2B, 3, 4, 5, 6, 7, 8, 10, 11, Phase 12 behavioral checks and the new audit security/callback checks passed when run. Phase 1 timed out at both ten and thirty seconds and remains failed/unverified, not silently skipped.
-- Zero application tables without RLS; zero anonymously readable application-table grants after the fix; zero exposed privileged `thread_*` write functions; authenticated direct inserts into canonical objects are revoked.
-- Ledger verification read 2,738 entries with no bad hash. Version snapshot rehearsal matched; it is simulated, not a platform backup restore.
-- Current snapshot: 534 stored objects, 153 non-tombstoned objects, **92 non-draft orphans**, zero notifications lacking an event/decision trigger, zero live objects missing review/expiration fields. Counts may change with real use.
+- Historical database regression groups: Phase 2, 2B, 3, 4, 5, 6, 7, 8, 10, 11 and Phase 12 behavioral checks passed in the previous audit; they were not all rerun here. Fresh migration 0063 reran the rollback-only audit security/callback suite and ledger integrity successfully. Direct read-tool calls to privileged tests are denied; privileges were not weakened to run tests. Phase 1's historical ten/thirty-second timeouts remain failed/unverified.
+- Fresh catalogue covers **53 public tables, 54 policies and 368 public functions**: zero tables without RLS; zero anonymous table SELECT grants; authenticated canonical INSERT revoked. Two authenticated-callable `thread_*` functions are read-only integrity/snapshot checks (`thread_verify_ledger`, `thread_restore_rehearsal`), not exposed writes. Nine linter warnings remain: two public extensions and seven intentionally callable RLS/read helpers. This is not independent security certification.
+- Fresh independent SQL hash recomputation verified **2,754 ledger entries**, no bad sequence. Version snapshot rehearsal is historical and simulated, not a platform backup restore.
+- Current snapshot: 534 stored objects, 153 non-tombstoned objects, **93 non-draft orphans**, zero notifications lacking an event/decision trigger, zero live objects missing review/expiration fields. The previous 92-orphan count is superseded; no relationships or objects were altered to force a pass.
 - AW-5 is correctly **THRESHOLD_UNSET**: open/null decision, zero recorded usage sessions, no invented threshold. AW-13 lacks real adversarial execution. AW-14 has no published actual intent-to-first-working-evidence measurement.
 - Inventory: **126 exported human server operations; 95 MCP tools: 75 advertised live, 10 pending execution, 10 human-only.** “Live” is catalogue status, not proof that each verb ran end-to-end.
-- Browser: required evidence/session deep links and Assurance redirect signed-out to Sign in; no page errors; unauthenticated MCP returns 401. Authenticated workflows were not verified: requester-session mint failed because no matching account existed. No unrelated account was selected.
+- Fresh browser: `/build-audit`, `/assurance` and required evidence/session deep links redirect signed-out to Sign in; zero page errors; unauthenticated MCP returns 401. Authenticated workflows were not verified: requester-session mint again failed because no matching account existed. No unrelated account was selected.
+
+## Renewed audit — additional fixes and fresh proof
+
+The complete source and Appendices A–C were reviewed again. All 19 section entries below remain a built/missing/mismatch assessment, and all 34 specified Section 19 operations were compared individually. **Not every engineering gap was fixed:** source authority, schemas, permission semantics, execution and performance work below remains open. An earlier chat claim that everything fixable in code was fixed was incorrect.
+
+| New fix | Failure prevented | Executed proof | Boundary |
+|---|---|---|---|
+| Fail-closed prompt context | Failed guardrail/reuse reads could compile without the required safety context | `creation.server.test.ts`: failed object/guardrail/reuse reads and invisible reuse all refuse before a write | Mocked reads; full registered body schemas still missing |
+| Fail-closed dispatch configuration | Failed prompt/adapter-binding reads could silently choose simulation | Same test file: both failure cases refuse before dispatch | Real adapters not invoked |
+| Evidence read errors | Related missions, outcomes, history, policy, contracts, usage and prior-object queries could return false empty success | `tools.server.test.ts`: multi-read failures are errors, not empty success; 11 handler regressions | All-policy and two-person runtime acceptance still required |
+| Historical object lookup | Missing XOR identity and version contract | Phase 9 schema regression; handler requires visible current parent before version 2; hidden parent never reads snapshots | MCP contract/handler fixed, not every human contract |
+| Search state selection | Specified `states` input absent/ignored | Handler test asserts `lifecycle_state` filter `published` | Retrieval correctness at production scale unverified |
+| Withdrawal evidence | Supplied evidence was omitted from authority change | Handler tests preserve evidence IDs and refuse hidden evidence before writing | Evidence truth/applicability still requires trusted receipts |
+| AW-5 setting status | Readers expected impossible `decided`, while Section 18 permits `set/open` | Domain boundary test; migration 0063 checks SQL status and open/null returns `THRESHOLD_UNSET` | **No threshold set**; usage writer/aggregate still missing |
+| Honest current AW verdicts | AW-7/8 were unconditional passes from historical results | Two regressions now require blocked status without current execution evidence | Historical DB-boundary passes retained only as historical proof |
+
+Fresh evidence downloads on this page contain the complete suite transcript, all AW-1–15 results, database catalog/access policies, ledger check, linter warnings, public browser outcomes, 95 generated contracts and 126 human-operation names/paths. Names/paths are not full human request/response contracts. Full automated suite **1,653/1,653** passes; full Section 17 acceptance does **not**.
 
 ## Section-by-section result
 
@@ -28,7 +45,7 @@ This audit reviews Sections 1–19, the full canonical specification and Appendi
 ### 2. Non-negotiable constraints
 **Built:** separate canon/renditions, authority/confidence, immutable ledger/version history, reuse/citation/consent guards, prohibited-content and surveillance refusal, challenge-window canon changes.
 
-**Fixed:** low confidence formerly allowed automation; it now escalates to an accountable human. Moderate/high confidence cannot manufacture execution authority for an observer. Privileged actor fields now reject missing/null kind/identity/authority.
+**Fixed:** low confidence formerly allowed automation; it now escalates to an accountable human. Moderate/high confidence cannot manufacture execution authority for an observer. Privileged actor fields reject missing/null kind/identity/authority. Current AW-7/8 statuses no longer hardcode historical passes.
 
 **Missing/mismatch:** full named runtime P1–P15 acceptance; all-surface anti-legacy/semantic tests; purpose/context enforcement. No full compliance claim follows from regex scans.
 
@@ -79,7 +96,7 @@ This audit reviews Sections 1–19, the full canonical specification and Appendi
 ### 9. Creation loop
 **Built:** typed confirmed-field compiler, raw-capture hash guard, mandatory reuse, five platform routes, reproducibility keys, spending ceilings, skeleton and iteration lineage.
 
-**Fixed:** dispatch sends run ID; ledgered external-ID binding; signed callback is typed and bounded; callback-before-response works; identical callback retries are idempotent; conflicting callbacks are rejected; live timeout is reconciliation-required, not a false failed build inviting duplicates.
+**Fixed:** dispatch sends run ID; ledgered external-ID binding; signed callback is typed and bounded; callback-before-response works; identical callback retries are idempotent; conflicting callbacks are rejected; live timeout is reconciliation-required, not a false failed build inviting duplicates. Compiler and dispatcher now stop on unavailable safety/reuse/configuration reads rather than silently omitting safeguards or falling back to simulation.
 
 **Proof:** two live-adapter unit tests and ten rollback-only DB audit checks including callback race, late binding, identical retry and conflict refusal. Existing Phase 6 twenty-check suite passes. No real builder was invoked by these tests.
 
@@ -120,7 +137,9 @@ This audit reviews Sections 1–19, the full canonical specification and Appendi
 
 **Fixed:** detector candidate set materialized once per sweep instead of recomputing for each open finding. This reduces repeated work; Phase 1 still times out because exhaustive type mutations repeatedly trigger full graph/framing sweeps, so performance is NOT fixed overall.
 
-**Missing/mismatch:** AW-5 has no semantic usage-session writer and its current caller-scoped reader is personal, not safe aggregate collection. Setting status expects `decided` while the table permits `set/open`; no threshold was changed. Session semantics/privacy must be designed and implemented. Actual intent-to-first-working-evidence publication (AW-14) and live value/compounding evidence missing. Do not use call counts as value.
+**Fixed in renewal:** AW-5 SQL and domain readers now recognize Section 18 `set/open`, not the impossible `decided` status. No setting value or recorded decision was changed.
+
+**Missing/mismatch:** AW-5 has no semantic usage-session writer and its current caller-scoped reader is personal, not safe aggregate collection. Session semantics/privacy must be designed and implemented. Actual intent-to-first-working-evidence publication (AW-14) and live value/compounding evidence missing. Do not use call counts as value.
 
 ### 15. Non-functional requirements
 **Built:** 256 KiB/20-item transport bounds, no-store protected responses, currentness checks, spending bounds, precomputed graph layout and recovery targets.
@@ -144,16 +163,16 @@ This audit reviews Sections 1–19, the full canonical specification and Appendi
 ### 18. Database layout
 **Built:** required object registry/objects/version/edges/ledger, authority/confidence, reuse/creation/build, generation, embeddings, consent/session/extraction, detection, agent/tool, alias/settings/notifications/usage roles tables; additional phase-specific sidecars; migration history; all application tables RLS.
 
-**Fixed/proof:** migrations 0057–0062 add forward-only policy/grant/currentness/callback/authority/reconciliation protections. Catalog proves zero anonymous application table SELECT grants and no direct authenticated canonical INSERT. Append-only ledger/version rules retained. All new privileged helpers are service-role-only.
+**Fixed/proof:** migrations 0057–0063 are present in the repository; they add forward-only policy/grant/currentness/callback/authority/reconciliation protections and correct the action-ratio reader. Fresh full catalog proves zero anonymous application table SELECT grants and no direct authenticated canonical INSERT. Append-only ledger/version rules retained. New privileged write/test helpers remain service-role-only; two existing integrity read helpers intentionally remain authenticated-callable.
 
-**Missing/mismatch:** rich body schema parity, non-role permission predicates, safe usage telemetry and setting-status mismatch; every function's effective helper grants/dataflow needs exhaustive negative caller testing. Broad registry reads are intentional metadata, not object-content exemptions. Read-only catalogue observations do not prove full two-identity enforcement.
+**Missing/mismatch:** rich body schema parity, non-role permission predicates and safe usage telemetry; every function's effective helper grants/dataflow needs exhaustive negative caller testing. Broad registry reads are intentional metadata, not object-content exemptions. Read-only catalogue observations do not prove full two-identity enforcement.
 
 ### 19. API surface — every specified operation
 
 | Spec operation | Current implementation | Gap / mismatch / proof boundary |
 |---|---|---|
-| getObject | `get_object`, human `getObjectDetail` | Current object exists; XOR ID/ref and historical version permission semantics require complete contract acceptance |
-| searchGraph | `search_graph`, human graph queries | Full-text lookup; permission-negative all-query acceptance pending |
+| getObject | `get_object`, human `getObjectDetail` | **Renewal fix:** XOR ID/ref, positive version, current-parent visibility before historical lookup tested; full envelope and shared human contract remain incomplete |
+| searchGraph | `search_graph`, human graph queries | **Renewal fix:** `states` filter accepted and applied; permission-negative all-query/shared human acceptance pending |
 | traverseGraph | `traverse_graph`, `graph_neighbourhood` | Existing output budgets; full work budget and reliable `truncated` metadata missing |
 | proposeCanonChange | `propose_canon_change` | Version/evidence/challenge-window DB test passed |
 | challengeCanon | `challenge_canon` | Uses change ID; spec object-ID routing semantics need reconciliation |
@@ -162,7 +181,7 @@ This audit reviews Sections 1–19, the full canonical specification and Appendi
 | createValueMission | `create_value_mission` | Shared mission schema; spec nested bounds/field names not identical; organizational decision mandate unresolved |
 | recommendValueCell | `recommend_value_cell` | Creates a cell rather than merely returning candidate roles; contract mismatch |
 | startValueBurst | `start_value_burst` | Recorded bounded burst; phases not yet orchestrated |
-| startFramingSession | human `createFramingSession`; agent human-only | Consent capture tests passed; trusted domain mandate and real two-person flow pending |
+| startFramingSession | human `startFramingSession`; agent human-only | Historical consent capture tests passed; trusted domain mandate and real two-person flow pending |
 | recordConsent | human consent operation | Not exposed as agent-authored consent; person/attestation semantics preserved |
 | ingestArtifact | human capture/artifact operations; agent human-only | Live media/transcription missing; exact spec operation shape differs |
 | reclassifyStatement | human correction; agent human-only | Cannot give agents human confirmation authority; domain-authority resolution pending |
@@ -180,7 +199,7 @@ This audit reviews Sections 1–19, the full canonical specification and Appendi
 | evaluateAuthority | `evaluate_authority`, `evaluateAction` | **Fixed** shared action-aware evaluation; bare object-ID history lookup removed; scoped grants fail closed |
 | requestExposureAuthority | `request_exposure_authority` | Creates HumanDecisionRequest; human grant separately required; typed evidence reference mismatch remains |
 | requestHumanDecision | `request_human_decision` | Builds exact stored HDR but input alternatives/reversibility/evidence are narrower; contract completion pending |
-| withdrawAuthority | `withdraw_authority` | Withdrawal exists; supplied evidence_refs field missing from current MCP contract |
+| withdrawAuthority | `withdraw_authority` | **Renewal fix:** supplied `evidence_refs` accepted, visibility checked and preserved in authority write; complete shared contract and trusted evidence acceptance pending |
 | explainCapability | `explain_capability` | Nine question enums/citations implemented and DB fixture query passed |
 | monitorOutcomeEvidence | `monitor_outcome_evidence` | Reads outcomes/value/incidents; requested window ignored/missing — gap |
 | getIntentToValueTime | `get_intent_to_value_time` | Capability only, no mission alternative/path parity; synthetic graph test exactly 54h |
@@ -221,11 +240,11 @@ The complete 95-tool current contracts are saved in `docs/audit/tool-contracts.j
 | AW-4 | BLOCKED | Eleven rejected measure rules tested; complete API/UI/schema output acceptance pending |
 | AW-5 | FAIL | THRESHOLD_UNSET, open/null, zero usage sessions; no default |
 | AW-6 | BLOCKED | Zero invalid live notification rows; isolated invalid-insert mutation proof pending |
-| AW-7 | PASS at DB boundary | Actual creation/reuse negative tests in current Phase4/6 suites passed |
-| AW-8 | PASS at DB generator boundary | Current Phase8 generator refuses uncited guidance |
+| AW-7 | BLOCKED current acceptance | Historical Phase4/6 DB reuse refusal passed; fresh full authorized acceptance not executed; no unconditional pass |
+| AW-8 | BLOCKED current acceptance | Historical Phase8 DB uncited-guidance refusal passed; fresh full authorized acceptance not executed; no unconditional pass |
 | AW-9 | BLOCKED overall | DB actual generation surveillance requests refused; all query/MCP paths still needed |
 | AW-10 | BLOCKED | Canon supremacy guard exists; exhaustive static dataflow and Phase1 test unresolved timeout |
-| AW-11 | FAIL | 92 non-draft non-tombstoned orphan records; do not fabricate edges or delete evidence to pass |
+| AW-11 | FAIL | 93 non-draft non-tombstoned orphan records; do not fabricate edges or delete evidence to pass |
 | AW-12 | BLOCKED overall | Zero live rows missing expiration; all-type/write-path mutants pending |
 | AW-13 | FAIL | run_adversarial_simulation remains pending execution; catalogue names are not executability |
 | AW-14 | FAIL | No actual published intent-to-first-working-evidence rendition |
@@ -233,7 +252,7 @@ The complete 95-tool current contracts are saved in `docs/audit/tool-contracts.j
 
 ## Remaining work — not hidden behind green tests
 
-**Engineering gaps:** full registry schemas and every-write validation; trusted organizational/domain authority; real decision source existence/type/evidence; full purpose/context/attribute/permitted-use policy compiler; every-hop composition permissions; bounded traversal/path/closure work; coherent Section19 request/response semantics; live action-session writer/privacy-safe aggregate and setting-status correction; actual first-evidence publication; safe automatic rendition regeneration; required surface interactions/onboarding/accessible graph views; native detector induction/recurrence and mutation acceptance; Phase1 performance/test repair; old contract reconciliation; orphan remediation with valid existing provenance, never invented relationships; complete mandatory enforcement from trusted facts.
+**Engineering gaps:** full registry schemas and every-write validation; trusted organizational/domain authority; real decision source existence/type/evidence; full purpose/context/attribute/permitted-use policy compiler; every-hop composition permissions; bounded traversal/path/closure work; coherent Section19 request/response semantics; live action-session writer/privacy-safe aggregate; actual first-evidence publication; safe automatic rendition regeneration; required surface interactions/onboarding/accessible graph views; native detector induction/recurrence and mutation acceptance; Phase1 performance/test repair; old contract reconciliation; orphan remediation with valid existing provenance, never invented relationships; complete mandatory enforcement from trusted facts.
 
 **External/user-dependent blockers:** requester sign-in and second real human; approved organizational authority/SSO; five builder endpoints/tokens/signature secrets; Telemetry/FeatureFlags/transcription/embedding/media/execution adapters; isolated migrated test database and realistic load infrastructure; independent penetration/accessibility/compliance assessors; actual backup restore operator; human-reviewed corpus labels/test intent; real operational/retention controls and lawful disposition; Carey's AW-5 decision.
 

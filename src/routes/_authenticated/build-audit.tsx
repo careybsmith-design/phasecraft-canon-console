@@ -2,6 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import report from "../../../docs/THREAD-build-audit.md?raw";
+import testTranscript from "../../../docs/audit/full-suite.log?raw";
+import evidenceBundle from "../../../docs/audit/reaudit-evidence.json?raw";
 import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
 
@@ -15,13 +17,17 @@ export const Route = createFileRoute("/_authenticated/build-audit")({
   ] }), component: AuditPage,
 });
 function AuditPage() {
-  function download() {
-    const url = URL.createObjectURL(new Blob([report], { type: "text/markdown;charset=utf-8" }));
-    const link = document.createElement("a"); link.href = url; link.download = "THREAD-build-audit.md"; link.click();
+  function download(content: string, filename: string, type: string) {
+    const url = URL.createObjectURL(new Blob([content], { type }));
+    const link = document.createElement("a"); link.href = url; link.download = filename; link.click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
   return <main className="mx-auto max-w-6xl space-y-5 p-4">
-    <div className="flex justify-end"><Button variant="outline" onClick={download}><Download />Download audit</Button></div>
+    <div className="flex flex-wrap justify-end gap-2">
+      <Button variant="outline" onClick={() => download(report, "THREAD-build-audit.md", "text/markdown;charset=utf-8")}><Download />Download audit</Button>
+      <Button variant="outline" onClick={() => download(testTranscript, "THREAD-test-results.txt", "text/plain;charset=utf-8")}><Download />Test results</Button>
+      <Button variant="outline" onClick={() => download(evidenceBundle, "THREAD-audit-evidence.json", "application/json;charset=utf-8")}><Download />Evidence bundle</Button>
+    </div>
     <article className="space-y-4 break-words text-sm">
       <ReactMarkdown remarkPlugins={[remarkGfm]} components={{
         h1: ({ children }) => <h1 className="border-b pb-3 text-2xl font-semibold">{children}</h1>,
