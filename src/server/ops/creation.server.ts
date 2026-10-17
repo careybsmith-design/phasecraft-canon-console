@@ -18,6 +18,9 @@ export async function compilePromptCore(ctx: OpCtx, data: CompileInput) {
     sb.from("reuse_checks").select("results,decision").eq("id", data.reuse_check_id).maybeSingle(),
   ]);
   if (objs.error) throw err(objs.error.message);
+  if (gr.error) throw err(`GUARDRAIL_READ_FAILED: ${gr.error.message}`);
+  if (rc.error) throw err(`REUSE_CHECK_READ_FAILED: ${rc.error.message}`);
+  if (!rc.data) throw err("REUSE_CHECK_REQUIRED: reuse check not visible to you");
   const by = new Map((objs.data ?? []).map((o) => [o.id, o]));
   const con = by.get(data.contract_id); const tpl = by.get(data.template_id);
   if (!con || !tpl) throw err("NOT_FOUND: contract or template not visible to you");
@@ -52,13 +55,18 @@ export async function compilePromptCore(ctx: OpCtx, data: CompileInput) {
 export async function dispatchCore(ctx: OpCtx, p: { prompt_id: string; platform: Platform; cost_ceiling: number; estimated_cost: number; replay_of?: string }) {
   const sb = ctx.db;
   // The prompt must be visible to the caller before anything else happens.
-  const { data: visible } = await ctx.sb.from("objects").select("id").eq("id", p.prompt_id).maybeSingle();
+  const { data: visible, error: visibilityError } = await ctx.sb.from("objects").select("id").eq("id", p.prompt_id).maybeSingle();
+  if (visibilityError) throw err(`PROMPT_READ_FAILED: ${visibilityError.message}`);
   if (!visible) throw err("NOT_FOUND: prompt not visible to you");
-  const [{ data: prompt }, { data: cp }, { data: binding }] = await Promise.all([
+  const [promptRead, compiledRead, bindingRead] = await Promise.all([
     sb.from("objects").select("data_classification").eq("id", p.prompt_id).single(),
     sb.from("creation_prompts").select("compiled_text,compiled_hash,template_version").eq("object_id", p.prompt_id).single(),
     sb.from("adapter_bindings").select("mode").eq("adapter", "BuildPlatform").eq("environment", "preview").maybeSingle(),
   ]);
+  if (promptRead.error) throw err(`PROMPT_READ_FAILED: ${promptRead.error.message}`);
+  if (compiledRead.error) throw err(`PROMPT_READ_FAILED: ${compiledRead.error.message}`);
+  if (bindingRead.error) throw err(`ADAPTER_BINDING_READ_FAILED: ${bindingRead.error.message}`);
+  const prompt = promptRead.data; const cp = compiledRead.data; const binding = bindingRead.data;
   if (!prompt || !cp) throw err("PROMPT_REQUIRED: compile the prompt first");
   const refused = platformRefusal(p.platform, prompt.data_classification as Classification);
   if (refused) throw err(refused);
