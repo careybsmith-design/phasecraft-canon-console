@@ -4,7 +4,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { toast } from "sonner";
 import { ClipboardCheck, Search, ShieldCheck } from "lucide-react";
-import { assuranceQuery, recordAssurance, runHardeningChecks, assessorPack } from "@/lib/assurance.functions";
+import { assuranceQuery, acceptanceBlockers, recordAssurance, runHardeningChecks, assessorPack } from "@/lib/assurance.functions";
 import { ASSURANCE_KINDS, SCALE_TARGET, type AssuranceInput } from "@/domain/hardening";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -12,8 +12,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { errorText } from "@/components/human-surfaces";
 
 const options = queryOptions({ queryKey: ["assurance"], queryFn: () => assuranceQuery() });
+const blockerOptions = queryOptions({ queryKey: ["acceptance-blockers"], queryFn: () => acceptanceBlockers() });
 export const Route = createFileRoute("/_authenticated/assurance")({
-  loader: ({ context }) => context.queryClient.ensureQueryData(options),
+  loader: ({ context }) => Promise.all([context.queryClient.ensureQueryData(options), context.queryClient.ensureQueryData(blockerOptions)]),
   head: () => ({ meta: [{ title: "Assurance and recovery · THREAD" }, { name: "description", content: "Cited assurance evidence, ledger integrity, recovery conditions and independent verification in THREAD." }, { property: "og:title", content: "Assurance and recovery · THREAD" }, { property: "og:description", content: "Evidence-linked hardening with explicit live assurance gaps and recovery checks." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }), component: Assurance,
 });
 
