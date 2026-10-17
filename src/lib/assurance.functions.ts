@@ -15,8 +15,8 @@ export const assuranceQuery = createServerFn({ method: "GET" }).middleware([requ
 
 export type AcceptanceBlockers = {
   orphans: { count: number; nodes: Array<{ id: string; human_ref: string; type: string; title: string; lifecycle_state: string }> };
-  action_ratio: { action_pct: number | null; read_only_pct: number | null; status: string; thresholds: unknown; evidence: { sessions: number } };
-  aw5_setting: { key: string; value: unknown; status: string } | null;
+  action_ratio: { action_pct: number | null; read_only_pct: number | null; status: string; thresholds: string | null; evidence: { sessions: number } };
+  aw5_setting: { key: string; value: string | null; status: string } | null;
 };
 
 /** Acceptance blockers: orphan reconciliation list, AW-5 decision state, and the tracked exit checklist. */
