@@ -22,7 +22,6 @@ export const THREAD_DETECTORS = [
   ["RejectedMeasureInUse", "rejected_measure_in_use", "Use outcome evidence, never activity as a value proxy."],
   ["WikiDrift", "wiki_drift", "Restore operating actions; thresholds require Carey's recorded decision."],
   ["AuthorityInflation", "authority_inflation", "Re-evaluate evidence and reduce unsupported authority."],
-  ["ProhibitedInference", "prohibited_inference", "Refuse individual activity-derived inferences."],
 ] as const;
 export const FRAMING_DETECTORS = [
   ["RawSpeechTreatedAsAuthority", "raw_speech_treated_as_authority", "Require explicit human reclassification."],
@@ -43,6 +42,8 @@ export const FRAMING_DETECTORS = [
   ["FramingSessionAsMeeting", "framing_session_as_meeting", "Capture operating intent rather than an awareness meeting."],
 ] as const;
 export const DETECTION_RULES = [...VALUEOS_DETECTORS, ...THREAD_DETECTORS, ...FRAMING_DETECTORS];
+export const ACTION_RATIO_WARNING = "AntiWikiActionRatioThresholdUnset";
+export const DETECTOR_MANIFEST = [...DETECTION_RULES.map(([key]) => key), ACTION_RATIO_WARNING];
 export function evaluateFacts(facts: Record<string, unknown>) {
   return DETECTION_RULES.filter(([, fact]) => facts[fact] === true).map(([key]) => key);
 }
@@ -52,8 +53,9 @@ export function actionRatios(rows: Array<{ mutating_actions: number; reads: numb
   const total = rows.length;
   const action_pct = total ? 100 * rows.filter(r => r.mutating_actions > 0).length / total : null;
   const read_only_pct = total ? 100 * rows.filter(r => r.reads > 0 && r.mutating_actions === 0).length / total : null;
-  if (setting.status !== "set" || !setting.value) return { action_pct, read_only_pct, status: "THRESHOLD_UNSET", pass: false };
-  return { action_pct, read_only_pct, status: total ? "measured" : "NO_EVIDENCE", pass: action_pct !== null && read_only_pct !== null && action_pct >= setting.value.min_action_pct && read_only_pct <= setting.value.max_read_only_pct };
+  if (setting.status === "open") return { action_pct, read_only_pct, status: "THRESHOLD_UNSET", pass: false, release_blocking: false, severity: "warning" };
+  const pass = setting.status === "set" && setting.value !== null && action_pct !== null && read_only_pct !== null && action_pct >= setting.value.min_action_pct && read_only_pct <= setting.value.max_read_only_pct;
+  return { action_pct, read_only_pct, status: setting.status !== "set" || !setting.value ? "THRESHOLD_UNSET" : total ? "measured" : "NO_EVIDENCE", pass, release_blocking: !pass, severity: pass ? "none" : "error" };
 }
 export function elapsedHours(start: string, end: string) {
   const duration = (Date.parse(end) - Date.parse(start)) / 36e5;

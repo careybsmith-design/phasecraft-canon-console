@@ -1,5 +1,7 @@
 # THREAD whole-build audit
 
+**Correction update, 18 October 2026:** see `docs/THREAD-correction-status.md` for current directive-by-directive proof and 1,718 passing tests. OPEN AW-5 is now a non-blocking warning, not a release failure. Activity input is private with a verified aggregate-only read path; signed-in checks are available and were run. AW-16 detects legacy state ownership and fails. Historical findings below are retained, not current claims where superseded.
+
 **Audit refreshed:** 17 October 2026, 01:02 UTC (fourth renewal). **Release verdict: FAIL — not fully compliant.**
 
 This audit reviews Sections 1–19, the full canonical specification and Appendices A–C. It does not relabel unfinished phases as accepted. Passing local tests, rollback-only fixture checks and catalog scans are identified separately from real production proof. All prior open items remain in the roadmap.
@@ -268,7 +270,7 @@ The complete 95-tool current contracts are saved in `docs/audit/tool-contracts.j
 | AW-2 | BLOCKED | All public enum/lifecycle labels clean; authenticated rendered state scan pending |
 | AW-3 | BLOCKED | Authenticated Mission Runtime screenshot/OCR unavailable |
 | AW-4 | BLOCKED | Eleven rejected measure rules tested; complete API/UI/schema output acceptance pending |
-| AW-5 | FAIL | THRESHOLD_UNSET, open/null, zero usage sessions; no default |
+| AW-5 | WARNING — non-blocking (L-02 supersedes) | THRESHOLD_UNSET, OPEN/null, zero usage sessions; both ratios null; no default |
 | AW-6 | BLOCKED | Zero invalid live notification rows; isolated invalid-insert mutation proof pending |
 | AW-7 | BLOCKED current acceptance | Historical Phase4/6 DB reuse refusal passed; fresh full authorized acceptance not executed; no unconditional pass |
 | AW-8 | BLOCKED current acceptance | Historical Phase8 DB uncited-guidance refusal passed; fresh full authorized acceptance not executed; no unconditional pass |

@@ -13,12 +13,13 @@ describe("Phase 10 deterministic detectors", () => {
   it("allows outcome measures", () => expect(rejectedMeasure("median intent-to-value time and operating cost")).toBe(false));
   it("never supplies AW-5 defaults while Carey has not decided", () => {
     const r = actionRatios([{ mutating_actions: 1, reads: 2 }, { mutating_actions: 0, reads: 1 }], { status: "open", value: null });
-    expect(r).toEqual({ action_pct: 50, read_only_pct: 50, status: "THRESHOLD_UNSET", pass: false });
+    expect(r).toEqual({ action_pct: 50, read_only_pct: 50, status: "THRESHOLD_UNSET", pass: false, release_blocking: false, severity: "warning" });
   });
   it("uses the Section 18 set status without creating a threshold default", () => {
     const rows = [{ mutating_actions: 1, reads: 2 }, { mutating_actions: 0, reads: 1 }];
     expect(actionRatios(rows, { status: "set", value: { min_action_pct: 50, max_read_only_pct: 50 } })).toMatchObject({ status: "measured", pass: true });
     expect(actionRatios(rows, { status: "set", value: { min_action_pct: 51, max_read_only_pct: 50 } }).pass).toBe(false);
+    expect(actionRatios(rows, { status: "set", value: { min_action_pct: 51, max_read_only_pct: 50 } }).release_blocking).toBe(true);
     expect(actionRatios(rows, { status: "open", value: { min_action_pct: 50, max_read_only_pct: 50 } }).status).toBe("THRESHOLD_UNSET");
   });
   it("computes confirmed intent to value time from exact instants", () => expect(elapsedHours("2026-10-01T12:00:00Z", "2026-10-03T18:00:00Z")).toBe(54));

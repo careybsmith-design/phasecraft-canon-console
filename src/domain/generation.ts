@@ -34,6 +34,7 @@ export type RenditionKind = keyof typeof RENDITION_KINDS;
  * JavaScript and PostgreSQL ARE (`~*`). The SQL function `_prohibited_inference` holds the same list.
  */
 export const PROHIBITED_INFERENCE_RULES: Array<{ key: string; pattern: string; reason: string }> = [
+  { key: "actor_activity_fields", pattern: "(actor_id[\\s\\S]*(reads|mutating_actions)|(reads|mutating_actions)[\\s\\S]*actor_id)", reason: "Actor-level usage-session activity is never exposed (L-10 / 14.3)" },
   { key: "activity_volume", pattern: "(prompt|message|agent[ -]?call|keystroke|login|commit|meeting)s? (count|volume|total|frequency)", reason: "Infers performance from activity volume (14.3)" },
   { key: "hours_connected", pattern: "(hours|time) (connected|online|logged|active)", reason: "Infers performance from hours connected (14.3)" },
   { key: "leaderboard", pattern: "(leaderboard|league table)", reason: "Ranks individual humans (14.3)" },

@@ -1,0 +1,18 @@
+-- Stored generated columns backfill deterministically without mutating immutable envelopes or audit history.
+ALTER TABLE public.objects ADD COLUMN simulated boolean GENERATED ALWAYS AS (coalesce(body->'provenance'->>'simulated','false')='true' OR coalesce(body->>'adapter_mode','')='simulated') STORED;
+ALTER TABLE public.object_versions ADD COLUMN simulated boolean GENERATED ALWAYS AS (coalesce(body->'provenance'->>'simulated','false')='true' OR coalesce(body->>'adapter_mode','')='simulated') STORED;
+CREATE INDEX objects_simulated_gate ON public.objects(simulated,type) WHERE NOT is_tombstone;
+CREATE INDEX versions_simulated_gate ON public.object_versions(simulated,type);
+-- Snapshot with an explicit column list omits the generated column; PostgreSQL derives it identically.
+CREATE OR REPLACE FUNCTION public.snapshot_version() RETURNS trigger LANGUAGE plpgsql SET search_path=public AS $$ BEGIN
+ INSERT INTO public.object_versions(id,human_ref,type,schema_version,title,statement,body,machine_description,version,supersedes,superseded_by,derived_from,created_at,created_by,updated_at,updated_by,lifecycle_state,effective_from,review_date,expiration_condition,expires_at,retired_at,retirement_reason,retirement_path,owner_id,co_creator_id,builder_id,steward_id,risk_tier,authority_level,confidence_bundle,consequence_class,permission,data_classification,permitted_uses,evidence_refs,citations,open_questions,content_hash,provenance_chain_id,is_tombstone)
+ VALUES(NEW.id,NEW.human_ref,NEW.type,NEW.schema_version,NEW.title,NEW.statement,NEW.body,NEW.machine_description,NEW.version,NEW.supersedes,NEW.superseded_by,NEW.derived_from,NEW.created_at,NEW.created_by,NEW.updated_at,NEW.updated_by,NEW.lifecycle_state,NEW.effective_from,NEW.review_date,NEW.expiration_condition,NEW.expires_at,NEW.retired_at,NEW.retirement_reason,NEW.retirement_path,NEW.owner_id,NEW.co_creator_id,NEW.builder_id,NEW.steward_id,NEW.risk_tier,NEW.authority_level,NEW.confidence_bundle,NEW.consequence_class,NEW.permission,NEW.data_classification,NEW.permitted_uses,NEW.evidence_refs,NEW.citations,NEW.open_questions,NEW.content_hash,NEW.provenance_chain_id,NEW.is_tombstone); RETURN NEW; END $$;
+CREATE OR REPLACE FUNCTION public.simulated_evidence_cannot_promote() RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$ BEGIN
+ IF TG_OP='UPDATE' AND public._authority_rank(NEW.authority_level)>public._authority_rank(OLD.authority_level) AND EXISTS(SELECT 1 FROM public.objects e WHERE e.id=ANY(NEW.evidence_refs) AND e.simulated) THEN RAISE EXCEPTION 'SIMULATED_EVIDENCE_CANNOT_PROMOTE'; END IF;
+ IF NEW.type='ExposureAuthorization' AND EXISTS(SELECT 1 FROM public.objects e WHERE e.id=ANY(NEW.evidence_refs) AND e.simulated) THEN RAISE EXCEPTION 'SIMULATED_EVIDENCE_CANNOT_AUTHORIZE_EXPOSURE'; END IF;
+ RETURN NEW; END $$;
+REVOKE ALL ON FUNCTION public.simulated_evidence_cannot_promote() FROM PUBLIC,anon,authenticated;
+GRANT EXECUTE ON FUNCTION public.simulated_evidence_cannot_promote() TO service_role;
+CREATE TRIGGER b_simulated_evidence_gate BEFORE INSERT OR UPDATE ON public.objects FOR EACH ROW EXECUTE FUNCTION public.simulated_evidence_cannot_promote();
+COMMENT ON COLUMN public.objects.simulated IS 'Indexed deterministic stored projection of adapter provenance; generated so callers cannot override the gate or rewrite historical evidence.';
+COMMENT ON COLUMN public.object_versions.simulated IS 'Historical generated projection; no immutable version data is rewritten.';

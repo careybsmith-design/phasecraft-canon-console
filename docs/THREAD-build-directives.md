@@ -28,6 +28,8 @@ Markers used throughout (from the source, Part 0.3):
 
 ## 1. Objective
 
+**NON-NEGOTIABLE (L-08): THREAD owns the THREAD, not the STATE.** THREAD compiles intent, dispatches prompts and records lineage and authority. Platforms own execution. Runtime/build/environment status is mirrored read-only with a `mirrored_from` source reference, never authored by THREAD, never a lifecycle, metric or gate.
+
 THREAD is MASA Global's canonical, machine-readable, versioned Enterprise Operating Graph, plus the evidence graph that connects every Value Signal to every decision, creation, authority grant, production outcome and value result. It is exposed as agent-executable MCP tools and as human-facing surfaces that are generated, stamped and set to expire. In plain words, it is the enterprise's living memory of what it intended, decided, built, was permitted to do, proved and gained, plus the machinery that lets people and AI agents act on that memory directly instead of reading about it. **THREAD is a place people and agents act through, never a place people go to read.** The single largest risk is that THREAD becomes a very well-organised wiki. Every slice must be checked against that risk, and the anti-wiki acceptance suite (Section 17, test group AW) proves it has not happened.
 
 ---
@@ -45,6 +47,8 @@ THREAD is MASA Global's canonical, machine-readable, versioned Enterprise Operat
 7. **PROHIBITED (Part 8A.6):** any measure that counts draft objects as progress.
 8. **NON-NEGOTIABLE (Part 13.4):** the creation prompt must contain no raw captured text. Prompts are compiled only from typed, confirmed fields.
 9. **NON-NEGOTIABLE (P11, Part 7.4):** no creation may begin until the fabric has been searched and the result recorded (`ReuseCheck`). This is enforced by a database constraint and by server logic, not by convention.
+11. **PROHIBITED (L-08):** THREAD-owned build, environment, deployment, pipeline or release-execution state in any type/table/column/enum/lifecycle/surface/metric/report. BuildRun carries only source outcome `succeeded|failed|partial` and lineage; no build status board.
+12. **Hard routing gates:** expired attestations or failed evaluation suites refuse routing; Tier A/B invocation logging must be off or equivalently protected; Tier C is blocked before processing.
 10. No administrative ceremony: no approval workflows for standard work, no sign-off queues, no review boards, no stage gates with committees, no status reporting. Where a checkpoint seems needed, add an **evidence condition** instead.
 
 ### 2.2 Governing principles P1–P15 (Part 3), all NON-NEGOTIABLE
@@ -59,7 +63,8 @@ Each principle below must be enforced in code and have at least one named accept
 | P4 | Expiration everywhere | `review_date`, `expiration_condition` and a retirement path are `NOT NULL` on every live object (CHECK constraint) |
 | P5 | Machine-discoverable and agent-executable | Every type in `object_type_registry` has a `discovery_descriptor`; every operation has a `tool_contracts` row |
 | P6 | No approval queues for standard work | Enum audit test (AW-2) |
-| P7–P8 | See Layer B Part 3 | Implement as written |
+| P7 | Human judgment at consequential boundaries | Independent authorized human judgment for Tier 4; recorded decision and armed monitoring/kill switch |
+| P8 | Permission at retrieval | Caller-scoped RLS/security-definer predicates on every graph/vector hop; post-filter-only leakage tests must fail |
 | P9 | Complete provenance | Append-only `ledger` with hash chain; a trigger rejects consequential writes that lack `provenance_chain_id` |
 | P10 | Anti-pattern detection is a product capability | `detectors` registry with an owner on every detector |
 | P11 | Reuse before creating | FK `creation_prompts.reuse_check_id NOT NULL` → `reuse_checks` |
@@ -68,7 +73,7 @@ Each principle below must be enforced in code and have at least one named accept
 | P14 | Open protocols | MCP endpoint, A2A cards, provider-agnostic model router, canon export |
 | P15 | The model can challenge itself | Canon change = new version + evidence + challenge window + recorded `ConfirmedDecision` |
 
-All remaining NON-NEGOTIABLE and PROHIBITED statements from the source are listed verbatim, with their location, in **Appendix A**. Every one of them is binding.
+Appendix A is an index of binding constraints with explicit Appendix C references. The complete cited Appendix C text governs; extracted fragments are not substitutes. The correction packet overrides the specified source contradictions until Revision 1.2.
 
 ---
 
@@ -100,12 +105,14 @@ All remaining NON-NEGOTIABLE and PROHIBITED statements from the source are liste
 ### 3.2 Creation loop (Part 8.1)
 
 ```text
-ValueSignal -> (promote) ValueMission -> ValueCell -> ValueBurst -> FramingSession
-  -> ExtractedStatement (draft) -> confirm -> BehaviorStatement + ExecutableOutcomeContract
-  -> ReuseCheck (search_capability_fabric)  [hard block if absent]
-  -> CreationPrompt (compiled from typed fields only) -> BuildRun (reproducibility key)
-  -> BuildArtifact -> Simulation / Adversarial / Tests -> ShadowRun -> ExposureAuthorization
-  -> ProductionOutcome -> ValueMeasure -> (iteration: classify_change) -> next version
+ValueSignal -> ValueMission -> ValueCell
+  -> AI pre-session preparation: draft IntentModel, draft ExecutableOutcomeContract,
+     candidate hypotheses, disposable probe, smallest unanswered human questions
+  -> ValueBurst [ FramingSession = burst phases 1–4 ]
+  -> confirmed BehaviorStatements + ExecutableOutcomeContract
+  -> ReuseCheck [hard block] -> CreationPrompt -> BuildRun -> BuildArtifact
+  -> Test / Simulation / Adversarial -> Production Shadow
+  -> ExposureAuthorization -> ProductionOutcome -> ValueMeasure -> Compound
 ```
 
 ### 3.3 Lovable stack mapping (DESIGN DECISION, Lovable adaptation)
@@ -114,16 +121,16 @@ ValueSignal -> (promote) ValueMission -> ValueCell -> ValueBurst -> FramingSessi
 |---|---|---|
 | Framework | Services per Part 17.1 | TanStack Start v1 app; each source "service" becomes a server module `src/server/<service>/*.server.ts`, called through `createServerFn` wrappers in `src/server/<service>/*.functions.ts` |
 | Object store | PostgreSQL + JSONB | Lovable Cloud Postgres, table `objects` (typed envelope columns + `body jsonb`) and `object_versions` |
-| Graph | Apache AGE (alt. Neo4j) | **Not available on Lovable.** Table `edges` plus recursive CTE functions (`graph_traverse`, `graph_paths`, `graph_closure`, `graph_cycles`, `graph_orphans`) written in SQL. Depth caps and edge budgets per Part 16.4–16.5 |
+| Graph | Apache AGE (alt. Neo4j) | **Platform availability must be verified before relying on the substitution.** Table `edges` plus recursive CTE functions (`graph_traverse`, `graph_paths`, `graph_closure`, `graph_cycles`, `graph_orphans`) written in SQL. Depth caps and edge budgets per Part 16.4–16.5 |
 | Semantic discovery | pgvector | pgvector, `object_embeddings` (general) and `object_embeddings_restricted` (separate table, separate RLS, never merged) |
-| Evidence/audit ledger | Append-only, hash-chained | `ledger` table; `REVOKE UPDATE, DELETE`; BEFORE trigger computes `hash = sha256(prev_hash ‖ canonical_json(row))`; nightly verifier |
+| Evidence/audit ledger | Append-only, hash-chained | `ledger` table; `REVOKE UPDATE, DELETE`; BEFORE trigger serializes the append with `pg_advisory_xact_lock(hashtext('thread_ledger_chain'))`; SQL `ledger_row_hash` uses pgcrypto; SQL `thread_verify_ledger` alone verifies; nightly verifier. Contention must be load-tested at 500 calls/s |
 | Artifacts and renditions | S3-compatible, versioned | Lovable Cloud storage buckets `artifacts` (immutable, private) and `renditions` (private, lifecycle by expiry) |
 | Search | Postgres FTS / OpenSearch | Postgres FTS (`tsvector` generated column) + trigram for identifiers |
 | Models | AI Factory gateway | `ModelGateway` adapter. The default implementation calls the Lovable AI Gateway; the production implementation targets the MASA Factory gateway. All calls are logged per Part 13.3 |
 | Agent surface | MCP gateway | Server route `src/routes/api/public/mcp.ts` (JSON-RPC MCP over Streamable HTTP). It verifies an agent bearer token against `agents` inside the handler |
 | Auth / identity | Factory IdP (Entra, etc.) | Lovable Cloud auth (email + Google) now; `IdentityProvider` adapter for SSO later. Roles in a separate `user_roles` table with a `has_role()` security-definer function, never on the profile |
 | Scheduled sweeps | Scheduler | `/api/public/cron/*` server routes, protected by a shared secret, triggered by pg_cron + pg_net |
-| Runtime | Cloud-agnostic | Edge (Worker) runtime: no Node-only libraries in server code; use Web Crypto for hashing |
+| Runtime | Cloud-agnostic | Edge (Worker) runtime: no Node-only libraries in server code; use Web Crypto for unrelated application hashes, never the database ledger chain |
 
 ### 3.4 AI Factory boundary: real interfaces with simulated adapters (DESIGN DECISION)
 
@@ -140,13 +147,13 @@ THREAD must not rebuild the AI Factory (Part 13.1). Define each integration as a
 | `Telemetry` | `subscribe(capability_id, filters)` ; shadow tap `tap({read_only:true})` ; `metrics(query)` |
 | `FeatureFlags` | `setExposure(capability_id, population_pct, segments)` ; `killSwitch(capability_id) → {stopped_at}` |
 | `IdentityProvider` | `resolveActor(token) → Actor` ; `attributes(actorId)` |
-| `ContentClassifier` | `classify(text) → {tier, phi:bool, pan:bool, spans}`. The simulated version uses deterministic regex and Luhn rules, and PHI/PAN hard blocks apply in every mode |
+| `ContentClassifier` | `classify(text) → {tier, phi:bool, pan:bool, spans}`. Deterministic regex/Luhn scanning is the production in-boundary implementation and must never be stubbed; only model assistance may be simulated. PHI/PAN hard blocks apply before any model call |
 
 ---
 
 ## 4. Object model
 
-Implement **exactly** the schemas in Layer B Part 4: the universal envelope (4.1), the ConfidenceBundle (4.1.1), the relationship verbs (4.2), the Object Type Registry with every family (4.3), lifecycle states (4.4) and graph integrity rules (4.5). Also implement the framing-session types from Part 8A.4 (`FramingSession`, `CoCreationArtifact`, `ExtractedStatement`, `NeedStatement`, `DependencyProposal`, and the others listed there). Do not invent parallel structures.
+Implement **exactly** the schemas in Layer B Part 4: the universal envelope (4.1), the ConfidenceBundle (4.1.1), the relationship verbs (4.2), the Object Type Registry with every family (4.3), lifecycle states (4.4) and graph integrity rules (4.5). Also implement the framing-session types from Part 8A.6 (`FramingSession`, `CoCreationArtifact`, `ExtractedStatement`, `NeedStatement`, `DependencyProposal`, and the others listed there). Do not invent parallel structures.
 
 **Depth priority (Part 25.2).** Build these first and in full detail, with Zod schemas in `src/domain/types/` and per-type JSON Schema stored in `object_type_registry.body_schema`: envelope, `ConfidenceBundle`, `ValueSignal`, `ValueMission`, `BehaviorStatement`, `ExecutableOutcomeContract`, `CreationPrompt`, `BuildRun`, `ExposureAuthorization`, `ValueMeasure`, `Rendition`, `Detector`.
 
@@ -154,7 +161,7 @@ Implement **exactly** the schemas in Layer B Part 4: the universal envelope (4.1
 
 **`ConfidenceBundle.overall`** must be computed by a published, versioned rule (`confidence_rules` table, pure function `computeOverall(bundle, ruleVersion)`). It is never learned and never model-generated. The rule version is stored with every computation.
 
-**Human references** (`human_ref`, e.g. `VS-2026-0417`) come from a per-type prefix and a per-year sequence (`ref_sequences`). `id` is a UUIDv7, never reused and never renumbered.
+**Human references** (`human_ref`, e.g. `VS-2026-0417`) come from a per-type prefix and a per-year sequence (`ref_sequences`). **DESIGN DECISION (Lovable adaptation):** `id` is a UUIDv7, never reused and never renumbered.
 
 **Legacy alias registry:** the `legacy_aliases(alias, source_system, object_id)` table is a migration aid only. It has no status column.
 
@@ -165,7 +172,7 @@ Implement **exactly** the schemas in Layer B Part 4: the universal envelope (4.1
 Implement Layer B Part 6 as a **pure, deterministic TypeScript module** `src/server/authority/engine.ts` with no I/O and no model calls inside the decision. The same module runs in server functions and in tests.
 
 - `assessRisk(object, context) → {tier:1..4, reasons[]}` per Part 6.1.
-- `evaluateAuthority({actor, action, object, bundle, consequence_class, guardrail_results}) → {decision: 'proceed'|'proceed_with_confirmation'|'escalate_human_decision'|'block', rule_ids[], explanation}`, using the decision pattern in Part 6.4. Every evaluation writes a `PolicyEvaluation` object and a ledger entry.
+- `evaluateAuthority({actor, action, object, bundle, consequence_class, guardrail_results}) → {decision: 'proceed'|'proceed_with_confirmation'|'escalate_human_decision'|'block', rule_ids[], explanation}`, using the decision pattern in Part 6.4. The pure function returns `policy_evaluation_payload` as well. The Authority Service persists PolicyEvaluation and ledger in the same transaction as an action requiring policy evaluation; such an action cannot commit without both (L-16).
 - **Authority ladder (Part 6.2):** `observe → recommend → act_with_confirmation → act_bounded → autonomous_with_exception`. Promotion is automatic when the evidence thresholds are met (only non-simulated evidence counts). Demotion is automatic on every trigger listed in Part 6.2. Both are written to `authority_history`.
 - **Guardrails-as-code (Part 6.6):** the `guardrails` table stores versioned rules (`category`, `evaluator` key, `params jsonb`). The evaluators are registered TS functions. The six source categories map to evaluators exactly as in the Part 6.6 table.
 - **Prohibited conditions (Part 6.7):** checked before everything else. They return `block` regardless of confidence or authority.
@@ -181,12 +188,12 @@ Implement Layer B Part 8A in full, including 8A.1–8A.15. Lovable specifics:
 - **Consent first.** A `FramingSession` cannot move to `capturing` until a `ConsentRecord` exists for every participant and every modality (Part 8A.13, P13). This is enforced by a trigger.
 - **Capture.** Audio goes through the `Transcription` adapter. Typed chat, uploaded artifacts (whiteboard images, documents, prototype screenshots) and pasted text go to the `artifacts` bucket as `CoCreationArtifact`s on one **common session timeline** (`session_events(session_id, t_offset_ms, kind, ref)`).
 - **Segmentation and classification.** Each segment becomes an `ExtractedStatement` with the **six-way classification** from Part 8A.5, made **speaker-authority-aware**: a statement from a participant without decision authority for the domain can never be classified as a decision. It is classified as a suggestion, and the mismatch is surfaced. Classification uses `ModelGateway.complete` with a strict JSON schema, then deterministic post-rules.
-- **Typed extraction with mandatory provenance spans.** Every extracted object stores `provenance_spans[] = {artifact_id|segment_id, start, end, speaker_id}`. A CHECK constraint rejects an empty spans array. Everything enters in **draft** state.
+- **Typed extraction with mandatory provenance spans.** `extraction_spans` is the sole authoritative span store (artifact, speaker, time/character range, drawing region or interaction offset). Drop span-less candidates before persistence, with an observable discard. A deferred same-transaction insert constraint rejects extracted objects without spans; draft exit checks again. Captures/sessions themselves are not extracted candidates. Everything extracted enters in **draft** state (L-06).
 - **Draft vs confirmed.** Draft objects cannot reach creation: `compile_creation_prompt` rejects any source whose state is draft, and a DB constraint does the same. Material items need confirmation by the actor with authority (Part 8A.10). Confirmation is a recorded decision, not an approval queue.
 - **Re-extraction safety.** Re-running with a changed extractor version never overwrites a confirmed object. It creates proposals linked by `supersedes` candidates, and every prior confirmation is preserved.
 - **Connection (Part 8A.7).** Dependency derivation follows the relationship-source confidence ordering in 8A.7 and produces `DependencyProposal`s.
 - **Live surfacing.** While a session runs, look up contradictions with prior confirmed objects, related prior objects (vector search) and reusable capabilities, within the latency budgets in Part 8A.13. Push results with Supabase Realtime.
-- **Views (Part 8A.8):** Need Web, Dependency Web, Decomposition Tree, Contradiction Map, Unresolved Frontier, and the other two views named in 8A.8. Render them with a WebGL graph library (for example `@cosmograph/cosmos` or `sigma.js`) loaded client-only (lazy import behind `ClientOnly`).
+- **Views (Part 8A.8):** Need Web · Decomposition Tree · Session Constellation · Dependency Web · Contradiction Map · Unresolved Frontier · Cross-Session Timeline · Impact Overlay. Each supports neighbourhood isolation, edge explanations, distinct inferred/stated and draft/confirmed rendering, deep links, image/data export. Render them with a WebGL graph library (for example `@cosmograph/cosmos` or `sigma.js`) loaded client-only (lazy import behind `ClientOnly`).
 - **Framing session surface (Part 8A.9):** the live extraction pane with one-click re-classification, the timeline, the entry test tracker, and the confirmation panel.
 - **MCP tools (Part 8A.11)** and **the sixteen detectors (Part 8A.12):** implement all of them, named exactly as in the source.
 - **Quality publication:** extraction precision and recall are computed per classification and per object type against a labelled set (`extraction_eval_items`) and published as a generated rendition.
@@ -266,7 +273,7 @@ Implement Layer B Part 15. The primary measure (15.1) and the four measure famil
 
 ## 15. Non-functional requirements
 
-Implement Layer B Parts 16.3–16.5 and 19 exactly, including every performance budget, the scale assumptions (validated in the pilot), the Nebula rendering strategy (20,000 nodes interactive, honest edge budgets), security, auditability and accessibility. On the edge runtime, any query that cannot meet its budget must be pre-computed into a materialised table refreshed by an event or schedule. Record each such case as a DESIGN DECISION in `AGENTS.md`.
+Implement Layer B Parts 16.3–16.5 and 19 exactly, including every performance budget, the scale assumptions (validated in the pilot), security, auditability and accessibility. Graph requirements (L-17): server-precomputed layouts per view/cluster (no large browser layout); level-of-detail cluster aggregation; incremental neighbour loading; honest visible edge cap (showing 500 of 3,412); precomputed cluster summaries; restorable deep-link state (nodes/filters/layout/time/authority); sparsity by default. Test first clustered paint <300 ms and ≥30 FPS at 20,000 rendered nodes; targets are not proof. On the edge runtime, any query that cannot meet its budget must be pre-computed into a materialised table refreshed by an event or schedule. Record each such case as a DESIGN DECISION in `AGENTS.md`.
 
 ---
 
@@ -276,7 +283,7 @@ Implement Layer B Parts 16.3–16.5 and 19 exactly, including every performance 
 
 1. **Phase 1, Canon and envelope.** Enable Lovable Cloud, create the core DDL (Section 18), the ledger hash chain, tombstoning, the lifecycle triggers and the type registry seed. *Exit evidence: Part 20 Phase 1, plus a test proving a provenance gap cannot be created.*
 2. **Phase 2, Operating Graph core**, including the Explorer views.
-3. **Phase 2B, Framing session capture and extraction** (Part 8A), using the simulated `Transcription` adapter, with real model classification through `ModelGateway`.
+3. **Phase 2B, Framing session capture and extraction** (Part 8A), with recorded-fixture Transcription (speaker labels, timestamps, confidence) for regression and live transcription for the real human pilot; no synthetic substitute for exit evidence.
 4. **Phase 3, Authority, guardrails and decisions.**
 5. **Phase 4, Capability Fabric.**
 6. **Phase 5, Evidence graph.**
@@ -284,21 +291,25 @@ Implement Layer B Parts 16.3–16.5 and 19 exactly, including every performance 
 8. **Phase 7, Shadow, exposure and production outcome** (`Telemetry` and `FeatureFlags` adapters).
 9. **Phase 8, Generation layer.**
 10. **Phase 9, Agent-executable surface** (MCP endpoint, all tools).
-11. **Phase 10, Detection and measurement** (the 15 ValueOS failure-mode detectors, the THREAD-specific detectors and the 16 framing detectors).
+11. **Phase 10, Detection and measurement** (exactly the L-05 manifest: 15 ValueOS + 5 governance + 16 framing = 36 blocking-capable, plus AntiWikiActionRatioThresholdUnset = 37; no duplicates; security refusals remain controls, not additional inventory aliases).
 12. **Phase 11, Human surfaces** (built partly in parallel from Phase 2).
 13. **Phase 12, Hardening, assurance and scale.**
 
 **Dogfooding (Part 21, NON-NEGOTIABLE):** from Phase 2B onward, THREAD's own build is recorded inside THREAD as signals, a mission, a cell, bursts, behaviour statements, prompts, runs and evidence.
 
-**Exit evidence that depends on real external systems** (live builds on five platforms, a real framing session, a penetration test, DR timing) is recorded as `pending_live_adapter` with the simulated evidence attached. It counts as met only when the live adapter produces it. List these items to the user at the end of each slice.
+**(a) Adapter-dependent evidence may be deferred (L-03).** Live five-platform builds, telemetry, feature-flag exposure, penetration testing and DR timing are `pending_live_adapter` with simulated evidence attached; met only on live evidence. List each at slice end.
+
+**(b) The Phase 2B human pilot may NOT be deferred.** Phase 3 must not begin until a real Co-Creator/Builder session passes: 100% produced-object provenance; deliberate non-authority suggestion with mismatch surfaced live; contradiction with prior confirmed object detected live; changed-extractor re-extraction preserving every confirmation; draft unable to reach creation; precision/recall by class and type published. Existing later-phase implementation does not retroactively satisfy this gate.
+
+**DESIGN DECISION (recorded):** Run the pilot on MASA's approved enterprise environment, on the codebase that will migrate to MASA AWS. Record deployment target and real business condition. Synthetic/recorded sessions are regression fixtures only. Named participants and a scheduled time require human input; never fabricate them.
 
 ---
 
 ## 17. Test and assurance strategy
 
-Use Vitest for unit, domain and DB tests (against a test schema), and Playwright for surface tests. Implement every category in Layer B Part 21.1, the authority test matrix (21.2: risk × confidence × consequence), verification independence (21.3: the test generator and the code generator must be different model routes, and this is recorded), and operating-model tests (21.5).
+Use Vitest for unit, domain and DB tests (against a test schema), and Playwright for surface tests. Implement every category in Layer B Part 21.1, the authority test matrix (21.2: risk × confidence × consequence), verification independence (L-09 / 21.3: tests from human-confirmed Behaviour Statements/Executable Outcome Contracts; blind separate authoring plus human intent review for compliance/safety/financial/rights behaviour; sampled mutation testing; rolling human review each cycle; publish drill-through independence ≥70% overall and 100% compliance-scoped), and operating-model tests (21.5).
 
-**Anti-wiki / anti-legacy acceptance suite (Part 21.4), all 15 tests, IDs AW-1 to AW-15.** Every release must pass them, and a regression is a release blocker:
+**Anti-wiki / anti-legacy acceptance suite (Part 21.4), all 16 tests, IDs AW-1 to AW-16.** Every blocking-capable test must pass; AW-5 OPEN is explicitly a non-blocking warning (L-02), never silently omitted:
 
 | ID | Test | Implementation |
 |---|---|---|
@@ -307,6 +318,7 @@ Use Vitest for unit, domain and DB tests (against a test schema), and Playwright
 | AW-3 | No backlog, story, sprint or task list | Schema + UI text scan; Playwright screenshot of Mission Runtime with OCR check |
 | AW-4 | No rejected measure | Schema + API response + UI scan for all eleven rejected measures (Part 15.3) |
 | AW-5 | Action ratio | **OPEN, see Appendix B.** Telemetry computes `% sessions with ≥1 graph-mutating action` and `% read-only sessions`. Thresholds are read from canon setting `anti_wiki.action_ratio` |
+| AW-16 | No state ownership | Live schema and rendered-surface scan; every execution status must be read-only with mirrored_from |
 | AW-6 | No awareness notifications | Every notification row has a non-null `trigger_event_id` or `decision_id` |
 | AW-7 | Reuse gate enforced | Insert a `CreationPrompt` without a `ReuseCheck` → rejected by the DB |
 | AW-8 | Citations mandatory | The generator refuses uncited guidance |
@@ -317,6 +329,8 @@ Use Vitest for unit, domain and DB tests (against a test schema), and Playwright
 | AW-13 | Executability | Every core verb in Part 12 is invocable through MCP in the test harness |
 | AW-14 | Compression realised | Intent-to-first-evidence time is measured and published as a rendition |
 | AW-15 | No document prepared for handoff | `DocumentPreparedForHandoff` detector has zero unaddressed findings above threshold |
+
+AW-5 while `status=open` computes/reports both ratios and THRESHOLD_UNSET, creates owned WARNING finding AntiWikiActionRatioThresholdUnset without expiry, and does not block release. Once set, out-of-threshold ratios block release. Every slice-end report prints ratios and OPEN until decided.
 
 Also required: one test per principle P1–P15, one test per lifecycle transition rule, one test per detector (induce the failure, then assert a finding with an owner), PHI/PAN recall measured on a labelled corpus, and a test that simulated evidence never promotes authority.
 
@@ -351,7 +365,7 @@ create table public.lifecycle_transitions (
   lifecycle_family text not null, from_state text not null, to_state text not null,
   primary key (lifecycle_family, from_state, to_state),
   constraint no_approval_states check (
-    to_state !~* '(approv|sign.?off|pending.?review|submitted.?for.?review|awaiting|qa.?phase|gate)')
+    not public.is_prohibited_lifecycle_state(to_state))
 );
 
 -- Universal envelope (4.1)
@@ -506,7 +520,7 @@ create table public.notifications (id uuid primary key, recipient_id uuid not nu
   body jsonb not null, created_at timestamptz not null default now(),
   constraint decision_or_event check (trigger_event_id is not null or decision_id is not null)); -- AW-6
 create table public.usage_sessions (id uuid primary key, actor_id uuid not null, started_at timestamptz not null, ended_at timestamptz,
-  mutating_actions int not null default 0, reads int not null default 0);  -- AW-5; aggregate-only renditions, never individual (14.3)
+  mutating_actions int not null default 0, reads int not null default 0);  -- L-10: no application table SELECT; only windowed security-definer aggregate reads, never actor activity
 
 -- Roles (separate table, never on profile)
 create type app_role as enum ('steward','co_creator','builder','member','compliance');
@@ -521,7 +535,7 @@ Required triggers: `assert_transition`, `enforce_provenance` (rejects writes wit
 
 ---
 
-## 19. API surface
+## 19. Representative operations (complete requirement: §11 and Appendix C Parts 12.2 / 8A.11)
 
 Human surfaces use TanStack `createServerFn` functions with `requireSupabaseAuth` middleware. Agents use MCP at `/api/public/mcp` (bearer agent token, verified inside the handler). External webhooks use `/api/public/hooks/*` (HMAC-verified). One Zod schema per operation drives both surfaces, and the `ToolContract` is generated from that schema.
 
@@ -579,556 +593,66 @@ detectLegacyBehavior({ text | object_id }) -> DetectorFinding[]
 generateBriefing({ for_actor, purpose }) -> Rendition       // refuses prohibited inferences
 ```
 
-Error model: `{ code: 'BLOCKED_PROHIBITED'|'REUSE_CHECK_REQUIRED'|'DRAFT_NOT_CREATABLE'|'CONSENT_REQUIRED'|'AUTHORITY_INSUFFICIENT'|'PHI_PAN_BLOCK'|'PROVENANCE_REQUIRED'|'UNCITED_GENERATION', rule_ids[], explanation }`.
+**DESIGN DECISION (Lovable adaptation):** Error model: `{ code: 'BLOCKED_PROHIBITED'|'REUSE_CHECK_REQUIRED'|'DRAFT_NOT_CREATABLE'|'CONSENT_REQUIRED'|'AUTHORITY_INSUFFICIENT'|'PHI_PAN_BLOCK'|'PROVENANCE_REQUIRED'|'UNCITED_GENERATION', rule_ids[], explanation }`.
 
 ---
 
-## Appendix A: Verbatim index of NON-NEGOTIABLE and PROHIBITED statements
-
-Each entry below is quoted from the source and binds the build. The location shows the nearest section heading.
-
-**A1. [1.3.9]**
-
-```text
-1.3.9 What ValueOS must not become (verbatim list — treat as PROHIBITED)
-Another intranet · a large searchable wiki · a renamed project-management platform · a static AI playbook · a library of
-recorded webinars · a traditional certification program · a chatbot that only answers questions · a social feed optimised for
-reactions · a digital-adoption layer filled with pop-ups · a central content team that manually updates everything · surveillance
-disguised as behavioural coaching · multiple agents with conflicting definitions · a knowledge base that cannot initiate action.
-```
-
-**A2. [1.3.12]**
-
-```text
-1.3.12 Measures to reject (verbatim — PROHIBITED in THREAD's schema)
-Story points · sprint velocity · requirements completed · features shipped without outcome evidence · lines of code · prompt
-count · agent-call count · utilisation as a proxy for value · meetings held · documents produced · training modules completed.
-```
-
-**A3. [2.3]**
-
-```text
-2.3 THREAD is not (PROHIBITED — absence is testable)
-```
-
-**A4. [PART 3]**
-
-```text
-These are derived from the ValueOS source and are NON-NEGOTIABLE. Each must be enforced in code and covered by an
-acceptance test.
-```
-
-**A5. [4.1]**
-
-```text
-NON-NEGOTIABLE: every operating object in THREAD carries this envelope. No exceptions, including generated renditions
-and evidence objects.
-ObjectEnvelope:
- # Identity
- id: string # stable, opaque, never reused, never renumbered
- human_ref: string # display reference, e.g. VS-2026-0417, BM-2026-0031
- type: enum # from the Object Type Registry (4.3)
- schema_version: semver # the schema this object was written against
-```
-
-**A6. [4.1.1]**
-
-```text
-# Integrity
- content_hash: string
- provenance_chain_id:string # links to the append-only ledger
-4.1.1 ConfidenceBundle (replaces any single confidence score)
-NON-NEGOTIABLE: confidence is a transparent evidence bundle, never an unexplainable model score.
-```
-
-**A7. [4.4]**
-
-```text
-NON-NEGOTIABLE: no object type may have a state named or meaning "awaiting approval", "pending sign-off", "submitted
-for review" or "in QA phase".
-```
-
-**A8. [5.1]**
-
-```text
-NON-NEGOTIABLE: THREAD must be able to render and query this chain end to end:
-```
-
-**A9. [6.1]**
-
-```text
-NON-NEGOTIABLE: Tier is a computed property, stored with its inputs, recomputable, and never manually overridden
-downward. Upward override is permitted with a recorded rationale; downward override is PROHIBITED.
-```
-
-**A10. [6.2]**
-
-```text
-5. Operates continuously; routes only Sustained production performance; discrepancy rate below
- autonomous_with_exception ambiguous or consequential cases to threshold; no critical incidents in period; risk tier ≤ 3; explicit
- humans human grant
-NON-NEGOTIABLE demotion rules. Authority decreases automatically, without human action, when any of: discrepancy rate
-exceeds threshold; a critical or repeated incident occurs; policy or guardrail changes; the capability version changes materially;
-the data distribution shifts beyond bounds; the model route or model version changes; the authority's effective_to passes
-without renewal; the steward becomes unassigned; or a value review shows underperformance.
-```
-
-**A11. [6.2]**
-
-```text
-PROHIBITED: Tier 4 autonomous operation without independently-authorised human judgment on each authorisation, and
-without continuous monitoring and an armed kill switch.
-```
-
-**A12. [6.3]**
-
-```text
-NON-NEGOTIABLE: machine confidence is a transparent evidence bundle connected to the Intent Model, tests, policies,
-authority, production behaviour and reversibility. It is not an unexplainable model score. The ConfidenceBundle schema is in
-Part 4.1.1. Its overall value is computed by a published, versioned, readable rule — never by a learned model — and the
-rule itself is a Rule object in the graph with a steward and history.
-```
-
-**A13. [6.4]**
-
-```text
-NON-NEGOTIABLE decision matrix:
-```
-
-**A14. [6.5]**
-
-```text
-The only human wait state in the entire system. PROHIBITED: any other queue, inbox, approval list, sign-off tray, review board
-or gate.
-```
-
-**A15. [6.5]**
-
-```text
-NON-NEGOTIABLE — a decision request contains exactly these fields and nothing more:
-```
-
-**A16. [6.6]**
-
-```text
-NON-NEGOTIABLE: guardrail evaluation is deterministic where determinable. An LLM may propose a guardrail; only a
-deterministic evaluator may enforce one. Advisory and enforcing guardrails are distinct fields and must never be conflated.
-```
-
-**A17. [PART 7]**
-
-```text
-PROHIBITED: a "pending approval" state anywhere in the model.
- PROHIBITED: any workflow that blocks standard work awaiting a committee.
- The AI Governance Council receives escalations — high-risk, high-impact, novel or ambiguous matters — and returns
- guidance and decisions, not approvals. THREAD records council engagements as ConfirmedDecision objects with
- source: governance_council , and never as gates.
- Routine work inside guardrails must flow without any human touch. A measurable target: ≥80% of consequential
- actions are resolved by the authority engine with no human wait.
-PART 7 — The Capability Fabric
-```
-
-**A18. [7.3]**
-
-```text
-NON-NEGOTIABLE. A published capability must be, and must be testably:
-```
-
-**A19. [7.4]**
-
-```text
-NON-NEGOTIABLE (P11): no creation may begin until the fabric has been searched and the result recorded.
- ReuseCheck:
- intent_shape: {outcome, inputs, outputs, domain}
- results: [{capability_id, match_score, reuse_mode: use_as_is|compose|extend, gaps[]}]
- decision: reuse_as_is|compose_existing|create_new
- rationale: text
- searched_by: Actor
- searched_at: timestamp
- # create_new requires: results is empty OR every result has recorded gaps,
- # AND a human or agent rationale is present.
-```
-
-**A20. [7.6]**
-
-```text
-NON-NEGOTIABLE. Every capability receives, at creation: a value hypothesis; a designated owner; a review date; an operating-
-cost ceiling; a minimum-use threshold; performance and risk thresholds; an expiration condition; and an automated retirement
-path.
-```
-
-**A21. [8.2]**
-
-```text
-Prompt compiled CreationPrompt , ReuseCheck , Raw captured text is PROHIBITED in the prompt. Guardrails applied
- GuardrailSet ref, PromptTemplate ref are enumerated on the prompt object
-```
-
-**A22. [8.3]**
-
-```text
-Lovable Vendor SaaS — the only external build NON-NEGOTIABLE: only content classes cleared for external processing;
- platform. Dispatch via its API restricted/prohibited classes must never be routed here. The platform registry
- records this per-platform
-```
-
-**A23. [PART 8A]**
-
-```text
-NON-NEGOTIABLE: scope changes may not be smuggled through iteration. A detector flags iterations whose diff content
-indicates a scope change classified as cosmetic or behavioural.
-PART 8A — Framing Sessions and the Co-Creation Extraction
-Pipeline
-```
-
-**A24. [8A.2]**
-
-```text
-NON-NEGOTIABLE. The pipeline must handle every one of these. They arrive simultaneously, in different modalities, and each
-carries different evidence weight.
-```
-
-**A25. [8A.2]**
-
-```text
-Every artifact becomes a CoCreationArtifact object with its own envelope, its content-tier classification, its consent basis,
-and its provenance. Artifacts are evidence, not canon. PROHIBITED: treating any artifact as authoritative content in its own
-right.
-```
-
-**A26. [8A.4]**
-
-```text
-NON-NEGOTIABLE. Every extracted object carries: the source CoCreationArtifact id; a provenance span (speaker +
-timestamp range, or character range, or a bounding region on a drawing, or an interaction-log offset); the extractor and model
-version; a confidence; and a draft state. An extracted object with no provenance span is discarded before it reaches the
-graph — not flagged, discarded.
-```
-
-**A27. [8A.5]**
-
-```text
-NON-NEGOTIABLE — authority-aware classification. The pipeline knows who is speaking and whether that person holds the
-authority to make the claim. If a participant without decision authority states a rule as fact, it is logged as a suggestion , not a
-decision, and the mismatch is surfaced: "Recorded as a suggestion — the decision authority for this belongs to the Claims
-Operations Lead." This is the single most valuable use of speaker-identification, and it prevents the most common failure in
-framing sessions: an offhand remark by someone without authority being treated as a requirement.
-```
-
-**A28. [8A.5]**
-
-```text
-PROHIBITED. Any path by which a context or question unit can become a BehaviorStatement without an explicit
-classification change by a human. A detector ( RawSpeechTreatedAsAuthority ) watches for it.
-```
-
-**A29. [8A.6]**
-
-```text
-NON-NEGOTIABLE — no silent materiality. Where the classifier is uncertain whether a statement is a rule, decision or
-consequence, it must ask in the session, not guess and not defer. "That sounds like a rule — should I record it as one?" A single
-in-session question is cheaper than a wrong object in the graph forever.
-8A.6 Logging — how objects enter the graph
-```
-
-**A30. [8A.6]**
-
-```text
-FramingSession:
- id, human_ref # FS-2026-0184
- mission_ref # nullable — a session may precede a mission
- co_creator: Actor # required
- builder: Actor # required
- participants: [{actor, role, authority_held: ref}]
- purpose: text
- opened_at, closed_at
- consent_ref: ConsentRecord # NON-NEGOTIABLE: required before capture opens
- content_tier: A|B|C # computed; gates all downstream processing
- artifacts: [CoCreationArtifact]
- extraction_revision: integer
- objects_proposed: count
- objects_confirmed: count
- material_items_awaiting_confirmation: count
- contradictions_surfaced: [DetectorFinding]
- prior_objects_surfaced: [object_id]
- entry_test_result: {completed: bool, sentence: text|null}
-```
-
-**A31. [8A.7]**
-
-```text
-Draft visibility rule. Draft objects are visible, searchable and traceable immediately — so nothing is lost — but they: cannot
-reach creation; cannot be counted in any value or coverage measure; and are rendered with a visible draft marker.
-PROHIBITED: any measure that counts draft objects as progress.
-8A.7 Connection — how dependencies and relationships are derived
-```
-
-**A32. [8A.7.1]**
-
-```text
-NON-NEGOTIABLE. Every proposed relationship carries its source, its confidence, and its provenance span, and appears in the
-session review queue. Nothing below "explicit statement" is auto-confirmed into canon. A wrongly-auto-linked
-dependency silently corrupts every downstream impact analysis, and it is very hard to notice — which makes it the most
-dangerous automated action in this part.
-```
-
-**A33. [8A.7.4]**
-
-```text
-NON-NEGOTIABLE: this surfacing happens live, in the session, not in a report afterwards. A post-session summary is too late
-— the decision has already been made out loud.
-```
-
-**A34. [8A.9]**
-
-```text
-NON-NEGOTIABLE — the tool must show, live, what it is capturing. The Co-Creator must be able to correct the machine's
-understanding while the context is alive. This is the show-react-refine loop applied to capture itself, and it is the difference
-between a session that produces a trustworthy model and one that produces a transcript.
-```
-
-**A35. [8A.9]**
-
-```text
-No minutes, no action PROHIBITED. The session produces objects, not a document
- items
-```
-
-**A36. [8A.10]**
-
-```text
-NON-NEGOTIABLE — material items require explicit human confirmation. Material means: rules, exceptions, non-
-negotiable consequences, decisions, and confirmed behaviour. Non-material items (context, suggestions, assumptions,
-questions) are logged without blocking.
-```
-
-**A37. [8A.10]**
-
-```text
-NON-NEGOTIABLE: a session may close with unresolved items, but never with unrecorded unresolved items. Explicit deferral
-is a legitimate outcome and is recorded as such; silence is not.
-```
-
-**A38. [8A.11]**
-
-```text
-Confirmation is captured on the object ( confirmed state, actor, authority used, timestamp) — the same mechanism as any
-other ValueOS confirmation. There is no separate sign-off workflow, no approval record, and no gate. PROHIBITED: a session
-approval state.
-8A.11 New MCP tools
-```
-
-**A39. [8A.14]**
-
-```text
-F7 Surveillance drift — session Critical Participation analysis is PROHIBITED; no individual activity metrics derived from
- analysis used to evaluate sessions; refusal at generation time; explicit board-level policy
- participants
-```
-
-**A40. [10.1]**
-
-```text
-NON-NEGOTIABLE (P1). The Operating Graph is the only authority. Every human-facing artifact — explanation, briefing,
-interface, diagram, simulation, walkthrough, export, audio, video, role-specific scenario, decision tree — is a rendition,
-generated from canon, for a specific person and moment.
-```
-
-**A41. [10.4]**
-
-```text
-Generated overnight, per Builder, from the graph. Contains only what requires judgment: decisions requiring input,
-anomalies, opportunities, and stop recommendations. Not a status report. PROHIBITED: any generated artifact whose
-primary content is progress-against-plan, task list, or activity summary.
-```
-
-**A42. [PART 11]**
-
-```text
-NON-NEGOTIABLE (P15). Canon objects may be changed only through a recorded path: proposed change → evidence →
-challenge window (counter-arguments invited; Challenge Agent actively produces them) → decision by the steward under
-stated authority → new version with the old version preserved → dependent renditions marked stale → dependent capabilities
-notified.
-PROHIBITED: silent drift of canonical definitions, authority rules or consequential guardrails. The system must detect and
-report canon drift as a live metric.
-PART 11 — Surfaces
-```
-
-**A43. [PART 11]**
-
-```text
-Each surface is a generated interface appropriate to the moment, not a fixed set of permanent screens. NON-NEGOTIABLE for
-all surfaces: permission-aware at retrieval (P8); keyboard navigable; WCAG 2.2 AA; no decorative chrome; every number is drill-
-through to its evidence.
-```
-
-**A44. [11.2]**
-
-```text
-PROHIBITED: this surface must not resemble a project-management tool or a backlog with renamed fields. Absence is testable
-(Part 21.4).
-```
-
-**A45. [11.5]**
-
-```text
-Only the fields in Part 6.5. Time-boxed; shows cost of waiting; supports decide, one clarification, reduce authority, or stop.
-PROHIBITED: bulk approve.
-```
-
-**A46. [11.6]**
-
-```text
-PROHIBITED: engagement optimisation, reaction counts, streaks, or any mechanic that rewards visibility over value. A detector
-must exist for ValueFeedDriftingTowardEngagement .
-```
-
-**A47. [11.10]**
-
-```text
-NON-NEGOTIABLE: new-employee onboarding culminates in a real, low-risk Value Mission, not course completion.
-PROHIBITED: multiple-choice certification, completion percentages as a measure.
-```
-
-**A48. [12.3]**
-
-```text
-NON-NEGOTIABLE. Every tool declares, and THREAD enforces:
-```
-
-**A49. [12.5]**
-
-```text
-NON-NEGOTIABLE: THREAD must support A2A so specialised agents can discover one another and collaborate across
-platforms, using open contracts. THREAD's role: register agent identities, capabilities and mandates in the graph; enforce
-authority per agent; record every inter-agent interaction in the provenance chain; and prevent multiple agents with
-conflicting definitions — one canon, many agents (a named failure mode).
-```
-
-**A50. [13.1]**
-
-```text
-NON-NEGOTIABLE. The AI Factory already provides unified model access, orchestration, MCP servers, connectors,
-observability, CI/CD, and the six capability domains. THREAD consumes those and owns canon, evidence, authority and
-generation. Duplicating Factory capability is a named anti-pattern and a design failure.
-```
-
-**A51. [13.2]**
-
-```text
-Two hard routing gates (NON-NEGOTIABLE):
-```
-
-**A52. [13.3]**
-
-```text
-NON-NEGOTIABLE. Prompt/response invocation logging must be off for Tier A/B routes, or routed to the same access
-controls, retention class and audit as the source object. Debug logging that captures prompts recreates exactly the exposure
-the perimeter exists to prevent. This is a named check in Part 21.
-```
-
-**A53. [13.4]**
-
-```text
-NON-NEGOTIABLE. The CreationPrompt is assembled from typed fields: the confirmed Behaviour Statement, the Executable
-Outcome Contract, linked design context (glossary terms, patterns, design tokens, prior capability contracts), the guardrail set,
-the prompt template and approved reference examples. Captured transcripts, uploaded documents and tool outputs are never
-concatenated into it. Where verbatim content is genuinely required, it enters as a bounded, length-capped, explicitly-quoted
-field in a designated non-instruction region, and the template must instruct the model to treat it as untrusted data.
-```
-
-**A54. [13.5]**
-
-```text
-Per-build, per-mission and per-cell cost ceilings enforced at dispatch.
- A FinOps view aligning to the strategy's cost-optimisation promise: routing efficiency, usage visibility, shadow-AI
- elimination.
- PROHIBITED as measures: prompt count, agent-call count, token volume as a productivity proxy. Cost is measured for
- control, never for performance.
-```
-
-**A55. [14.3]**
-
-```text
-14.3 Surveillance boundaries — PROHIBITED inferences
-```
-
-**A56. [14.3]**
-
-```text
-NON-NEGOTIABLE. The system must expose mission evidence while protecting people. THREAD must not:
-```
-
-**A57. [15.3]**
-
-```text
-15.3 Rejected measures — PROHIBITED
-```
-
-**A58. [15.3]**
-
-```text
-NON-NEGOTIABLE test: a schema-level test asserts that no field, table, view or API response contains any rejected measure. A
-detector flags rejected-measure language. This is one of the tests that proves THREAD has not become a legacy tool (Part 21.5).
-```
-
-**A59. [PART 16]**
-
-```text
-Every measure is drill-through to the evidence that produced it. A number without evidence is PROHIBITED.
- No manual status reporting. Live evidence replaces status reporting — "anyone with permission can inspect the evidence
- without asking another person for an update."
- Transparency must not become surveillance (Part 14.3).
- Board/Audit Committee reporting is a generated rendition, expiring, sourced from the graph.
-PART 16 — Data model and storage
-```
-
-**A60. [16.2]**
-
-```text
-NON-NEGOTIABLE. There is no "document" object type in THREAD. Content is either an operating object (with envelope,
-authority, evidence, expiration), an evidence object, or a rendition (generated, stamped, expiring). A free-floating document is
-exactly the legacy artifact ValueOS removes — "a document prepared for a handoff."
-```
-
-**A61. [18.1]**
-
-```text
-No portal PROHIBITED: hero banners, marketing copy, welcome dashboards, card grids of links, "quick links", news carousels
- aesthetics
-```
-
-**A62. [18.3]**
-
-```text
-NON-NEGOTIABLE. WCAG 2.2 AA from the first release, not retrofitted. Keyboard navigation for every interaction including
-graph traversal; a non-visual equivalent for every graph view (the adjacency and evidence lists are the accessible path); colour-
-blind-safe palettes; screen-reader announcements for generated content and for live state changes; reduced-motion support.
-```
-
-**A63. [PART 20]**
-
-```text
-NON-NEGOTIABLE framing. This is a sequence of capability slices with evidence-based exit gates, not a phased project
-plan. Do not convert it into milestones and a schedule in the build prompt. Each phase ends when its exit evidence exists — not
-when a date passes.
-```
-
-**A64. [PART 21]**
-
-```text
-NON-NEGOTIABLE: THREAD must be built the ValueOS way. Dogfooding is a requirement, not a virtue signal. THREAD's
-own build runs through the same loop it implements: signals, a mission, a cell, bursts, behaviour statements, prompts, runs,
-evidence, shadow, progressive exposure, value measurement. If the build of THREAD cannot be conducted through ValueOS,
-then ValueOS does not work and that is the most important possible finding.
-```
-
-**A65. [21.3]**
-
-```text
-NON-NEGOTIABLE. A model that writes both the capability and its tests produces weak evidence: "all tests pass" becomes
-close to a tautology, and a green suite is exactly the evidence that makes reviewers feel safe while proving little.
-```
-
+## Appendix A: Index of binding constraints (L-19 corrected)
+
+This is a navigational index, not a verbatim extraction. Full Appendix C sections below govern, including all tables/schema fields, not the old heading-only or scrambled fragments. `docs/THREAD-correction-packet.md` resolves the specified contradictions.
+
+- **Appendix C Part 1.3.9 — What ValueOS must not become (verbatim list — treat as PROHIBITED)**: complete section text, including tables and schemas, is binding. Search the exact heading in `docs/THREAD-spec.md`.
+- **Appendix C Part 1.3.12 — Measures to reject (verbatim — PROHIBITED in THREAD's schema)**: complete section text, including tables and schemas, is binding. Search the exact heading in `docs/THREAD-spec.md`.
+- **Appendix C Part 2.3 — THREAD is not (PROHIBITED — absence is testable)**: complete section text, including tables and schemas, is binding. Search the exact heading in `docs/THREAD-spec.md`.
+- **Appendix C Part 2.5 — The one tension that must be resolved explicitly**: complete section text, including tables and schemas, is binding. Search the exact heading in `docs/THREAD-spec.md`.
+- **Appendix C Part 4.1 — The universal object envelope**: complete section text, including tables and schemas, is binding. Search the exact heading in `docs/THREAD-spec.md`.
+- **Appendix C Part 4.1.1 — ConfidenceBundle (replaces any single confidence score)**: complete section text, including tables and schemas, is binding. Search the exact heading in `docs/THREAD-spec.md`.
+- **Appendix C Part 4.4 — Lifecycle states**: complete section text, including tables and schemas, is binding. Search the exact heading in `docs/THREAD-spec.md`.
+- **Appendix C Part 5.1 — The chain**: complete section text, including tables and schemas, is binding. Search the exact heading in `docs/THREAD-spec.md`.
+- **Appendix C Part 6.1 — Risk tiers**: complete section text, including tables and schemas, is binding. Search the exact heading in `docs/THREAD-spec.md`.
+- **Appendix C Part 6.2 — The progressive authority ladder**: complete section text, including tables and schemas, is binding. Search the exact heading in `docs/THREAD-spec.md`.
+- **Appendix C Part 6.3 — The confidence engine**: complete section text, including tables and schemas, is binding. Search the exact heading in `docs/THREAD-spec.md`.
+- **Appendix C Part 6.4 — The decision pattern**: complete section text, including tables and schemas, is binding. Search the exact heading in `docs/THREAD-spec.md`.
+- **Appendix C Part 6.5 — The Human Decision Queue**: complete section text, including tables and schemas, is binding. Search the exact heading in `docs/THREAD-spec.md`.
+- **Appendix C Part 6.6 — Guardrails-as-code**: complete section text, including tables and schemas, is binding. Search the exact heading in `docs/THREAD-spec.md`.
+- **Appendix C Part 6.8 — Governance as escalation, not gating**: complete section text, including tables and schemas, is binding. Search the exact heading in `docs/THREAD-spec.md`.
+- **Appendix C Part 7.3 — Required characteristics**: complete section text, including tables and schemas, is binding. Search the exact heading in `docs/THREAD-spec.md`.
+- **Appendix C Part 7.4 — Discovery and the reuse-first gate**: complete section text, including tables and schemas, is binding. Search the exact heading in `docs/THREAD-spec.md`.
+- **Appendix C Part 7.6 — Lifecycle, ownership and retirement**: complete section text, including tables and schemas, is binding. Search the exact heading in `docs/THREAD-spec.md`.
+- **Appendix C Part 8.2 — What THREAD records at each step**: complete section text, including tables and schemas, is binding. Search the exact heading in `docs/THREAD-spec.md`.
+- **Appendix C Part 8.3 — Platform integration requirements**: complete section text, including tables and schemas, is binding. Search the exact heading in `docs/THREAD-spec.md`.
+- **Appendix C Part 8.5 — Change classification on iteration**: complete section text, including tables and schemas, is binding. Search the exact heading in `docs/THREAD-spec.md`.
+- **Appendix C Part 8A.2 — The co-creation artifact set — what must be captured**: complete section text, including tables and schemas, is binding. Search the exact heading in `docs/THREAD-spec.md`.
+- **Appendix C Part 8A.4 — What gets extracted**: complete section text, including tables and schemas, is binding. Search the exact heading in `docs/THREAD-spec.md`.
+- **Appendix C Part 8A.5 — Statement classification — the discipline that prevents transcripts becoming authority**: complete section text, including tables and schemas, is binding. Search the exact heading in `docs/THREAD-spec.md`.
+- **Appendix C Part 8A.6 — Logging — how objects enter the graph**: complete section text, including tables and schemas, is binding. Search the exact heading in `docs/THREAD-spec.md`.
+- **Appendix C Part 8A.7.1 — Relationship sources, in order of confidence**: complete section text, including tables and schemas, is binding. Search the exact heading in `docs/THREAD-spec.md`.
+- **Appendix C Part 8A.7.4 — Cross-session continuity — the highest-value behaviour in this part**: complete section text, including tables and schemas, is binding. Search the exact heading in `docs/THREAD-spec.md`.
+- **Appendix C Part 8A.9 — The framing session surface**: complete section text, including tables and schemas, is binding. Search the exact heading in `docs/THREAD-spec.md`.
+- **Appendix C Part 8A.10 — Session review and confirmation**: complete section text, including tables and schemas, is binding. Search the exact heading in `docs/THREAD-spec.md`.
+- **Appendix C Part 8A.14 — Risks specific to this pipeline**: complete section text, including tables and schemas, is binding. Search the exact heading in `docs/THREAD-spec.md`.
+- **Appendix C Part 10.1 — The core rule**: complete section text, including tables and schemas, is binding. Search the exact heading in `docs/THREAD-spec.md`.
+- **Appendix C Part 10.4 — The morning intelligence brief — a required generated artifact**: complete section text, including tables and schemas, is binding. Search the exact heading in `docs/THREAD-spec.md`.
+- **Appendix C Part 10.5 — Canon change and the challenge mechanism**: complete section text, including tables and schemas, is binding. Search the exact heading in `docs/THREAD-spec.md`.
+- **Appendix C Part 11.2 — Value Mission Runtime**: complete section text, including tables and schemas, is binding. Search the exact heading in `docs/THREAD-spec.md`.
+- **Appendix C Part 11.5 — Human Decision Queue**: complete section text, including tables and schemas, is binding. Search the exact heading in `docs/THREAD-spec.md`.
+- **Appendix C Part 11.6 — Live Enterprise Value Feed**: complete section text, including tables and schemas, is binding. Search the exact heading in `docs/THREAD-spec.md`.
+- **Appendix C Part 11.10 — Simulation Studio**: complete section text, including tables and schemas, is binding. Search the exact heading in `docs/THREAD-spec.md`.
+- **Appendix C Part 12.3 — Tool contract requirements**: complete section text, including tables and schemas, is binding. Search the exact heading in `docs/THREAD-spec.md`.
+- **Appendix C Part 12.5 — Agent-to-agent**: complete section text, including tables and schemas, is binding. Search the exact heading in `docs/THREAD-spec.md`.
+- **Appendix C Part 13.1 — Do not rebuild the AI Factory**: complete section text, including tables and schemas, is binding. Search the exact heading in `docs/THREAD-spec.md`.
+- **Appendix C Part 13.2 — Routing and residency**: complete section text, including tables and schemas, is binding. Search the exact heading in `docs/THREAD-spec.md`.
+- **Appendix C Part 13.3 — Invocation logging trap**: complete section text, including tables and schemas, is binding. Search the exact heading in `docs/THREAD-spec.md`.
+- **Appendix C Part 13.4 — The creation prompt must contain no raw captured text**: complete section text, including tables and schemas, is binding. Search the exact heading in `docs/THREAD-spec.md`.
+- **Appendix C Part 13.5 — Cost governance**: complete section text, including tables and schemas, is binding. Search the exact heading in `docs/THREAD-spec.md`.
+- **Appendix C Part 14.3 — Surveillance boundaries — PROHIBITED inferences**: complete section text, including tables and schemas, is binding. Search the exact heading in `docs/THREAD-spec.md`.
+- **Appendix C Part 15.3 — Rejected measures — PROHIBITED**: complete section text, including tables and schemas, is binding. Search the exact heading in `docs/THREAD-spec.md`.
+- **Appendix C Part 15.4 — Reporting rules**: complete section text, including tables and schemas, is binding. Search the exact heading in `docs/THREAD-spec.md`.
+- **Appendix C Part 16.2 — Why not a document store**: complete section text, including tables and schemas, is binding. Search the exact heading in `docs/THREAD-spec.md`.
+- **Appendix C Part 18.1 — Design language**: complete section text, including tables and schemas, is binding. Search the exact heading in `docs/THREAD-spec.md`.
+- **Appendix C Part 18.3 — Accessibility**: complete section text, including tables and schemas, is binding. Search the exact heading in `docs/THREAD-spec.md`.
+- **Appendix C Part 18.4 — Reference implementations already produced**: complete section text, including tables and schemas, is binding. Search the exact heading in `docs/THREAD-spec.md`.
+- **Appendix C Part 21.3 — Verification independence — the test-circularity control**: complete section text, including tables and schemas, is binding. Search the exact heading in `docs/THREAD-spec.md`.
 
 ---
+

@@ -2,15 +2,22 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { AssuranceInput } from "@/domain/hardening";
+import { verificationIndependence, type VerificationRecord } from "@/domain/verification-independence";
 
 export const assuranceQuery = createServerFn({ method: "GET" }).middleware([requireSupabaseAuth]).handler(async ({ context }) => {
-  const [checks, sources, role] = await Promise.all([
+  const [checks, sources, role, tests] = await Promise.all([
     context.supabase.rpc("phase12_assurance_checks"),
     context.supabase.from("objects").select("id,human_ref,type,title,data_classification,version").eq("is_tombstone", false).order("updated_at", { ascending: false }).limit(200),
     context.supabase.from("user_roles").select("role").eq("user_id", context.userId),
+    context.supabase.from("objects").select("id,body,simulated").eq("type", "TestRun").eq("is_tombstone", false).limit(1000),
   ]);
-  if (checks.error || sources.error || role.error) throw new Error("Assurance evidence could not be read.");
-  return { checks: checks.data as unknown as Array<{ id: string; human_ref: string; title: string; body: { assurance_kind: string; result: string; evidence: string[]; rationale: string }; review_date: string }>, sources: sources.data ?? [], can_record: role.data?.some((r) => r.role === "steward" || r.role === "compliance") ?? false };
+  if (checks.error || sources.error || role.error || tests.error) throw new Error("Assurance evidence could not be read.");
+  const records: VerificationRecord[] = (tests.data ?? []).map(t => {
+    const body = t.body as Record<string, unknown>;
+    const text = (key: string) => typeof body[key] === "string" ? String(body[key]) : "";
+    return { id:t.id, compliance_scoped:body['compliance_scoped'] !== false, code_route:text('code_route'), test_route:text('test_route'), implementation_visible:body['implementation_visible'] !== false, human_reviewed:body['human_reviewed'] === true && !t.simulated, provenance:text('provenance'), confirmed_behavior_ref:text('confirmed_behavior_ref') || null, outcome_contract_ref:text('outcome_contract_ref') || null, mutation_sample_passed:body['mutation_sample_passed'] === true, cycle_reviewed:body['cycle_reviewed'] === true };
+  });
+  return { independence: verificationIndependence(records), checks: checks.data as unknown as Array<{ id: string; human_ref: string; title: string; body: { assurance_kind: string; result: string; evidence: string[]; rationale: string }; review_date: string }>, sources: sources.data ?? [], can_record: role.data?.some((r) => r.role === "steward" || r.role === "compliance") ?? false };
 });
 
 export type AcceptanceBlockers = {

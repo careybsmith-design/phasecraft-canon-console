@@ -456,6 +456,41 @@
       "when": 1792198845151,
       "tag": "0064_audit4_phase10_fail_closed_acceptance",
       "breakpoints": true
+    },
+    {
+      "idx": 65,
+      "version": "7",
+      "when": 1792287459623,
+      "tag": "0065_correction_aw5_privacy_state_guards",
+      "breakpoints": true
+    },
+    {
+      "idx": 66,
+      "version": "7",
+      "when": 1792287576730,
+      "tag": "0066_correction_extraction_span_store",
+      "breakpoints": true
+    },
+    {
+      "idx": 67,
+      "version": "7",
+      "when": 1792287761429,
+      "tag": "0067_correction_model_route_eligibility",
+      "breakpoints": true
+    },
+    {
+      "idx": 68,
+      "version": "7",
+      "when": 1792287854425,
+      "tag": "0068_correction_simulated_gate_projection",
+      "breakpoints": true
+    },
+    {
+      "idx": 69,
+      "version": "7",
+      "when": 1792288062998,
+      "tag": "0069_correction_span_validation_and_aw16_scan",
+      "breakpoints": true
     }
   ]
 }

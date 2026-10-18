@@ -15,8 +15,8 @@
  */
 import { REGISTRY } from "./registry";
 
-export type Origin = "stated" | "drawn" | "decomposed" | "resolved" | "inferred";
-export const ORIGINS: Origin[] = ["stated", "drawn", "decomposed", "resolved", "inferred"];
+export type Origin = "stated" | "drawn" | "decomposed" | "capability_reference" | "resolved" | "co_occurrence" | "inferred" | "contradiction";
+export const ORIGINS: Origin[] = ["stated", "drawn", "decomposed", "capability_reference", "resolved", "co_occurrence", "inferred", "contradiction"];
 /** Part 8A.7.3: a dependency carries a kind; a bare "depends on" is insufficient. */
 export const DEPENDENCY_KINDS = ["data", "sequence", "authority", "capability", "decision"] as const;
 

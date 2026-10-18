@@ -1,0 +1,15 @@
+CREATE OR REPLACE FUNCTION public.validate_extraction_span_row() RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$ DECLARE valid boolean:=false; BEGIN
+ IF NOT EXISTS(SELECT 1 FROM public.objects WHERE id=NEW.source_ref AND type='CoCreationArtifact' AND NOT is_tombstone) THEN RAISE EXCEPTION 'PROVENANCE_SOURCE_REQUIRED'; END IF;
+ IF NEW.span_kind='time_range' THEN valid:=NEW.start_ms>=0 AND NEW.end_ms>NEW.start_ms;
+ ELSIF NEW.span_kind='char_range' THEN valid:=NEW.char_start>=0 AND NEW.char_end>NEW.char_start;
+ ELSIF NEW.span_kind='log_offset' THEN valid:=NEW.log_start>=0 AND NEW.log_end>NEW.log_start;
+ ELSIF NEW.span_kind='region' THEN valid:=jsonb_typeof(NEW.drawing_region->'start')='array' AND jsonb_typeof(NEW.drawing_region->'end')='array' AND jsonb_array_length(NEW.drawing_region->'start')=2 AND jsonb_array_length(NEW.drawing_region->'end')=2 AND (NEW.drawing_region->'start'->>0)::numeric>=0 AND (NEW.drawing_region->'start'->>1)::numeric>=0 AND (NEW.drawing_region->'end'->>0)::numeric<=1 AND (NEW.drawing_region->'end'->>1)::numeric<=1 AND (NEW.drawing_region->'end'->>0)::numeric>(NEW.drawing_region->'start'->>0)::numeric AND (NEW.drawing_region->'end'->>1)::numeric>(NEW.drawing_region->'start'->>1)::numeric; END IF;
+ IF valid IS DISTINCT FROM true THEN RAISE EXCEPTION 'PROVENANCE_RANGE_REQUIRED'; END IF; RETURN NEW;
+END $$;
+REVOKE ALL ON FUNCTION public.validate_extraction_span_row() FROM PUBLIC,anon,authenticated;
+GRANT EXECUTE ON FUNCTION public.validate_extraction_span_row() TO service_role;
+CREATE TRIGGER spans_range_guard BEFORE INSERT ON public.extraction_spans FOR EACH ROW EXECUTE FUNCTION public.validate_extraction_span_row();
+-- AW-16 live schema scan is fail-closed: legacy owned execution state is reported, not renamed away.
+CREATE OR REPLACE FUNCTION public.aw16_state_ownership_scan() RETURNS jsonb LANGUAGE sql STABLE SECURITY DEFINER SET search_path=public AS $$ SELECT jsonb_build_object('id','AW-16','passed',NOT EXISTS(SELECT 1 FROM information_schema.columns WHERE table_schema='public' AND (column_name IN('build_status','deployment_state','pipeline_state','release_state','is_released') OR (table_name='build_runs' AND column_name='status'))),'violations',coalesce((SELECT jsonb_agg(jsonb_build_object('table',table_name,'column',column_name,'reason','Execution state requires removal or read-only source mirror')) FROM information_schema.columns WHERE table_schema='public' AND (column_name IN('build_status','deployment_state','pipeline_state','release_state','is_released') OR (table_name='build_runs' AND column_name='status'))),'[]'::jsonb),'rendered_scan','pending_authenticated_full_surface_scan') $$;
+REVOKE ALL ON FUNCTION public.aw16_state_ownership_scan() FROM PUBLIC,anon;
+GRANT EXECUTE ON FUNCTION public.aw16_state_ownership_scan() TO authenticated,service_role;

@@ -17,7 +17,8 @@ export function tokenColour(token: string): string {
   if (hit) return hit;
   const raw = getComputedStyle(document.documentElement).getPropertyValue(`--${token}`).trim() || "gray";
   const c = document.createElement("canvas"); c.width = c.height = 1;
-  const ctx = c.getContext("2d")!;
+  const ctx = c.getContext("2d");
+  if (!ctx) return raw;
   ctx.fillStyle = raw; ctx.fillRect(0, 0, 1, 1);
   const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
   const out = `rgb(${r},${g},${b})`;
@@ -79,7 +80,7 @@ export const GraphCanvas = forwardRef<GraphCanvasHandle, Props>(function GraphCa
         for (const e of edges) {
           if (!g.hasNode(e.source) || !g.hasNode(e.target) || g.hasEdge(e.id)) continue;
           g.addEdgeWithKey(e.id, e.source, e.target, {
-            size: e.highlight ? 2.5 : 1, color: e.highlight ? hiColour : e.inferred ? inferredColour : edgeColour, label: e.label, type: "arrow",
+            size: e.highlight ? 2.5 : e.inferred ? 0.5 : 1, color: e.highlight ? hiColour : e.inferred ? inferredColour : edgeColour, label: e.label, type: "arrow",
           });
         }
         const s = new Sigma(g, el.current, {
@@ -89,6 +90,12 @@ export const GraphCanvas = forwardRef<GraphCanvasHandle, Props>(function GraphCa
         if (killed) { s.kill(); return; }
         s.on("clickNode", ({ node }: { node: string }) => handlers.current.onNode?.(node));
         s.on("clickEdge", ({ edge }: { edge: string }) => handlers.current.onEdge?.(edge));
+        s.on("enterNode", ({ node }: { node: string }) => {
+          const neighbours = new Set([node, ...g.neighbors(node)]);
+          s.setSetting("nodeReducer", (id, data) => neighbours.has(id) ? data : { ...data, color: inferredColour, label: "", zIndex: 0 });
+          s.setSetting("edgeReducer", (id, data) => ({ ...data, hidden: !g.hasExtremity(id, node) }));
+        });
+        s.on("leaveNode", () => { s.setSetting("nodeReducer", null); s.setSetting("edgeReducer", null); });
         sigmaRef.current = s;
         setStatus({ state: "ready", ms: performance.now() - t0 });
       } catch (e) {
@@ -106,7 +113,7 @@ export const GraphCanvas = forwardRef<GraphCanvasHandle, Props>(function GraphCa
       const layers = s.getCanvases() as Record<string, HTMLCanvasElement>;
       const first = Object.values(layers)[0]; if (!first) return;
       const out = document.createElement("canvas"); out.width = first.width; out.height = first.height;
-      const ctx = out.getContext("2d")!;
+      const ctx = out.getContext("2d"); if (!ctx) return;
       ctx.fillStyle = tokenColour("background"); ctx.fillRect(0, 0, out.width, out.height);
       for (const c of Object.values(layers)) ctx.drawImage(c, 0, 0);
       const a = document.createElement("a"); a.href = out.toDataURL("image/png"); a.download = `${name}.png`; a.click();
