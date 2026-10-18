@@ -18,7 +18,7 @@ import {
   listOutlookMessages,
   listTeamsChannels,
   listTeamsChats,
-} from "@/lib/connectors.functions";
+} from "@/lib/framing.functions";
 import type { Participant } from "@/domain/framing";
 
 type Status = Record<string, { connected: boolean; configured: boolean; label: string }>;
