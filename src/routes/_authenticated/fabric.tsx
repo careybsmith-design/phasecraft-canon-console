@@ -40,6 +40,7 @@ function FabricPage() {
   const q = useQuery({ queryKey: ["fabric"], queryFn: () => lf() });
   return (
     <main className="grid gap-4 p-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+      <header className="thread-page-heading"><h1>Capability Fabric</h1></header>
       <section className="min-w-0 space-y-4">
         <Search />
         <NewCapability requiredKeys={q.data?.required_keys ?? []} />
