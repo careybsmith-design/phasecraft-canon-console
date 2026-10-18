@@ -20,6 +20,12 @@ describe("Phase 9 agent-executable surface", () => {
     expect(schema?.safeParse({ root, depth: 3 }).success).toBe(true);
     expect(schema?.safeParse({ root, depth: 4 }).success).toBe(false);
   });
+  it.each(["render_need_web", "render_dependency_web"])("%s also rejects unsupported depth four", name => {
+    const schema = TOOL_BY_NAME.get(name)?.input;
+    const root_id = "11111111-1111-4111-8111-111111111111";
+    expect(schema?.safeParse({ root_id, depth: 3 }).success).toBe(true);
+    expect(schema?.safeParse({ root_id, depth: 4 }).success).toBe(false);
+  });
   it("every tool contract carries every Part 12.3 field", () => {
     const keys = ["name", "purpose", "input_schema", "output_schema", "risk_tier", "authority_required", "side_effects", "idempotent", "requires_policy_evaluation",
       "provenance_capture", "permission_predicate", "rate_limits", "cost_model", "failure_modes", "compensating_action"];
