@@ -1,5 +1,16 @@
 # THREAD roadmap
 
+## Correction packet L-02–L-20 (18 October 2026)
+- [ ] Apply directive/specification corrections and regenerate Appendix A cross-references.
+- [ ] L-02: non-blocking OPEN AW-5 warning, owned finding, ratios and set-state enforcement.
+- [ ] L-03: complete regression fixture; real pilot requires named people, business condition, deployment target and agreed time (human input).
+- [ ] L-04/L-05: checked-in registry and 37-detector manifests, parity and owner induction proof.
+- [ ] L-06/L-07: provenance persistence guards and ledger concurrency/tamper evidence.
+- [ ] L-08/L-09: AW-16 state-ownership checks and independently verified metric/controls.
+- [ ] L-10/L-11: aggregate-only usage access and exact approval-state guard.
+- [ ] L-12–L-18/L-20: inspect and correct canon, operation, framing, gate, authority, graph and lineage gaps.
+- [ ] Run complete automated tests and report proof plus every remaining blocker; do not claim correction-round acceptance prematurely.
+
 ## Whole-build audit — Sections 1–19 (authorized 16 October 2026)
 - [x] 17 October 00:51 third renewal: fresh full suite 1,671/1,671 (25 files) saved to docs/audit/full-suite.txt; build clean; 534 objects, 93 non-draft orphans, AW-5 still open, 0 usage sessions; 2,754 ledger entries, 53 tables/368 functions/54 policies. No new code gaps found beyond those already listed; release verdict remains FAIL pending the open blockers below.
 - [x] 17 October 00:18 comparison/proof pass: all 19 sections and 34 specified operations rechecked against relevant Appendices A–C; 1,671 tests/25 files pass. Shared human/MCP lookup/search with complete envelope outputs, current-parent history, partial-read refusal and explicit three-hop input fixed. Fresh 53-table/54-policy/368-function catalog, 2,754 verified ledger hashes, 128 human operations/95 tools saved. Complete Section17 acceptance and every engineering gap remain OPEN below; no full completion claimed.

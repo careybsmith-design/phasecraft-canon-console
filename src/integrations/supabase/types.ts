@@ -1088,27 +1088,39 @@ export type Database = {
         Row: {
           char_end: number | null
           char_start: number | null
+          drawing_region: Json | null
           end_ms: number | null
+          log_end: number | null
+          log_start: number | null
           object_id: string
           source_ref: string
+          span_kind: string
           speaker_id: string | null
           start_ms: number | null
         }
         Insert: {
           char_end?: number | null
           char_start?: number | null
+          drawing_region?: Json | null
           end_ms?: number | null
+          log_end?: number | null
+          log_start?: number | null
           object_id: string
           source_ref: string
+          span_kind?: string
           speaker_id?: string | null
           start_ms?: number | null
         }
         Update: {
           char_end?: number | null
           char_start?: number | null
+          drawing_region?: Json | null
           end_ms?: number | null
+          log_end?: number | null
+          log_start?: number | null
           object_id?: string
           source_ref?: string
+          span_kind?: string
           speaker_id?: string | null
           start_ms?: number | null
         }
@@ -1116,6 +1128,13 @@ export type Database = {
           {
             foreignKeyName: "extraction_spans_object_id_fkey"
             columns: ["object_id"]
+            isOneToOne: false
+            referencedRelation: "objects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "spans_source_object"
+            columns: ["source_ref"]
             isOneToOne: false
             referencedRelation: "objects"
             referencedColumns: ["id"]
@@ -1493,6 +1512,53 @@ export type Database = {
           },
         ]
       }
+      model_routes: {
+        Row: {
+          attestation_expiry: string | null
+          cleared_tiers: string[]
+          eval_status: string
+          invocation_logging_off: boolean
+          model_version_pin: string | null
+          object_id: string
+          permitted_task_classes: string[]
+          refreshed_at: string
+          route_key: string
+          source_version: number
+        }
+        Insert: {
+          attestation_expiry?: string | null
+          cleared_tiers?: string[]
+          eval_status?: string
+          invocation_logging_off?: boolean
+          model_version_pin?: string | null
+          object_id: string
+          permitted_task_classes?: string[]
+          refreshed_at?: string
+          route_key: string
+          source_version: number
+        }
+        Update: {
+          attestation_expiry?: string | null
+          cleared_tiers?: string[]
+          eval_status?: string
+          invocation_logging_off?: boolean
+          model_version_pin?: string | null
+          object_id?: string
+          permitted_task_classes?: string[]
+          refreshed_at?: string
+          route_key?: string
+          source_version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "model_routes_object_id_fkey"
+            columns: ["object_id"]
+            isOneToOne: true
+            referencedRelation: "objects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       notifications: {
         Row: {
           body: Json
@@ -1645,6 +1711,7 @@ export type Database = {
           risk_tier: Database["public"]["Enums"]["risk_tier"]
           schema_version: string
           search: unknown
+          simulated: boolean | null
           statement: string
           steward_id: string | null
           superseded_by: string[]
@@ -1689,6 +1756,7 @@ export type Database = {
           risk_tier: Database["public"]["Enums"]["risk_tier"]
           schema_version: string
           search?: unknown
+          simulated?: boolean | null
           statement: string
           steward_id?: string | null
           superseded_by?: string[]
@@ -1733,6 +1801,7 @@ export type Database = {
           risk_tier?: Database["public"]["Enums"]["risk_tier"]
           schema_version?: string
           search?: unknown
+          simulated?: boolean | null
           statement?: string
           steward_id?: string | null
           superseded_by?: string[]
@@ -1780,6 +1849,7 @@ export type Database = {
           risk_tier: Database["public"]["Enums"]["risk_tier"]
           schema_version: string
           search: unknown
+          simulated: boolean | null
           statement: string
           steward_id: string | null
           superseded_by: string[]
@@ -1824,6 +1894,7 @@ export type Database = {
           risk_tier: Database["public"]["Enums"]["risk_tier"]
           schema_version: string
           search?: unknown
+          simulated?: boolean | null
           statement: string
           steward_id?: string | null
           superseded_by?: string[]
@@ -1868,6 +1939,7 @@ export type Database = {
           risk_tier?: Database["public"]["Enums"]["risk_tier"]
           schema_version?: string
           search?: unknown
+          simulated?: boolean | null
           statement?: string
           steward_id?: string | null
           superseded_by?: string[]
@@ -2379,6 +2451,7 @@ export type Database = {
           risk_tier: Database["public"]["Enums"]["risk_tier"]
           schema_version: string
           search: unknown
+          simulated: boolean | null
           statement: string
           steward_id: string | null
           superseded_by: string[]
@@ -2461,6 +2534,7 @@ export type Database = {
           risk_tier: Database["public"]["Enums"]["risk_tier"]
           schema_version: string
           search: unknown
+          simulated: boolean | null
           statement: string
           steward_id: string | null
           superseded_by: string[]
@@ -2479,6 +2553,7 @@ export type Database = {
         }
       }
       _prohibited_inference: { Args: { t: string }; Returns: Json }
+      _prohibited_inference_base: { Args: { t: string }; Returns: Json }
       _rejected_measure: { Args: { t: string }; Returns: boolean }
       _rendition_ledger: {
         Args: { _action: string; _actor: Json; _mode: string; _payload: Json }
@@ -2542,6 +2617,7 @@ export type Database = {
           risk_tier: Database["public"]["Enums"]["risk_tier"]
           schema_version: string
           search: unknown
+          simulated: boolean | null
           statement: string
           steward_id: string | null
           superseded_by: string[]
@@ -2560,6 +2636,7 @@ export type Database = {
         }
       }
       _thread_phase6_selftest_v1: { Args: never; Returns: Json }
+      anti_wiki_action_ratio: { Args: { p_window?: string }; Returns: Json }
       artifact_modality: { Args: { _kind: string }; Returns: string }
       assert_transition: {
         Args: { _from: string; _to: string; _type: string }
@@ -2683,6 +2760,7 @@ export type Database = {
         Returns: boolean
       }
       human_surface_context: { Args: { p_root?: string }; Returns: Json }
+      is_prohibited_lifecycle_state: { Args: { s: string }; Returns: boolean }
       least_auth: {
         Args: {
           a: Database["public"]["Enums"]["authority_level"]
@@ -2761,6 +2839,15 @@ export type Database = {
         }
         Returns: number
       }
+      thread_assert_model_route: {
+        Args: {
+          p_class: string
+          p_model: string
+          p_route: string
+          p_task: string
+        }
+        Returns: boolean
+      }
       thread_audit_security_selftest: { Args: never; Returns: Json }
       thread_authority_event: {
         Args: {
@@ -2816,6 +2903,7 @@ export type Database = {
           risk_tier: Database["public"]["Enums"]["risk_tier"]
           schema_version: string
           search: unknown
+          simulated: boolean | null
           statement: string
           steward_id: string | null
           superseded_by: string[]
@@ -2902,6 +2990,7 @@ export type Database = {
           risk_tier: Database["public"]["Enums"]["risk_tier"]
           schema_version: string
           search: unknown
+          simulated: boolean | null
           statement: string
           steward_id: string | null
           superseded_by: string[]
@@ -3065,6 +3154,7 @@ export type Database = {
           risk_tier: Database["public"]["Enums"]["risk_tier"]
           schema_version: string
           search: unknown
+          simulated: boolean | null
           statement: string
           steward_id: string | null
           superseded_by: string[]
@@ -3226,6 +3316,7 @@ export type Database = {
           risk_tier: Database["public"]["Enums"]["risk_tier"]
           schema_version: string
           search: unknown
+          simulated: boolean | null
           statement: string
           steward_id: string | null
           superseded_by: string[]
@@ -3326,6 +3417,7 @@ export type Database = {
           risk_tier: Database["public"]["Enums"]["risk_tier"]
           schema_version: string
           search: unknown
+          simulated: boolean | null
           statement: string
           steward_id: string | null
           superseded_by: string[]
@@ -3395,6 +3487,7 @@ export type Database = {
           risk_tier: Database["public"]["Enums"]["risk_tier"]
           schema_version: string
           search: unknown
+          simulated: boolean | null
           statement: string
           steward_id: string | null
           superseded_by: string[]
@@ -3461,6 +3554,7 @@ export type Database = {
           risk_tier: Database["public"]["Enums"]["risk_tier"]
           schema_version: string
           search: unknown
+          simulated: boolean | null
           statement: string
           steward_id: string | null
           superseded_by: string[]
@@ -3520,6 +3614,7 @@ export type Database = {
           risk_tier: Database["public"]["Enums"]["risk_tier"]
           schema_version: string
           search: unknown
+          simulated: boolean | null
           statement: string
           steward_id: string | null
           superseded_by: string[]

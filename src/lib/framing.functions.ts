@@ -36,6 +36,7 @@ import {
 import { classifyContent, type ContentTier } from "@/domain/content-tier";
 import { LIFECYCLE_FAMILIES } from "@/domain/lifecycle";
 import { REGISTRY } from "@/domain/registry";
+import { validExtractionSpan } from "@/domain/extraction-span";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Json = Record<string, any>;
@@ -586,6 +587,12 @@ async function extractUnits(
   t0: number,
   opts: { reextract_of?: Map<string, Row> } = {},
 ) {
+  const discarded = units.filter(u => !validExtractionSpan(u.span));
+  for (const unit of discarded) {
+    const { error } = await c.db.from("session_events").insert({ session_id: c.session.id, t_offset_ms: 0, kind: "extraction_discarded", ref: c.artifact.id, payload: { reason: "PROVENANCE_SPAN_MISSING", extractor_version: c.version } });
+    if (error) throw threadError(error.message);
+  }
+  units = units.filter(u => validExtractionSpan(u.span));
   const { classifyUnits, findContradictions } = await import("@/server/framing/extractor");
   const { db, session } = c;
   const ps = participants(session);
@@ -603,8 +610,9 @@ async function extractUnits(
   let entry: Partial<EntryTest> = {};
   const adapter_mode = c.simulated ? "simulated" : undefined;
   for (let i = 0; i < units.length; i++) {
-    const u = units[i]!;
-    const m = cls.units[i]!;
+    const u = units[i];
+    const m = cls.units[i];
+    if (!u || !m) continue;
     const r: PostRuled = applyPostRules(m, u.speaker, ps);
     entry = mergeEntryTest({ ...EMPTY_ENTRY_TEST, ...entry } as EntryTest, m.entry_test);
     const spans = [

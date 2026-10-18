@@ -88,6 +88,6 @@ export function canTransition(family: LifecycleFamily, from: string, to: string)
   return transitions(family).some(([f, t]) => f === from && t === to);
 }
 
-/** Part 4.4 NON-NEGOTIABLE: no approval-like state anywhere. Same regex as the DB CHECK. */
+/** L-11: whole state tokens, not substrings of delegated/aggregate/investigate. */
 export const APPROVAL_STATE_PATTERN =
-  /(approv|sign.?off|pending.?review|submitted.?for.?review|awaiting|qa.?phase|gate)/i;
+  /(^|[^a-z0-9])(approval|approved|approve|awaiting|gate|sign[ _-]?off|pending[ _-]?review|submitted[ _-]?for[ _-]?review|qa[ _-]?phase|in[ _-]?qa[ _-]?phase)([^a-z0-9]|$)/i;

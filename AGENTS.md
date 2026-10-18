@@ -11,7 +11,7 @@
 
 # THREAD build rules
 
-- The spec lives in `docs/THREAD-spec.md` (full) and `docs/THREAD-build-directives.md` (Sections 1–19). Re-read Section 2, Appendix A and the cited Appendix C parts before every phase; build one phase at a time and wait for user approval.
+- Read docs/THREAD-spec.md Section 2, Appendix A and cited Appendix C before each approved phase. docs/THREAD-correction-packet.md overrides its specified contradictions; report directive evidence separately. Why: implementation is not exit acceptance.
 - Privileged `thread_*` writes and trigger helpers are service-role-only; actors come from verified sessions. Authenticated RLS predicates remain callable. Why: public keys cannot forge writes (P9).
 - `enforce_provenance` requires a ledger row in the same transaction with matching chain, version and content hash. Why: a provenance gap or forged entry is impossible, not just discouraged.
 - Ledger and `object_versions` are append-only (revoked grants plus rejecting triggers). Objects are tombstoned, never deleted.
@@ -30,13 +30,13 @@
 - Graph-integrity detectors (GraphOrphan, DependencyCycle, CanonDrift, CanonWithoutSteward) are owned by the first steward and swept after writes; Phase 10 owns the full detector suite.
 - The browser build pins the bare `events` / `node:events` import to the `events` npm package (plugin in `vite.config.ts`). Why: the toolchain otherwise stubs it, breaking sigma's EventEmitter base class.
 
-- Read nested `AGENTS.md` before changing a server subsystem or its named DB functions.
+- Read subdirectories' own `AGENTS.md` before changing their code or DB functions.
 - Fabric rules are pure in `src/domain/fabric.ts`, mirrored in SQL (`_capability_gaps`, `reuse_checks_guard`, `fabric_search`, `thread_fabric_sweep_scoped`); change both together. Creation (CreationPrompt/BuildRun objects, `creation_prompts`) is blocked in the DB without a reuse check that allows it. Why: P11 by system, not convention.
 - Self-test fixtures for every registered type come from `_selftest_body` / `_selftest_refs` / `_selftest_next_state`; extend these when a new guard is added, not the phase self-tests.
 - Evidence graph rules: see src/server/evidence/AGENTS.md (read before changing evidence/trace DB functions).
 - Shadow/exposure rules: see src/server/shadow/AGENTS.md.
 - Generation (renditions) rules: see src/server/generation/AGENTS.md.
-- Detection and measurement: read src/server/detection/AGENTS.md before changing phase10 SQL or domain rules. Why: observations, live evidence and time-based reconciliation must stay distinct.
+- Read src/server/detection/AGENTS.md for measurement changes; use anti_wiki_action_ratio, never usage_sessions directly. Why: only windowed aggregates may leave measurement.
 - Human surfaces and Phase 12 assurance: read src/server/ops/AGENTS.md first. Why: shared schemas, caller RLS and ledger-first writes distinguish simulated checks from live assurance.
 - Generic human creation accepts only `generic-body.ts` contracts; other types require dedicated operations. Why: placeholder registry schemas cannot authorize arbitrary bodies.
 - Bundle downloadable audit test transcripts as `.txt`, never ignored `.log` files. Why: ignored files disappear from deployment source and break raw imports.

@@ -125,7 +125,7 @@ function Views() {
         <span>
           {nodes.length} nodes · {edges.length} edges
         </span>
-        <span>◌ = draft (not authoritative) · dashed = inferred or co-occurrence</span>
+        <span>◌ = draft (not authoritative) · thin muted edges = inferred or co-occurrence</span>
         <label className="flex items-center gap-1">
           <input
             type="checkbox"
