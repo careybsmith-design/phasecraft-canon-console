@@ -13,13 +13,13 @@
 
 - Read docs/THREAD-spec.md Section 2, Appendix A and cited Appendix C before each approved phase. docs/THREAD-correction-packet.md overrides its specified contradictions; report directive evidence separately.
 - Privileged `thread_*` writes and trigger helpers are service-role-only; actors come from verified sessions. Authenticated RLS predicates stay callable. Why: public keys cannot forge writes (P9).
-- `enforce_provenance` requires a ledger row in the same transaction with matching chain, version and content hash. Why: a provenance gap or forged entry is impossible, not just discouraged.
+- `enforce_provenance` requires a same-transaction ledger row with matching chain, version and content hash. Why: a provenance gap or forged entry is impossible, not just discouraged.
 - Ledger and `object_versions` are append-only (revoked grants plus rejecting triggers). Objects are tombstoned, never deleted.
 - Lifecycle families are ordered ranks in `src/domain/lifecycle.ts`; transitions go only to a strictly later rank (reversals become new versions, P15). Types without a Part 4.4 family use `canon`, `evidence_record` or `framing_extract`. The DB seed must mirror `lifecycle.ts` and `registry.ts`; change both together.
 - WorkingCapability, ExposurePopulation and AuthorityGrant are registered because Part 4.2 verbs reference them though Part 4.3 has no row for them.
 - The first account to sign up becomes `steward`; everyone is `member`. DESIGN DECISION until the IdentityProvider adapter exists.
 - Restore rehearsal is a snapshot-replay check (`thread_restore_rehearsal`) recorded as simulated; a platform backup restore stays `pending_live_adapter`.
-- `/` redirects to the protected `/feed` surface and sign-in opens it. Why: home is a place to act without duplicating the root route.
+- `/` redirects to the protected `/feed` surface and sign-in opens it. Why: no duplicate root route.
 - Relationship verbs are data in `src/domain/relationships.ts`; the DB seed (`scripts/gen-phase2-seed.ts`) must mirror it. Edges are written only via `thread_create_edge` / `thread_retire_edge`; `edges_guard` requires a same-transaction ledger entry and allows only retirement. Why: P9 applies to relationships too.
 - DESIGN DECISION: each verb has an `impact` direction (forward/reverse/both/none) for blast radius; Part 4.2 does not state propagation. `derives_from` is registered because Part 4.5 rule 6 names it.
 - Graph reads are SQL functions (`graph_*`) run as the caller so permissions apply. Nebula positions are precomputed server-side in `graph_layouts` and refreshed after each write. Why: Part 16.5, the browser never solves a large layout.
@@ -33,6 +33,6 @@
 - Self-test fixtures come from `_selftest_body` / `_selftest_refs` / `_selftest_next_state`; extend these when a guard is added, not the phase self-tests.
 - Read the nested AGENTS.md in src/server/{evidence,shadow,generation,detection,ops} before changing those areas. Measurement uses anti_wiki_action_ratio, never usage_sessions directly. Why: only windowed aggregates may leave measurement.
 - Generic human creation accepts only `generic-body.ts` contracts; other types need dedicated operations. Why: placeholder schemas cannot authorize arbitrary bodies.
-- Bundle downloadable audit test transcripts as `.txt`, never ignored `.log` files. Why: ignored files disappear from deployment source and break raw imports.
+- Bundle audit test transcripts as `.txt`, never ignored `.log` files. Why: ignored files disappear from deployment source and break raw imports.
 - Live speech capture: `src/server/adapters/transcription/live.server.ts` (gateway Whisper-class model) + WAV-chunk recorder with durable IndexedDB outbox (`src/lib/live-capture.ts`). Why: 8A.13 zero-loss; no GPU self-hosting on the edge runtime.
 - Per-user Microsoft connectors (Teams/Outlook) live in `src/lib/framing.functions.ts` with helpers in `src/integrations/lovable/appUserConnector.ts` and `src/server/appUserConnections.server.ts`. `.functions.ts` files must never statically import server-only modules or export plain helpers — both break the client/server split (import-protection 500s).
