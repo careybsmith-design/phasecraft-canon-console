@@ -12,7 +12,7 @@ const observation = { forbidden_types: 0, forbidden_states: 0, invalid_notificat
     expect(check?.reason).toContain("THRESHOLD_UNSET");
     expect(auditVerdict(check ? [check] : [])).toBe("passed");
   });
-  it("fails release for the actual 92 non-draft orphans", () => expect(antiWikiAudit(observation).find((c) => c.id === "AW-11")).toMatchObject({ status: "failed", observed: 92 }));
+  it("fails release for a fixture of 92 non-draft orphans", () => expect(antiWikiAudit(observation).find((c) => c.id === "AW-11")).toMatchObject({ status: "failed", observed: 92 }));
   it("does not claim unexecuted screenshot/OCR acceptance passed", () => expect(antiWikiAudit(observation).find((c) => c.id === "AW-3")?.status).toBe("blocked"));
   it("cannot pass a release with blocked or failed mandatory tests", () => {
     expect(auditVerdict(antiWikiAudit(observation))).toBe("failed");
