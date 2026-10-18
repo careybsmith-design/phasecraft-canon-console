@@ -1,5 +1,7 @@
 {
   "round": 4,
+  "historical": true,
+  "superseded_by": "correction-reaudit-evidence.json",
   "date": "2026-10-17",
   "tests": { "files": 26, "passed": 1675, "failed": 0 },
   "database": { "tables": 53, "functions": 368, "policies": 54, "ledger_entries": 2754, "live_objects": 153, "tables_without_rls": 0 },
@@ -10,5 +12,5 @@
     "graph.functions.ts getIntegrity now rejects on cycle and drift query errors instead of displaying fabricated zero cycles or crashing"
   ],
   "anti_wiki_state": { "aw5_threshold": "open (unset)", "orphan_objects": 93, "usage_sessions": 0 },
-  "verdict": "FAIL — unresolved: AW-5 decision pending, 93 orphans pending human reconciliation, remaining checks need live services or people"
+  "verdict": "HISTORICAL FAIL — superseded by the correction-aware recheck; AW-5 OPEN is non-blocking, not a release failure"
 }

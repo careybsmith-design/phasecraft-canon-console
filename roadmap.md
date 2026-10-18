@@ -1,5 +1,11 @@
 # THREAD roadmap
 
+## Correction-aware whole-build recheck — 18 October 2026
+- [x] Re-read governing specification/Sections 1–19/Appendices A–C with corrections; current section and operation dispositions in docs/THREAD-correction-reaudit.md and 95-tool source/contract inventory.
+- [x] Complete local suite: 1,735 tests/32 files; signed-in integrity receipt #27550, SQL chain verified 2,968 entries; usage direct read denied, aggregate OPEN warning, AW-16 legacy status failure verified. 54 tables/379 functions/54 policies; 93 non-draft versus 94 all-live orphans (different populations, no new object from integrity receipt).
+- [x] Fix configured AW-5/empty-set verdicts, malformed bounds, orphan ref/state display, missing live config refusal, agent reservation locks/expiry/cost, anonymous mandate disclosure, resource/prompt failure handling, standard outputSchema and sibling graph depth; current proof bundled on /build-audit.
+- [ ] Complete full Section 17/anti-wiki acceptance and all remaining engineering; release remains FAIL / INCOMPLETE, not merely waiting for credentials. Permanent additions are under Open items below.
+
 ## Correction packet L-02–L-20 (18 October 2026)
 - [x] Directive/source corrections and Appendix A cross-reference index applied; correction packet/status saved. Complete implementation acceptance remains below.
 - [x] L-02: OPEN warning/finding, no expiry/default, aggregate ratios and configured violation rule implemented; authenticated UI/RPC verified. Current action/read-only ratios null (0 sessions).
@@ -20,7 +26,7 @@
 - [x] Run complete automated suite and available database groups; report every AW-1–AW-15 as pass/fail/blocked, not full execution. Full release FAIL.
 - [x] Inspect live database layout/grants and static API inventory: now 128 human operations, 95 MCP tools (75 advertised live / 10 pending / 10 human-only). Not all executed.
 - [x] Apply verified forward-only safety fixes; proof and remaining engineering gaps in docs/THREAD-build-audit.md and /build-audit.
-- [ ] Complete every remaining gap and full acceptance. Blockers: engineering gaps listed below, requester sign-in, trusted organizational authority, execution/Factory adapters, isolated test/load environment, independent humans and Carey's AW-5 decision.
+- [ ] Complete every remaining gap and full acceptance. Blockers: engineering gaps below, trusted organizational authority, execution/Factory adapters, isolated test/load environment and independent humans. Requester signed-in checks are now available; Carey's AW-5 decision is optional/non-blocking while OPEN.
 
 **Phase checkmarks below mean implemented, not all live exit evidence accepted; full build release remains FAIL.**
 
@@ -40,10 +46,20 @@
 
 ## Open items — keep until addressed at the end (never delete without resolving)
 
+Correction-aware recheck additions (18 October)
+- [ ] Agent peak concurrency/same-token execution receipts, per-tool rate limits and actual reserved/external cost reconciliation; reservation locks applied in 0070 but no load receipt.
+- [ ] MCP production-outcome payload parity and evidence-derived baseline/delta/value recording; rollback/kill-switch execution must use verified external receipts, not local timestamps.
+- [ ] Scope/window/permission applicability fixes for measure_flow/value/community, monitor_outcome_evidence, check_data_use_permission, unresolved frontier and usage completeness; every source handler is not semantic parity.
+- [ ] Strict JSON-RPC request/notification/protocol behavior, notification list-vs-ack effect contract, push transport, publication consent for private agent discovery (mandates currently safely withheld).
+- [ ] Nightly SQL ledger verifier schedule and health receipt; safe live schedule listing shows only rendition sweep, morning briefs and detection reconciliation.
+- [ ] Receipt-backed full AW-1–AW-16 production runner; current helper and unit results cannot replace isolated native/mutation/rendered/real acceptance.
+- [ ] Source-resolved independence receipts (current body declarations/nonempty refs/≤1,000 caller-visible records are insufficient), final registry migration replay and all-source span/lineage validation.
+- [x] Whole-build live adapter missing-config silent simulation gap fixed: live binding now refuses before a run write; creation regression passes. Live platform credentials/evidence remain separate.
+
 Phase 1
 - [ ] Real platform-backup restore (`pending_live_adapter`; only snapshot-replay rehearsal done)
 - [ ] AW-5 action-ratio thresholds — OPEN for Carey Smith; no default may be set. Tracked live on Assurance → Acceptance blockers (proposed ≥60% action / ≤25% read-only; user declined to set it 17 Oct 2026)
-- [ ] Orphan objects (88, mostly Phase 2B/3/7 test leftovers) — user declined auto-retirement 17 Oct 2026; listed for per-item human review on Assurance → Acceptance blockers
+- [ ] Orphan objects (18 Oct: 93 non-draft, 94 all-live; earlier 88 historical) — user declined auto-retirement; per-item human review remains on Assurance → Acceptance blockers
 
 Phase 2
 - [ ] Spec discrepancy: exit summary says 15 Canon-family types, Part 4.3 lists 9

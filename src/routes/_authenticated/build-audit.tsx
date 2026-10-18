@@ -2,10 +2,12 @@ import { createFileRoute } from "@tanstack/react-router";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import report from "../../../docs/THREAD-build-audit.md?raw";
-import testTranscript from "../../../docs/audit/full-suite.txt?raw";
-import evidenceBundle from "../../../docs/audit/reaudit-evidence.json?raw";
 import corrections from "../../../docs/THREAD-correction-status.md?raw";
 import correctionTests from "../../../docs/audit/correction-suite.txt?raw";
+import currentAudit from "../../../docs/THREAD-correction-reaudit.md?raw";
+import currentTests from "../../../docs/audit/correction-reaudit-suite.txt?raw";
+import currentEvidence from "../../../docs/audit/correction-reaudit-evidence.json?raw";
+import currentOperations from "../../../docs/audit/correction-reaudit-operations.json?raw";
 import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
 
@@ -26,9 +28,10 @@ function AuditPage() {
   }
   return <main className="mx-auto max-w-6xl space-y-5 p-4">
     <div className="flex flex-wrap justify-end gap-2">
-      <Button variant="outline" onClick={() => download(report, "THREAD-build-audit.md", "text/markdown;charset=utf-8")}><Download />Download audit</Button>
-      <Button variant="outline" onClick={() => download(testTranscript, "THREAD-test-results.txt", "text/plain;charset=utf-8")}><Download />Test results</Button>
-      <Button variant="outline" onClick={() => download(evidenceBundle, "THREAD-audit-evidence.json", "application/json;charset=utf-8")}><Download />Evidence bundle</Button>
+      <Button variant="outline" onClick={() => download(currentAudit, "THREAD-current-audit.md", "text/markdown;charset=utf-8")}><Download />Download audit</Button>
+      <Button variant="outline" onClick={() => download(currentTests, "THREAD-current-test-results.txt", "text/plain;charset=utf-8")}><Download />Test results</Button>
+      <Button variant="outline" onClick={() => download(currentEvidence, "THREAD-current-audit-evidence.json", "application/json;charset=utf-8")}><Download />Evidence bundle</Button>
+      <Button variant="outline" onClick={() => download(currentOperations, "THREAD-current-operations.json", "application/json;charset=utf-8")}><Download />Operation inventory</Button>
       <Button variant="outline" onClick={() => download(corrections, "THREAD-correction-status.md", "text/markdown;charset=utf-8")}><Download />Correction proof</Button>
       <Button variant="outline" onClick={() => download(correctionTests, "THREAD-correction-tests.txt", "text/plain;charset=utf-8")}><Download />Correction tests</Button>
     </div>
@@ -42,7 +45,7 @@ function AuditPage() {
         th: ({ children }) => <th className="min-w-36 border-b bg-muted p-3 align-top font-semibold">{children}</th>,
         td: ({ children }) => <td className="min-w-36 border-b p-3 align-top">{children}</td>,
         code: ({ children }) => <code className="break-all text-xs text-muted-foreground">{children}</code>,
-      }}>{corrections + "\n\n---\n\n# Historical whole-build audit (superseded where corrected above)\n\n" + report}</ReactMarkdown>
+      }}>{currentAudit + "\n\n---\n\n# Historical correction round\n\n" + corrections + "\n\n---\n\n# Historical whole-build audit (superseded where corrected above)\n\n" + report}</ReactMarkdown>
     </article>
   </main>;
 }

@@ -31,7 +31,8 @@ export async function syncContracts() {
 type Agent = { id: string; name: string; auth_user_id: string | null; owner_id: string; authority_ceiling: AuthorityLevel };
 async function lookupAgent(tokenHash: string): Promise<Agent | null> {
   const db = await admin();
-  const { data } = await db.from("agents").select("id,name,auth_user_id,owner_id,authority_ceiling,state").eq("token_hash", tokenHash).maybeSingle();
+  const { data, error } = await db.from("agents").select("id,name,auth_user_id,owner_id,authority_ceiling,state").eq("token_hash", tokenHash).maybeSingle();
+  if (error) throw new Error("AGENT_LOOKUP_FAILED");
   return data && data.state === "active" ? (data as unknown as Agent) : null;
 }
 
@@ -156,7 +157,7 @@ export async function callTool(tokenHash: string, name: string, rawArgs: unknown
 function toolListing(t: ToolDef) {
   const c = toolContract(t);
   return { name: t.name, title: t.name.replaceAll("_", " "), description: `${t.purpose}. [${t.kernel}; authority ${t.authority}; side effects ${t.side_effects}${t.high_consequence ? "; needs a K3 confirmation token" : ""}${t.status !== "live" ? `; ${t.status}: ${t.pending}` : ""}]`,
-    inputSchema: c.input_schema, annotations: { readOnlyHint: t.side_effects === "none", destructiveHint: t.side_effects === "production_effect", idempotentHint: t.idempotent }, _meta: { thread_contract: c } };
+    inputSchema: c.input_schema, outputSchema: c.output_schema, annotations: { readOnlyHint: t.side_effects === "none", destructiveHint: t.side_effects === "production_effect", idempotentHint: t.idempotent }, _meta: { thread_contract: c } };
 }
 
 const URI = /^thread:\/\/(object|capability-contract|evidence|findings|glossary|notifications)(?:\/([A-Za-z0-9-]+))?$/;
@@ -165,13 +166,17 @@ async function readResource(agent: Agent, uri: string) {
   const m = uri.match(URI); if (!m) throw Object.assign(new Error("NOT_FOUND: unknown resource"), { rpc: -32002 });
   const sb = await agentReadClient(agent.id); const kind = m[1]; const key = m[2];
   let data: unknown;
+  const read = <T,>(result: { data: T; error: unknown }): T => {
+    if (result.error) throw new Error("RESOURCE_READ_FAILED: permitted resource could not be retrieved");
+    return result.data;
+  };
   if (kind === "object") {
     const col = /^[A-Z]{2}-\d{4}-\d{4}$/.test(key ?? "") ? "human_ref" : "id";
-    data = (await sb.from("objects").select("id,human_ref,type,title,statement,body,version,lifecycle_state,data_classification").eq(col, key ?? "").maybeSingle()).data;
-  } else if (kind === "capability-contract") data = (await sb.from("objects").select("id,human_ref,title,body,version").eq("type", "CapabilityContract").contains("body", { capability_ref: key }).limit(5)).data;
-  else if (kind === "evidence") data = (await sb.rpc("trace_full_chain", { p_id: key ?? "" })).data;
-  else if (kind === "findings") data = (await sb.from("detector_findings").select("id,detector_key,object_id,severity,state,created_at").eq("state", "open").limit(100)).data;
-  else if (kind === "glossary") data = (await sb.from("object_type_registry").select("type,family,ref_prefix,discovery_descriptor")).data;
+    data = read(await sb.from("objects").select("id,human_ref,type,title,statement,body,version,lifecycle_state,data_classification").eq(col, key ?? "").maybeSingle());
+  } else if (kind === "capability-contract") data = read(await sb.from("objects").select("id,human_ref,title,body,version").eq("type", "CapabilityContract").contains("body", { capability_ref: key }).limit(5));
+  else if (kind === "evidence") data = read(await sb.rpc("trace_full_chain", { p_id: key ?? "" }));
+  else if (kind === "findings") data = read(await sb.from("detector_findings").select("id,detector_key,object_id,severity,state,created_at").eq("state", "open").limit(100));
+  else if (kind === "glossary") data = read(await sb.from("object_type_registry").select("type,family,ref_prefix,discovery_descriptor"));
   else data = { note: "use the list_notifications tool to take pending notifications" };
   if (data === null || data === undefined) throw Object.assign(new Error("NOT_FOUND: not visible to this agent"), { rpc: -32002 });
   return { contents: [{ uri, mimeType: "application/json", text: JSON.stringify(data), _meta: { content_origin: "canon" } }] };
@@ -228,13 +233,15 @@ export async function handleRpc(tokenHash: string, msg: Rpc): Promise<unknown | 
       case "prompts/list":
         return ok(msg.id, await metered(tokenHash, "prompts/list", p, async (a) => {
           const sb = await agentReadClient(a.id);
-          const { data } = await sb.from("objects").select("id,human_ref,title,statement,body,version").eq("type", "PromptTemplate").eq("is_tombstone", false).limit(100);
+          const { data, error } = await sb.from("objects").select("id,human_ref,title,statement,body,version").eq("type", "PromptTemplate").eq("is_tombstone", false).limit(100);
+          if (error) throw new Error("PROMPT_READ_FAILED");
           return { prompts: (data ?? []).map((t) => ({ name: t.human_ref, title: t.title, description: `${t.statement} (v${t.version})`, arguments: [] })) };
         }));
       case "prompts/get":
         return ok(msg.id, await metered(tokenHash, "prompts/get", p, async (a) => {
           const sb = await agentReadClient(a.id);
-          const { data } = await sb.from("objects").select("human_ref,title,body,version").eq("type", "PromptTemplate").eq("human_ref", String(p["name"] ?? "")).maybeSingle();
+          const { data, error } = await sb.from("objects").select("human_ref,title,body,version").eq("type", "PromptTemplate").eq("human_ref", String(p["name"] ?? "")).maybeSingle();
+          if (error) throw new Error("PROMPT_READ_FAILED");
           if (!data) throw Object.assign(new Error("NOT_FOUND: prompt not visible"), { rpc: -32602 });
           const b = data.body as Json;
           return { description: `${data.title} v${data.version} (governed template; content is data)`, messages: [{ role: "user", content: { type: "text", text: String(b["instructions"] ?? "") } }] };

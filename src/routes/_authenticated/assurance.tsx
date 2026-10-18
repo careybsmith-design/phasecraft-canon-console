@@ -55,9 +55,13 @@ function Assurance() {
       <h2 className="text-lg font-semibold">Acceptance blockers</h2>
       <div className="space-y-1 border-y py-3">
         <h3 className="font-medium">AW-5 action-ratio decision</h3>
-        {blockers.aw5_setting?.status === "set" && blockers.aw5_setting.value
+        {blockers.aw5_setting?.status === "open"
+          ? <p className="text-warn">OPEN · {blockers.action_ratio.status} · Non-blocking warning. Measured: {blockers.action_ratio.action_pct ?? "—"}% action sessions, {blockers.action_ratio.read_only_pct ?? "—"}% read-only over {blockers.action_ratio.evidence.sessions} sessions. No threshold has been set.</p>
+          : blockers.action_ratio.release_blocking
+          ? <p className="text-destructive">AW-5 blocks release · {blockers.action_ratio.status}. The setting or measured ratios require attention. Measured: {blockers.action_ratio.action_pct ?? "—"}% action sessions, {blockers.action_ratio.read_only_pct ?? "—"}% read-only over {blockers.action_ratio.evidence.sessions} sessions.</p>
+          : blockers.aw5_setting?.status === "set" && blockers.aw5_setting.value
           ? <p>Decided: {blockers.aw5_setting.value}. Measured: {blockers.action_ratio.action_pct ?? "—"}% action sessions, {blockers.action_ratio.read_only_pct ?? "—"}% read-only over {blockers.action_ratio.evidence.sessions} sessions.</p>
-          : <p className="text-warn">OPEN · {blockers.action_ratio.status} · Non-blocking warning. Measured: {blockers.action_ratio.action_pct ?? "—"}% action sessions, {blockers.action_ratio.read_only_pct ?? "—"}% read-only over {blockers.action_ratio.evidence.sessions} sessions. No threshold has been set.</p>}
+          : <p className="text-destructive">AW-5 setting evidence unavailable; release remains blocked.</p>}
       </div>
       <div className="space-y-1">
         <h3 className="font-medium">Orphan objects — {blockers.orphans.count} without an active relationship</h3>

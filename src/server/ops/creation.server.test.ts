@@ -31,4 +31,13 @@ describe("Creation context fails closed before any write or dispatch", () => {
     await expect(dispatchCore(ctx, { prompt_id: id, platform: "lovable", cost_ceiling: 1, estimated_cost: 0 })).rejects.toThrow("permission denied");
     expect(rpc).not.toHaveBeenCalled();
   });
+  it("live binding without credentials refuses before creating a run or using simulation", async () => {
+    const { ctx, rpc } = fixture({ objects: { data: { id, data_classification: "internal" }, error: null }, creation_prompts: { data: { compiled_text: "typed intent", compiled_hash: "hash", template_version: "1" }, error: null }, adapter_bindings: { data: { mode: "live" }, error: null } });
+    vi.stubEnv("BUILD_PLATFORM_LOVABLE_URL", "");
+    vi.stubEnv("BUILD_PLATFORM_LOVABLE_TOKEN", "");
+    try {
+      await expect(dispatchCore(ctx, { prompt_id: id, platform: "lovable", cost_ceiling: 1, estimated_cost: 0 })).rejects.toThrow("PLATFORM_CONFIGURATION_REQUIRED");
+      expect(rpc).not.toHaveBeenCalled();
+    } finally { vi.unstubAllEnvs(); }
+  });
 });

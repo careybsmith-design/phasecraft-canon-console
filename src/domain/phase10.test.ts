@@ -22,6 +22,9 @@ describe("Phase 10 deterministic detectors", () => {
     expect(actionRatios(rows, { status: "set", value: { min_action_pct: 51, max_read_only_pct: 50 } }).release_blocking).toBe(true);
     expect(actionRatios(rows, { status: "open", value: { min_action_pct: 50, max_read_only_pct: 50 } }).status).toBe("THRESHOLD_UNSET");
   });
+  it.each([{ min_action_pct: -1, max_read_only_pct: 100 }, { min_action_pct: 0, max_read_only_pct: 101 }, { min_action_pct: NaN, max_read_only_pct: 25 }])("L-02 rejects malformed decided percentage bounds %j", value => {
+    expect(actionRatios([{ mutating_actions: 1, reads: 0 }], { status: "set", value })).toMatchObject({ status: "THRESHOLD_UNSET", pass: false, release_blocking: true });
+  });
   it("computes confirmed intent to value time from exact instants", () => expect(elapsedHours("2026-10-01T12:00:00Z", "2026-10-03T18:00:00Z")).toBe(54));
   it("rejects backwards temporal evidence", () => expect(elapsedHours("2026-10-03T18:00:00Z", "2026-10-01T12:00:00Z")).toBeNull());
   it("reports an unmeasured median as null", () => expect(median([])).toBeNull());

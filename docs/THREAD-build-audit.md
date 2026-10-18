@@ -1,5 +1,7 @@
 # THREAD whole-build audit
 
+**Current correction-aware recheck, 18 October:** see `docs/THREAD-correction-reaudit.md` for every section, current AW-1–AW-16 dispositions, additional fixes and fresh proof. The current complete local suite is 1,735/1,735 across 32 files; remaining engineering and live acceptance are not complete. All counts and older verdicts below are historical where superseded.
+
 **Correction update, 18 October 2026:** see `docs/THREAD-correction-status.md` for current directive-by-directive proof and 1,718 passing tests. OPEN AW-5 is now a non-blocking warning, not a release failure. Activity input is private with a verified aggregate-only read path; signed-in checks are available and were run. AW-16 detects legacy state ownership and fails. Historical findings below are retained, not current claims where superseded.
 
 **Audit refreshed:** 17 October 2026, 01:02 UTC (fourth renewal). **Release verdict: FAIL — not fully compliant.**

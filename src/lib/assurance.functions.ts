@@ -3,6 +3,7 @@ import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { AssuranceInput } from "@/domain/hardening";
 import { verificationIndependence, type VerificationRecord } from "@/domain/verification-independence";
+import { validActionRatioThresholds } from "@/domain/detection";
 
 export const assuranceQuery = createServerFn({ method: "GET" }).middleware([requireSupabaseAuth]).handler(async ({ context }) => {
   const [checks, sources, role, tests] = await Promise.all([
@@ -22,7 +23,7 @@ export const assuranceQuery = createServerFn({ method: "GET" }).middleware([requ
 
 export type AcceptanceBlockers = {
   orphans: { count: number; nodes: Array<{ id: string; human_ref: string; type: string; title: string; lifecycle_state: string }> };
-  action_ratio: { action_pct: number | null; read_only_pct: number | null; status: string; thresholds: string | null; evidence: { sessions: number } };
+  action_ratio: { action_pct: number | null; read_only_pct: number | null; status: string; thresholds: string | null; release_blocking: boolean; evidence: { sessions: number } };
   aw5_setting: { key: string; value: string | null; status: string } | null;
 };
 
@@ -34,12 +35,13 @@ export const acceptanceBlockers = createServerFn({ method: "GET" }).middleware([
     context.supabase.from("canon_settings").select("key,value,status").eq("key", "anti_wiki.action_ratio").maybeSingle(),
   ]);
   if (orphans.error || ratio.error || setting.error) throw new Error("Acceptance blockers could not be read.");
-  const nodes = (orphans.data as { nodes?: AcceptanceBlockers["orphans"]["nodes"] })?.nodes ?? [];
-  const rawRatio = ratio.data as { action_pct: number | null; read_only_pct: number | null; status: string; thresholds?: unknown; evidence?: { sessions: number } };
+  const rawNodes = (orphans.data as { nodes?: Array<{ id: string; ref: string; type: string; title: string; state: string }> })?.nodes ?? [];
+  const nodes = rawNodes.map(n => ({ id: n.id, human_ref: n.ref, type: n.type, title: n.title, lifecycle_state: n.state }));
+  const rawRatio = ratio.data as { action_pct: number | null; read_only_pct: number | null; status: string; thresholds?: unknown; release_blocking?: boolean; evidence?: { sessions: number } };
   const rawSetting = setting.data as { key: string; value: unknown; status: string } | null;
   return {
     orphans: { count: (orphans.data as { count?: number })?.count ?? 0, nodes },
-    action_ratio: { action_pct: rawRatio.action_pct, read_only_pct: rawRatio.read_only_pct, status: rawRatio.status, thresholds: rawRatio.thresholds == null ? null : JSON.stringify(rawRatio.thresholds), evidence: { sessions: rawRatio.evidence?.sessions ?? 0 } },
+    action_ratio: { action_pct: rawRatio.action_pct, read_only_pct: rawRatio.read_only_pct, status: rawRatio.status, thresholds: rawRatio.thresholds == null ? null : JSON.stringify(rawRatio.thresholds), release_blocking: rawSetting?.status === "open" ? false : !validActionRatioThresholds(rawSetting?.value) || rawRatio.release_blocking !== false, evidence: { sessions: rawRatio.evidence?.sessions ?? 0 } },
     aw5_setting: rawSetting ? { key: rawSetting.key, status: rawSetting.status, value: rawSetting.value == null ? null : JSON.stringify(rawSetting.value) } : null,
   };
 });
