@@ -51,7 +51,7 @@ async function admin() {
 function human(uid: string, authority = "observe") {
   return { kind: "human", id: uid, authority_used: authority };
 }
-export function extractor(uid: string) {
+function extractor(uid: string) {
   return {
     kind: "system",
     id: "thread.intent_extractor",
@@ -68,7 +68,7 @@ const today = (d = 30) => new Date(Date.now() + d * 864e5).toISOString().slice(0
 const familyOf = (type: string) =>
   REGISTRY.find((r) => r.type === type)?.lifecycle_family ?? "canon";
 
-export function payload(
+function payload(
   type: string,
   title: string,
   statement: string,
@@ -99,7 +99,7 @@ export function payload(
     adapter_mode: o.adapter_mode,
   };
 }
-export async function create(db: Db, actor: Json, p: Json): Promise<Row> {
+async function create(db: Db, actor: Json, p: Json): Promise<Row> {
   const { data, error } = await db.rpc("thread_create_object", {
     p_actor: actor as never,
     p: p as never,
@@ -251,7 +251,7 @@ async function isSteward(db: Db, uid: string) {
   return !!data;
 }
 /** The caller must be the session's owner, a linked participant or a steward. */
-export async function loadSessionFor(db: Db, uid: string, id: string): Promise<Row> {
+async function loadSessionFor(db: Db, uid: string, id: string): Promise<Row> {
   const s = await load(db, id);
   if (s.type !== "FramingSession") throw threadError("NOT_FOUND: not a framing session");
   if (
@@ -1094,7 +1094,7 @@ type UtteranceInput = z.infer<typeof utteranceInput>;
  * `transcription` marks speech as coming from the simulated fixture adapter or the
  * live Whisper-class adapter; text modalities are always direct input.
  */
-export async function captureUtteranceImpl(
+async function captureUtteranceImpl(
   uid: string,
   data: UtteranceInput,
   transcription: "simulated" | "live",
