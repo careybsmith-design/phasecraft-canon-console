@@ -1,5 +1,10 @@
 # THREAD roadmap
 
+## Visual-only redesign — user review required
+- [x] Prepare desktop/mobile design concepts and the visual-only plan; no running UI changes applied.
+- [ ] Apply the approved visual direction consistently across existing UIs, preserving every function and workflow. Blocked on user design approval.
+- [ ] Verify existing controls/flows, desktop and narrow layout, and relevant regressions after approval.
+
 ## Correction-aware whole-build recheck — 18 October 2026
 - [x] Re-read governing specification/Sections 1–19/Appendices A–C with corrections; current section and operation dispositions in docs/THREAD-correction-reaudit.md and 95-tool source/contract inventory.
 - [x] Complete local suite: 1,735 tests/32 files; signed-in integrity receipt #27550, SQL chain verified 2,968 entries; usage direct read denied, aggregate OPEN warning, AW-16 legacy status failure verified. 54 tables/379 functions/54 policies; 93 non-draft versus 94 all-live orphans (different populations, no new object from integrity receipt).
