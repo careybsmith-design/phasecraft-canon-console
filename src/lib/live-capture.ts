@@ -1,0 +1,202 @@
+/**
+ * Live speech capture (browser side). Records microphone PCM with the Web Audio API,
+ * encodes complete WAV chunks every few seconds, and uploads them through a durable
+ * outbox: chunks are buffered in IndexedDB and retried until the server acknowledges
+ * them, so a network drop cannot lose captured speech (8A.13 zero loss).
+ */
+
+export interface CaptureChunk {
+  id: string;
+  sessionId: string;
+  speakerId: string;
+  tOffsetMs: number;
+  wav: ArrayBuffer;
+  attempts: number;
+}
+
+const DB_NAME = "thread-live-capture";
+const STORE = "outbox";
+
+function openDb(): Promise<IDBDatabase> {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(DB_NAME, 1);
+    req.onupgradeneeded = () => req.result.createObjectStore(STORE, { keyPath: "id" });
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+async function outboxPut(chunk: CaptureChunk): Promise<void> {
+  const db = await openDb();
+  await new Promise<void>((resolve, reject) => {
+    const tx = db.transaction(STORE, "readwrite");
+    tx.objectStore(STORE).put(chunk);
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+  });
+  db.close();
+}
+
+async function outboxDelete(id: string): Promise<void> {
+  const db = await openDb();
+  await new Promise<void>((resolve, reject) => {
+    const tx = db.transaction(STORE, "readwrite");
+    tx.objectStore(STORE).delete(id);
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+  });
+  db.close();
+}
+
+export async function outboxCount(): Promise<number> {
+  const db = await openDb();
+  const n = await new Promise<number>((resolve, reject) => {
+    const req = db.transaction(STORE).objectStore(STORE).count();
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+  db.close();
+  return n;
+}
+
+export async function outboxAll(): Promise<CaptureChunk[]> {
+  const db = await openDb();
+  const all = await new Promise<CaptureChunk[]>((resolve, reject) => {
+    const req = db.transaction(STORE).objectStore(STORE).getAll();
+    req.onsuccess = () => resolve(req.result as CaptureChunk[]);
+    req.onerror = () => reject(req.error);
+  });
+  db.close();
+  return all;
+}
+
+export function encodeWav(chunks: readonly Float32Array[], sampleRate: number): ArrayBuffer {
+  const length = chunks.reduce((sum, chunk) => sum + chunk.length, 0);
+  const bytes = new ArrayBuffer(44 + length * 2);
+  const view = new DataView(bytes);
+  const tag = (offset: number, value: string) => {
+    for (let i = 0; i < value.length; i++) view.setUint8(offset + i, value.charCodeAt(i));
+  };
+  tag(0, "RIFF");
+  view.setUint32(4, 36 + length * 2, true);
+  tag(8, "WAVE");
+  tag(12, "fmt ");
+  view.setUint32(16, 16, true);
+  view.setUint16(20, 1, true);
+  view.setUint16(22, 1, true);
+  view.setUint32(24, sampleRate, true);
+  view.setUint32(28, sampleRate * 2, true);
+  view.setUint16(32, 2, true);
+  view.setUint16(34, 16, true);
+  tag(36, "data");
+  view.setUint32(40, length * 2, true);
+  let offset = 44;
+  for (const chunk of chunks)
+    for (const value of chunk) {
+      const sample = Math.max(-1, Math.min(1, value));
+      view.setInt16(offset, sample * (sample < 0 ? 32768 : 32767), true);
+      offset += 2;
+    }
+  return bytes;
+}
+
+export function wavToBase64(buf: ArrayBuffer): string {
+  const bytes = new Uint8Array(buf);
+  let s = "";
+  const step = 8192;
+  for (let i = 0; i < bytes.length; i += step)
+    s += String.fromCharCode(...bytes.subarray(i, i + step));
+  return btoa(s);
+}
+
+export interface LiveRecorder {
+  stop: () => Promise<void>;
+}
+
+/**
+ * Start capturing microphone audio in `chunkMs` windows. Each finished window is
+ * encoded as a complete WAV, persisted to the outbox, and handed to `onChunk`,
+ * which must upload it and only resolve when the server has acknowledged it.
+ */
+export async function startLiveCapture(opts: {
+  sessionId: string;
+  speakerId: string;
+  chunkMs?: number;
+  onChunk: (chunk: CaptureChunk) => Promise<void>;
+  onError?: (message: string) => void;
+}): Promise<LiveRecorder> {
+  const chunkMs = opts.chunkMs ?? 4000;
+  const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+  const audioContext = new AudioContext();
+  await audioContext.resume();
+  const source = audioContext.createMediaStreamSource(stream);
+  const node = audioContext.createScriptProcessor(4096, 1, 1);
+  let current: Float32Array[] = [];
+  let windowStart = 0;
+  let stopped = false;
+  let seq = 0;
+
+  node.onaudioprocess = (event) => {
+    if (stopped) return;
+    current.push(new Float32Array(event.inputBuffer.getChannelData(0)));
+  };
+  source.connect(node);
+  node.connect(audioContext.destination);
+
+  const flush = async () => {
+    if (!current.length) return;
+    const chunks = current;
+    current = [];
+    const wav = encodeWav(chunks, audioContext.sampleRate);
+    if (wav.byteLength < 2048) return; // silence-only window
+    const chunk: CaptureChunk = {
+      id: `${opts.sessionId}-${Date.now()}-${seq++}`,
+      sessionId: opts.sessionId,
+      speakerId: opts.speakerId,
+      tOffsetMs: windowStart,
+      wav,
+      attempts: 0,
+    };
+    windowStart += chunkMs;
+    await outboxPut(chunk);
+    try {
+      await opts.onChunk(chunk);
+      await outboxDelete(chunk.id);
+    } catch (e) {
+      opts.onError?.((e as Error).message);
+      // stays in the outbox; flushOutbox retries it
+    }
+  };
+
+  const timer = window.setInterval(() => {
+    void flush();
+  }, chunkMs);
+
+  return {
+    async stop() {
+      if (stopped) return;
+      stopped = true;
+      window.clearInterval(timer);
+      stream.getTracks().forEach((t) => t.stop());
+      node.disconnect();
+      source.disconnect();
+      node.onaudioprocess = null;
+      await flush();
+      await audioContext.close();
+    },
+  };
+}
+
+/** Retry every buffered chunk oldest-first; resolves when the outbox is empty. */
+export async function flushOutbox(
+  onChunk: (chunk: CaptureChunk) => Promise<void>,
+): Promise<number> {
+  const all = (await outboxAll()).sort((a, b) => a.id.localeCompare(b.id));
+  let sent = 0;
+  for (const chunk of all) {
+    await onChunk(chunk);
+    await outboxDelete(chunk.id);
+    sent++;
+  }
+  return sent;
+}

@@ -31,6 +31,8 @@ import { TIER_ROUTES, type ContentTier } from "@/domain/content-tier";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { LiveCapturePanel } from "@/components/LiveCapturePanel";
+import { ConnectorsPanel } from "@/components/ConnectorsPanel";
 import { errText } from "./framing.index";
 
 export const Route = createFileRoute("/_authenticated/framing/$sessionId")({
@@ -137,12 +139,21 @@ export function SessionSurface({ sessionId }: { sessionId: string }) {
       <div className="grid gap-3 xl:grid-cols-[minmax(0,0.9fr)_minmax(0,1.2fr)_minmax(0,0.9fr)]">
         <section className="space-y-3" aria-label="Capture and transcript">
           {s.lifecycle_state === "capturing" && (
-            <Capture
-              sessionId={sessionId}
-              participants={ps}
-              openedAt={s.body.opened_at}
-              onDone={refresh}
-            />
+            <>
+              <LiveCapturePanel
+                sessionId={sessionId}
+                participants={ps}
+                openedAt={s.body.opened_at}
+                onDone={refresh}
+              />
+              <Capture
+                sessionId={sessionId}
+                participants={ps}
+                openedAt={s.body.opened_at}
+                onDone={refresh}
+              />
+              <ConnectorsPanel sessionId={sessionId} participants={ps} onDone={refresh} />
+            </>
           )}
           <Transcript events={d.events} participants={ps} />
           <PrototypePane events={d.events} objects={d.objects} />
@@ -197,7 +208,7 @@ function Header({ d, onChange }: { d: Row; onChange: () => void }) {
           Content tier <strong className={tier === "A" ? "text-ok" : "text-warn"}>{tier}</strong> —{" "}
           {TIER_ROUTES[tier]}
         </span>
-        <span>Speech capture uses the simulated transcription adapter</span>
+        <span>Live speech capture uses the real transcription adapter; typed “speech” entries remain simulated</span>
       </div>
       <div className="flex flex-wrap gap-3 text-xs text-muted-foreground">
         {Object.entries(lat).map(([k, v]) => (

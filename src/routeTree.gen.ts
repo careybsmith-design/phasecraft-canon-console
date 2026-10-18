@@ -39,6 +39,8 @@ import { Route as AuthenticatedMissionsIndexRouteImport } from './routes/_authen
 import { Route as AuthenticatedMissionsMissionIdRouteImport } from './routes/_authenticated/missions.$missionId'
 import { Route as AuthenticatedSessionsSessionIdRouteImport } from './routes/_authenticated/sessions.$sessionId'
 import { Route as ApiPublicMcpRouteImport } from './routes/api/public/mcp'
+import { Route as ApiOauthMicrosoft_outlookReturnRouteImport } from './routes/api/oauth/microsoft_outlook/return'
+import { Route as ApiOauthMicrosoft_teamsReturnRouteImport } from './routes/api/oauth/microsoft_teams/return'
 import { Route as ApiPublicA2aDotwellKnownAgentDotjsonRouteImport } from './routes/api/public/a2a/[.]well-known/agent[.]json'
 import { Route as ApiPublicHooksBuildPlatformRouteImport } from './routes/api/public/hooks/build.$platform'
 
@@ -199,6 +201,18 @@ const ApiPublicMcpRoute = ApiPublicMcpRouteImport.update({
   path: '/api/public/mcp',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiOauthMicrosoft_outlookReturnRoute =
+  ApiOauthMicrosoft_outlookReturnRouteImport.update({
+    id: '/api/oauth/microsoft_outlook/return',
+    path: '/api/oauth/microsoft_outlook/return',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiOauthMicrosoft_teamsReturnRoute =
+  ApiOauthMicrosoft_teamsReturnRouteImport.update({
+    id: '/api/oauth/microsoft_teams/return',
+    path: '/api/oauth/microsoft_teams/return',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicA2aDotwellKnownAgentDotjsonRoute =
   ApiPublicA2aDotwellKnownAgentDotjsonRouteImport.update({
     id: '/api/public/a2a/.well-known/agent.json',
@@ -242,6 +256,8 @@ export interface FileRoutesByFullPath {
   '/api/public/mcp': typeof ApiPublicMcpRoute
   '/framing/': typeof AuthenticatedFramingIndexRoute
   '/missions/': typeof AuthenticatedMissionsIndexRoute
+  '/api/oauth/microsoft_outlook/return': typeof ApiOauthMicrosoft_outlookReturnRoute
+  '/api/oauth/microsoft_teams/return': typeof ApiOauthMicrosoft_teamsReturnRoute
   '/api/public/a2a/.well-known/agent.json': typeof ApiPublicA2aDotwellKnownAgentDotjsonRoute
   '/api/public/hooks/build/$platform': typeof ApiPublicHooksBuildPlatformRoute
 }
@@ -274,6 +290,8 @@ export interface FileRoutesByTo {
   '/api/public/mcp': typeof ApiPublicMcpRoute
   '/framing': typeof AuthenticatedFramingIndexRoute
   '/missions': typeof AuthenticatedMissionsIndexRoute
+  '/api/oauth/microsoft_outlook/return': typeof ApiOauthMicrosoft_outlookReturnRoute
+  '/api/oauth/microsoft_teams/return': typeof ApiOauthMicrosoft_teamsReturnRoute
   '/api/public/a2a/.well-known/agent.json': typeof ApiPublicA2aDotwellKnownAgentDotjsonRoute
   '/api/public/hooks/build/$platform': typeof ApiPublicHooksBuildPlatformRoute
 }
@@ -309,6 +327,8 @@ export interface FileRoutesById {
   '/api/public/mcp': typeof ApiPublicMcpRoute
   '/_authenticated/framing/': typeof AuthenticatedFramingIndexRoute
   '/_authenticated/missions/': typeof AuthenticatedMissionsIndexRoute
+  '/api/oauth/microsoft_outlook/return': typeof ApiOauthMicrosoft_outlookReturnRoute
+  '/api/oauth/microsoft_teams/return': typeof ApiOauthMicrosoft_teamsReturnRoute
   '/api/public/a2a/.well-known/agent.json': typeof ApiPublicA2aDotwellKnownAgentDotjsonRoute
   '/api/public/hooks/build/$platform': typeof ApiPublicHooksBuildPlatformRoute
 }
@@ -344,6 +364,8 @@ export interface FileRouteTypes {
     | '/api/public/mcp'
     | '/framing/'
     | '/missions/'
+    | '/api/oauth/microsoft_outlook/return'
+    | '/api/oauth/microsoft_teams/return'
     | '/api/public/a2a/.well-known/agent.json'
     | '/api/public/hooks/build/$platform'
   fileRoutesByTo: FileRoutesByTo
@@ -376,6 +398,8 @@ export interface FileRouteTypes {
     | '/api/public/mcp'
     | '/framing'
     | '/missions'
+    | '/api/oauth/microsoft_outlook/return'
+    | '/api/oauth/microsoft_teams/return'
     | '/api/public/a2a/.well-known/agent.json'
     | '/api/public/hooks/build/$platform'
   id:
@@ -410,6 +434,8 @@ export interface FileRouteTypes {
     | '/api/public/mcp'
     | '/_authenticated/framing/'
     | '/_authenticated/missions/'
+    | '/api/oauth/microsoft_outlook/return'
+    | '/api/oauth/microsoft_teams/return'
     | '/api/public/a2a/.well-known/agent.json'
     | '/api/public/hooks/build/$platform'
   fileRoutesById: FileRoutesById
@@ -419,6 +445,8 @@ export interface RootRouteChildren {
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   AuthRoute: typeof AuthRoute
   ApiPublicMcpRoute: typeof ApiPublicMcpRoute
+  ApiOauthMicrosoft_outlookReturnRoute: typeof ApiOauthMicrosoft_outlookReturnRoute
+  ApiOauthMicrosoft_teamsReturnRoute: typeof ApiOauthMicrosoft_teamsReturnRoute
   ApiPublicA2aDotwellKnownAgentDotjsonRoute: typeof ApiPublicA2aDotwellKnownAgentDotjsonRoute
   ApiPublicHooksBuildPlatformRoute: typeof ApiPublicHooksBuildPlatformRoute
 }
@@ -635,6 +663,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicMcpRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/oauth/microsoft_outlook/return': {
+      id: '/api/oauth/microsoft_outlook/return'
+      path: '/api/oauth/microsoft_outlook/return'
+      fullPath: '/api/oauth/microsoft_outlook/return'
+      preLoaderRoute: typeof ApiOauthMicrosoft_outlookReturnRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/oauth/microsoft_teams/return': {
+      id: '/api/oauth/microsoft_teams/return'
+      path: '/api/oauth/microsoft_teams/return'
+      fullPath: '/api/oauth/microsoft_teams/return'
+      preLoaderRoute: typeof ApiOauthMicrosoft_teamsReturnRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/a2a/.well-known/agent.json': {
       id: '/api/public/a2a/.well-known/agent.json'
       path: '/api/public/a2a/.well-known/agent.json'
@@ -731,6 +773,8 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
   AuthRoute: AuthRoute,
   ApiPublicMcpRoute: ApiPublicMcpRoute,
+  ApiOauthMicrosoft_outlookReturnRoute: ApiOauthMicrosoft_outlookReturnRoute,
+  ApiOauthMicrosoft_teamsReturnRoute: ApiOauthMicrosoft_teamsReturnRoute,
   ApiPublicA2aDotwellKnownAgentDotjsonRoute:
     ApiPublicA2aDotwellKnownAgentDotjsonRoute,
   ApiPublicHooksBuildPlatformRoute: ApiPublicHooksBuildPlatformRoute,
