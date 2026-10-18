@@ -1,0 +1,39 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv4.1.11 [39m[90m/dev-server[39m
+
+ [32m✓[39m src/domain/phase7.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+ [32m✓[39m src/domain/phase6.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+ [32m✓[39m src/domain/phase11.test.ts [2m([22m[2m19 tests[22m[2m)[22m[32m 28[2mms[22m[39m
+ [32m✓[39m src/server/ops/object-read.server.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 30[2mms[22m[39m
+ [32m✓[39m src/domain/phase12.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 40[2mms[22m[39m
+ [32m✓[39m src/domain/phase1.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 31[2mms[22m[39m
+ [32m✓[39m src/domain/authority-matrix.test.ts [2m([22m[2m1008 tests[22m[2m)[22m[32m 156[2mms[22m[39m
+ [32m✓[39m src/domain/phase10.test.ts [2m([22m[2m62 tests[22m[2m)[22m[32m 30[2mms[22m[39m
+ [32m✓[39m src/domain/phase9.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 177[2mms[22m[39m
+ [32m✓[39m src/server/mcp/gateway.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 182[2mms[22m[39m
+ [32m✓[39m src/server/mcp/tools.server.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 32[2mms[22m[39m
+ [32m✓[39m src/domain/phase4.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+ [32m✓[39m src/domain/mcp-output.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 119[2mms[22m[39m
+ [32m✓[39m src/lib/canon.functions.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 47[2mms[22m[39m
+ [32m✓[39m src/server/ops/creation.server.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 18[2mms[22m[39m
+ [32m✓[39m src/domain/verification-independence.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m src/domain/registry-manifest.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+ [32m✓[39m src/domain/phase5.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+ [32m✓[39m src/domain/phase8.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32m✓[39m src/domain/phase3.test.ts [2m([22m[2m34 tests[22m[2m)[22m[32m 37[2mms[22m[39m
+ [32m✓[39m src/domain/lifecycle-exhaustive.test.ts [2m([22m[2m380 tests[22m[2m)[22m[32m 58[2mms[22m[39m
+ [32m✓[39m src/domain/phase2.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 33[2mms[22m[39m
+ [32m✓[39m src/domain/correction-packet.test.ts [2m([22m[2m27 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+ [32m✓[39m src/domain/phase2b.test.ts [2m([22m[2m18 tests[22m[2m)[22m[32m 18[2mms[22m[39m
+ [32m✓[39m src/domain/audit-acceptance.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+ [32m✓[39m src/server/adapters/build-platform/live.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+ [32m✓[39m src/server/adapters/model-gateway/live.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32m✓[39m src/domain/audit4-acceptance.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m src/domain/generic-body.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m src/test/app-routing.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[32m 22[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m30 passed[39m[22m[90m (30)[39m
+[2m      Tests [22m [1m[32m1714 passed[39m[22m[90m (1714)[39m
+[2m   Start at [22m 01:46:10
+[2m   Duration [22m 14.14s[2m (transform 3.41s, setup 41.48s, import 8.76s, tests 1.22s, environment 104.88s)[22m
+
