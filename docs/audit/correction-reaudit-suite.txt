@@ -1,0 +1,41 @@
+
+ RUN  v4.1.11 /dev-server
+
+ ✓ src/domain/lifecycle-exhaustive.test.ts (380 tests) 46ms
+ ✓ src/domain/phase2.test.ts (6 tests) 39ms
+ ✓ src/domain/phase1.test.ts (11 tests) 21ms
+ ✓ src/domain/phase12.test.ts (13 tests) 30ms
+ ✓ src/domain/authority-matrix.test.ts (1008 tests) 116ms
+ ✓ src/server/ops/creation.server.test.ts (7 tests) 229ms
+ ✓ src/server/ops/object-read.server.test.ts (8 tests) 31ms
+ ✓ src/domain/phase3.test.ts (34 tests) 25ms
+ ✓ src/domain/mcp-output.test.ts (9 tests) 69ms
+ ✓ src/lib/canon.functions.test.ts (8 tests) 41ms
+ ✓ src/domain/phase9.test.ts (18 tests) 149ms
+ ✓ src/domain/phase11.test.ts (19 tests) 19ms
+ ✓ src/server/mcp/gateway.test.ts (8 tests) 143ms
+ ✓ src/server/mcp/tools.server.test.ts (11 tests) 27ms
+ ✓ src/domain/phase10.test.ts (65 tests) 24ms
+ ✓ src/domain/correction-packet.test.ts (27 tests) 13ms
+ ✓ src/domain/phase2b.test.ts (18 tests) 17ms
+ ✓ src/domain/phase8.test.ts (6 tests) 11ms
+ ✓ src/server/adapters/build-platform/live.test.ts (2 tests) 12ms
+ ✓ src/domain/phase7.test.ts (9 tests) 11ms
+ ✓ src/domain/registry-manifest.test.ts (5 tests) 12ms
+ ✓ src/domain/phase4.test.ts (8 tests) 9ms
+ ✓ src/domain/generic-body.test.ts (4 tests) 9ms
+ ✓ src/domain/audit-acceptance.test.ts (12 tests) 10ms
+ ✓ src/domain/framing-pilot-fixture.test.ts (4 tests) 9ms
+ ✓ src/domain/phase5.test.ts (7 tests) 10ms
+ ✓ src/server/adapters/model-gateway/live.test.ts (2 tests) 11ms
+ ✓ src/domain/phase6.test.ts (8 tests) 8ms
+ ✓ src/domain/verification-independence.test.ts (6 tests) 6ms
+ ✓ src/domain/audit4-acceptance.test.ts (4 tests) 4ms
+ ✓ src/domain/agent-reservation.test.ts (3 tests) 4ms
+ ✓ src/test/app-routing.test.tsx (5 tests) 15ms
+
+ Test Files  32 passed (32)
+      Tests  1735 passed (1735)
+   Start at  02:45:30
+   Duration  9.48s (transform 3.64s, setup 24.98s, import 7.51s, tests 1.18s, environment 67.08s)
+

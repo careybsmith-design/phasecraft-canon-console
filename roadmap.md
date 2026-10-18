@@ -1,9 +1,10 @@
 # THREAD roadmap
 
 ## Correction-aware whole-build recheck — 18 October 2026
-- [ ] Re-read governing specification, Sections 1–19 and Appendices A–C with L-02–L-20/S-01–S-07 overrides; publish section-by-section and operation-by-operation findings.
-- [ ] Run the full local suite and available current authenticated/database acceptance; distinguish live receipts, rollback fixtures and unexecuted acceptance.
-- [ ] Fix independently verified engineering gaps, preserve every unresolved item, and attach current proof without declaring incomplete acceptance passed.
+- [x] Re-read governing specification/Sections 1–19/Appendices A–C with corrections; current section and operation dispositions in docs/THREAD-correction-reaudit.md and 95-tool source/contract inventory.
+- [x] Complete local suite: 1,735 tests/32 files; signed-in integrity receipt #27550, SQL chain verified 2,968 entries; usage direct read denied, aggregate OPEN warning, AW-16 legacy status failure verified. 54 tables/379 functions/54 policies; 93 non-draft versus 94 all-live orphans (different populations, no new object from integrity receipt).
+- [x] Fix configured AW-5/empty-set verdicts, malformed bounds, orphan ref/state display, missing live config refusal, agent reservation locks/expiry/cost, anonymous mandate disclosure, resource/prompt failure handling, standard outputSchema and sibling graph depth; current proof bundled on /build-audit.
+- [ ] Complete full Section 17/anti-wiki acceptance and all remaining engineering; release remains FAIL / INCOMPLETE, not merely waiting for credentials. Permanent additions are under Open items below.
 
 ## Correction packet L-02–L-20 (18 October 2026)
 - [x] Directive/source corrections and Appendix A cross-reference index applied; correction packet/status saved. Complete implementation acceptance remains below.
@@ -44,6 +45,16 @@
 - [ ] Phase 12 — Hardening controls and assurance surface added; live exit evidence and signed-in validation remain open
 
 ## Open items — keep until addressed at the end (never delete without resolving)
+
+Correction-aware recheck additions (18 October)
+- [ ] Agent peak concurrency/same-token execution receipts, per-tool rate limits and actual reserved/external cost reconciliation; reservation locks applied in 0070 but no load receipt.
+- [ ] MCP production-outcome payload parity and evidence-derived baseline/delta/value recording; rollback/kill-switch execution must use verified external receipts, not local timestamps.
+- [ ] Scope/window/permission applicability fixes for measure_flow/value/community, monitor_outcome_evidence, check_data_use_permission, unresolved frontier and usage completeness; every source handler is not semantic parity.
+- [ ] Strict JSON-RPC request/notification/protocol behavior, notification list-vs-ack effect contract, push transport, publication consent for private agent discovery (mandates currently safely withheld).
+- [ ] Nightly SQL ledger verifier schedule and health receipt; safe live schedule listing shows only rendition sweep, morning briefs and detection reconciliation.
+- [ ] Receipt-backed full AW-1–AW-16 production runner; current helper and unit results cannot replace isolated native/mutation/rendered/real acceptance.
+- [ ] Source-resolved independence receipts (current body declarations/nonempty refs/≤1,000 caller-visible records are insufficient), final registry migration replay and all-source span/lineage validation.
+- [x] Whole-build live adapter missing-config silent simulation gap fixed: live binding now refuses before a run write; creation regression passes. Live platform credentials/evidence remain separate.
 
 Phase 1
 - [ ] Real platform-backup restore (`pending_live_adapter`; only snapshot-replay rehearsal done)

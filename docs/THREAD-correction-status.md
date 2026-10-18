@@ -1,5 +1,7 @@
 # Correction packet — implementation and exit evidence
 
+**Current recheck:** `docs/THREAD-correction-reaudit.md` supersedes this round's counts and proof where explicitly updated. The new local suite passes 1,735 tests in 32 files; release remains INCOMPLETE. This document preserves the earlier correction-round evidence.
+
 **18 October 2026. Correction-round verdict: INCOMPLETE. No further capability phase authorized.**
 
 The uploaded packet is saved as `docs/THREAD-correction-packet.md` and supersedes its identified source contradictions. A passing local suite is not the packet's definition of done.

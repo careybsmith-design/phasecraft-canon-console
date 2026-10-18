@@ -1,0 +1,98 @@
+{
+  "date": "2026-10-18",
+  "round": "correction-aware recheck",
+  "verdict": "FAIL / INCOMPLETE",
+  "test_boundary": "Complete local suite; not full Section 17 live acceptance",
+  "tests": {
+    "files": 32,
+    "passed": 1735,
+    "failed": 0
+  },
+  "database": {
+    "tables": 54,
+    "functions": 379,
+    "policies": 54,
+    "objects": 534,
+    "live_objects": 153,
+    "ledger_entries": 2968,
+    "tables_without_rls": 0,
+    "non_draft_orphans": 93,
+    "all_live_orphans": 94,
+    "detectors": 43,
+    "normalized_span_rows": 26,
+    "missing_scanned_spans": 0,
+    "model_routes": 0
+  },
+  "authenticated_checks": {
+    "thread_verify_ledger": {
+      "ok": true,
+      "head_hash": "b3e902c6e515d7cd5639d2c87febabf6a90fbc7133007aaee5a9bd5fb1885c50",
+      "verified_at": "2026-10-18T02:40:53.5908+00:00",
+      "first_bad_seq": null,
+      "entries_checked": 2968
+    },
+    "phase10_action_ratios": {
+      "pass": false,
+      "status": "THRESHOLD_UNSET",
+      "evidence": {
+        "source": "aggregate_usage_sessions",
+        "sessions": 0,
+        "window_seconds": 2592000
+      },
+      "severity": "warning",
+      "action_pct": null,
+      "thresholds": null,
+      "read_only_pct": null,
+      "release_blocking": false
+    },
+    "aw16_state_ownership_scan": {
+      "id": "AW-16",
+      "passed": false,
+      "violations": [
+        {
+          "table": "build_runs",
+          "column": "status",
+          "reason": "Execution state requires removal or read-only source mirror"
+        }
+      ],
+      "rendered_scan": "pending_authenticated_full_surface_scan"
+    },
+    "phase10_schema_check": {
+      "pass": true,
+      "scope": "public fields, measure definitions and tool output contracts",
+      "checked_at": "2026-10-18T02:40:54.166495+00:00"
+    },
+    "usage_direct": {
+      "denied": true
+    }
+  },
+  "agent_reservation": {
+    "agent_lock": true,
+    "confirmation_lock": true,
+    "anonymous_execute": false,
+    "authenticated_execute": false,
+    "concurrent_peak_execution": "not executed"
+  },
+  "tools": {
+    "total": 95,
+    "source_live_handlers": 75,
+    "pending": 10,
+    "human_only": 10,
+    "semantic_parity": "incomplete"
+  },
+  "aw5": {
+    "setting": "open",
+    "default": null,
+    "release_blocking": false,
+    "sessions": 0,
+    "action_pct": null,
+    "read_only_pct": null
+  },
+  "schedules": [
+    "thread-rendition-sweep",
+    "thread-morning-briefs",
+    "thread-phase10-reconcile"
+  ],
+  "nightly_verifier": "not listed",
+  "proof_boundary": "No secrets, raw private agent mandates or orphan body content bundled; catalogue counts and source checks are not execution certification"
+}
