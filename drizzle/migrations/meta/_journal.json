@@ -484,6 +484,13 @@
       "when": 1792287854425,
       "tag": "0068_correction_simulated_gate_projection",
       "breakpoints": true
+    },
+    {
+      "idx": 69,
+      "version": "7",
+      "when": 1792288062998,
+      "tag": "0069_correction_span_validation_and_aw16_scan",
+      "breakpoints": true
     }
   ]
 }

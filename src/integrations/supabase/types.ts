@@ -2642,6 +2642,7 @@ export type Database = {
         Args: { _from: string; _to: string; _type: string }
         Returns: undefined
       }
+      aw16_state_ownership_scan: { Args: never; Returns: Json }
       can_reach_creation: { Args: { p_behavior: string }; Returns: boolean }
       can_read_object: {
         Args: {
