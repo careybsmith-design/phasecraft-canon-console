@@ -1,5 +1,10 @@
 # THREAD roadmap
 
+## Correction-aware whole-build recheck — 18 October 2026
+- [ ] Re-read governing specification, Sections 1–19 and Appendices A–C with L-02–L-20/S-01–S-07 overrides; publish section-by-section and operation-by-operation findings.
+- [ ] Run the full local suite and available current authenticated/database acceptance; distinguish live receipts, rollback fixtures and unexecuted acceptance.
+- [ ] Fix independently verified engineering gaps, preserve every unresolved item, and attach current proof without declaring incomplete acceptance passed.
+
 ## Correction packet L-02–L-20 (18 October 2026)
 - [x] Directive/source corrections and Appendix A cross-reference index applied; correction packet/status saved. Complete implementation acceptance remains below.
 - [x] L-02: OPEN warning/finding, no expiry/default, aggregate ratios and configured violation rule implemented; authenticated UI/RPC verified. Current action/read-only ratios null (0 sessions).
