@@ -51,7 +51,7 @@ async function admin() {
 function human(uid: string, authority = "observe") {
   return { kind: "human", id: uid, authority_used: authority };
 }
-function extractor(uid: string) {
+export function extractor(uid: string) {
   return {
     kind: "system",
     id: "thread.intent_extractor",
@@ -68,7 +68,7 @@ const today = (d = 30) => new Date(Date.now() + d * 864e5).toISOString().slice(0
 const familyOf = (type: string) =>
   REGISTRY.find((r) => r.type === type)?.lifecycle_family ?? "canon";
 
-function payload(
+export function payload(
   type: string,
   title: string,
   statement: string,
@@ -99,7 +99,7 @@ function payload(
     adapter_mode: o.adapter_mode,
   };
 }
-async function create(db: Db, actor: Json, p: Json): Promise<Row> {
+export async function create(db: Db, actor: Json, p: Json): Promise<Row> {
   const { data, error } = await db.rpc("thread_create_object", {
     p_actor: actor as never,
     p: p as never,
@@ -251,7 +251,7 @@ async function isSteward(db: Db, uid: string) {
   return !!data;
 }
 /** The caller must be the session's owner, a linked participant or a steward. */
-async function loadSessionFor(db: Db, uid: string, id: string): Promise<Row> {
+export async function loadSessionFor(db: Db, uid: string, id: string): Promise<Row> {
   const s = await load(db, id);
   if (s.type !== "FramingSession") throw threadError("NOT_FOUND: not a framing session");
   if (
@@ -1072,31 +1072,36 @@ async function surface(
   }
 }
 
-export const captureUtterance = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) =>
-    z
-      .object({
-        session_id: uuid,
-        speaker_id: uuid,
-        text: z.string().trim().min(1).max(4000),
-        mode: z.enum([
-          "speech",
-          "typed_notes",
-          "chat",
-          "prototype_interaction",
-          "brought_in_document",
-          "third_party_recording",
-        ]),
-        t_offset_ms: z.number().int().min(0),
-        client_id: z.string().max(80).optional(),
-      })
-      .parse(d),
-  )
-  .handler(async ({ data, context }) => {
+const utteranceInput = z.object({
+  session_id: uuid,
+  speaker_id: uuid,
+  text: z.string().trim().min(1).max(4000),
+  mode: z.enum([
+    "speech",
+    "typed_notes",
+    "chat",
+    "prototype_interaction",
+    "brought_in_document",
+    "third_party_recording",
+  ]),
+  t_offset_ms: z.number().int().min(0),
+  client_id: z.string().max(80).optional(),
+});
+type UtteranceInput = z.infer<typeof utteranceInput>;
+
+/**
+ * Shared capture pipeline (8A.3): consent/tier gate -> artifact -> segment -> extract.
+ * `transcription` marks speech as coming from the simulated fixture adapter or the
+ * live Whisper-class adapter; text modalities are always direct input.
+ */
+export async function captureUtteranceImpl(
+  uid: string,
+  data: UtteranceInput,
+  transcription: "simulated" | "live",
+) {
     const t0 = Date.now();
     const db = await admin();
-    const session = await loadSessionFor(db, context.userId, data.session_id);
+    const session = await loadSessionFor(db, uid, data.session_id);
     if (session.lifecycle_state !== "capturing")
       throw threadError(`CAPTURE_NOT_OPEN: ${session.human_ref} is ${session.lifecycle_state}`);
     const speaker = participants(session).find((p) => p.id === data.speaker_id);
@@ -1128,7 +1133,7 @@ export const captureUtterance = createServerFn({ method: "POST" })
       return { duplicate: false, blocked: true, reasons: tier.reasons, statements: 0 };
     }
     const kind: ArtifactKind = data.mode === "speech" ? "transcript" : data.mode;
-    const simulated = data.mode === "speech";
+    const simulated = data.mode === "speech" && transcription === "simulated";
     const { data: consents } = await db
       .from("consent_records")
       .select("id")
@@ -1137,7 +1142,7 @@ export const captureUtterance = createServerFn({ method: "POST" })
     const consentIds = (consents ?? []).map((x) => x.id);
     const artifact = await create(
       db,
-      extractor(context.userId),
+      extractor(uid),
       payload(
         "CoCreationArtifact",
         `${kind.replace(/_/g, " ")} · ${speaker.name}`,
@@ -1149,18 +1154,18 @@ export const captureUtterance = createServerFn({ method: "POST" })
           content: data.text,
           duration_or_size: data.text.length,
           captured_at: new Date().toISOString(),
-          captured_by: context.userId,
+          captured_by: uid,
           speaker_id: speaker.id,
           content_tier: tier.tier,
           consent_basis: consentIds,
           extraction_state: "pending",
           evidence_weight: evidenceWeight(kind),
-          provenance: { simulated, adapter: simulated ? "Transcription.simulated" : null },
+          provenance: { simulated, adapter: simulated ? "Transcription.simulated" : transcription === "live" ? "Transcription.live" : null },
         },
         {
           owner: session.owner_id,
           tier: tier.tier,
-          adapter_mode: simulated ? "simulated" : undefined,
+          adapter_mode: simulated ? "simulated" : transcription === "live" ? "live" : undefined,
           rationale: "Captured on the session timeline",
         },
       ),
@@ -1241,7 +1246,7 @@ export const captureUtterance = createServerFn({ method: "POST" })
     const out = await extractUnits(
       {
         db,
-        uid: context.userId,
+        uid: uid,
         session,
         artifact,
         tier: tier.tier,
@@ -1255,14 +1260,14 @@ export const captureUtterance = createServerFn({ method: "POST" })
     );
     await reviseBody(
       db,
-      extractor(context.userId),
+      extractor(uid),
       artifact.id,
       (b) => ({ ...b, extraction_state: "extracted", extraction_revision: revision }),
       "Extracted",
     );
     await reviseBody(
       db,
-      extractor(context.userId),
+      extractor(uid),
       session.id,
       (b) => {
         const e = mergeEntryTest(
@@ -1297,6 +1302,53 @@ export const captureUtterance = createServerFn({ method: "POST" })
       model_error: out.cls.error ?? null,
       latency_ms: Date.now() - t0,
     };
+}
+
+export const captureUtterance = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => utteranceInput.parse(d))
+  .handler(async ({ data, context }) => captureUtteranceImpl(context.userId, data, "simulated"));
+
+/**
+ * Live speech capture (8A.2 live speech, 8A.13 zero-loss): the browser uploads a complete
+ * WAV chunk; the server transcribes it through the live Whisper-class adapter and runs the
+ * same consent-gated pipeline. Speaker identity is the authenticated participant's chosen
+ * participant record — never guessed from audio. No silent fallback to simulated: a
+ * transcription failure is surfaced, and the client keeps the audio buffered for retry.
+ */
+export const captureLiveSpeech = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) =>
+    z
+      .object({
+        session_id: uuid,
+        speaker_id: uuid,
+        audio_wav_base64: z.string().min(100).max(28_000_000),
+        t_offset_ms: z.number().int().min(0),
+        client_id: z.string().max(80).optional(),
+        language: z.string().max(10).optional(),
+      })
+      .parse(d),
+  )
+  .handler(async ({ data, context }) => {
+    const { transcribeAudio } = await import("@/server/adapters/transcription/live");
+    const bin = atob(data.audio_wav_base64);
+    const wav = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) wav[i] = bin.charCodeAt(i);
+    const transcript = await transcribeAudio(wav, data.language ? { language: data.language } : {});
+    const out = await captureUtteranceImpl(
+      context.userId,
+      {
+        session_id: data.session_id,
+        speaker_id: data.speaker_id,
+        text: transcript.text.slice(0, 4000),
+        mode: "speech",
+        t_offset_ms: data.t_offset_ms,
+        client_id: data.client_id,
+      },
+      "live",
+    );
+    return { ...out, transcript: transcript.text, transcribe_model: transcript.model };
   });
 
 function maxTier(a: ContentTier | undefined, b: ContentTier): ContentTier {
