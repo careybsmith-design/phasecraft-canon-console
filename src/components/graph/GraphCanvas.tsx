@@ -140,7 +140,7 @@ export const GraphCanvas = forwardRef<GraphCanvasHandle, Props>(function GraphCa
 
   return (
     <div className="relative">
-      <div ref={el} role="img" aria-label={ariaLabel} className={className ?? "h-[560px] w-full rounded-md border bg-panel"} />
+      <div ref={el} role="img" aria-label={ariaLabel} className={className ?? "thread-graph-canvas"} />
       {status.state !== "ready" && (
         <div role="status" className="absolute inset-0 flex items-center justify-center p-6 text-center text-sm">
           {status.state === "loading"

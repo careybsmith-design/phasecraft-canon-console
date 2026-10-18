@@ -53,13 +53,13 @@ function AuthPage() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center px-4">
-      <div className="w-full max-w-sm space-y-6">
+    <main className="thread-auth flex min-h-screen items-center justify-center">
+      <div className="thread-auth-inner w-full max-w-sm space-y-6">
         <div>
-          <p className="ident text-primary">THREAD</p>
+          <p className="thread-auth-brand">THREAD</p>
           <h1 className="mt-1 text-lg font-semibold">{mode === "in" ? "Sign in" : "Create account"}</h1>
         </div>
-        <form onSubmit={submit} className="space-y-3">
+        <form onSubmit={submit} className="space-y-5">
           <div className="space-y-1">
             <Label htmlFor="email">Email</Label>
             <Input id="email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
@@ -72,9 +72,9 @@ function AuthPage() {
           <Button type="submit" className="w-full" disabled={busy}>{mode === "in" ? "Sign in" : "Create account"}</Button>
         </form>
         <Button variant="outline" className="w-full" onClick={google}>Continue with Google</Button>
-        <button type="button" className="text-sm text-muted-foreground underline" onClick={() => setMode(mode === "in" ? "up" : "in")}>
+        <Button type="button" variant="link" className="h-auto px-0 text-sm text-muted-foreground" onClick={() => setMode(mode === "in" ? "up" : "in")}>
           {mode === "in" ? "Need an account? Create one" : "Have an account? Sign in"}
-        </button>
+        </Button>
       </div>
     </main>
   );
