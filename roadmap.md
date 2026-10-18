@@ -26,7 +26,7 @@
 - [x] Run complete automated suite and available database groups; report every AW-1–AW-15 as pass/fail/blocked, not full execution. Full release FAIL.
 - [x] Inspect live database layout/grants and static API inventory: now 128 human operations, 95 MCP tools (75 advertised live / 10 pending / 10 human-only). Not all executed.
 - [x] Apply verified forward-only safety fixes; proof and remaining engineering gaps in docs/THREAD-build-audit.md and /build-audit.
-- [ ] Complete every remaining gap and full acceptance. Blockers: engineering gaps listed below, requester sign-in, trusted organizational authority, execution/Factory adapters, isolated test/load environment, independent humans and Carey's AW-5 decision.
+- [ ] Complete every remaining gap and full acceptance. Blockers: engineering gaps below, trusted organizational authority, execution/Factory adapters, isolated test/load environment and independent humans. Requester signed-in checks are now available; Carey's AW-5 decision is optional/non-blocking while OPEN.
 
 **Phase checkmarks below mean implemented, not all live exit evidence accepted; full build release remains FAIL.**
 
@@ -59,7 +59,7 @@ Correction-aware recheck additions (18 October)
 Phase 1
 - [ ] Real platform-backup restore (`pending_live_adapter`; only snapshot-replay rehearsal done)
 - [ ] AW-5 action-ratio thresholds — OPEN for Carey Smith; no default may be set. Tracked live on Assurance → Acceptance blockers (proposed ≥60% action / ≤25% read-only; user declined to set it 17 Oct 2026)
-- [ ] Orphan objects (88, mostly Phase 2B/3/7 test leftovers) — user declined auto-retirement 17 Oct 2026; listed for per-item human review on Assurance → Acceptance blockers
+- [ ] Orphan objects (18 Oct: 93 non-draft, 94 all-live; earlier 88 historical) — user declined auto-retirement; per-item human review remains on Assurance → Acceptance blockers
 
 Phase 2
 - [ ] Spec discrepancy: exit summary says 15 Canon-family types, Part 4.3 lists 9
