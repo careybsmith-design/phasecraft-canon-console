@@ -12,18 +12,6 @@ import { z } from "zod";
 import { getRequest } from "@tanstack/react-start/server";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import {
-  appUserReconnectRequired,
-  authorizeAppUserOAuth,
-  callAsAppUser,
-  disconnectAppUser,
-  exchangeAppUserOAuthCode,
-} from "@/integrations/lovable/appUserConnector";
-import {
-  deleteConnectionKeyForUser,
-  getConnectionKeyForUser,
-  saveConnectionKeyForUser,
-} from "@/server/appUserConnections.server";
-import {
   captureUtteranceImpl,
   create,
   extractor,
@@ -33,6 +21,15 @@ import {
 import { classifyContent } from "@/domain/content-tier";
 
 const GATEWAY_BASE_URL = "https://connector-gateway.lovable.dev";
+
+// Server-only modules are loaded dynamically: this file is a server-function module
+// and static imports of server-only code would leak credentials into the client bundle.
+async function auc() {
+  return import("@/integrations/lovable/appUserConnector");
+}
+async function connStore() {
+  return import("@/server/appUserConnections.server");
+}
 
 export const CONNECTORS = {
   microsoft_teams: {
@@ -89,7 +86,9 @@ export const startConnectorConnect = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => z.object({ connector: connectorInput }).parse(d))
   .handler(async ({ data, context }) => {
+    const { getConnectionKeyForUser } = await connStore();
     const existing = await getConnectionKeyForUser(context.userId, data.connector);
+    const { authorizeAppUserOAuth } = await auc();
     const { authorizationUrl } = await authorizeAppUserOAuth({
       gatewayBaseUrl: GATEWAY_BASE_URL,
       connectorId: data.connector,
@@ -109,6 +108,8 @@ export const completeConnectorConnect = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => z.object({ code: z.string().min(1) }).parse(d))
   .handler(async ({ data, context }) => {
+    const { exchangeAppUserOAuthCode } = await auc();
+    const { saveConnectionKeyForUser } = await connStore();
     const { connectionAPIKey, connectorId } = await exchangeAppUserOAuthCode(
       GATEWAY_BASE_URL,
       data.code,
@@ -123,6 +124,8 @@ export const disconnectConnector = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => z.object({ connector: connectorInput }).parse(d))
   .handler(async ({ data, context }) => {
+    const { getConnectionKeyForUser, deleteConnectionKeyForUser } = await connStore();
+    const { disconnectAppUser } = await auc();
     const key = await getConnectionKeyForUser(context.userId, data.connector);
     if (key)
       await disconnectAppUser({
@@ -139,6 +142,7 @@ export const getConnectorStatus = createServerFn({ method: "GET" })
   .handler(async ({ context }) => {
     const out: Record<string, { connected: boolean; configured: boolean; label: string }> = {};
     for (const id of Object.keys(CONNECTORS) as ConnectorId[]) {
+      const { getConnectionKeyForUser } = await connStore();
       out[id] = {
         connected: !!(await getConnectionKeyForUser(context.userId, id)),
         configured: !!process.env[CONNECTORS[id].envVar],
@@ -153,6 +157,8 @@ async function callGraph(
   connector: ConnectorId,
   path: string,
 ): Promise<{ ok: true; json: any } | { ok: false; reason: string }> {
+  const { getConnectionKeyForUser } = await connStore();
+  const { callAsAppUser, appUserReconnectRequired } = await auc();
   const key = await getConnectionKeyForUser(uid, connector);
   if (!key) return { ok: false, reason: "not_connected" };
   const res = await callAsAppUser({
@@ -177,6 +183,8 @@ async function callGraphBlob(
   connector: ConnectorId,
   path: string,
 ): Promise<{ ok: true; bytes: Uint8Array } | { ok: false; reason: string }> {
+  const { getConnectionKeyForUser } = await connStore();
+  const { callAsAppUser, appUserReconnectRequired } = await auc();
   const key = await getConnectionKeyForUser(uid, connector);
   if (!key) return { ok: false, reason: "not_connected" };
   const res = await callAsAppUser({
