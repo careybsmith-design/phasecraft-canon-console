@@ -14,3 +14,6 @@
 - Published output schemas validate required fields and finite plain JSON before receipts/results; artifact injection scans normalize compatibility and zero-width text. Why: serialization and hidden characters cannot silently bypass the gateway boundary.
 - Object reads require one identity; historical snapshots require current-parent visibility, search honors state filters, and withdrawal preserves caller-readable evidence. All multi-read handlers reject read errors. Why: missing access or failed retrieval must not masquerade as empty successful evidence.
 - Traversal input supports the database's three-hop maximum, rejecting a fourth hop explicitly. Why: silent depth clamping must not imply a complete answer.
+- Agent call reservations lock the agent before quota/cost reads and lock single-use confirmations before validation/consumption. Why: concurrent calls must not exceed bounds or replay a human token.
+- Public A2A discovery exposes only THREAD service capabilities, not registered agents or mandates without publication consent. Why: anonymous discovery must not leak internal assignments.
+- Resource/prompt retrieval failures return errors, never empty successful receipts. Why: failed access context is not absence of canon evidence.

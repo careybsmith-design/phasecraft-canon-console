@@ -183,8 +183,8 @@ export const TOOLS: ToolDef[] = [
   D("confirm_relationship", "K2", "Confirm an inferred relationship", z.object({ edge_id: id }).strict(), HUMAN),
   D("surface_prior_objects", "K2", "Prior needs, decisions and capabilities related to a statement", z.object({ statement: txt(1000) }).strict()),
   D("find_contradictions", "K2", "Contradicting statement pairs in the graph", z.object({}).strict()),
-  D("render_need_web", "K2", "Need web around an object", z.object({ root_id: id, depth: z.number().int().min(1).max(4).default(2) }).strict()),
-  D("render_dependency_web", "K2", "Dependency web around an object", z.object({ root_id: id, depth: z.number().int().min(1).max(4).default(2) }).strict()),
+  D("render_need_web", "K2", "Need web around an object", z.object({ root_id: id, depth: z.number().int().min(1).max(3).default(2) }).strict()),
+  D("render_dependency_web", "K2", "Dependency web around an object", z.object({ root_id: id, depth: z.number().int().min(1).max(3).default(2) }).strict()),
   D("render_unresolved_frontier", "K2", "Unresolved questions and assumptions of a mission", z.object({ mission_ref: id }).strict()),
   D("close_framing_session", "K2", "Close a framing session with its entry test", z.object({ session_id: id }).strict(), HUMAN),
 
@@ -194,7 +194,7 @@ export const TOOLS: ToolDef[] = [
 ];
 
 export const TOOL_BY_NAME = new Map(TOOLS.map((t) => [t.name, t]));
-export const TOOL_CONTRACT_VERSION = "audit-3";
+export const TOOL_CONTRACT_VERSION = "correction-reaudit-1";
 
 export function toolContract(t: ToolDef) {
   return {
