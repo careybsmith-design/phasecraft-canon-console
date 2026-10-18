@@ -195,3 +195,6 @@ Whole-build audit — permanent open items
 - [ ] Full P1–P15 runtime acceptance, guardrail positive/negative, native detector induction/recurrence, isolated schema mutation, independent test-route/human-review evidence, authenticated Mission Runtime OCR/surface flows and dogfooding. Blocker: isolated environment, requester/second human, independent reviewer and live adapters.
 - [ ] Generic live evidence receipts/assessor execution verification; JSON adapter_mode='live' is not verified execution. Compliance walkthrough passing intentionally blocked without execution proof; full real assurance remains pending.
 - [ ] Complete regeneration/orchestrated burst/accessible surface/account onboarding workflows; lifecycle adjacency/evidence shortcut and source inconsistencies reconciliation. No invented policy values; engineering plus real workflow review.
+- [ ] Live speech-to-text capture (multi-participant meetings, single-person dictation) via Whisper-class transcription
+- [ ] Teams live meeting capture + Teams chat/message ingestion
+- [ ] Outlook email + attachment ingestion as mission artifacts
