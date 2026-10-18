@@ -2,8 +2,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import report from "../../../docs/THREAD-build-audit.md?raw";
-import testTranscript from "../../../docs/audit/full-suite.txt?raw";
-import evidenceBundle from "../../../docs/audit/reaudit-evidence.json?raw";
 import corrections from "../../../docs/THREAD-correction-status.md?raw";
 import correctionTests from "../../../docs/audit/correction-suite.txt?raw";
 import currentAudit from "../../../docs/THREAD-correction-reaudit.md?raw";
