@@ -40,3 +40,5 @@
 - Human surfaces and Phase 12 assurance: read src/server/ops/AGENTS.md first. Why: shared schemas, caller RLS and ledger-first writes distinguish simulated checks from live assurance.
 - Generic human creation accepts only `generic-body.ts` contracts; other types require dedicated operations. Why: placeholder registry schemas cannot authorize arbitrary bodies.
 - Bundle downloadable audit test transcripts as `.txt`, never ignored `.log` files. Why: ignored files disappear from deployment source and break raw imports.
+- Live speech capture uses `src/server/adapters/transcription/live.server.ts` (gateway Whisper-class model); the browser records WAV chunks with a durable IndexedDB outbox (`src/lib/live-capture.ts`). Why: 8A.13 zero-loss and no GPU self-hosting on the edge runtime.
+- Per-user Microsoft connector code lives in `src/lib/framing.functions.ts` (connect/ingest server fns) with helpers in `src/integrations/lovable/appUserConnector.ts` and `src/server/appUserConnections.server.ts`; `.functions.ts` files must never statically import server-only modules or export plain helpers — both break the client/server split (import-protection 500s).
