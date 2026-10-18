@@ -11,13 +11,12 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { getRequest } from "@tanstack/react-start/server";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import {
-  captureUtteranceImpl,
-  create,
-  extractor,
-  loadSessionFor,
-  payload,
-} from "@/lib/framing.functions";
+// framing.functions helpers are plain (non-server-fn) exports: importing them
+// statically would break the server/client split of this module. Load them
+// dynamically inside handlers — handler bodies never ship to the client.
+async function framingImpl() {
+  return import("@/lib/framing.functions");
+}
 import { classifyContent } from "@/domain/content-tier";
 
 const GATEWAY_BASE_URL = "https://connector-gateway.lovable.dev";
@@ -295,6 +294,7 @@ export const ingestTeamsMessages = createServerFn({ method: "POST" })
     const r = await callGraph(context.userId, "microsoft_teams", path);
     if (!r.ok) return r;
 
+    const { captureUtteranceImpl, loadSessionFor } = await framingImpl();
     const db = await (await import("@/integrations/supabase/client.server")).supabaseAdmin;
     const session = await loadSessionFor(db, context.userId, data.session_id);
     const participants = (session.body?.participants ?? []) as Array<{
@@ -381,6 +381,7 @@ export const ingestOutlookMessage = createServerFn({ method: "POST" })
       .parse(d),
   )
   .handler(async ({ data, context }) => {
+    const { captureUtteranceImpl } = await framingImpl();
     const r = await callGraph(
       context.userId,
       "microsoft_outlook",
@@ -420,6 +421,7 @@ export const ingestOutlookMessage = createServerFn({ method: "POST" })
         `/me/messages/${encodeURIComponent(data.message_id)}/attachments?$select=id,name,contentType,size`,
       );
       if (ar.ok) {
+        const { create, extractor, loadSessionFor, payload } = await framingImpl();
         const db = await (await import("@/integrations/supabase/client.server")).supabaseAdmin;
         const session = await loadSessionFor(db, context.userId, data.session_id);
         for (const a of (ar.json.value as Array<any>) ?? []) {

@@ -593,7 +593,7 @@ async function extractUnits(
     if (error) throw threadError(error.message);
   }
   units = units.filter(u => validExtractionSpan(u.span));
-  const { classifyUnits, findContradictions } = await import("@/server/framing/extractor.server");
+  const { classifyUnits, findContradictions } = await import("@/server/framing/extractor");
   const { db, session } = c;
   const ps = participants(session);
   const actor = extractor(c.uid);
@@ -1414,7 +1414,7 @@ export const captureImage = createServerFn({ method: "POST" })
         { owner: session.owner_id, rationale: "Drawing captured on the session timeline" },
       ),
     );
-    const { describeDrawing } = await import("@/server/framing/extractor.server");
+    const { describeDrawing } = await import("@/server/framing/extractor");
     const mode = await modelMode(db);
     let desc: Awaited<ReturnType<typeof describeDrawing>> = null;
     try {
@@ -2343,7 +2343,7 @@ export const publishExtractionQuality = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const db = await admin();
-    const { classifyUnits } = await import("@/server/framing/extractor.server");
+    const { classifyUnits } = await import("@/server/framing/extractor");
     const { data: items } = await db.from("extraction_eval_items").select("*").order("created_at");
     const rows = (items ?? []) as Row[];
     if (!rows.length) throw threadError("NO_LABELLED_SET");
