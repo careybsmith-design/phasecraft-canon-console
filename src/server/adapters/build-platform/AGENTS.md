@@ -5,4 +5,4 @@
 - The database records the run BEFORE the adapter is called, so nothing leaves THREAD unchecked.
 - Live dispatch sends the THREAD run ID and binds the external ID through `thread_bind_external_build`; signed callbacks use `thread_receive_build_result` with row locking and a payload hash. Why: response races and retries cannot duplicate artifacts or change a finished result.
 - Platform registry: `PLATFORM_REGISTRY` mirrors the `build_platforms` seed; `detectChangeClass` mirrors `_classify_iteration`; the simulated digest mirrors `_sim_build_digest`. Change both together.
-- Adapter choice: `adapter_bindings` BuildPlatform=live AND `BUILD_PLATFORM_<P>_URL/_TOKEN` set, else simulated. Live results return via `/api/public/hooks/build/$platform` signed with `BUILD_WEBHOOK_SECRET_<P>`.
+- Adapter choice follows `adapter_bindings`; a live binding without an endpoint/token refuses before any run write, never falls back to simulation. Live results return via `/api/public/hooks/build/$platform` signed with `BUILD_WEBHOOK_SECRET_<P>`. Why: missing live configuration cannot masquerade as platform execution.

@@ -49,13 +49,19 @@ export function evaluateFacts(facts: Record<string, unknown>) {
 }
 export const REJECTED_MEASURE_PATTERN = /\b(story[ _-]?points|sprint[ _-]?velocity|requirements[ _-]?completed|features[ _-]?shipped[ _-]?without[ _-]?outcome[ _-]?evidence|lines[ _-]?of[ _-]?code|prompt[ _-]?count|agent[ _-]?call[ _-]?count|utili[sz]ation[ _-]?as[ _-]?a[ _-]?proxy[ _-]?for[ _-]?value|meetings[ _-]?held|documents[ _-]?produced|training[ _-]?modules[ _-]?completed)\b/i;
 export function rejectedMeasure(text: string) { return REJECTED_MEASURE_PATTERN.test(text); }
+export function validActionRatioThresholds(value: unknown): value is { min_action_pct: number; max_read_only_pct: number } {
+  if (!value || typeof value !== "object") return false;
+  const thresholds = value as Record<string, unknown>;
+  return [thresholds['min_action_pct'], thresholds['max_read_only_pct']].every(v => typeof v === "number" && Number.isFinite(v) && v >= 0 && v <= 100);
+}
 export function actionRatios(rows: Array<{ mutating_actions: number; reads: number }>, setting: { status: string; value: { min_action_pct: number; max_read_only_pct: number } | null }) {
   const total = rows.length;
   const action_pct = total ? 100 * rows.filter(r => r.mutating_actions > 0).length / total : null;
   const read_only_pct = total ? 100 * rows.filter(r => r.reads > 0 && r.mutating_actions === 0).length / total : null;
   if (setting.status === "open") return { action_pct, read_only_pct, status: "THRESHOLD_UNSET", pass: false, release_blocking: false, severity: "warning" };
-  const pass = setting.status === "set" && setting.value !== null && action_pct !== null && read_only_pct !== null && action_pct >= setting.value.min_action_pct && read_only_pct <= setting.value.max_read_only_pct;
-  return { action_pct, read_only_pct, status: setting.status !== "set" || !setting.value ? "THRESHOLD_UNSET" : total ? "measured" : "NO_EVIDENCE", pass, release_blocking: !pass, severity: pass ? "none" : "error" };
+  const configured = setting.status === "set" && validActionRatioThresholds(setting.value);
+  const pass = configured && action_pct !== null && read_only_pct !== null && action_pct >= setting.value.min_action_pct && read_only_pct <= setting.value.max_read_only_pct;
+  return { action_pct, read_only_pct, status: !configured ? "THRESHOLD_UNSET" : total ? "measured" : "NO_EVIDENCE", pass, release_blocking: !pass, severity: pass ? "none" : "error" };
 }
 export function elapsedHours(start: string, end: string) {
   const duration = (Date.parse(end) - Date.parse(start)) / 36e5;

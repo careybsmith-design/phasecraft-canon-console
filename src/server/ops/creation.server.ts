@@ -73,6 +73,7 @@ export async function dispatchCore(ctx: OpCtx, p: { prompt_id: string; platform:
   const { liveConfig, liveBuildPlatform } = await import("@/server/adapters/build-platform/live");
   const { simulatedBuildPlatform } = await import("@/server/adapters/build-platform/simulated");
   const cfg = binding?.mode === "live" ? liveConfig(p.platform) : null;
+  if (binding?.mode === "live" && !cfg) throw err("PLATFORM_CONFIGURATION_REQUIRED: live binding requires a platform endpoint and token; simulation was not dispatched");
   const adapter = cfg ? liveBuildPlatform(p.platform, cfg) : simulatedBuildPlatform();
   const model_version = adapter.mode === "simulated" ? "sim-1" : (process.env[`BUILD_PLATFORM_${p.platform.toUpperCase()}_MODEL`] ?? "unpinned");
   const actor = ctx.actor;
