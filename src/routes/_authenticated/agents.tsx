@@ -5,6 +5,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useCallback, useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
+import { Button } from "@/components/ui/button";
 import { getPhase9Evidence, issueConfirmation, listAgentSurface, registerAgent, revokeAgent, runPhase9Evidence } from "@/lib/agents.functions";
 
 export const Route = createFileRoute("/_authenticated/agents")({
@@ -76,21 +77,21 @@ function AgentsPage() {
           <label className="text-sm">Calls per minute<input type="number" className="mt-1 w-full rounded border bg-background p-2" value={cpm} onChange={(e) => setCpm(Number(e.target.value))} /></label>
           <label className="text-sm">Daily cost cap (units)<input type="number" className="mt-1 w-full rounded border bg-background p-2" value={cap} onChange={(e) => setCap(Number(e.target.value))} /></label>
         </div>
-        <button type="button" className="rounded bg-primary px-3 py-1 text-sm text-primary-foreground" onClick={() => run(async () => {
+        <Button type="button"  onClick={() => run(async () => {
           const r = await reg({ data: { name, mandate, authority_ceiling: ceiling, calls_per_minute: cpm, cost_cap: cap } });
           setToken(r.token); setName(""); setMandate("");
           return `Registered (ledger #${r.ledger_seq}). Copy the token now; it is shown only once.`;
-        })}>Register</button>
+        })}>Register</Button>
         {token && <p className="break-all rounded border border-primary p-2 text-sm">Token (shown once): <span className="ident" data-testid="agent-token">{token}</span></p>}
       </section>
 
       <section aria-labelledby="list" className="space-y-2 rounded border p-4">
         <h2 id="list" className="text-lg font-medium">Agents</h2>
-        <table className="w-full text-sm"><thead><tr className="text-left text-muted-foreground"><th>Name</th><th>Ceiling</th><th>Quota</th><th>Cost cap</th><th>State</th><th>Token</th><th /></tr></thead>
+        <div className="thread-table-scroll"><table className="w-full text-sm"><thead><tr className="text-left text-muted-foreground"><th>Name</th><th>Ceiling</th><th>Quota</th><th>Cost cap</th><th>State</th><th>Token</th><th /></tr></thead>
           <tbody>{s?.agents.map((a) => (
             <tr key={a.id} className="border-t"><td className="py-1" title={a.mandate ?? ""}>{a.name}</td><td>{a.authority_ceiling}</td><td>{(a.quota as { calls_per_minute?: number }).calls_per_minute}/min</td><td>{a.cost_cap}</td><td>{a.state}</td><td className="ident">{a.token_prefix}…</td>
-              <td>{a.state === "active" && <button type="button" className="underline" onClick={() => run(async () => { const r = await rev({ data: { agent_id: a.id, reason: "revoked from the agent gateway" } }); return `Revoked (ledger #${r.ledger_seq}).`; })}>Revoke</button>}</td></tr>
-          ))}</tbody></table>
+              <td>{a.state === "active" && <Button type="button" variant="link" className="px-0" onClick={() => run(async () => { const r = await rev({ data: { agent_id: a.id, reason: "revoked from the agent gateway" } }); return `Revoked (ledger #${r.ledger_seq}).`; })}>Revoke</Button>}</td></tr>
+          ))}</tbody></table></div>
       </section>
 
       <section aria-labelledby="k3" className="space-y-3 rounded border p-4">
@@ -102,10 +103,10 @@ function AgentsPage() {
           <label className="text-sm sm:col-span-2">Exact arguments (JSON)<textarea className="ident mt-1 w-full rounded border bg-background p-2 text-xs" rows={3} value={cArgs} onChange={(e) => setCArgs(e.target.value)} /></label>
           <label className="text-sm sm:col-span-2">Reason<input className="mt-1 w-full rounded border bg-background p-2" value={cReason} onChange={(e) => setCReason(e.target.value)} /></label>
         </div>
-        <button type="button" className="rounded border px-3 py-1 text-sm" onClick={() => run(async () => {
+        <Button type="button" variant="outline" onClick={() => run(async () => {
           const r = await conf({ data: { agent_id: cAgent, tool: cTool, arguments_json: cArgs, reason: cReason } });
           return `Confirmation token ${r.token_id} (expires ${new Date(r.expires_at).toLocaleTimeString()}, ledger #${r.ledger_seq}).`;
-        })}>Issue confirmation</button>
+        })}>Issue confirmation</Button>
         {(s?.tokens.length ?? 0) > 0 && <ul className="text-xs text-muted-foreground">{s!.tokens.slice(0, 5).map((t) => <li key={t.id}><span className="ident">{t.id}</span> · {agentName(t.agent_id)} · {t.tool} · {t.consumed_at ? "used" : new Date(t.expires_at) < new Date() ? "expired" : "unused"}</li>)}</ul>}
       </section>
 
@@ -137,10 +138,10 @@ function AgentsPage() {
 
       <section aria-labelledby="ev" className="space-y-2 rounded border p-4">
         <h2 id="ev" className="text-lg font-medium">Phase 9 exit evidence</h2>
-        <button type="button" className="rounded border px-3 py-1 text-sm" disabled={!cAgent} onClick={() => run(async () => {
+        <Button type="button" variant="outline" disabled={!cAgent} onClick={() => run(async () => {
           const r = await runEv({ data: { agent_id: cAgent } });
           return `${r.passed ? "Passed" : "Not passed"}: recorded as ledger #${r.ledger_seq}.`;
-        })}>Check the chosen agent's run and record</button>
+        })}>Check the chosen agent's run and record</Button>
         {ev && <div className="text-sm"><p>Last recorded: ledger #{ev.seq} — {ev.payload.passed ? "passed" : "not passed"}</p>
           <ul>{ev.payload.checks.map((c) => <li key={c.name}>{c.pass ? "✓" : "✗"} {c.name} <span className="text-muted-foreground">— {c.detail}</span></li>)}</ul></div>}
       </section>

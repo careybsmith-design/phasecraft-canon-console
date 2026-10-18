@@ -5,6 +5,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useCallback, useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
+import { Button } from "@/components/ui/button";
 import { CANON_MARKER, RENDITION_KINDS, type RenditionKind } from "@/domain/generation";
 import {
   generateMyBrief, generateRendition, getPhase8Evidence, listGeneration, runPhase8Evidence, serveRendition, recordRenditionDownload,
@@ -84,13 +85,13 @@ function GenerationPage() {
       <section aria-labelledby="brief" className="space-y-2 rounded border p-4">
         <h2 id="brief" className="text-lg font-medium">Morning intelligence brief</h2>
         <p className="text-sm text-muted-foreground">Generated every morning at 05:00 UTC. Only what needs your judgment: decisions, anomalies, opportunities and stop recommendations. No progress or activity.</p>
-        <button type="button" disabled={busy} className="rounded bg-primary px-3 py-1 text-sm text-primary-foreground"
+        <Button type="button" disabled={busy} 
           onClick={() => run(async () => {
             const r = await brief();
             if (r.skipped) return r.reason ?? "Nothing requires your judgment today.";
             if (r.rendition_id) await open(r.rendition_id, "morning intelligence brief");
             return `Brief ${r.human_ref} generated.`;
-          })}>Generate my brief now</button>
+          })}>Generate my brief now</Button>
       </section>
 
       <section aria-labelledby="new" className="space-y-3 rounded border p-4">
@@ -116,7 +117,7 @@ function GenerationPage() {
         <ul className="max-h-56 overflow-auto rounded border text-sm">
           {objs.slice(0, 80).map((o) => (
             <li key={o.id} className="border-t first:border-t-0">
-              <label className="flex items-center gap-2 px-2 py-1">
+              <label className="flex flex-wrap items-center gap-2 px-2 py-2">
                 <input type="checkbox" checked={sources.includes(o.id)}
                   onChange={(e) => setSources((s) => (e.target.checked ? [...s, o.id].slice(0, 20) : s.filter((x) => x !== o.id)))} />
                 <span className="ident">{o.human_ref}</span> {o.title}
@@ -125,13 +126,13 @@ function GenerationPage() {
             </li>
           ))}
         </ul>
-        <button type="button" disabled={busy || !purpose.trim() || sources.length === 0} className="rounded bg-primary px-3 py-1 text-sm text-primary-foreground"
+        <Button type="button" disabled={busy || !purpose.trim() || sources.length === 0} 
           onClick={() => run(async () => {
             const r = await gen({ data: { kind, purpose: purpose.trim(), request_text: focus, source_ids: sources } });
             if (r.refused) return `Refused: ${r.reason}. Nothing was generated (recorded as ledger #${r.ledger_seq}).`;
             if (r.rendition_id) await open(r.rendition_id, purpose.trim());
             return `Generated ${r.human_ref} (ledger #${r.ledger_seq}).`;
-          })}>{busy ? "Generating…" : "Generate"}</button>
+          })}>{busy ? "Generating…" : "Generate"}</Button>
       </section>
 
       {shown && (
@@ -157,7 +158,7 @@ function GenerationPage() {
           </p>
           <div className="flex flex-wrap items-center gap-3 border-t pt-3">
             {!pdf ? (
-              <button type="button" className="rounded border px-3 py-1 text-sm" disabled={preparing} onClick={async () => {
+              <Button type="button" variant="outline" disabled={preparing} onClick={async () => {
                 setPreparing(true); setMsg("");
                 try {
                   const purposeText = shown.permission_context.purpose;
@@ -170,9 +171,9 @@ function GenerationPage() {
                   });
                   setPdf({ blob, name: `${shown.human_ref}.pdf`, seq: d.ledger_seq });
                 } catch (e) { setMsg(parseErr(e)); } finally { setPreparing(false); }
-              }}>{preparing ? "Preparing PDF…" : "Prepare PDF"}</button>
+              }}>{preparing ? "Preparing PDF…" : "Prepare PDF"}</Button>
             ) : (
-              <button type="button" className="rounded bg-primary px-3 py-1 text-sm text-primary-foreground" onClick={() => void deliverFile(pdf.blob, pdf.name)}>Download {pdf.name}</button>
+              <Button type="button"  onClick={() => void deliverFile(pdf.blob, pdf.name)}>Download {pdf.name}</Button>
             )}
             <p className="text-xs text-muted-foreground">{pdf ? `Download recorded as ledger #${pdf.seq}. ` : ""}A downloaded copy doesn't update or expire, so it may go out of date.</p>
           </div>
@@ -181,7 +182,7 @@ function GenerationPage() {
 
       <section aria-labelledby="mine" className="space-y-2 rounded border p-4">
         <h2 id="mine" className="text-lg font-medium">Your renditions</h2>
-        <table className="w-full text-sm">
+        <div className="thread-table-scroll"><table className="w-full text-sm">
           <thead><tr className="text-left text-muted-foreground"><th>Ref</th><th>Kind</th><th>Purpose</th><th>State</th><th>Sources</th><th /></tr></thead>
           <tbody>
             {list?.renditions.map((r) => {
@@ -194,18 +195,18 @@ function GenerationPage() {
                   <td>{pc.purpose}</td>
                   <td>{r.state}{r.state === "stale" && r.stale_reason ? ` — ${r.stale_reason}` : ""}</td>
                   <td className="ident text-xs">{gf.map((g) => `${g.human_ref ?? "?"} v${g.version ?? "?"}`).join(", ")}</td>
-                  <td><button type="button" className="underline" onClick={() => open(r.id, pc.purpose ?? "")}>Open</button></td>
+                  <td><Button type="button" variant="link" className="px-0" onClick={() => open(r.id, pc.purpose ?? "")}>Open</Button></td>
                 </tr>
               );
             })}
           </tbody>
-        </table>
+        </table></div>
       </section>
 
       <section aria-labelledby="exit" className="space-y-2 rounded border p-4">
         <h2 id="exit" className="text-lg font-medium">Phase 8 exit evidence</h2>
-        <button type="button" disabled={busy} className="rounded border px-3 py-1 text-sm"
-          onClick={() => run(async () => { const r = await runEv(); return `Self-test ${r.selftest.passed ? "passed" : "FAILED"}; recorded as ledger #${r.ledger_seq}.`; })}>Run and record</button>
+        <Button type="button" disabled={busy} variant="outline"
+          onClick={() => run(async () => { const r = await runEv(); return `Self-test ${r.selftest.passed ? "passed" : "FAILED"}; recorded as ledger #${r.ledger_seq}.`; })}>Run and record</Button>
         {evidence && (
           <div className="text-sm">
             <p>Ledger #{evidence.ledger_seq}: {evidence.selftest.passed ? "all checks passed" : "some checks failed"}</p>
