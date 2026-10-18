@@ -60,7 +60,7 @@ export function actionRatios(rows: Array<{ mutating_actions: number; reads: numb
   const read_only_pct = total ? 100 * rows.filter(r => r.reads > 0 && r.mutating_actions === 0).length / total : null;
   if (setting.status === "open") return { action_pct, read_only_pct, status: "THRESHOLD_UNSET", pass: false, release_blocking: false, severity: "warning" };
   const configured = setting.status === "set" && validActionRatioThresholds(setting.value);
-  const pass = configured && action_pct !== null && read_only_pct !== null && action_pct >= setting.value.min_action_pct && read_only_pct <= setting.value.max_read_only_pct;
+  const pass = configured && setting.value !== null && action_pct !== null && read_only_pct !== null && action_pct >= setting.value.min_action_pct && read_only_pct <= setting.value.max_read_only_pct;
   return { action_pct, read_only_pct, status: !configured ? "THRESHOLD_UNSET" : total ? "measured" : "NO_EVIDENCE", pass, release_blocking: !pass, severity: pass ? "none" : "error" };
 }
 export function elapsedHours(start: string, end: string) {
