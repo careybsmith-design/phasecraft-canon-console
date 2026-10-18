@@ -365,7 +365,7 @@ create table public.lifecycle_transitions (
   lifecycle_family text not null, from_state text not null, to_state text not null,
   primary key (lifecycle_family, from_state, to_state),
   constraint no_approval_states check (
-    to_state !~* '(approv|sign.?off|pending.?review|submitted.?for.?review|awaiting|qa.?phase|gate)')
+    not public.is_prohibited_lifecycle_state(to_state))
 );
 
 -- Universal envelope (4.1)
@@ -520,7 +520,7 @@ create table public.notifications (id uuid primary key, recipient_id uuid not nu
   body jsonb not null, created_at timestamptz not null default now(),
   constraint decision_or_event check (trigger_event_id is not null or decision_id is not null)); -- AW-6
 create table public.usage_sessions (id uuid primary key, actor_id uuid not null, started_at timestamptz not null, ended_at timestamptz,
-  mutating_actions int not null default 0, reads int not null default 0);  -- AW-5; aggregate-only renditions, never individual (14.3)
+  mutating_actions int not null default 0, reads int not null default 0);  -- L-10: no application table SELECT; only windowed security-definer aggregate reads, never actor activity
 
 -- Roles (separate table, never on profile)
 create type app_role as enum ('steward','co_creator','builder','member','compliance');

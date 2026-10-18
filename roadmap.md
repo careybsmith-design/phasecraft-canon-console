@@ -1,15 +1,16 @@
 # THREAD roadmap
 
 ## Correction packet L-02–L-20 (18 October 2026)
-- [ ] Apply directive/specification corrections and regenerate Appendix A cross-references.
-- [ ] L-02: non-blocking OPEN AW-5 warning, owned finding, ratios and set-state enforcement.
+- [x] Directive/source corrections and Appendix A cross-reference index applied; correction packet/status saved. Complete implementation acceptance remains below.
+- [x] L-02: OPEN warning/finding, no expiry/default, aggregate ratios and configured violation rule implemented; authenticated UI/RPC verified. Current action/read-only ratios null (0 sessions).
 - [ ] L-03: complete regression fixture; real pilot requires named people, business condition, deployment target and agreed time (human input).
-- [ ] L-04/L-05: checked-in registry and 37-detector manifests, parity and owner induction proof.
-- [ ] L-06/L-07: provenance persistence guards and ledger concurrency/tamper evidence.
-- [ ] L-08/L-09: AW-16 state-ownership checks and independently verified metric/controls.
-- [ ] L-10/L-11: aggregate-only usage access and exact approval-state guard.
+- [ ] L-04/L-05: manifest checked in and five parity tests pass; fresh DB replay/full schemas and 43→37 legacy detector reconciliation remain unfinished engineering, not an outside-service blocker.
+- [ ] L-06/L-07: normalized span persistence/commit/range/immutability guards applied; 26 covered objects, zero missing live spans. Full compatibility-array removal and isolated negative DB/extractor proof remain engineering; peak concurrent chain/tamper proof requires isolated load environment.
+- [ ] L-08/L-09: AW-16 scanner/report correctly FAIL on legacy build_runs.status; safe execution-state conversion remains engineering. Five-control independence metric published with six tests; actual independent authors/reviewers/mutation execution and verified source refs remain required.
+- [x] L-10/L-11: authenticated usage table read denied, aggregate succeeds without actor IDs, technical-field inference refused; whole-token state constraints validated. Remaining isolated direct-mutant tests recorded in correction status.
 - [ ] L-12–L-18/L-20: inspect and correct canon, operation, framing, gate, authority, graph and lineage gaps.
-- [ ] Run complete automated tests and report proof plus every remaining blocker; do not claim correction-round acceptance prematurely.
+- [x] Complete local suite 1,718/1,718 across 31 files, latest build OK; signed-in Assurance/RPC warning/privacy checks passed. Proof at Assurance → Whole-build audit → Correction proof/tests. Correction-round acceptance remains INCOMPLETE.
+- [ ] L-15/L-20: model eligibility/simulation projections and pre-fetch gates applied; zero eligible routes (live model calls refuse, classifier uses regression fallback). Genuine route attestations/evaluations/logging evidence required; verified source controls, all-lineage validation and remaining engineering in correction status.
 
 ## Whole-build audit — Sections 1–19 (authorized 16 October 2026)
 - [x] 17 October 00:51 third renewal: fresh full suite 1,671/1,671 (25 files) saved to docs/audit/full-suite.txt; build clean; 534 objects, 93 non-draft orphans, AW-5 still open, 0 usage sessions; 2,754 ledger entries, 53 tables/368 functions/54 policies. No new code gaps found beyond those already listed; release verdict remains FAIL pending the open blockers below.

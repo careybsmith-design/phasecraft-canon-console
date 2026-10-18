@@ -365,7 +365,7 @@ create table public.lifecycle_transitions (
   lifecycle_family text not null, from_state text not null, to_state text not null,
   primary key (lifecycle_family, from_state, to_state),
   constraint no_approval_states check (
-    to_state !~* '(approv|sign.?off|pending.?review|submitted.?for.?review|awaiting|qa.?phase|gate)')
+    not public.is_prohibited_lifecycle_state(to_state))
 );
 
 -- Universal envelope (4.1)
@@ -520,7 +520,7 @@ create table public.notifications (id uuid primary key, recipient_id uuid not nu
   body jsonb not null, created_at timestamptz not null default now(),
   constraint decision_or_event check (trigger_event_id is not null or decision_id is not null)); -- AW-6
 create table public.usage_sessions (id uuid primary key, actor_id uuid not null, started_at timestamptz not null, ended_at timestamptz,
-  mutating_actions int not null default 0, reads int not null default 0);  -- AW-5; aggregate-only renditions, never individual (14.3)
+  mutating_actions int not null default 0, reads int not null default 0);  -- L-10: no application table SELECT; only windowed security-definer aggregate reads, never actor activity
 
 -- Roles (separate table, never on profile)
 create type app_role as enum ('steward','co_creator','builder','member','compliance');
@@ -658,7 +658,7 @@ This is a navigational index, not a verbatim extraction. Full Appendix C section
 
 ## Appendix B: Design decisions and OPEN items
 
-**DESIGN DECISIONS carried from the source (Part 24, may be challenged):** the five-kernel decomposition; service boundaries and storage roles; graph technology; scale estimates; performance budgets; the build-phase sequence including Phase 2B; the "visualization tomorrow" reconciliation with the daily pattern (Part 8.4); the framing pipeline design (object types, six-way classification, the authority-aware rule, the relationship-source ordering, cross-session surfacing and its latency budgets, and the 16 detectors); the eight framing views; the design language (Part 18.1).
+**DESIGN DECISIONS carried from the source (Part 24, may be challenged):** platforms own execution, THREAD owns lineage (Part 1.4 / L-08); the five-kernel decomposition; service boundaries and storage roles; graph technology; scale estimates; performance budgets; the build-phase sequence including Phase 2B; the "visualization tomorrow" reconciliation with the daily pattern (Part 8.4); the framing pipeline design (object types, six-way classification, the authority-aware rule, the relationship-source ordering, cross-session surfacing and its latency budgets, and the 16 detectors); the eight framing views; the design language (Part 18.1).
 
 **DESIGN DECISIONS added for Lovable:**
 1. Postgres tables plus recursive CTEs replace Apache AGE/Neo4j, with current platform availability to be verified.
@@ -678,7 +678,7 @@ This is a navigational index, not a verbatim extraction. Full Appendix C section
 
 ## Appendix C: Canonical specification, source Parts 1–23 reproduced verbatim (normative, Layer B)
 
-This text was extracted from *THREAD Build Plan Rev 1.1*, keeping the source layout. Part 23 is the canonical glossary: use its terms exactly and do not invent vocabulary. Source Part 0 (instructions for the prompt author), Part 24 (sources) and Part 25 (generation rules) are already applied above and are left out.
+This text was extracted from *THREAD Build Plan Rev 1.1*, keeping the source layout. The saved correction packet is authoritative for L-02–L-20/S-01–S-07 until Revision 1.2; the historical source text below is preserved, not silently rewritten. Part 23 is the canonical glossary: use its terms exactly and do not invent vocabulary. Source Part 0 (instructions for the prompt author), Part 24 (sources) and Part 25 (generation rules) are already applied above and are left out.
 
 ```text
 PART 1 — Context you must hold
