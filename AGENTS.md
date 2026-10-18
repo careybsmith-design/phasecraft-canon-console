@@ -12,16 +12,15 @@
 # THREAD build rules
 
 - Read docs/THREAD-spec.md Section 2, Appendix A and cited Appendix C before each approved phase. docs/THREAD-correction-packet.md overrides its specified contradictions; report directive evidence separately.
-- Privileged `thread_*` writes and trigger helpers are service-role-only; actors come from verified sessions. Authenticated RLS predicates remain callable. Why: public keys cannot forge writes (P9).
+- Privileged `thread_*` writes and trigger helpers are service-role-only; actors come from verified sessions. Authenticated RLS predicates stay callable. Why: public keys cannot forge writes (P9).
 - `enforce_provenance` requires a ledger row in the same transaction with matching chain, version and content hash. Why: a provenance gap or forged entry is impossible, not just discouraged.
 - Ledger and `object_versions` are append-only (revoked grants plus rejecting triggers). Objects are tombstoned, never deleted.
 - Lifecycle families are ordered ranks in `src/domain/lifecycle.ts`; transitions go only to a strictly later rank (reversals become new versions, P15). Types without a Part 4.4 family use `canon`, `evidence_record` or `framing_extract`. The DB seed must mirror `lifecycle.ts` and `registry.ts`; change both together.
-- WorkingCapability, ExposurePopulation and AuthorityGrant are registered because Part 4.2 verbs reference them although Part 4.3 has no row for them.
+- WorkingCapability, ExposurePopulation and AuthorityGrant are registered because Part 4.2 verbs reference them though Part 4.3 has no row for them.
 - The first account to sign up becomes `steward`; everyone is `member`. DESIGN DECISION until the IdentityProvider adapter exists.
 - Restore rehearsal is a snapshot-replay check (`thread_restore_rehearsal`) recorded as simulated; a platform backup restore stays `pending_live_adapter`.
 - `/` redirects to the protected `/feed` surface and sign-in opens it. Why: home is a place to act without duplicating the root route.
-- Relationship verbs are data in `src/domain/relationships.ts`; the DB seed (`scripts/gen-phase2-seed.ts`) must mirror it. Why: edge type checks in `thread_create_edge` and the UI agree.
-- Edges are written only via `thread_create_edge` / `thread_retire_edge`; `edges_guard` requires a same-transaction ledger entry and allows only retirement. Why: P9 applies to relationships too.
+- Relationship verbs are data in `src/domain/relationships.ts`; the DB seed (`scripts/gen-phase2-seed.ts`) must mirror it. Edges are written only via `thread_create_edge` / `thread_retire_edge`; `edges_guard` requires a same-transaction ledger entry and allows only retirement. Why: P9 applies to relationships too.
 - DESIGN DECISION: each verb has an `impact` direction (forward/reverse/both/none) for blast radius; Part 4.2 does not state propagation. `derives_from` is registered because Part 4.5 rule 6 names it.
 - Graph reads are SQL functions (`graph_*`) run as the caller so permissions apply. Nebula positions are precomputed server-side in `graph_layouts` and refreshed after each write. Why: Part 16.5, the browser never solves a large layout.
 - Active Canon-family objects change only via `thread_propose_canon_change` -> challenge window (min 24 h, default 72 h) -> steward `thread_decide_canon_change` (records a ConfirmedDecision); the `canon_change_path` trigger blocks anything else. Drafts are edited directly. Why: P15.
