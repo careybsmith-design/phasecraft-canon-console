@@ -593,7 +593,7 @@ async function extractUnits(
     if (error) throw threadError(error.message);
   }
   units = units.filter(u => validExtractionSpan(u.span));
-  const { classifyUnits, findContradictions } = await import("@/server/framing/extractor");
+  const { classifyUnits, findContradictions } = await import("@/server/framing/extractor.server");
   const { db, session } = c;
   const ps = participants(session);
   const actor = extractor(c.uid);
@@ -1331,7 +1331,7 @@ export const captureLiveSpeech = createServerFn({ method: "POST" })
       .parse(d),
   )
   .handler(async ({ data, context }) => {
-    const { transcribeAudio } = await import("@/server/adapters/transcription/live");
+    const { transcribeAudio } = await import("@/server/adapters/transcription/live.server");
     const bin = atob(data.audio_wav_base64);
     const wav = new Uint8Array(bin.length);
     for (let i = 0; i < bin.length; i++) wav[i] = bin.charCodeAt(i);
@@ -1414,7 +1414,7 @@ export const captureImage = createServerFn({ method: "POST" })
         { owner: session.owner_id, rationale: "Drawing captured on the session timeline" },
       ),
     );
-    const { describeDrawing } = await import("@/server/framing/extractor");
+    const { describeDrawing } = await import("@/server/framing/extractor.server");
     const mode = await modelMode(db);
     let desc: Awaited<ReturnType<typeof describeDrawing>> = null;
     try {
@@ -2343,7 +2343,7 @@ export const publishExtractionQuality = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const db = await admin();
-    const { classifyUnits } = await import("@/server/framing/extractor");
+    const { classifyUnits } = await import("@/server/framing/extractor.server");
     const { data: items } = await db.from("extraction_eval_items").select("*").order("created_at");
     const rows = (items ?? []) as Row[];
     if (!rows.length) throw threadError("NO_LABELLED_SET");

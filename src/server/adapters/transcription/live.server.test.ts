@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { liveTranscription, transcribeAudio, LIVE_TRANSCRIBE_MODEL } from "./live";
+import { liveTranscription, transcribeAudio, LIVE_TRANSCRIBE_MODEL } from "./live.server";
 import { encryptConnectionKey, decryptConnectionKey } from "@/server/connectionKeyCrypto";
 
 const WAV = new Uint8Array(2048).fill(1);
