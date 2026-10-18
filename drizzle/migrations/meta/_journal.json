@@ -498,6 +498,13 @@
       "when": 1792291403486,
       "tag": "0070_reaudit_agent_reservation_serialization",
       "breakpoints": true
+    },
+    {
+      "idx": 71,
+      "version": "7",
+      "when": 1792297663345,
+      "tag": "0071_app_user_connections",
+      "breakpoints": true
     }
   ]
 }
