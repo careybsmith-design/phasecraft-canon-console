@@ -65,6 +65,7 @@ export function FramingHome() {
   const sessions = useQuery({ queryKey: ["framing-sessions"], queryFn: () => list() });
   return (
     <main className="grid gap-4 p-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+      <header className="thread-page-heading"><h1>Framing sessions</h1></header>
       <section className="space-y-4">
         <StartForm />
         <div className="rounded-md border bg-panel">

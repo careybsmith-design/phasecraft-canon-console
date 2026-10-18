@@ -38,6 +38,7 @@ function AuthorityPage() {
   const d = overview.data;
   return (
     <main className="grid gap-4 p-4 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
+      <header className="thread-page-heading"><h1>Authority</h1></header>
       <section className="min-w-0 space-y-4">
         <Evaluate />
         <Evidence />

@@ -1,9 +1,9 @@
 # THREAD roadmap
 
-## Visual-only redesign — user review required
-- [x] Prepare desktop/mobile design concepts and the visual-only plan; no running UI changes applied.
-- [ ] Apply the approved visual direction consistently across existing UIs, preserving every function and workflow. Blocked on user design approval.
-- [ ] Verify existing controls/flows, desktop and narrow layout, and relevant regressions after approval.
+## Visual-only redesign — approved and applied
+- [x] Desktop/mobile design concepts and plan approved; implemented neutral charcoal/amber system, desktop rail, narrow horizontal navigation, consistent controls, hierarchy and unframed sections. Real content/actions/data semantics preserved.
+- [x] Applied shared visual direction to all existing surfaces, with Feed hierarchy, Generation/Agent table containment, page headings, Companion/dialog and sign-in polish. No server/domain/database/business-rule changes.
+- [x] Browser checked all 17 navigation destinations at 1280×1800 and 503×612: no page errors or horizontal document overflow; 17 destinations retained. Verified Feed reference filtering/following checkbox, Mission form opening/input without submission, Companion opening/input/close, creation prompt expansion, graph canvas/export and sign-in mode switching. All 1,735 existing tests/32 files pass; preview build OK. Visual approval does not resolve the earlier audit acceptance blockers.
 
 ## Correction-aware whole-build recheck — 18 October 2026
 - [x] Re-read governing specification/Sections 1–19/Appendices A–C with corrections; current section and operation dispositions in docs/THREAD-correction-reaudit.md and 95-tool source/contract inventory.

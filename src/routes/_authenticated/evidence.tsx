@@ -35,6 +35,7 @@ export function EvidencePage({ capabilityId, onSelect }: { capabilityId?: string
   const id = capabilityId ?? selectedId;
   return (
     <main className="grid gap-4 p-4 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)]">
+      <header className="thread-page-heading"><h1>Evidence graph</h1></header>
       <section className="min-w-0 space-y-4">
         <Picker roots={roots.data ?? []} id={id} setId={onSelect ?? setId} />
         {id ? <Explain id={id} /> : <p className="text-sm text-muted-foreground">Choose a capability, behaviour, decision, exposure, outcome or incident to see its evidence chain.</p>}

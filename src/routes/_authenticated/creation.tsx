@@ -37,6 +37,7 @@ function CreationPage() {
   if (!q.data) return <p className="p-4 text-sm text-muted-foreground">Loading the creation loop…</p>;
   return (
     <main className="grid gap-4 p-4 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
+      <header className="thread-page-heading"><h1>Creation</h1></header>
       <section className="min-w-0 space-y-4">
         <Compile d={q.data} />
         <Prompts d={q.data} />

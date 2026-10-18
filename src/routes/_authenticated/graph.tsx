@@ -79,6 +79,7 @@ function Explorer() {
   const set = (patch: Partial<z.infer<typeof Search>>) => navigate({ search: (p) => ({ ...p, ...patch }) });
   return (
     <main className="space-y-3 p-4">
+      <header className="thread-page-heading"><h1>Operating Graph</h1></header>
       <nav aria-label="Explorer views" className="flex flex-wrap items-center gap-1">
         {EXPLORER_VIEWS.map((v) => (
           <button key={v} type="button" onClick={() => set({ view: v })} aria-current={s.view === v ? "page" : undefined}
