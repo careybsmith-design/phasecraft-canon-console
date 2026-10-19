@@ -9,6 +9,7 @@ import {
   extractSignalFromArtifact,
   startSignalCapture,
   completeSignalCapture,
+  abandonSignalCapture,
   confirmDraftSignal,
   promoteSignal,
   linkSignalToMission,
@@ -118,6 +119,7 @@ function IntakePanel({ onChanged }: { onChanged: () => void }) {
   const [purpose, setPurpose] = useState("");
   const [captureId, setCaptureId] = useState("");
   const [transcript, setTranscript] = useState("");
+  const [consentConfirmed, setConsentConfirmed] = useState(false);
   const [drafts, setDrafts] = useState<DraftSignal[]>([]);
   const [draftOrigin, setDraftOrigin] = useState<SignalOrigin>("artifact_upload");
   const [busy, setBusy] = useState(false);
@@ -125,6 +127,7 @@ function IntakePanel({ onChanged }: { onChanged: () => void }) {
   const extract = useServerFn(extractSignalFromArtifact);
   const startCapture = useServerFn(startSignalCapture);
   const completeCapture = useServerFn(completeSignalCapture);
+  const abandonCapture = useServerFn(abandonSignalCapture);
 
   async function submitDirect() {
     setBusy(true);
@@ -171,9 +174,11 @@ function IntakePanel({ onChanged }: { onChanged: () => void }) {
   async function openCapture() {
     setBusy(true);
     try {
-      const r = await startCapture({ data: { modalities: ["text"], purpose } });
-      setCaptureId(r.capture_id);
-      toast.success("Capture open — consent is required from every participant before dictation.");
+      const r = await startCapture({
+        data: { modalities: ["text"], purpose, consent_confirmed: true },
+      });
+      setCaptureId(r.capture_id ?? "");
+      toast.success("Capture open — your consent confirmation is recorded with it.");
     } catch (e) {
       toast.error(errorText(e));
     } finally {
@@ -187,6 +192,23 @@ function IntakePanel({ onChanged }: { onChanged: () => void }) {
       const r = await completeCapture({ data: { capture_id: captureId, transcript } });
       setDrafts(r.draft_signal);
       setDraftOrigin("live_capture");
+      setCaptureId("");
+      setTranscript("");
+      setConsentConfirmed(false);
+    } catch (e) {
+      toast.error(errorText(e));
+    } finally {
+      setBusy(false);
+    }
+  }
+  async function dropCapture() {
+    setBusy(true);
+    try {
+      await abandonCapture({ data: { capture_id: captureId } });
+      toast.info("Capture abandoned — the attempt is recorded as abandoned.");
+      setCaptureId("");
+      setTranscript("");
+      setConsentConfirmed(false);
     } catch (e) {
       toast.error(errorText(e));
     } finally {
@@ -197,7 +219,7 @@ function IntakePanel({ onChanged }: { onChanged: () => void }) {
   const tabs: Array<{ id: Channel; label: string }> = [
     { id: "human_expertise", label: "Record directly" },
     { id: "artifact_upload", label: "From a document" },
-    { id: "live_capture", label: "Live dictation" },
+    { id: "live_capture", label: "Typed capture" },
   ];
   return (
     <section className="space-y-4 border-y py-4" aria-label="Record a signal">
@@ -338,9 +360,21 @@ function IntakePanel({ onChanged }: { onChanged: () => void }) {
                   onChange={(e) => setPurpose(e.target.value)}
                 />
               </div>
+              <label className="flex items-start gap-2 text-sm">
+                <input
+                  type="checkbox"
+                  checked={consentConfirmed}
+                  onChange={(e) => setConsentConfirmed(e.target.checked)}
+                  className="mt-1"
+                />
+                <span>
+                  I confirm that every participant whose words are captured here has consented to
+                  being recorded. This confirmation is stored with the capture.
+                </span>
+              </label>
               <Button
                 type="submit"
-                disabled={busy || !purpose.trim()}
+                disabled={busy || !purpose.trim() || !consentConfirmed}
                 className="justify-self-start"
               >
                 {busy ? "Opening…" : "Open capture (consent required)"}
@@ -355,11 +389,12 @@ function IntakePanel({ onChanged }: { onChanged: () => void }) {
               }}
             >
               <p className="text-xs text-muted-foreground">
-                Capture <span className="ident">{captureId.slice(0, 8)}</span> open. Every
-                participant must have consented.
+                Capture <span className="ident">{captureId.slice(0, 8)}</span> open under your
+                recorded consent confirmation. Type or paste the captured words below — this
+                channel does not record audio.
               </p>
               <div className="space-y-1">
-                <Label htmlFor="si-transcript">Dictated transcript</Label>
+                <Label htmlFor="si-transcript">Captured text</Label>
                 <Textarea
                   id="si-transcript"
                   required
@@ -369,13 +404,23 @@ function IntakePanel({ onChanged }: { onChanged: () => void }) {
                   onChange={(e) => setTranscript(e.target.value)}
                 />
               </div>
-              <Button
-                type="submit"
-                disabled={busy || !transcript.trim()}
-                className="justify-self-start"
-              >
-                {busy ? "Analysing…" : "Complete capture"}
-              </Button>
+              <div className="flex gap-2">
+                <Button
+                  type="submit"
+                  disabled={busy || !transcript.trim()}
+                  className="justify-self-start"
+                >
+                  {busy ? "Analysing…" : "Complete capture"}
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  disabled={busy}
+                  onClick={() => void dropCapture()}
+                >
+                  Abandon capture
+                </Button>
+              </div>
             </form>
           )}
         </div>
