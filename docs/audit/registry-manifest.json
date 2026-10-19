@@ -1343,6 +1343,10 @@
      "to": [
       "ValueSignal"
      ]
+    },
+    {
+     "from": ["ValueMission"],
+     "to": ["NeedStatement"]
     }
    ],
    "directed": true,
@@ -1388,6 +1392,10 @@
      "to": [
       "ValueCell"
      ]
+    },
+    {
+     "from": ["FramingSession"],
+     "to": ["ValueMission"]
     }
    ],
    "directed": true,
