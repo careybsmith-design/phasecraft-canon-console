@@ -144,6 +144,7 @@ export function SessionSurface({ sessionId }: { sessionId: string }) {
                 sessionId={sessionId}
                 participants={ps}
                 openedAt={s.body.opened_at}
+                me={d.me}
                 onDone={refresh}
               />
               <Capture
@@ -814,17 +815,23 @@ function StatementCard({
         ))}
       </div>
       {draft && (
-        <div className="mt-2 flex flex-wrap gap-2">
-          <Button
-            size="sm"
-            onClick={() =>
-              mode === "edit"
-                ? act(() => conf({ data: { statement_id: x.id, title, statement: stmt } }))
-                : act(() => conf({ data: { statement_id: x.id } }))
-            }
-          >
-            Confirm
-          </Button>
+        <div className="mt-2 space-y-1">
+          <p className="text-xs text-muted-foreground">
+            Confirming records this statement as confirmed under your authority. If you hold no
+            decision authority in this session, the confirmation is flagged as an authority
+            mismatch and material items still need an authority holder.
+          </p>
+          <div className="flex flex-wrap gap-2">
+            <Button
+              size="sm"
+              onClick={() =>
+                mode === "edit"
+                  ? act(() => conf({ data: { statement_id: x.id, title, statement: stmt } }))
+                  : act(() => conf({ data: { statement_id: x.id } }))
+              }
+            >
+              Confirm
+            </Button>
           <Button
             size="sm"
             variant="outline"
