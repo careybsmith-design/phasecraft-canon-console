@@ -1,0 +1,203 @@
+{
+  "surfaces": [
+    {
+      "route": "/feed",
+      "final_path": "/feed",
+      "title": "Live Value Feed \u00b7 THREAD",
+      "heading": [
+        "Live Enterprise Value Feed"
+      ],
+      "overflow": false,
+      "error_boundary": 0
+    },
+    {
+      "route": "/signals",
+      "final_path": "/signals",
+      "title": "Signal Intake and Register \u00b7 THREAD",
+      "heading": [
+        "Signal Intake and Register"
+      ],
+      "overflow": false,
+      "error_boundary": 0
+    },
+    {
+      "route": "/missions",
+      "final_path": "/missions",
+      "title": "Value Missions \u00b7 THREAD",
+      "heading": [
+        "Value Missions"
+      ],
+      "overflow": false,
+      "error_boundary": 0
+    },
+    {
+      "route": "/framing",
+      "final_path": "/framing",
+      "title": "Framing sessions \u00b7 THREAD",
+      "heading": [
+        "Framing sessions"
+      ],
+      "overflow": false,
+      "error_boundary": 0
+    },
+    {
+      "route": "/canon",
+      "final_path": "/canon",
+      "title": "Canon console \u00b7 THREAD",
+      "heading": [
+        "Record a canon object"
+      ],
+      "overflow": false,
+      "error_boundary": 0
+    },
+    {
+      "route": "/graph",
+      "final_path": "/graph",
+      "title": "Operating Graph Explorer \u00b7 THREAD",
+      "heading": [
+        "Operating Graph"
+      ],
+      "overflow": false,
+      "error_boundary": 0
+    },
+    {
+      "route": "/fabric",
+      "final_path": "/fabric",
+      "title": "Capability Fabric \u00b7 THREAD",
+      "heading": [
+        "Capability Fabric"
+      ],
+      "overflow": false,
+      "error_boundary": 0
+    },
+    {
+      "route": "/creation",
+      "final_path": "/creation",
+      "title": "Creation loop \u00b7 THREAD",
+      "heading": [
+        "Creation"
+      ],
+      "overflow": false,
+      "error_boundary": 0
+    },
+    {
+      "route": "/shadow",
+      "final_path": "/shadow",
+      "title": "Shadow, exposure and production outcome \u2014 THREAD",
+      "heading": [
+        "Shadow, exposure and production outcome"
+      ],
+      "overflow": false,
+      "error_boundary": 0
+    },
+    {
+      "route": "/generation",
+      "final_path": "/generation",
+      "title": "Generation layer \u2014 THREAD",
+      "heading": [
+        "Generation layer"
+      ],
+      "overflow": false,
+      "error_boundary": 0
+    },
+    {
+      "route": "/agents",
+      "final_path": "/agents",
+      "title": "Agent gateway \u2014 THREAD",
+      "heading": [
+        "Agent gateway"
+      ],
+      "overflow": false,
+      "error_boundary": 0
+    },
+    {
+      "route": "/assurance",
+      "final_path": "/assurance",
+      "title": "Assurance and recovery \u00b7 THREAD",
+      "heading": [
+        "Assurance"
+      ],
+      "overflow": false,
+      "error_boundary": 0
+    },
+    {
+      "route": "/detectors",
+      "final_path": "/detectors",
+      "title": "Detection \u2014 THREAD",
+      "heading": [
+        "Detection"
+      ],
+      "overflow": false,
+      "error_boundary": 0
+    },
+    {
+      "route": "/measurement",
+      "final_path": "/measurement",
+      "title": "Value measurement \u2014 THREAD",
+      "heading": [
+        "Measurement"
+      ],
+      "overflow": false,
+      "error_boundary": 0
+    },
+    {
+      "route": "/evidence",
+      "final_path": "/evidence",
+      "title": "Evidence Graph \u00b7 THREAD",
+      "heading": [
+        "Evidence graph"
+      ],
+      "overflow": false,
+      "error_boundary": 0
+    },
+    {
+      "route": "/authority",
+      "final_path": "/authority",
+      "title": "Authority and guardrails \u00b7 THREAD",
+      "heading": [
+        "Authority"
+      ],
+      "overflow": false,
+      "error_boundary": 0
+    },
+    {
+      "route": "/decisions",
+      "final_path": "/decisions",
+      "title": "Human Decision Queue \u00b7 THREAD",
+      "heading": [
+        "Human Decision Queue"
+      ],
+      "overflow": false,
+      "error_boundary": 0
+    },
+    {
+      "route": "/simulate",
+      "final_path": "/simulate",
+      "title": "Simulation Studio \u00b7 THREAD",
+      "heading": [
+        "Simulation Studio"
+      ],
+      "overflow": false,
+      "error_boundary": 0
+    },
+    {
+      "route": "/build-audit",
+      "final_path": "/build-audit",
+      "title": "Whole-build audit and proof \u00b7 THREAD",
+      "heading": [
+        "THREAD \u2014 correction-aware whole-build recheck",
+        "Historical correction round",
+        "Correction packet \u2014 implementation and exit evidence",
+        "Historical whole-build audit (superseded where corrected above)",
+        "THREAD whole-build audit"
+      ],
+      "overflow": false,
+      "error_boundary": 0
+    },
+    {
+      "a2a_contains_mandate": false,
+      "a2a_status": "checked"
+    }
+  ],
+  "page_errors": []
+}
