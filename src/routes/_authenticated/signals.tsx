@@ -91,7 +91,7 @@ function IntakePanel({ onChanged }: { onChanged: () => void }) {
   async function submitArtifact() {
     setBusy(true); setDrafts([]);
     try {
-      const r = await extract({ data: { artifact_text: artifact, kind });
+      const r = await extract({ data: { artifact_text: artifact, kind } });
       setDrafts(r.proposals); setDraftOrigin("artifact_upload");
     } catch (e) { toast.error(errorText(e)); } finally { setBusy(false); }
   }
