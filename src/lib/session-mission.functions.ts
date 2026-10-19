@@ -4,6 +4,14 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { LinkSessionMissionInput, NeedMissionInput } from "@/domain/session-mission";
 
 type Scope = { id: string; human_ref: string; title: string; origin: string; depth: number };
+export const getNeedPromotedSignals = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => z.object({ need_id: z.uuid() }).strict().parse(d))
+  .handler(async ({ data, context }) => {
+    const { data: signals, error } = await context.supabase.rpc("need_promoted_signals", { p_need: data.need_id });
+    if (error) throw new Error(error.message);
+    return signals ?? [];
+  });
 export const runSessionMissionAcceptance = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
