@@ -72,7 +72,7 @@ export interface DraftSignal {
 
 /** Words that mark a sentence as a candidate observed condition (gap, risk, opportunity). */
 const CONDITION_CUES =
-  /\b(gap|risk|delay|waiting|backlog|error|fail\w*|cost|waste|drop|decline|complaint|churn|manual|rework|duplicat\w*|slow|miss\w*|overdue|bottleneck|opportunit\w*|demand|growth|friction|hand.?off|abandon)\b/i;
+  /\b(gap|risk|delay|wait\w*|backlog|error|fail\w*|cost|waste|drop|decline|complaint|churn|manual|rework|duplicat\w*|slow|miss\w*|overdue|bottleneck|opportunit\w*|demand|grow\w*|friction|hand.?off|abandon|takes? \w+ (weeks?|days?|months?))\b/i;
 
 /**
  * Rule-based extraction (L-15: no live model route is attested, so extraction is deterministic).
