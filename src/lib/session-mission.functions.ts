@@ -8,7 +8,7 @@ export const runSessionMissionAcceptance = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const { data: steward, error: roleError } = await context.supabase.rpc("has_role", {
-      _user_id: context.userId,
+      _uid: context.userId,
       _role: "steward",
     });
     if (roleError) throw new Error(roleError.message);
