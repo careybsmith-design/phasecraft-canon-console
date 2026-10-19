@@ -17,6 +17,6 @@ describe("L-08: no THREAD-owned execution state", () => {
   it("BuildRun is an evidence record, not an execution lifecycle", () => {
     const br = REGISTRY.find((r) => r.type === "BuildRun");
     expect(br?.lifecycle_family).toBe("evidence_record");
-    expect(br?.machine_description ?? br?.description ?? "").toMatch(/platform/i);
+    expect(br?.purpose ?? "").toMatch(/platform/i);
   });
 });
