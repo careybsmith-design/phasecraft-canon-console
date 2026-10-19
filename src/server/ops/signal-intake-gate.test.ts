@@ -16,7 +16,9 @@ const PAN = "4111 1111 1111 1111"; // Luhn-valid card number
 const PHI = "ssn 123-45-6789";
 
 function fakeCtx() {
-  const rpc = vi.fn(async () => ({ data: { intake_event_id: "ev-1", status: "rejected" } }));
+  const rpc = vi.fn(async (..._args: unknown[]) => ({
+    data: { intake_event_id: "ev-1", status: "rejected" },
+  }));
   const ctx = {
     db: { rpc },
     actor: { kind: "human", id: "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa", authority_used: "observe" },
