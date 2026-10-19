@@ -839,7 +839,7 @@ function Detail({
       <div className="rounded-md border bg-panel p-3">
         <h3 className="label-caps">Versions</h3>
         <ol className="mt-1 space-y-1 text-xs">
-          {d.data.versions.map((v: any) => (
+          {d.data.versions.map((v: { version: number; lifecycle_state: string; statement: string }) => (
             <li key={v.version} className="grid grid-cols-[2.5rem_7rem_1fr] gap-2">
               <span className="ident">v{v.version}</span>
               <span className="ident text-muted-foreground">{v.lifecycle_state}</span>
@@ -851,7 +851,8 @@ function Detail({
       <div className="rounded-md border bg-panel p-3">
         <h3 className="label-caps">Ledger</h3>
         <ol className="mt-1 space-y-1 text-xs">
-          {d.data.ledger.map((l: any) => (
+          {d.data.ledger.map(
+            (l: { seq: number; action: string; object_version: number; hash: string; prev_hash: string }) => (
             <li key={l.seq} className="grid grid-cols-[3rem_9rem_2.5rem_1fr] gap-2">
               <span className="ident">#{l.seq}</span>
               <span className="ident">{l.action}</span>
