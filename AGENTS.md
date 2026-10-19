@@ -29,7 +29,7 @@
 - The browser build pins `events` / `node:events` to the `events` npm package (plugin in `vite.config.ts`). Why: the toolchain otherwise stubs it, breaking sigma's EventEmitter base class.
 
 - Fabric rules are pure in `src/domain/fabric.ts`, mirrored in SQL (`_capability_gaps`, `reuse_checks_guard`, `fabric_search`, `thread_fabric_sweep_scoped`); change both together. Creation is blocked in the DB without an allowing reuse check. Why: P11 by system, not convention.
-- Self-test fixtures come from `_selftest_body` / `_selftest_refs` / `_selftest_next_state`; extend these when a guard is added, not the phase self-tests.
+- Extend `_selftest_body` / `_selftest_refs` / `_selftest_next_state` for new guards. SI-1 uses rollback-only ledger-valid inserts in `thread_signal_intake_selftest`. Why: only its trigger exception may pass.
 - Read nested AGENTS.md files (including src/components and src/server/{evidence,shadow,generation,detection,ops}) before changing those areas. Measurement uses anti_wiki_action_ratio, never usage_sessions directly. Why: only windowed aggregates may leave measurement.
 - Generic human creation accepts only `generic-body.ts` contracts; other types need dedicated operations. Why: placeholder schemas cannot authorize arbitrary bodies.
 - Bundle audit test transcripts as `.txt`, never ignored `.log` files. Why: ignored files disappear from deployment source and break raw imports.
