@@ -1,5 +1,13 @@
 # THREAD roadmap
 
+## Consolidated remediation (THREAD-Consolidated-Remediation-Prompt.md) — 19 October 2026
+
+- [x] W1.1 typecheck gate: `typecheck`/`build`/`build:dev` scripts now run `tsgo --noEmit` before Vite (deviation: prompt said `tsc`, project toolchain uses tsgo). Gate proven: deliberate `src/__gatecheck.ts` type error failed with TS2322 exit 2; clean tree exits 0; `bun run build` exit 0. No CI workflows exist — the `build` script is the only gate.
+- [x] W1.2 lint gate: `prettier --write .` cleared ~7,126 formatting findings; `eslint --fix` cleared 30 more; fixed by hand — 8 `explicit-any` in the Microsoft Graph handlers (typed Graph response shapes), 2 `explicit-any` in canon.tsx, 1 unused-expression in creation.tsx, 1 `prefer-const` in ConnectorsPanel.tsx. Narrow commented ignore added for auto-generated `src/integrations/supabase/previewAuthStorage.ts` (never edited by hand). `verify` script = typecheck + lint + test. `bun run verify` exit 0: lint 0 errors (11 warnings remain, non-blocking), 1,767/1,767 tests.
+- [ ] W2.1–W2.5 guards-before-action (audio authorization, duplicate-lookup scoping, byte classification, outbox account scoping, Confirm authority display).
+- [ ] W3.1–W3.5 honesty/losslessness (zero-loss capture, dictation channel, ledger every attempt, gate all persisted fields, promotion suggestion honesty + eligibility narrowing pending Carey confirmation).
+- [ ] Wave 4 (L-08/AW-16 execution-state removal): needs a written plan before code — produce plan and stop.
+
 ## Complete code and plan-conformance audit — 19 October 2026
 
 - [x] Audited original phases, authoritative corrections, approved redesign/capture plans and later intake/confirmation changes; current report: docs/THREAD-complete-audit-2026-10-19.md. No application behavior or data repaired; release FAIL / INCOMPLETE.
