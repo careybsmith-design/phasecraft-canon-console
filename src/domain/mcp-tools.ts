@@ -8,6 +8,7 @@ import { z } from "zod/v4";
 import type { AuthorityLevel, ContentOrigin } from "./mcp";
 import { PLATFORMS } from "./creation";
 import { MissionInput, CellInput, BurstInput } from "./human-surfaces";
+import { RecordSignalInput, ExtractSignalInput, CaptureStartInput, CaptureCompleteInput, PromoteSignalInput, LinkSignalInput } from "./signal-intake";
 import { outputSchema } from "./mcp-output";
 import { ObjectLookupInput, GraphSearchInput } from "./object-read";
 
@@ -53,6 +54,16 @@ const iterationDiff = z.object({ added_obligations: z.array(txt(300)).max(20).de
   changed_contracts: z.array(txt(300)).max(20).default([]), text_edits: z.array(txt(300)).max(20).default([]) });
 
 export const TOOLS: ToolDef[] = [
+  // Signal intake — the four channels (L-22/S-09). All terminate in a ValueSignal in 'detected'.
+  D("record_value_signal", "K2", "Record a signal from a human-stated condition (human_expertise channel; agents record as agent_sensor)",
+    RecordSignalInput, { side_effects: "creates_objects", authority: "observe", output: "{signal: ValueSignal envelope, intake_event_id} or {status: duplicate, existing_signal}" }),
+  D("extract_signal_from_artifact", "K2", "Propose draft signals from an uploaded artifact; the PHI/PAN gate runs before any model call",
+    ExtractSignalInput, { authority: "observe", output: "{proposals: DraftSignal[]}; never creates a signal" }),
+  D("start_signal_capture", "K2", "Open a live voice/text signal capture (consent required)", CaptureStartInput, { authority: "observe", output: "{capture_id, consent_required: true}" }),
+  D("complete_signal_capture", "K2", "Finalise a live capture into draft signal proposals (capture owner)", CaptureCompleteInput, { authority: "observe", output: "{draft_signal: DraftSignal[]}; never creates a signal" }),
+  D("promote_signal", "K2", "Promote a detected/enriched/monitoring signal to mission-eligible; a non-authority promotion is recorded as a suggestion",
+    PromoteSignalInput, { side_effects: "creates_objects", output: "{promoted, decision_id} or {promoted: false, recorded_as: suggestion}" }),
+  D("link_signal_to_mission", "K2", "Attach a secondary signal to an existing mission", LinkSignalInput, { side_effects: "creates_objects" }),
   // The twelve ValueOS tools (exact names)
   D("detect_value_signal", "K2", "Create a signal from evidence; the observed condition is kept separate from requested solutions (P3)",
     z.object({ observed_condition: txt(2000), affected_population: txt(500).optional(), evidence_refs: z.array(id).max(20).default([]),

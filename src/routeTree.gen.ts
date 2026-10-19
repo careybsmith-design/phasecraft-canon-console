@@ -39,6 +39,7 @@ import { Route as AuthenticatedFramingViewsRouteImport } from './routes/_authent
 import { Route as AuthenticatedMissionsIndexRouteImport } from './routes/_authenticated/missions.index'
 import { Route as AuthenticatedMissionsMissionIdRouteImport } from './routes/_authenticated/missions.$missionId'
 import { Route as AuthenticatedSessionsSessionIdRouteImport } from './routes/_authenticated/sessions.$sessionId'
+import { Route as AuthenticatedSignalsSignalIdRouteImport } from './routes/_authenticated/signals_.$signalId'
 import { Route as ApiPublicMcpRouteImport } from './routes/api/public/mcp'
 import { Route as ApiOauthMicrosoft_outlookReturnRouteImport } from './routes/api/oauth/microsoft_outlook/return'
 import { Route as ApiOauthMicrosoft_teamsReturnRouteImport } from './routes/api/oauth/microsoft_teams/return'
@@ -202,6 +203,12 @@ const AuthenticatedSessionsSessionIdRoute =
     path: '/sessions/$sessionId',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const AuthenticatedSignalsSignalIdRoute =
+  AuthenticatedSignalsSignalIdRouteImport.update({
+    id: '/signals_/$signalId',
+    path: '/signals/$signalId',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const ApiPublicMcpRoute = ApiPublicMcpRouteImport.update({
   id: '/api/public/mcp',
   path: '/api/public/mcp',
@@ -260,6 +267,7 @@ export interface FileRoutesByFullPath {
   '/framing/views': typeof AuthenticatedFramingViewsRoute
   '/missions/$missionId': typeof AuthenticatedMissionsMissionIdRoute
   '/sessions/$sessionId': typeof AuthenticatedSessionsSessionIdRoute
+  '/signals/$signalId': typeof AuthenticatedSignalsSignalIdRoute
   '/api/public/mcp': typeof ApiPublicMcpRoute
   '/framing/': typeof AuthenticatedFramingIndexRoute
   '/missions/': typeof AuthenticatedMissionsIndexRoute
@@ -295,6 +303,7 @@ export interface FileRoutesByTo {
   '/framing/views': typeof AuthenticatedFramingViewsRoute
   '/missions/$missionId': typeof AuthenticatedMissionsMissionIdRoute
   '/sessions/$sessionId': typeof AuthenticatedSessionsSessionIdRoute
+  '/signals/$signalId': typeof AuthenticatedSignalsSignalIdRoute
   '/api/public/mcp': typeof ApiPublicMcpRoute
   '/framing': typeof AuthenticatedFramingIndexRoute
   '/missions': typeof AuthenticatedMissionsIndexRoute
@@ -333,6 +342,7 @@ export interface FileRoutesById {
   '/_authenticated/framing/views': typeof AuthenticatedFramingViewsRoute
   '/_authenticated/missions/$missionId': typeof AuthenticatedMissionsMissionIdRoute
   '/_authenticated/sessions/$sessionId': typeof AuthenticatedSessionsSessionIdRoute
+  '/_authenticated/signals_/$signalId': typeof AuthenticatedSignalsSignalIdRoute
   '/api/public/mcp': typeof ApiPublicMcpRoute
   '/_authenticated/framing/': typeof AuthenticatedFramingIndexRoute
   '/_authenticated/missions/': typeof AuthenticatedMissionsIndexRoute
@@ -371,6 +381,7 @@ export interface FileRouteTypes {
     | '/framing/views'
     | '/missions/$missionId'
     | '/sessions/$sessionId'
+    | '/signals/$signalId'
     | '/api/public/mcp'
     | '/framing/'
     | '/missions/'
@@ -406,6 +417,7 @@ export interface FileRouteTypes {
     | '/framing/views'
     | '/missions/$missionId'
     | '/sessions/$sessionId'
+    | '/signals/$signalId'
     | '/api/public/mcp'
     | '/framing'
     | '/missions'
@@ -443,6 +455,7 @@ export interface FileRouteTypes {
     | '/_authenticated/framing/views'
     | '/_authenticated/missions/$missionId'
     | '/_authenticated/sessions/$sessionId'
+    | '/_authenticated/signals_/$signalId'
     | '/api/public/mcp'
     | '/_authenticated/framing/'
     | '/_authenticated/missions/'
@@ -675,6 +688,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSessionsSessionIdRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/signals_/$signalId': {
+      id: '/_authenticated/signals_/$signalId'
+      path: '/signals/$signalId'
+      fullPath: '/signals/$signalId'
+      preLoaderRoute: typeof AuthenticatedSignalsSignalIdRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/api/public/mcp': {
       id: '/api/public/mcp'
       path: '/api/public/mcp'
@@ -753,6 +773,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedFramingSessionIdRoute: typeof AuthenticatedFramingSessionIdRoute
   AuthenticatedFramingViewsRoute: typeof AuthenticatedFramingViewsRoute
   AuthenticatedSessionsSessionIdRoute: typeof AuthenticatedSessionsSessionIdRoute
+  AuthenticatedSignalsSignalIdRoute: typeof AuthenticatedSignalsSignalIdRoute
   AuthenticatedFramingIndexRoute: typeof AuthenticatedFramingIndexRoute
 }
 
@@ -782,6 +803,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedFramingSessionIdRoute: AuthenticatedFramingSessionIdRoute,
   AuthenticatedFramingViewsRoute: AuthenticatedFramingViewsRoute,
   AuthenticatedSessionsSessionIdRoute: AuthenticatedSessionsSessionIdRoute,
+  AuthenticatedSignalsSignalIdRoute: AuthenticatedSignalsSignalIdRoute,
   AuthenticatedFramingIndexRoute: AuthenticatedFramingIndexRoute,
 }
 

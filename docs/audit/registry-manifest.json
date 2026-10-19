@@ -151,7 +151,10 @@
         "recommended_co_creator",
         "recommended_builder",
         "recommended_next_probe",
-        "requested_solution_candidates"
+        "requested_solution_candidates",
+        "origin_channel",
+        "source_ref",
+        "intake_event_id"
       ],
       "purpose": "An observed condition worth acting on"
     },
@@ -1346,6 +1349,36 @@
       "impact": "reverse"
     },
     {
+      "verb": "originated_from",
+      "signatures": [
+        {
+          "from": [
+            "ValueSignal"
+          ],
+          "to": [
+            "Evidence"
+          ]
+        }
+      ],
+      "directed": true,
+      "impact": "none"
+    },
+    {
+      "verb": "duplicates",
+      "signatures": [
+        {
+          "from": [
+            "ValueSignal"
+          ],
+          "to": [
+            "ValueSignal"
+          ]
+        }
+      ],
+      "directed": true,
+      "impact": "none"
+    },
+    {
       "verb": "scoped_to",
       "signatures": [
         {
@@ -2476,16 +2509,6 @@
       "ModelRoute"
     ]
   },
-  "origins": [
-    "stated",
-    "drawn",
-    "decomposed",
-    "capability_reference",
-    "resolved",
-    "co_occurrence",
-    "inferred",
-    "contradiction"
-  ],
   "transitions": [
     {
       "family": "canon",
@@ -3271,5 +3294,15 @@
     "InferredEdgeAutoConfirmed",
     "FramingSessionAsMeeting",
     "AntiWikiActionRatioThresholdUnset"
+  ],
+  "origins": [
+    "stated",
+    "drawn",
+    "decomposed",
+    "capability_reference",
+    "resolved",
+    "co_occurrence",
+    "inferred",
+    "contradiction"
   ]
 }

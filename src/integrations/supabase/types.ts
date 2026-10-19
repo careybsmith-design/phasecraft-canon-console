@@ -2275,6 +2275,66 @@ export type Database = {
         }
         Relationships: []
       }
+      signal_intake_events: {
+        Row: {
+          created_at: string
+          data_classification: Database["public"]["Enums"]["data_classification"]
+          duplicate_of: string | null
+          extraction_method: string
+          id: string
+          model_route: string | null
+          origin: Database["public"]["Enums"]["signal_origin"]
+          raw_input_ref: string | null
+          signal_id: string | null
+          source_ref: string | null
+          status: Database["public"]["Enums"]["intake_status"]
+          submitted_by: Json
+        }
+        Insert: {
+          created_at?: string
+          data_classification?: Database["public"]["Enums"]["data_classification"]
+          duplicate_of?: string | null
+          extraction_method: string
+          id?: string
+          model_route?: string | null
+          origin: Database["public"]["Enums"]["signal_origin"]
+          raw_input_ref?: string | null
+          signal_id?: string | null
+          source_ref?: string | null
+          status?: Database["public"]["Enums"]["intake_status"]
+          submitted_by: Json
+        }
+        Update: {
+          created_at?: string
+          data_classification?: Database["public"]["Enums"]["data_classification"]
+          duplicate_of?: string | null
+          extraction_method?: string
+          id?: string
+          model_route?: string | null
+          origin?: Database["public"]["Enums"]["signal_origin"]
+          raw_input_ref?: string | null
+          signal_id?: string | null
+          source_ref?: string | null
+          status?: Database["public"]["Enums"]["intake_status"]
+          submitted_by?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "signal_intake_events_duplicate_of_fkey"
+            columns: ["duplicate_of"]
+            isOneToOne: false
+            referencedRelation: "objects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "signal_intake_events_signal_id_fkey"
+            columns: ["signal_id"]
+            isOneToOne: false
+            referencedRelation: "objects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       surface_follows: {
         Row: {
           created_at: string
@@ -3537,6 +3597,10 @@ export type Database = {
         Args: { p: Json; p_actor: Json }
         Returns: undefined
       }
+      thread_signal_intake: {
+        Args: { p: Json; p_actor: Json; p_operation: string }
+        Returns: Json
+      }
       thread_sync_tool_contracts: {
         Args: { p: Json; p_version: string }
         Returns: number
@@ -3702,7 +3766,18 @@ export type Database = {
         | "confidential"
         | "restricted"
         | "prohibited"
+      intake_status:
+        | "received"
+        | "extracted"
+        | "confirmed"
+        | "rejected"
+        | "duplicate"
       risk_tier: "1" | "2" | "3" | "4"
+      signal_origin:
+        | "agent_sensor"
+        | "human_expertise"
+        | "artifact_upload"
+        | "live_capture"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -3855,7 +3930,20 @@ export const Constants = {
         "restricted",
         "prohibited",
       ],
+      intake_status: [
+        "received",
+        "extracted",
+        "confirmed",
+        "rejected",
+        "duplicate",
+      ],
       risk_tier: ["1", "2", "3", "4"],
+      signal_origin: [
+        "agent_sensor",
+        "human_expertise",
+        "artifact_upload",
+        "live_capture",
+      ],
     },
   },
 } as const
