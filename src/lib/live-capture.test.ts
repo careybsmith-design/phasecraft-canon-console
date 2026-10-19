@@ -164,6 +164,7 @@ describe("live capture zero-loss (W3.1)", () => {
     await wait(70); // first flush fails on the durable write
     expect(errors.some((m) => m.includes("audio retained"))).toBe(true);
     expect(uploaded).toHaveLength(0);
+    failing = false;
     indexedDB.open = realOpen;
     await wait(80); // next window retries the retained samples
     await rec.stop();
