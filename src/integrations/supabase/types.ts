@@ -311,7 +311,9 @@ export type Database = {
           estimated_cost: number | null
           external_run_id: string | null
           failure_reason: string | null
+          mirrored_from: string | null
           object_id: string
+          outcome: string | null
           platform: string
           prompt_id: string
           replay_mode: string | null
@@ -332,7 +334,9 @@ export type Database = {
           estimated_cost?: number | null
           external_run_id?: string | null
           failure_reason?: string | null
+          mirrored_from?: string | null
           object_id: string
+          outcome?: string | null
           platform: string
           prompt_id: string
           replay_mode?: string | null
@@ -353,7 +357,9 @@ export type Database = {
           estimated_cost?: number | null
           external_run_id?: string | null
           failure_reason?: string | null
+          mirrored_from?: string | null
           object_id?: string
+          outcome?: string | null
           platform?: string
           prompt_id?: string
           replay_mode?: string | null
