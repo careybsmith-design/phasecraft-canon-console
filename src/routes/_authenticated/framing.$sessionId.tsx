@@ -178,17 +178,30 @@ export function SessionSurface({ sessionId }: { sessionId: string }) {
 
 function NeedMissionPanel({ objects }: { objects: Row[] }) {
   const q = useSurface();
-  const needs = objects.filter(o => o.type === "NeedStatement" && o.lifecycle_state === "confirmed");
+  const needs = objects.filter(
+    (o) => o.type === "NeedStatement" && o.lifecycle_state === "confirmed",
+  );
   const [need, setNeed] = useState("");
   if (!needs.length) return null;
-  return <section className="space-y-3 border-y py-3">
-    <h2 className="label-caps">Establish a mission from confirmed intent</h2>
-    <select aria-label="Originating confirmed need" value={need} onChange={e => setNeed(e.target.value)} className="h-9 w-full rounded-md border bg-background px-2 text-sm">
-      <option value="">Select confirmed need</option>
-      {needs.map(n => <option key={n.id} value={n.id}>{n.human_ref} · {n.title}</option>)}
-    </select>
-    {need && <MissionForm key={need} needId={need} objects={q.data?.objects ?? []} />}
-  </section>;
+  return (
+    <section className="space-y-3 border-y py-3">
+      <h2 className="label-caps">Establish a mission from confirmed intent</h2>
+      <select
+        aria-label="Originating confirmed need"
+        value={need}
+        onChange={(e) => setNeed(e.target.value)}
+        className="h-9 w-full rounded-md border bg-background px-2 text-sm"
+      >
+        <option value="">Select confirmed need</option>
+        {needs.map((n) => (
+          <option key={n.id} value={n.id}>
+            {n.human_ref} · {n.title}
+          </option>
+        ))}
+      </select>
+      {need && <MissionForm key={need} needId={need} objects={q.data?.objects ?? []} />}
+    </section>
+  );
 }
 
 function Header({ d, onChange }: { d: Row; onChange: () => void }) {

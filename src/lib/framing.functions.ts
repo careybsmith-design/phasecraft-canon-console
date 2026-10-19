@@ -348,16 +348,20 @@ export const startFramingSession = createServerFn({ method: "POST" })
       p_actor: human(context.userId) as never,
       ...(data.mission_ref ? { p_mission: data.mission_ref } : {}),
       p: {
-      ...payload("FramingSession", data.purpose.slice(0, 120), data.purpose, body, {
-        owner: context.userId,
-        rationale: "Framing session started",
-      }),
-      co_creator_id: co.user_id ?? undefined,
-      builder_id: bu.user_id ?? undefined,
+        ...payload("FramingSession", data.purpose.slice(0, 120), data.purpose, body, {
+          owner: context.userId,
+          rationale: "Framing session started",
+        }),
+        co_creator_id: co.user_id ?? undefined,
+        builder_id: bu.user_id ?? undefined,
       } as never,
     });
     if (startError) throw threadError(startError.message);
-    const s = started as unknown as { id: string; human_ref: string; association?: { recorded_as?: string } };
+    const s = started as unknown as {
+      id: string;
+      human_ref: string;
+      association?: { recorded_as?: string };
+    };
     await db.from("extraction_revisions").insert({
       session_id: s.id,
       revision: 1,
@@ -2825,9 +2829,19 @@ export const getFramingView = createServerFn({ method: "GET" })
         break;
       }
       case "unresolved_frontier": {
-        const { data: advisory, error: advisoryError } = await sb.rpc("intent_mission_frontier", data.session ? { p_session: data.session } : {});
+        const { data: advisory, error: advisoryError } = await sb.rpc(
+          "intent_mission_frontier",
+          data.session ? { p_session: data.session } : {},
+        );
         if (advisoryError) throw new Error(advisoryError.message);
-        for (const a of advisory ?? []) list.push({ ref: a.human_ref, title: a.title, type: a.type, state: a.lifecycle_state, why: a.why });
+        for (const a of advisory ?? [])
+          list.push({
+            ref: a.human_ref,
+            title: a.title,
+            type: a.type,
+            state: a.lifecycle_state,
+            why: a.why,
+          });
         const has = (id: string, verbs: string[], dir: "from" | "to") =>
           edges.some((e) => verbs.includes(e.verb) && e[dir] === id);
         for (const o of all) {

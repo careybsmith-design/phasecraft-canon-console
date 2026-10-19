@@ -85,7 +85,12 @@ const v = (verb: string, impact: Impact, ...signatures: VerbSignature[]): VerbDe
 export const VERBS: VerbDef[] = [
   // Value flow
   v("signals", "forward", s("ValueSignal", "ValueMission")),
-  v("promoted_from", "reverse", s("ValueMission", "ValueSignal"), s("ValueMission", "NeedStatement")),
+  v(
+    "promoted_from",
+    "reverse",
+    s("ValueMission", "ValueSignal"),
+    s("ValueMission", "NeedStatement"),
+  ),
   // L-22/S-09 intake edges. captured_as is NOT a graph verb: intake events are append-only
   // audit rows, not objects, so the linkage is carried as body.intake_event_id (AGENTS.md).
   v("originated_from", "none", s("ValueSignal", "Evidence")),

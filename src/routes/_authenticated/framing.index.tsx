@@ -115,7 +115,10 @@ export function FramingHome() {
 function StartForm() {
   const start = useServerFn(startFramingSession);
   const readMissions = useServerFn(getSessionMissionOptions);
-  const missions = useQuery({ queryKey: ["session-mission-start"], queryFn: () => readMissions({ data: {} }) });
+  const missions = useQuery({
+    queryKey: ["session-mission-start"],
+    queryFn: () => readMissions({ data: {} }),
+  });
   const [mission, setMission] = useState("");
   const navigate = useNavigate();
   const qc = useQueryClient();
@@ -185,11 +188,24 @@ function StartForm() {
       </div>
       <div className="space-y-1">
         <Label htmlFor="start-mission">Mission (optional)</Label>
-        <select id="start-mission" value={mission} onChange={e => setMission(e.target.value)} className="h-9 w-full rounded-md border bg-background px-2 text-sm">
+        <select
+          id="start-mission"
+          value={mission}
+          onChange={(e) => setMission(e.target.value)}
+          className="h-9 w-full rounded-md border bg-background px-2 text-sm"
+        >
           <option value="">No mission yet</option>
-          {missions.data?.missions.map(m => <option key={m.id} value={m.id}>{m.human_ref} · {m.title}</option>)}
+          {missions.data?.missions.map((m) => (
+            <option key={m.id} value={m.id}>
+              {m.human_ref} · {m.title}
+            </option>
+          ))}
         </select>
-        {missions.error && <p role="alert" className="text-sm text-destructive">{errText(missions.error)}</p>}
+        {missions.error && (
+          <p role="alert" className="text-sm text-destructive">
+            {errText(missions.error)}
+          </p>
+        )}
       </div>
       <fieldset className="space-y-1">
         <legend className="text-sm">What will be captured</legend>

@@ -317,7 +317,15 @@ export function MissionForm({
           }
           setBusy(true);
           try {
-            const r = needId ? await fromNeed({ data: { need_id: needId, mission: parsed.data, rationale: "Mission established from this confirmed session need" } }) : await create({ data: parsed.data });
+            const r = needId
+              ? await fromNeed({
+                  data: {
+                    need_id: needId,
+                    mission: parsed.data,
+                    rationale: "Mission established from this confirmed session need",
+                  },
+                })
+              : await create({ data: parsed.data });
             toast.success(`Recorded ${r.human_ref}`);
             await navigate({ to: "/missions/$missionId", params: { missionId: r.id } });
           } catch (err) {
