@@ -1,0 +1,202 @@
+{
+  "rule_counts": {
+    "prettier/prettier": 7126,
+    "prefer-const": 2,
+    "react-refresh/only-export-components": 10,
+    "null": 3,
+    "@typescript-eslint/no-explicit-any": 10,
+    "@typescript-eslint/no-unused-expressions": 1,
+    "react-hooks/exhaustive-deps": 1
+  },
+  "nonformatting_findings": [
+    {
+      "file": "src/components/ConnectorsPanel.tsx",
+      "line": 37,
+      "severity": 2,
+      "rule": "prefer-const",
+      "message": "'poll' is never reassigned. Use 'const' instead."
+    },
+    {
+      "file": "src/components/graph/GraphCanvas.tsx",
+      "line": 15,
+      "severity": 1,
+      "rule": "react-refresh/only-export-components",
+      "message": "Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components."
+    },
+    {
+      "file": "src/components/graph/GraphCanvas.tsx",
+      "line": 107,
+      "severity": 1,
+      "rule": null,
+      "message": "Unused eslint-disable directive (no problems were reported from 'react-hooks/exhaustive-deps')."
+    },
+    {
+      "file": "src/components/human-surfaces.tsx",
+      "line": 16,
+      "severity": 1,
+      "rule": "react-refresh/only-export-components",
+      "message": "Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components."
+    },
+    {
+      "file": "src/components/human-surfaces.tsx",
+      "line": 17,
+      "severity": 1,
+      "rule": "react-refresh/only-export-components",
+      "message": "Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components."
+    },
+    {
+      "file": "src/components/ui/badge.tsx",
+      "line": 32,
+      "severity": 1,
+      "rule": "react-refresh/only-export-components",
+      "message": "Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components."
+    },
+    {
+      "file": "src/components/ui/button.tsx",
+      "line": 49,
+      "severity": 1,
+      "rule": "react-refresh/only-export-components",
+      "message": "Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components."
+    },
+    {
+      "file": "src/components/ui/form.tsx",
+      "line": 163,
+      "severity": 1,
+      "rule": "react-refresh/only-export-components",
+      "message": "Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components."
+    },
+    {
+      "file": "src/components/ui/navigation-menu.tsx",
+      "line": 111,
+      "severity": 1,
+      "rule": "react-refresh/only-export-components",
+      "message": "Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components."
+    },
+    {
+      "file": "src/components/ui/sidebar.tsx",
+      "line": 743,
+      "severity": 1,
+      "rule": "react-refresh/only-export-components",
+      "message": "Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components."
+    },
+    {
+      "file": "src/components/ui/toggle.tsx",
+      "line": 42,
+      "severity": 1,
+      "rule": "react-refresh/only-export-components",
+      "message": "Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components."
+    },
+    {
+      "file": "src/integrations/supabase/previewAuthStorage.ts",
+      "line": 38,
+      "severity": 2,
+      "rule": "prefer-const",
+      "message": "'timer' is never reassigned. Use 'const' instead."
+    },
+    {
+      "file": "src/lib/framing.functions.ts",
+      "line": 3016,
+      "severity": 2,
+      "rule": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "file": "src/lib/framing.functions.ts",
+      "line": 3034,
+      "severity": 2,
+      "rule": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "file": "src/lib/framing.functions.ts",
+      "line": 3074,
+      "severity": 2,
+      "rule": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "file": "src/lib/framing.functions.ts",
+      "line": 3078,
+      "severity": 2,
+      "rule": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "file": "src/lib/framing.functions.ts",
+      "line": 3209,
+      "severity": 2,
+      "rule": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "file": "src/lib/framing.functions.ts",
+      "line": 3213,
+      "severity": 2,
+      "rule": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "file": "src/lib/framing.functions.ts",
+      "line": 3213,
+      "severity": 2,
+      "rule": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "file": "src/lib/framing.functions.ts",
+      "line": 3282,
+      "severity": 2,
+      "rule": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "file": "src/routes/_authenticated/canon.tsx",
+      "line": 324,
+      "severity": 2,
+      "rule": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "file": "src/routes/_authenticated/canon.tsx",
+      "line": 332,
+      "severity": 2,
+      "rule": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "file": "src/routes/_authenticated/creation.tsx",
+      "line": 109,
+      "severity": 2,
+      "rule": "@typescript-eslint/no-unused-expressions",
+      "message": "Expected an assignment or function call and instead saw an expression."
+    },
+    {
+      "file": "src/routes/_authenticated/framing.index.tsx",
+      "line": 44,
+      "severity": 1,
+      "rule": "react-refresh/only-export-components",
+      "message": "Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components."
+    },
+    {
+      "file": "src/routes/_authenticated/framing.index.tsx",
+      "line": 287,
+      "severity": 1,
+      "rule": null,
+      "message": "Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')."
+    },
+    {
+      "file": "src/routes/_authenticated/framing.index.tsx",
+      "line": 413,
+      "severity": 1,
+      "rule": null,
+      "message": "Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')."
+    },
+    {
+      "file": "src/routes/_authenticated/graph.tsx",
+      "line": 339,
+      "severity": 1,
+      "rule": "react-hooks/exhaustive-deps",
+      "message": "React Hook useMemo has a missing dependency: 'q'. Either include it or remove the dependency array."
+    }
+  ]
+}
