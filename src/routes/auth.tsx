@@ -13,7 +13,10 @@ export const Route = createFileRoute("/auth")({
       { title: "Sign in · THREAD" },
       { name: "description", content: "Sign in to THREAD, the MASA Global operating graph." },
       { property: "og:title", content: "Sign in · THREAD" },
-      { property: "og:description", content: "Sign in to THREAD, the MASA Global operating graph." },
+      {
+        property: "og:description",
+        content: "Sign in to THREAD, the MASA Global operating graph.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
@@ -41,14 +44,20 @@ function AuthPage() {
     const res =
       mode === "in"
         ? await supabase.auth.signInWithPassword({ email, password })
-        : await supabase.auth.signUp({ email, password, options: { emailRedirectTo: window.location.origin + "/canon" } });
+        : await supabase.auth.signUp({
+            email,
+            password,
+            options: { emailRedirectTo: window.location.origin + "/canon" },
+          });
     setBusy(false);
     if (res.error) setMsg(res.error.message);
     else if (mode === "up" && !res.data.session) setMsg("Check your email to confirm the account.");
   }
 
   async function google() {
-    const r = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin });
+    const r = await lovable.auth.signInWithOAuth("google", {
+      redirect_uri: window.location.origin,
+    });
     if (r.error) setMsg(r.error.message);
   }
 
@@ -57,22 +66,50 @@ function AuthPage() {
       <div className="thread-auth-inner w-full max-w-sm space-y-6">
         <div>
           <p className="thread-auth-brand">THREAD</p>
-          <h1 className="mt-1 text-lg font-semibold">{mode === "in" ? "Sign in" : "Create account"}</h1>
+          <h1 className="mt-1 text-lg font-semibold">
+            {mode === "in" ? "Sign in" : "Create account"}
+          </h1>
         </div>
         <form onSubmit={submit} className="space-y-5">
           <div className="space-y-1">
             <Label htmlFor="email">Email</Label>
-            <Input id="email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
+            <Input
+              id="email"
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
           </div>
           <div className="space-y-1">
             <Label htmlFor="password">Password</Label>
-            <Input id="password" type="password" required minLength={8} value={password} onChange={(e) => setPassword(e.target.value)} />
+            <Input
+              id="password"
+              type="password"
+              required
+              minLength={8}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
           </div>
-          {msg && <p role="status" className="text-sm text-muted-foreground">{msg}</p>}
-          <Button type="submit" className="w-full" disabled={busy}>{mode === "in" ? "Sign in" : "Create account"}</Button>
+          {msg && (
+            <p role="status" className="text-sm text-muted-foreground">
+              {msg}
+            </p>
+          )}
+          <Button type="submit" className="w-full" disabled={busy}>
+            {mode === "in" ? "Sign in" : "Create account"}
+          </Button>
         </form>
-        <Button variant="outline" className="w-full" onClick={google}>Continue with Google</Button>
-        <Button type="button" variant="link" className="h-auto px-0 text-sm text-muted-foreground" onClick={() => setMode(mode === "in" ? "up" : "in")}>
+        <Button variant="outline" className="w-full" onClick={google}>
+          Continue with Google
+        </Button>
+        <Button
+          type="button"
+          variant="link"
+          className="h-auto px-0 text-sm text-muted-foreground"
+          onClick={() => setMode(mode === "in" ? "up" : "in")}
+        >
           {mode === "in" ? "Need an account? Create one" : "Have an account? Sign in"}
         </Button>
       </div>

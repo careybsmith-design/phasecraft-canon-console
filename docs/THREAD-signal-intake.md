@@ -15,12 +15,12 @@ Signal  →  Mission  →  Cell  →  Burst  →  Framing session  →  Requirem
 
 ## The four channels (§C of the round)
 
-| Channel | origin | Model call? | Confirmation |
-|---|---|---|---|
-| AI sensor | `agent_sensor` | enrichment only, never detection | promotion requires human authority |
-| Human expertise | `human_expertise` | no | none — creates directly in `detected` |
-| Artifact upload | `artifact_upload` | rule-based, after the PHI/PAN gate | human confirms each draft |
-| Live capture | `live_capture` | rule-based, after the PHI/PAN gate | human confirms each draft |
+| Channel         | origin            | Model call?                        | Confirmation                          |
+| --------------- | ----------------- | ---------------------------------- | ------------------------------------- |
+| AI sensor       | `agent_sensor`    | enrichment only, never detection   | promotion requires human authority    |
+| Human expertise | `human_expertise` | no                                 | none — creates directly in `detected` |
+| Artifact upload | `artifact_upload` | rule-based, after the PHI/PAN gate | human confirms each draft             |
+| Live capture    | `live_capture`    | rule-based, after the PHI/PAN gate | human confirms each draft             |
 
 All four write the intake event and the signal together; `intake_event_id` is carried on the signal body. Extraction is deterministic (rule-based) because no live model route is attested (L-15); the PHI/PAN gate runs before any analysis, PAN/SAD is hard-blocked, PHI is quarantined, and blocked attempts are still recorded as intake events with no signal.
 

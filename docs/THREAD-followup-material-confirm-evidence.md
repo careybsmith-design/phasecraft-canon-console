@@ -16,12 +16,12 @@ Applied `drizzle/migrations/0075_intake_read_classification.sql`. Number 0074 wa
 
 `thread_intake_read_selftest()` inserts one internal, one restricted and one prohibited content-free rejected audit fixture, switches to the authenticated database role with existing plain-member and steward identities, and executes actual intake SELECTs by fixture ID. It is invoker-rights, privileged-runner-only; the fixtures, role and claims changes roll back in a subtransaction. The migration runs it fail-closed, and it was executed again through the privileged data-query runner.
 
-| Caller | Selected fixtures | Count |
-|---|---|---:|
-| Plain member | Restricted | **0** |
-| Plain member | Internal | **1** (full fixture count) |
-| Steward | Internal + restricted | **2** (both fixtures) |
-| Steward | Prohibited (additional negative check) | **0** |
+| Caller       | Selected fixtures                      |                      Count |
+| ------------ | -------------------------------------- | -------------------------: |
+| Plain member | Restricted                             |                      **0** |
+| Plain member | Internal                               | **1** (full fixture count) |
+| Steward      | Internal + restricted                  |      **2** (both fixtures) |
+| Steward      | Prohibited (additional negative check) |                      **0** |
 
 Result: `all_ok = true`. A subsequent independent query returned **0 persisted fixture rows**. The reader-only query tool could not execute the privileged self-test; its permission-denied response was expected, and no grant was widened to accommodate it.
 

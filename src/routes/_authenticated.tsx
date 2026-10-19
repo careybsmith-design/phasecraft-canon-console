@@ -4,7 +4,27 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { CompanionPanel } from "@/components/human-surfaces";
-import { Compass, Activity, Flag, FlaskConical, BookOpen, Network, ScanLine, Boxes, Hammer, Layers, FileText, Bot, ShieldCheck, Radar, ChartNoAxesCombined, GitBranch, KeyRound, ListChecks, LogOut } from "lucide-react";
+import {
+  Compass,
+  Activity,
+  Flag,
+  FlaskConical,
+  BookOpen,
+  Network,
+  ScanLine,
+  Boxes,
+  Hammer,
+  Layers,
+  FileText,
+  Bot,
+  ShieldCheck,
+  Radar,
+  ChartNoAxesCombined,
+  GitBranch,
+  KeyRound,
+  ListChecks,
+  LogOut,
+} from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 
@@ -45,18 +65,54 @@ function AuthedLayout() {
   return (
     <div className="thread-shell">
       <header className="thread-navigation">
-        <Link to="/feed" className="thread-brand">THREAD</Link>
+        <Link to="/feed" className="thread-brand">
+          THREAD
+        </Link>
         <nav aria-label="Surfaces" className="thread-nav">
-          {surfaces.map(({ to, label, icon: Icon }) => <Link key={to} to={to} className="thread-nav-link"><Icon aria-hidden="true" /><span>{label}</span></Link>)}
+          {surfaces.map(({ to, label, icon: Icon }) => (
+            <Link key={to} to={to} className="thread-nav-link">
+              <Icon aria-hidden="true" />
+              <span>{label}</span>
+            </Link>
+          ))}
         </nav>
         <div className="thread-account">
           <span className="thread-account-email">{user?.email}</span>
-          <Sheet open={companionOpen} onOpenChange={setCompanionOpen}><SheetTrigger asChild><Button size="icon" variant="ghost" aria-label="Open Value Companion" title="Value Companion"><Compass size={18} /></Button></SheetTrigger><SheetContent className="w-full overflow-auto sm:max-w-lg"><SheetTitle className="sr-only">Value Companion</SheetTitle><CompanionPanel docked /></SheetContent></Sheet>
-          <Button size="sm" variant="ghost" onClick={async () => { await qc.cancelQueries(); qc.clear(); await supabase.auth.signOut(); await navigate({ to: "/auth", replace: true }); }}><LogOut aria-hidden="true" />Sign out</Button>
+          <Sheet open={companionOpen} onOpenChange={setCompanionOpen}>
+            <SheetTrigger asChild>
+              <Button
+                size="icon"
+                variant="ghost"
+                aria-label="Open Value Companion"
+                title="Value Companion"
+              >
+                <Compass size={18} />
+              </Button>
+            </SheetTrigger>
+            <SheetContent className="w-full overflow-auto sm:max-w-lg">
+              <SheetTitle className="sr-only">Value Companion</SheetTitle>
+              <CompanionPanel docked />
+            </SheetContent>
+          </Sheet>
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={async () => {
+              await qc.cancelQueries();
+              qc.clear();
+              await supabase.auth.signOut();
+              await navigate({ to: "/auth", replace: true });
+            }}
+          >
+            <LogOut aria-hidden="true" />
+            Sign out
+          </Button>
         </div>
         <span className="thread-account-email-mobile">{user?.email}</span>
       </header>
-      <div className="thread-workspace"><Outlet /></div>
+      <div className="thread-workspace">
+        <Outlet />
+      </div>
     </div>
   );
 }

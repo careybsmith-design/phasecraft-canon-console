@@ -40,7 +40,9 @@ describe("live transcription adapter", () => {
   });
 
   it("sends the multipart contract: model, wav file, streaming", async () => {
-    const spy = vi.fn(async () => sseResponse([JSON.stringify({ type: "transcript.text.done", text: "hi" })]));
+    const spy = vi.fn(async () =>
+      sseResponse([JSON.stringify({ type: "transcript.text.done", text: "hi" })]),
+    );
     vi.stubGlobal("fetch", spy);
     await transcribeAudio(WAV, { language: "en" });
     const [url, init] = spy.mock.calls[0] as unknown as [string, RequestInit];
@@ -54,7 +56,8 @@ describe("live transcription adapter", () => {
 
   it("surfaces the gateway's safe error message and never retries 402/403", async () => {
     const spy = vi.fn(
-      async () => new Response(JSON.stringify({ message: "insufficient credits" }), { status: 402 }),
+      async () =>
+        new Response(JSON.stringify({ message: "insufficient credits" }), { status: 402 }),
     );
     vi.stubGlobal("fetch", spy);
     await expect(transcribeAudio(WAV)).rejects.toThrow(/insufficient credits/);
@@ -69,7 +72,12 @@ describe("live transcription adapter", () => {
   });
 
   it("throws when no speech is recognised", async () => {
-    vi.stubGlobal("fetch", vi.fn(async () => sseResponse([JSON.stringify({ type: "transcript.text.done", text: "  " })])));
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () =>
+        sseResponse([JSON.stringify({ type: "transcript.text.done", text: "  " })]),
+      ),
+    );
     await expect(transcribeAudio(WAV)).rejects.toThrow(/TRANSCRIPTION_EMPTY/);
   });
 

@@ -5,11 +5,13 @@
   "type": "module",
   "scripts": {
     "dev": "vite dev",
-    "build": "vite build",
-    "build:dev": "vite build --mode development",
+    "typecheck": "tsgo --noEmit",
+    "build": "tsgo --noEmit && vite build",
+    "build:dev": "tsgo --noEmit && vite build --mode development",
     "preview": "vite preview",
     "lint": "eslint .",
     "format": "prettier --write .",
+    "verify": "bun run typecheck && bun run lint && bun run test",
     "test": "vitest run",
     "test:watch": "vitest"
   },

@@ -15,12 +15,36 @@
  */
 import { REGISTRY } from "./registry";
 
-export type Origin = "stated" | "drawn" | "decomposed" | "capability_reference" | "resolved" | "co_occurrence" | "inferred" | "contradiction";
-export const ORIGINS: Origin[] = ["stated", "drawn", "decomposed", "capability_reference", "resolved", "co_occurrence", "inferred", "contradiction"];
+export type Origin =
+  | "stated"
+  | "drawn"
+  | "decomposed"
+  | "capability_reference"
+  | "resolved"
+  | "co_occurrence"
+  | "inferred"
+  | "contradiction";
+export const ORIGINS: Origin[] = [
+  "stated",
+  "drawn",
+  "decomposed",
+  "capability_reference",
+  "resolved",
+  "co_occurrence",
+  "inferred",
+  "contradiction",
+];
 /** Part 8A.7.3: a dependency carries a kind; a bare "depends on" is insufficient. */
-export const DEPENDENCY_KINDS = ["data", "sequence", "authority", "capability", "decision"] as const;
+export const DEPENDENCY_KINDS = [
+  "data",
+  "sequence",
+  "authority",
+  "capability",
+  "decision",
+] as const;
 
-const familyTypes = (family: string) => REGISTRY.filter((r) => r.family === family).map((r) => r.type);
+const familyTypes = (family: string) =>
+  REGISTRY.filter((r) => r.family === family).map((r) => r.type);
 
 export const TYPE_GROUPS: Record<string, string[]> = {
   Actor: ["Builder", "BusinessCoCreator"],
@@ -32,7 +56,10 @@ export const TYPE_GROUPS: Record<string, string[]> = {
 };
 
 export type Impact = "forward" | "reverse" | "both" | "none";
-export interface VerbSignature { from: string[]; to: string[] }
+export interface VerbSignature {
+  from: string[];
+  to: string[];
+}
 export interface VerbDef {
   verb: string;
   signatures: VerbSignature[];
@@ -44,8 +71,16 @@ export interface VerbDef {
   acyclic?: boolean;
 }
 
-const s = (from: string, to: string): VerbSignature => ({ from: from.split("|"), to: to.split("|") });
-const v = (verb: string, impact: Impact, ...signatures: VerbSignature[]): VerbDef => ({ verb, signatures, directed: true, impact });
+const s = (from: string, to: string): VerbSignature => ({
+  from: from.split("|"),
+  to: to.split("|"),
+});
+const v = (verb: string, impact: Impact, ...signatures: VerbSignature[]): VerbDef => ({
+  verb,
+  signatures,
+  directed: true,
+  impact,
+});
 
 export const VERBS: VerbDef[] = [
   // Value flow
@@ -58,7 +93,11 @@ export const VERBS: VerbDef[] = [
   v("scoped_to", "reverse", s("ValueMission", "ValueCell")),
   v("operated_by", "reverse", s("ValueCell", "Actor")),
   v("bursts", "forward", s("ValueCell", "ValueBurst")),
-  v("produced", "forward", s("ValueBurst", "WorkingCapability|Evidence|Decision|DisprovedAssumption")),
+  v(
+    "produced",
+    "forward",
+    s("ValueBurst", "WorkingCapability|Evidence|Decision|DisprovedAssumption"),
+  ),
   // Intent
   v("expresses", "forward", s("IntentModel", "ValueMission")),
   v("contains", "forward", s("IntentModel", "BehaviorStatement")),
@@ -73,10 +112,13 @@ export const VERBS: VerbDef[] = [
   v("composes", "reverse", s("WorkingCapability", "ComposableCapability")),
   v("implements", "reverse", s("ComposableCapability", "CapabilityContract")),
   {
-    ...v("depends_on", "reverse",
+    ...v(
+      "depends_on",
+      "reverse",
       s("ComposableCapability", "ComposableCapability"),
       s("NeedStatement", "NeedStatement"),
-      s("BehaviorStatement", "BehaviorStatement")),
+      s("BehaviorStatement", "BehaviorStatement"),
+    ),
     acyclic: true,
   },
   v("evidenced_by", "reverse", s("ComposableCapability", "Evidence")),
@@ -99,7 +141,11 @@ export const VERBS: VerbDef[] = [
   v("evaluated_by", "forward", s("ModelRoute|Agent", "ModelEvaluation")),
   v("shadowed_by", "forward", s("WorkingCapability|ComposableCapability", "ShadowRun")),
   v("discrepancy_in", "reverse", s("ShadowRun", "Discrepancy")),
-  v("authorised_by", "forward", s("ExposureAuthorization", "WorkingCapability|ComposableCapability")),
+  v(
+    "authorised_by",
+    "forward",
+    s("ExposureAuthorization", "WorkingCapability|ComposableCapability"),
+  ),
   v("exposed_to", "forward", s("ExposureAuthorization", "ExposurePopulation")),
   v("observed_as", "forward", s("WorkingCapability|ComposableCapability", "ProductionOutcome")),
   v("values", "forward", s("ProductionOutcome", "ValueMeasure")),
@@ -152,7 +198,10 @@ export function expandGroup(name: string): string[] {
 
 /** Expanded signatures: every group resolved to concrete registered types. */
 export function expandedSignatures(def: VerbDef): Array<{ from: string[]; to: string[] }> {
-  return def.signatures.map((sig) => ({ from: sig.from.flatMap(expandGroup), to: sig.to.flatMap(expandGroup) }));
+  return def.signatures.map((sig) => ({
+    from: sig.from.flatMap(expandGroup),
+    to: sig.to.flatMap(expandGroup),
+  }));
 }
 
 /** Mirrors the DB check in thread_create_edge. */
@@ -160,7 +209,9 @@ export function edgeAllowed(verb: string, fromType: string, toType: string): boo
   const def = VERBS.find((d) => d.verb === verb);
   if (!def || def.computed) return false;
   return expandedSignatures(def).some(
-    (sig) => (sig.from.includes("*") || sig.from.includes(fromType)) && (sig.to.includes("*") || sig.to.includes(toType)),
+    (sig) =>
+      (sig.from.includes("*") || sig.from.includes(fromType)) &&
+      (sig.to.includes("*") || sig.to.includes(toType)),
   );
 }
 

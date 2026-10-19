@@ -2,7 +2,12 @@ import { createServerFn } from "@tanstack/react-start";
 import { validateGenericBody } from "@/domain/generic-body";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { CreateObjectInput, ReviseInput, TransitionInput, TombstoneInput } from "@/domain/types/envelope";
+import {
+  CreateObjectInput,
+  ReviseInput,
+  TransitionInput,
+  TombstoneInput,
+} from "@/domain/types/envelope";
 import { ObjectLookupInput, GraphSearchInput } from "@/domain/object-read";
 
 // Human actor derived from the verified session, never from client input.
@@ -23,11 +28,19 @@ async function admin() {
 
 export const listObjects = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: { q?: string | undefined; type?: string | undefined; includeTombstones?: boolean | undefined }) => d)
+  .inputValidator(
+    (d: {
+      q?: string | undefined;
+      type?: string | undefined;
+      includeTombstones?: boolean | undefined;
+    }) => d,
+  )
   .handler(async ({ data, context }) => {
     let query = context.supabase
       .from("objects")
-      .select("id,human_ref,type,title,statement,lifecycle_state,version,risk_tier,authority_level,data_classification,review_date,is_tombstone,updated_at,content_hash")
+      .select(
+        "id,human_ref,type,title,statement,lifecycle_state,version,risk_tier,authority_level,data_classification,review_date,is_tombstone,updated_at,content_hash",
+      )
       .order("updated_at", { ascending: false })
       .limit(200);
     if (data.type) query = query.eq("type", data.type);
@@ -42,7 +55,10 @@ export const getRegistry = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const [reg, tr, init] = await Promise.all([
-      context.supabase.from("object_type_registry").select("type,family,ref_prefix,lifecycle_family,discovery_descriptor").order("family"),
+      context.supabase
+        .from("object_type_registry")
+        .select("type,family,ref_prefix,lifecycle_family,discovery_descriptor")
+        .order("family"),
       context.supabase.from("lifecycle_transitions").select("lifecycle_family,from_state,to_state"),
       context.supabase.from("lifecycle_initial_states").select("lifecycle_family,state"),
     ]);
@@ -59,8 +75,18 @@ export const getObjectDetail = createServerFn({ method: "GET" })
     const { lookupObjectCore } = await import("@/server/ops/object-read.server");
     const object = await lookupObjectCore(context.supabase, data);
     const [versions, ledger] = await Promise.all([
-      context.supabase.from("object_versions").select("version,title,statement,lifecycle_state,content_hash,updated_at,updated_by,is_tombstone,risk_tier").eq("id", data.id).order("version", { ascending: false }),
-      context.supabase.from("ledger").select("seq,occurred_at,actor,action,object_version,payload,prev_hash,hash,adapter_mode").eq("object_id", data.id).order("seq", { ascending: false }),
+      context.supabase
+        .from("object_versions")
+        .select(
+          "version,title,statement,lifecycle_state,content_hash,updated_at,updated_by,is_tombstone,risk_tier",
+        )
+        .eq("id", data.id)
+        .order("version", { ascending: false }),
+      context.supabase
+        .from("ledger")
+        .select("seq,occurred_at,actor,action,object_version,payload,prev_hash,hash,adapter_mode")
+        .eq("object_id", data.id)
+        .order("seq", { ascending: false }),
     ]);
     if (versions.error) throw new Error(versions.error.message);
     if (ledger.error) throw new Error(ledger.error.message);
@@ -89,10 +115,18 @@ export const createObject = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     validateGenericBody(data.type, data.body);
     const db = await admin();
-    const { data: row, error } = await db.rpc("thread_create_object", { p_actor: humanActor(context.userId), p: data as never });
+    const { data: row, error } = await db.rpc("thread_create_object", {
+      p_actor: humanActor(context.userId),
+      p: data as never,
+    });
     if (error) throw toThreadError(error.message);
     // Keep the precomputed graph layout and integrity findings current (best effort).
-    try { await db.rpc("thread_refresh_graph_layout"); await db.rpc("thread_graph_sweep", { p_actor: humanActor(context.userId) as never }); } catch { /* best effort */ }
+    try {
+      await db.rpc("thread_refresh_graph_layout");
+      await db.rpc("thread_graph_sweep", { p_actor: humanActor(context.userId) as never });
+    } catch {
+      /* best effort */
+    }
     return row as { id: string; human_ref: string };
   });
 
@@ -102,7 +136,11 @@ export const reviseObject = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const db = await admin();
     const { error } = await db.rpc("thread_revise_object", {
-      p_actor: humanActor(context.userId), p_id: data.id, p_expected_version: data.expected_version, p_patch: data.patch as never, p_rationale: data.rationale,
+      p_actor: humanActor(context.userId),
+      p_id: data.id,
+      p_expected_version: data.expected_version,
+      p_patch: data.patch as never,
+      p_rationale: data.rationale,
     });
     if (error) throw toThreadError(error.message);
     return { ok: true };
@@ -114,7 +152,11 @@ export const transitionObject = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const db = await admin();
     const { error } = await db.rpc("thread_transition_object", {
-      p_actor: humanActor(context.userId), p_id: data.id, p_expected_version: data.expected_version, p_to_state: data.to_state, p_rationale: data.rationale,
+      p_actor: humanActor(context.userId),
+      p_id: data.id,
+      p_expected_version: data.expected_version,
+      p_to_state: data.to_state,
+      p_rationale: data.rationale,
     });
     if (error) throw toThreadError(error.message);
     return { ok: true };
@@ -126,7 +168,10 @@ export const tombstoneObject = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const db = await admin();
     const { error } = await db.rpc("thread_tombstone_object", {
-      p_actor: humanActor(context.userId), p_id: data.id, p_expected_version: data.expected_version, p_reason: data.reason,
+      p_actor: humanActor(context.userId),
+      p_id: data.id,
+      p_expected_version: data.expected_version,
+      p_reason: data.reason,
     });
     if (error) throw toThreadError(error.message);
     return { ok: true };
@@ -137,14 +182,24 @@ export const verifyLedger = createServerFn({ method: "POST" })
   .handler(async ({ context }) => {
     const { data, error } = await context.supabase.rpc("thread_verify_ledger");
     if (error) throw new Error(error.message);
-    return data as { ok: boolean; entries_checked: number; first_bad_seq: number | null; head_hash: string };
+    return data as {
+      ok: boolean;
+      entries_checked: number;
+      first_bad_seq: number | null;
+      head_hash: string;
+    };
   });
 
 export const getExitEvidence = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { data } = await context.supabase.from("ledger").select("seq,occurred_at,actor,payload,hash")
-      .eq("action", "phase1.exit_evidence").order("seq", { ascending: false }).limit(1).maybeSingle();
+    const { data } = await context.supabase
+      .from("ledger")
+      .select("seq,occurred_at,actor,payload,hash")
+      .eq("action", "phase1.exit_evidence")
+      .order("seq", { ascending: false })
+      .limit(1)
+      .maybeSingle();
     return data;
   });
 
@@ -152,7 +207,9 @@ export const runExitEvidence = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const db = await admin();
-    const { data, error } = await db.rpc("thread_record_phase1_evidence", { p_actor: humanActor(context.userId) });
+    const { data, error } = await db.rpc("thread_record_phase1_evidence", {
+      p_actor: humanActor(context.userId),
+    });
     if (error) throw new Error(error.message);
     return data;
   });

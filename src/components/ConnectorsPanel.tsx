@@ -34,11 +34,10 @@ function errText(e: unknown): string {
 
 function waitForOAuthCompletion(popup: Window, connectorId: string): Promise<string | null> {
   return new Promise((resolve, reject) => {
-    let poll: number | undefined;
-    const cleanup = () => {
+    function cleanup() {
       window.removeEventListener("message", onMessage);
-      if (poll !== undefined) window.clearInterval(poll);
-    };
+      window.clearInterval(poll);
+    }
     const onMessage = (event: MessageEvent) => {
       const type = event.data?.type;
       if (
@@ -57,7 +56,7 @@ function waitForOAuthCompletion(popup: Window, connectorId: string): Promise<str
       reject(new Error("OAuth connection failed."));
     };
     window.addEventListener("message", onMessage);
-    poll = window.setInterval(() => {
+    const poll = window.setInterval(() => {
       if (!popup.closed) return;
       cleanup();
       reject(new Error("OAuth window closed before completion."));
@@ -87,10 +86,16 @@ export function ConnectorsPanel({
   const [status, setStatus] = useState<Status | null>(null);
   const [busy, setBusy] = useState(false);
   const [speaker, setSpeaker] = useState(participants[0]?.id ?? "");
-  const [chats, setChats] = useState<Array<{ id: string; topic: string | null; chatType: string; members: string[] }>>([]);
-  const [channels, setChannels] = useState<Array<{ teamId: string; teamName: string; channelId: string; name: string }>>([]);
+  const [chats, setChats] = useState<
+    Array<{ id: string; topic: string | null; chatType: string; members: string[] }>
+  >([]);
+  const [channels, setChannels] = useState<
+    Array<{ teamId: string; teamName: string; channelId: string; name: string }>
+  >([]);
   const [teamsTarget, setTeamsTarget] = useState("");
-  const [emails, setEmails] = useState<Array<{ id: string; subject: string; from: string; received: string; hasAttachments: boolean }>>([]);
+  const [emails, setEmails] = useState<
+    Array<{ id: string; subject: string; from: string; received: string; hasAttachments: boolean }>
+  >([]);
   const [emailId, setEmailId] = useState("");
   const [search, setSearch] = useState("");
 
@@ -145,7 +150,13 @@ export function ConnectorsPanel({
         data:
           kind === "chat"
             ? { session_id: sessionId, fallback_speaker_id: speaker, chat_id: a, max_messages: 50 }
-            : { session_id: sessionId, fallback_speaker_id: speaker, team_id: a, channel_id: b, max_messages: 50 },
+            : {
+                session_id: sessionId,
+                fallback_speaker_id: speaker,
+                team_id: a,
+                channel_id: b,
+                max_messages: 50,
+              },
       });
       if (!r.ok) toast.error("Reconnect your Microsoft account to continue");
       else {
@@ -177,11 +188,17 @@ export function ConnectorsPanel({
     setBusy(true);
     try {
       const r = await ingestOutlookFn({
-        data: { session_id: sessionId, message_id: emailId, speaker_id: speaker, include_attachments: true },
+        data: {
+          session_id: sessionId,
+          message_id: emailId,
+          speaker_id: speaker,
+          include_attachments: true,
+        },
       });
       if ("ok" in r && r.ok === false) toast.error("Reconnect your Microsoft account to continue");
       else {
-        const att = (r as { attachments?: Array<{ name: string; stored: boolean }> }).attachments ?? [];
+        const att =
+          (r as { attachments?: Array<{ name: string; stored: boolean }> }).attachments ?? [];
         toast.success(
           `Email ingested (${(r as { statements?: number }).statements ?? 0} statement(s); ${att.filter((a) => a.stored).length} attachment(s) stored)`,
         );
@@ -227,7 +244,9 @@ export function ConnectorsPanel({
         <div className="flex flex-wrap items-center gap-2">
           <strong className="text-sm">Teams</strong>
           {!teams?.configured ? (
-            <span className="text-xs text-warn">Setup needed: the Teams connector is not linked to this project yet.</span>
+            <span className="text-xs text-warn">
+              Setup needed: the Teams connector is not linked to this project yet.
+            </span>
           ) : teams.connected ? (
             <>
               <span className="text-xs text-ok">Connected</span>
@@ -237,7 +256,9 @@ export function ConnectorsPanel({
               <Button
                 size="sm"
                 variant="ghost"
-                onClick={() => void disconnectFn({ data: { connector: "microsoft_teams" } }).then(refresh)}
+                onClick={() =>
+                  void disconnectFn({ data: { connector: "microsoft_teams" } }).then(refresh)
+                }
               >
                 Disconnect
               </Button>
@@ -263,12 +284,19 @@ export function ConnectorsPanel({
                 </option>
               ))}
               {channels.map((c) => (
-                <option key={`${c.teamId}/${c.channelId}`} value={`channel|${c.teamId}|${c.channelId}`}>
+                <option
+                  key={`${c.teamId}/${c.channelId}`}
+                  value={`channel|${c.teamId}|${c.channelId}`}
+                >
                   {c.teamName} / {c.name}
                 </option>
               ))}
             </select>
-            <Button size="sm" onClick={() => void ingestTeams()} disabled={busy || !teamsTarget || !speaker}>
+            <Button
+              size="sm"
+              onClick={() => void ingestTeams()}
+              disabled={busy || !teamsTarget || !speaker}
+            >
               Ingest into session
             </Button>
           </div>
@@ -279,14 +307,18 @@ export function ConnectorsPanel({
         <div className="flex flex-wrap items-center gap-2">
           <strong className="text-sm">Outlook</strong>
           {!outlook?.configured ? (
-            <span className="text-xs text-warn">Setup needed: the Outlook connector is not linked to this project yet.</span>
+            <span className="text-xs text-warn">
+              Setup needed: the Outlook connector is not linked to this project yet.
+            </span>
           ) : outlook.connected ? (
             <>
               <span className="text-xs text-ok">Connected</span>
               <Button
                 size="sm"
                 variant="ghost"
-                onClick={() => void disconnectFn({ data: { connector: "microsoft_outlook" } }).then(refresh)}
+                onClick={() =>
+                  void disconnectFn({ data: { connector: "microsoft_outlook" } }).then(refresh)
+                }
               >
                 Disconnect
               </Button>
@@ -325,7 +357,11 @@ export function ConnectorsPanel({
                     </option>
                   ))}
                 </select>
-                <Button size="sm" onClick={() => void ingestEmail()} disabled={busy || !emailId || !speaker}>
+                <Button
+                  size="sm"
+                  onClick={() => void ingestEmail()}
+                  disabled={busy || !emailId || !speaker}
+                >
                   Ingest email &amp; attachments
                 </Button>
               </>

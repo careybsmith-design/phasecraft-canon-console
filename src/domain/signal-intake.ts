@@ -8,9 +8,20 @@
  */
 import { z } from "zod/v4";
 
-export const SIGNAL_ORIGINS = ["agent_sensor", "human_expertise", "artifact_upload", "live_capture"] as const;
+export const SIGNAL_ORIGINS = [
+  "agent_sensor",
+  "human_expertise",
+  "artifact_upload",
+  "live_capture",
+] as const;
 export type SignalOrigin = (typeof SIGNAL_ORIGINS)[number];
-export const INTAKE_STATUSES = ["received", "extracted", "confirmed", "rejected", "duplicate"] as const;
+export const INTAKE_STATUSES = [
+  "received",
+  "extracted",
+  "confirmed",
+  "rejected",
+  "duplicate",
+] as const;
 export type IntakeStatus = (typeof INTAKE_STATUSES)[number];
 
 /** B.2 rule 5 / SI-1: only a promoted signal can originate a mission. */
@@ -21,47 +32,62 @@ const text = (max: number) => z.string().trim().min(1).max(max);
 const id = z.uuid();
 
 /** Human expertise channel: a person states a condition they own; no extraction step. */
-export const RecordSignalInput = z.object({
-  observed_condition: text(2000),
-  affected_population: text(500).optional(),
-  evidence_refs: z.array(id).max(20).default([]),
-  potential_value: text(300).optional(),
-  urgency: z.enum(["low", "medium", "high", "critical"]).optional(),
-  source_ref: text(300).optional(),
-  title: text(200).optional(),
-}).strict();
+export const RecordSignalInput = z
+  .object({
+    observed_condition: text(2000),
+    affected_population: text(500).optional(),
+    evidence_refs: z.array(id).max(20).default([]),
+    potential_value: text(300).optional(),
+    urgency: z.enum(["low", "medium", "high", "critical"]).optional(),
+    source_ref: text(300).optional(),
+    title: text(200).optional(),
+  })
+  .strict();
 
 /** Artifact channel: extraction produces draft proposals only; a human confirms each signal. */
-export const ExtractSignalInput = z.object({
-  artifact_text: text(20000),
-  kind: text(60),
-  domain: text(120).optional(),
-  source_ref: text(300).optional(),
-}).strict();
+export const ExtractSignalInput = z
+  .object({
+    artifact_text: text(20000),
+    kind: text(60),
+    domain: text(120).optional(),
+    source_ref: text(300).optional(),
+  })
+  .strict();
 
-export const CaptureStartInput = z.object({
-  modalities: z.array(z.enum(["audio", "text"])).min(1).max(2),
-  purpose: text(500),
-}).strict();
+export const CaptureStartInput = z
+  .object({
+    modalities: z
+      .array(z.enum(["audio", "text"]))
+      .min(1)
+      .max(2),
+    purpose: text(500),
+  })
+  .strict();
 
-export const CaptureCompleteInput = z.object({
-  capture_id: id,
-  transcript: text(20000),
-}).strict();
+export const CaptureCompleteInput = z
+  .object({
+    capture_id: id,
+    transcript: text(20000),
+  })
+  .strict();
 
 /** Human confirmation of one draft proposal from the artifact, capture or detector channel. */
-export const ConfirmDraftInput = z.object({
-  origin: z.enum(["artifact_upload", "live_capture", "agent_sensor"]),
-  observed_condition: text(2000),
-  evidence_refs: z.array(id).max(20).default([]),
-  source_ref: text(300).optional(),
-  raw_input_ref: text(300).optional(),
-  extraction_method: z.enum(["manual", "model_extraction", "detector"]),
-  model_route: text(120).optional(),
-}).strict();
+export const ConfirmDraftInput = z
+  .object({
+    origin: z.enum(["artifact_upload", "live_capture", "agent_sensor"]),
+    observed_condition: text(2000),
+    evidence_refs: z.array(id).max(20).default([]),
+    source_ref: text(300).optional(),
+    raw_input_ref: text(300).optional(),
+    extraction_method: z.enum(["manual", "model_extraction", "detector"]),
+    model_route: text(120).optional(),
+  })
+  .strict();
 
 export const PromoteSignalInput = z.object({ signal_id: id, rationale: text(1000) }).strict();
-export const LinkSignalInput = z.object({ signal_id: id, mission_id: id, rationale: text(1000) }).strict();
+export const LinkSignalInput = z
+  .object({ signal_id: id, mission_id: id, rationale: text(1000) })
+  .strict();
 
 export interface DraftSignal {
   observed_condition: string;
@@ -91,13 +117,17 @@ export function draftSignalsFromText(source: string, max = 5): DraftSignal[] {
       observed_condition: s,
       evidence_excerpt: s,
       confidence: "low" as const,
-      basis: "Rule-based extraction proposal; a person must confirm the observed condition before any signal exists (8A.4 draft/confirm).",
+      basis:
+        "Rule-based extraction proposal; a person must confirm the observed condition before any signal exists (8A.4 draft/confirm).",
     }));
 }
 
 /** Mandatory dedupe decision (B.2 rule 4): normalised-condition equality collapses near-duplicates. */
 export function normalizeCondition(condition: string): string {
-  return condition.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+  return condition
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
 }
 export function isNearDuplicate(candidate: string, existing: string): boolean {
   return normalizeCondition(candidate) === normalizeCondition(existing);

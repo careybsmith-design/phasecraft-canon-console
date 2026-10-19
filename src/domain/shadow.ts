@@ -17,7 +17,14 @@ export const EXPOSURE_STEPS = [1, 5, 25, 50, 100] as const;
 export const KILL_SWITCH_BOUND_MS = 60_000;
 
 /** Part 9.4: discrepancies are clustered by cause hypothesis; every class above threshold needs an owner and a disposition. */
-export const CAUSE_CLASSES = ["data_distribution", "edge_case", "policy_gap", "model_error", "integration", "unknown"] as const;
+export const CAUSE_CLASSES = [
+  "data_distribution",
+  "edge_case",
+  "policy_gap",
+  "model_error",
+  "integration",
+  "unknown",
+] as const;
 export type CauseClass = (typeof CAUSE_CLASSES)[number];
 
 export interface ShadowCase {
@@ -35,8 +42,10 @@ export function decisionsDiffer(shadow: string, actual: string): boolean {
 }
 
 export function discrepancyRate(sampleSize: number, discrepancyCount: number): number {
-  if (sampleSize <= 0) throw new Error("SAMPLE_SIZE_REQUIRED: a shadow run needs a positive sample size");
-  if (discrepancyCount < 0 || discrepancyCount > sampleSize) throw new Error("BAD_DISCREPANCY_COUNT");
+  if (sampleSize <= 0)
+    throw new Error("SAMPLE_SIZE_REQUIRED: a shadow run needs a positive sample size");
+  if (discrepancyCount < 0 || discrepancyCount > sampleSize)
+    throw new Error("BAD_DISCREPANCY_COUNT");
   return discrepancyCount / sampleSize;
 }
 
@@ -46,19 +55,28 @@ export function rateBreaches(rate: number): boolean {
 }
 
 /** 9.4: surface patterns, not just counts. */
-export function clusterCauses(cases: ShadowCase[]): Array<{ cause: CauseClass; count: number; case_refs: string[] }> {
+export function clusterCauses(
+  cases: ShadowCase[],
+): Array<{ cause: CauseClass; count: number; case_refs: string[] }> {
   const m = new Map<CauseClass, string[]>();
   for (const c of cases) {
     const arr = m.get(c.hypothesised_cause) ?? [];
     arr.push(c.case_ref);
     m.set(c.hypothesised_cause, arr);
   }
-  return [...m.entries()].map(([cause, refs]) => ({ cause, count: refs.length, case_refs: refs })).sort((a, b) => b.count - a.count);
+  return [...m.entries()]
+    .map(([cause, refs]) => ({ cause, count: refs.length, case_refs: refs }))
+    .sort((a, b) => b.count - a.count);
 }
 
 /** 9.4: every discrepancy class above threshold needs an owner and a disposition. */
-export function unownedClasses(clusters: Array<{ cause: CauseClass; count: number }>, sampleSize: number): CauseClass[] {
-  return clusters.filter((c) => sampleSize > 0 && c.count / sampleSize > DISCREPANCY_RATE_THRESHOLD).map((c) => c.cause);
+export function unownedClasses(
+  clusters: Array<{ cause: CauseClass; count: number }>,
+  sampleSize: number,
+): CauseClass[] {
+  return clusters
+    .filter((c) => sampleSize > 0 && c.count / sampleSize > DISCREPANCY_RATE_THRESHOLD)
+    .map((c) => c.cause);
 }
 
 /** Progressive population: the next authorised population must be a step up, never a leap. */
@@ -70,17 +88,26 @@ export function nextExposureStep(currentPct: number): number | null {
 export function exposureStepError(currentPct: number, requestedPct: number): string | null {
   const next = nextExposureStep(currentPct);
   if (next === null) return "EXPOSURE_COMPLETE: the capability is already at full population";
-  if (requestedPct <= currentPct) return `EXPOSURE_NOT_PROGRESSIVE: ${requestedPct}% does not extend the current ${currentPct}%`;
-  if (requestedPct > next) return `EXPOSURE_STEP_SKIPPED: the next step from ${currentPct}% is at most ${next}% (Part 9 progressive population)`;
+  if (requestedPct <= currentPct)
+    return `EXPOSURE_NOT_PROGRESSIVE: ${requestedPct}% does not extend the current ${currentPct}%`;
+  if (requestedPct > next)
+    return `EXPOSURE_STEP_SKIPPED: the next step from ${currentPct}% is at most ${next}% (Part 9 progressive population)`;
   return null;
 }
 
 /** 6.2: a critical incident, or a repeated serious one, demotes automatically. */
-export function incidentDemotes(severity: "minor" | "major" | "critical", recentSeriousCount: number): boolean {
+export function incidentDemotes(
+  severity: "minor" | "major" | "critical",
+  recentSeriousCount: number,
+): boolean {
   return severity === "critical" || recentSeriousCount >= 2;
 }
 
 /** Kill switch must stop within its stated bound. */
-export function killSwitchWithinBound(requestedAtMs: number, stoppedAtMs: number, boundMs: number = KILL_SWITCH_BOUND_MS): boolean {
+export function killSwitchWithinBound(
+  requestedAtMs: number,
+  stoppedAtMs: number,
+  boundMs: number = KILL_SWITCH_BOUND_MS,
+): boolean {
   return stoppedAtMs - requestedAtMs <= boundMs;
 }

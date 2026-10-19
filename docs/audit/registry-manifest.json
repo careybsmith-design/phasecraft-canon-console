@@ -19,11 +19,7 @@
       "family": "Canon",
       "ref_prefix": "PR",
       "lifecycle_family": "canon",
-      "key_fields": [
-        "directive",
-        "derivation",
-        "violation_examples"
-      ],
+      "key_fields": ["directive", "derivation", "violation_examples"],
       "purpose": "A governing principle"
     },
     {
@@ -46,12 +42,7 @@
       "family": "Canon",
       "ref_prefix": "PT",
       "lifecycle_family": "canon",
-      "key_fields": [
-        "preconditions",
-        "steps",
-        "decision_points",
-        "outputs"
-      ],
+      "key_fields": ["preconditions", "steps", "decision_points", "outputs"],
       "purpose": "How a recurring operating move happens"
     },
     {
@@ -88,12 +79,7 @@
       "family": "Canon",
       "ref_prefix": "AP",
       "lifecycle_family": "canon",
-      "key_fields": [
-        "signature",
-        "why_harmful",
-        "detector_ref",
-        "remediation"
-      ],
+      "key_fields": ["signature", "why_harmful", "detector_ref", "remediation"],
       "purpose": "A named failure mode with a detector"
     },
     {
@@ -319,11 +305,7 @@
       "family": "Intent",
       "ref_prefix": "CT",
       "lifecycle_family": "canon",
-      "key_fields": [
-        "kind",
-        "source",
-        "binding_scope"
-      ],
+      "key_fields": ["kind", "source", "binding_scope"],
       "purpose": "A binding constraint"
     },
     {
@@ -331,12 +313,7 @@
       "family": "Intent",
       "ref_prefix": "NN",
       "lifecycle_family": "canon",
-      "key_fields": [
-        "statement",
-        "why_non_negotiable",
-        "violation_severity",
-        "detector_ref"
-      ],
+      "key_fields": ["statement", "why_non_negotiable", "violation_severity", "detector_ref"],
       "purpose": "A consequence that must never happen"
     },
     {
@@ -362,13 +339,7 @@
       "family": "Intent",
       "ref_prefix": "OQ",
       "lifecycle_family": "canon",
-      "key_fields": [
-        "question",
-        "why_it_matters",
-        "blocking",
-        "owner",
-        "needed_by"
-      ],
+      "key_fields": ["question", "why_it_matters", "blocking", "owner", "needed_by"],
       "purpose": "An unresolved question"
     },
     {
@@ -376,13 +347,7 @@
       "family": "Intent",
       "ref_prefix": "AS",
       "lifecycle_family": "canon",
-      "key_fields": [
-        "statement",
-        "basis",
-        "confidence",
-        "verification_method",
-        "status"
-      ],
+      "key_fields": ["statement", "basis", "confidence", "verification_method", "status"],
       "purpose": "A held assumption awaiting verification"
     },
     {
@@ -430,10 +395,7 @@
       "family": "Capability",
       "ref_prefix": "WC",
       "lifecycle_family": "composable_capability",
-      "key_fields": [
-        "mission_ref",
-        "capability_refs"
-      ],
+      "key_fields": ["mission_ref", "capability_refs"],
       "purpose": "A capability working inside a mission (Part 4.2 verbs)"
     },
     {
@@ -457,12 +419,7 @@
       "family": "Capability",
       "ref_prefix": "DP",
       "lifecycle_family": "canon",
-      "key_fields": [
-        "from",
-        "to",
-        "kind",
-        "criticality"
-      ],
+      "key_fields": ["from", "to", "kind", "criticality"],
       "purpose": "A typed capability dependency"
     },
     {
@@ -602,12 +559,7 @@
       "family": "Creation",
       "ref_prefix": "IT",
       "lifecycle_family": "evidence_record",
-      "key_fields": [
-        "from_run",
-        "to_run",
-        "trigger",
-        "change_class"
-      ],
+      "key_fields": ["from_run", "to_run", "trigger", "change_class"],
       "purpose": "A classified change between runs"
     },
     {
@@ -615,11 +567,7 @@
       "family": "Evidence",
       "ref_prefix": "TS",
       "lifecycle_family": "evidence_record",
-      "key_fields": [
-        "generated_from",
-        "provenance",
-        "independence_class"
-      ],
+      "key_fields": ["generated_from", "provenance", "independence_class"],
       "purpose": "A test suite with independence class"
     },
     {
@@ -657,13 +605,7 @@
       "family": "Evidence",
       "ref_prefix": "AR",
       "lifecycle_family": "evidence_record",
-      "key_fields": [
-        "attempts",
-        "classes",
-        "findings",
-        "severity",
-        "remediated"
-      ],
+      "key_fields": ["attempts", "classes", "findings", "severity", "remediated"],
       "purpose": "An adversarial challenge"
     },
     {
@@ -671,12 +613,7 @@
       "family": "Evidence",
       "ref_prefix": "MV",
       "lifecycle_family": "evidence_record",
-      "key_fields": [
-        "model_route",
-        "suite",
-        "metrics",
-        "pass_fail"
-      ],
+      "key_fields": ["model_route", "suite", "metrics", "pass_fail"],
       "purpose": "A model evaluation"
     },
     {
@@ -741,11 +678,7 @@
       "family": "Evidence",
       "ref_prefix": "XP",
       "lifecycle_family": "evidence_record",
-      "key_fields": [
-        "percent",
-        "cohort_definition",
-        "event_set"
-      ],
+      "key_fields": ["percent", "cohort_definition", "event_set"],
       "purpose": "A defined exposure population (Part 4.2 verbs)"
     },
     {
@@ -824,13 +757,7 @@
       "family": "Assurance",
       "ref_prefix": "CH",
       "lifecycle_family": "evidence_record",
-      "key_fields": [
-        "control_ref",
-        "subject_ref",
-        "result",
-        "evidence",
-        "evaluator"
-      ],
+      "key_fields": ["control_ref", "subject_ref", "result", "evidence", "evaluator"],
       "purpose": "A control check"
     },
     {
@@ -854,13 +781,7 @@
       "family": "Assurance",
       "ref_prefix": "AE",
       "lifecycle_family": "evidence_record",
-      "key_fields": [
-        "standard",
-        "subject_ref",
-        "checks",
-        "findings",
-        "result"
-      ],
+      "key_fields": ["standard", "subject_ref", "checks", "findings", "result"],
       "purpose": "A WCAG evaluation"
     },
     {
@@ -868,12 +789,7 @@
       "family": "Assurance",
       "ref_prefix": "SS",
       "lifecycle_family": "evidence_record",
-      "key_fields": [
-        "kind",
-        "subject_ref",
-        "findings",
-        "severity_summary"
-      ],
+      "key_fields": ["kind", "subject_ref", "findings", "severity_summary"],
       "purpose": "A security scan"
     },
     {
@@ -911,13 +827,7 @@
       "family": "Assurance",
       "ref_prefix": "AG",
       "lifecycle_family": "evidence_record",
-      "key_fields": [
-        "subject_ref",
-        "authority_level",
-        "scope",
-        "evidence_refs",
-        "granted_by"
-      ],
+      "key_fields": ["subject_ref", "authority_level", "scope", "evidence_refs", "granted_by"],
       "purpose": "An authority grant (Part 4.2 verbs)"
     },
     {
@@ -925,12 +835,7 @@
       "family": "People",
       "ref_prefix": "BU",
       "lifecycle_family": "canon",
-      "key_fields": [
-        "identity",
-        "layers",
-        "capability_profile_ref",
-        "active_cells"
-      ],
+      "key_fields": ["identity", "layers", "capability_profile_ref", "active_cells"],
       "purpose": "A builder"
     },
     {
@@ -938,12 +843,7 @@
       "family": "People",
       "ref_prefix": "BC",
       "lifecycle_family": "canon",
-      "key_fields": [
-        "identity",
-        "business_domain",
-        "decision_authority",
-        "active_missions"
-      ],
+      "key_fields": ["identity", "business_domain", "decision_authority", "active_missions"],
       "purpose": "A business co-creator"
     },
     {
@@ -1007,10 +907,7 @@
       "family": "Context",
       "ref_prefix": "GT",
       "lifecycle_family": "canon",
-      "key_fields": [
-        "term",
-        "definition"
-      ],
+      "key_fields": ["term", "definition"],
       "purpose": "A canonical glossary term"
     },
     {
@@ -1018,10 +915,7 @@
       "family": "Context",
       "ref_prefix": "DM",
       "lifecycle_family": "canon",
-      "key_fields": [
-        "domain",
-        "entities"
-      ],
+      "key_fields": ["domain", "entities"],
       "purpose": "A domain model"
     },
     {
@@ -1029,10 +923,7 @@
       "family": "Context",
       "ref_prefix": "RP",
       "lifecycle_family": "canon",
-      "key_fields": [
-        "pattern",
-        "example"
-      ],
+      "key_fields": ["pattern", "example"],
       "purpose": "A reference pattern"
     },
     {
@@ -1040,10 +931,7 @@
       "family": "Context",
       "ref_prefix": "DT",
       "lifecycle_family": "canon",
-      "key_fields": [
-        "token",
-        "value"
-      ],
+      "key_fields": ["token", "value"],
       "purpose": "A design system token"
     },
     {
@@ -1051,10 +939,7 @@
       "family": "Context",
       "ref_prefix": "EX",
       "lifecycle_family": "canon",
-      "key_fields": [
-        "entity",
-        "example"
-      ],
+      "key_fields": ["entity", "example"],
       "purpose": "A representative entity example"
     },
     {
@@ -1076,12 +961,7 @@
       "family": "Learning",
       "ref_prefix": "FP",
       "lifecycle_family": "canon",
-      "key_fields": [
-        "signature",
-        "conditions",
-        "detection_ref",
-        "prevention"
-      ],
+      "key_fields": ["signature", "conditions", "detection_ref", "prevention"],
       "purpose": "A failure pattern"
     },
     {
@@ -1089,11 +969,7 @@
       "family": "Learning",
       "ref_prefix": "RX",
       "lifecycle_family": "canon",
-      "key_fields": [
-        "kind",
-        "source_mission",
-        "publication_state"
-      ],
+      "key_fields": ["kind", "source_mission", "publication_state"],
       "purpose": "A reusable primitive"
     },
     {
@@ -1101,12 +977,7 @@
       "family": "Learning",
       "ref_prefix": "MA",
       "lifecycle_family": "canon",
-      "key_fields": [
-        "primitive_ref",
-        "category",
-        "usage_stats_ref",
-        "owner"
-      ],
+      "key_fields": ["primitive_ref", "category", "usage_stats_ref", "owner"],
       "purpose": "A marketplace asset"
     },
     {
@@ -1133,13 +1004,7 @@
       "family": "ModelRoute",
       "ref_prefix": "PV",
       "lifecycle_family": "canon",
-      "key_fields": [
-        "type",
-        "scope",
-        "valid_from",
-        "valid_to",
-        "owner"
-      ],
+      "key_fields": ["type", "scope", "valid_from", "valid_to", "owner"],
       "purpose": "A provider attestation"
     },
     {
@@ -1147,14 +1012,7 @@
       "family": "ModelRoute",
       "ref_prefix": "ES",
       "lifecycle_family": "canon",
-      "key_fields": [
-        "name",
-        "version",
-        "golden_set_ref",
-        "metrics",
-        "pass_thresholds",
-        "last_run"
-      ],
+      "key_fields": ["name", "version", "golden_set_ref", "metrics", "pass_thresholds", "last_run"],
       "purpose": "An evaluation suite"
     },
     {
@@ -1231,13 +1089,7 @@
       "family": "Framing",
       "ref_prefix": "CA",
       "lifecycle_family": "evidence_record",
-      "key_fields": [
-        "session_ref",
-        "kind",
-        "content_tier",
-        "consent_basis",
-        "storage_ref"
-      ],
+      "key_fields": ["session_ref", "kind", "content_tier", "consent_basis", "storage_ref"],
       "purpose": "Captured material. Evidence, not canon"
     },
     {
@@ -1260,11 +1112,7 @@
       "family": "Framing",
       "ref_prefix": "NS",
       "lifecycle_family": "framing_extract",
-      "key_fields": [
-        "need",
-        "affected_people",
-        "provenance_spans"
-      ],
+      "key_fields": ["need", "affected_people", "provenance_spans"],
       "purpose": "A business need (the COO's named unit)"
     },
     {
@@ -1272,14 +1120,7 @@
       "family": "Framing",
       "ref_prefix": "DX",
       "lifecycle_family": "framing_extract",
-      "key_fields": [
-        "from_ref",
-        "to_ref",
-        "verb",
-        "source",
-        "confidence",
-        "provenance_spans"
-      ],
+      "key_fields": ["from_ref", "to_ref", "verb", "source", "confidence", "provenance_spans"],
       "purpose": "A proposed relationship awaiting confirmation"
     },
     {
@@ -1287,11 +1128,7 @@
       "family": "Framing",
       "ref_prefix": "ER",
       "lifecycle_family": "framing_extract",
-      "key_fields": [
-        "decision_ref",
-        "evidence_needed",
-        "provenance_spans"
-      ],
+      "key_fields": ["decision_ref", "evidence_needed", "provenance_spans"],
       "purpose": "Evidence required for the next decision"
     },
     {
@@ -1299,10 +1136,7 @@
       "family": "Framing",
       "ref_prefix": "PS",
       "lifecycle_family": "framing_extract",
-      "key_fields": [
-        "description",
-        "provenance_spans"
-      ],
+      "key_fields": ["description", "provenance_spans"],
       "purpose": "An affected person type"
     },
     {
@@ -1310,10 +1144,7 @@
       "family": "Framing",
       "ref_prefix": "SI",
       "lifecycle_family": "framing_extract",
-      "key_fields": [
-        "description",
-        "provenance_spans"
-      ],
+      "key_fields": ["description", "provenance_spans"],
       "purpose": "An affected situation"
     }
   ],
@@ -1322,12 +1153,8 @@
       "verb": "signals",
       "signatures": [
         {
-          "from": [
-            "ValueSignal"
-          ],
-          "to": [
-            "ValueMission"
-          ]
+          "from": ["ValueSignal"],
+          "to": ["ValueMission"]
         }
       ],
       "directed": true,
@@ -1337,12 +1164,8 @@
       "verb": "promoted_from",
       "signatures": [
         {
-          "from": [
-            "ValueMission"
-          ],
-          "to": [
-            "ValueSignal"
-          ]
+          "from": ["ValueMission"],
+          "to": ["ValueSignal"]
         }
       ],
       "directed": true,
@@ -1352,12 +1175,8 @@
       "verb": "originated_from",
       "signatures": [
         {
-          "from": [
-            "ValueSignal"
-          ],
-          "to": [
-            "Evidence"
-          ]
+          "from": ["ValueSignal"],
+          "to": ["Evidence"]
         }
       ],
       "directed": true,
@@ -1367,12 +1186,8 @@
       "verb": "duplicates",
       "signatures": [
         {
-          "from": [
-            "ValueSignal"
-          ],
-          "to": [
-            "ValueSignal"
-          ]
+          "from": ["ValueSignal"],
+          "to": ["ValueSignal"]
         }
       ],
       "directed": true,
@@ -1382,12 +1197,8 @@
       "verb": "scoped_to",
       "signatures": [
         {
-          "from": [
-            "ValueMission"
-          ],
-          "to": [
-            "ValueCell"
-          ]
+          "from": ["ValueMission"],
+          "to": ["ValueCell"]
         }
       ],
       "directed": true,
@@ -1397,12 +1208,8 @@
       "verb": "operated_by",
       "signatures": [
         {
-          "from": [
-            "ValueCell"
-          ],
-          "to": [
-            "Actor"
-          ]
+          "from": ["ValueCell"],
+          "to": ["Actor"]
         }
       ],
       "directed": true,
@@ -1412,12 +1219,8 @@
       "verb": "bursts",
       "signatures": [
         {
-          "from": [
-            "ValueCell"
-          ],
-          "to": [
-            "ValueBurst"
-          ]
+          "from": ["ValueCell"],
+          "to": ["ValueBurst"]
         }
       ],
       "directed": true,
@@ -1427,15 +1230,8 @@
       "verb": "produced",
       "signatures": [
         {
-          "from": [
-            "ValueBurst"
-          ],
-          "to": [
-            "WorkingCapability",
-            "Evidence",
-            "Decision",
-            "DisprovedAssumption"
-          ]
+          "from": ["ValueBurst"],
+          "to": ["WorkingCapability", "Evidence", "Decision", "DisprovedAssumption"]
         }
       ],
       "directed": true,
@@ -1445,12 +1241,8 @@
       "verb": "expresses",
       "signatures": [
         {
-          "from": [
-            "IntentModel"
-          ],
-          "to": [
-            "ValueMission"
-          ]
+          "from": ["IntentModel"],
+          "to": ["ValueMission"]
         }
       ],
       "directed": true,
@@ -1460,12 +1252,8 @@
       "verb": "contains",
       "signatures": [
         {
-          "from": [
-            "IntentModel"
-          ],
-          "to": [
-            "BehaviorStatement"
-          ]
+          "from": ["IntentModel"],
+          "to": ["BehaviorStatement"]
         }
       ],
       "directed": true,
@@ -1475,12 +1263,8 @@
       "verb": "governed_by_contract",
       "signatures": [
         {
-          "from": [
-            "ExecutableOutcomeContract"
-          ],
-          "to": [
-            "IntentModel"
-          ]
+          "from": ["ExecutableOutcomeContract"],
+          "to": ["IntentModel"]
         }
       ],
       "directed": true,
@@ -1490,12 +1274,8 @@
       "verb": "confirmed_by",
       "signatures": [
         {
-          "from": [
-            "BehaviorStatement"
-          ],
-          "to": [
-            "Decision"
-          ]
+          "from": ["BehaviorStatement"],
+          "to": ["Decision"]
         }
       ],
       "directed": true,
@@ -1505,12 +1285,8 @@
       "verb": "constrains",
       "signatures": [
         {
-          "from": [
-            "Constraint"
-          ],
-          "to": [
-            "BehaviorStatement"
-          ]
+          "from": ["Constraint"],
+          "to": ["BehaviorStatement"]
         }
       ],
       "directed": true,
@@ -1520,12 +1296,8 @@
       "verb": "non_negotiable",
       "signatures": [
         {
-          "from": [
-            "NonNegotiableConsequence"
-          ],
-          "to": [
-            "BehaviorStatement"
-          ]
+          "from": ["NonNegotiableConsequence"],
+          "to": ["BehaviorStatement"]
         }
       ],
       "directed": true,
@@ -1535,12 +1307,8 @@
       "verb": "raises",
       "signatures": [
         {
-          "from": [
-            "OpenQuestion"
-          ],
-          "to": [
-            "BehaviorStatement"
-          ]
+          "from": ["OpenQuestion"],
+          "to": ["BehaviorStatement"]
         }
       ],
       "directed": true,
@@ -1550,12 +1318,8 @@
       "verb": "assumes",
       "signatures": [
         {
-          "from": [
-            "Assumption"
-          ],
-          "to": [
-            "BehaviorStatement"
-          ]
+          "from": ["Assumption"],
+          "to": ["BehaviorStatement"]
         }
       ],
       "directed": true,
@@ -1565,12 +1329,8 @@
       "verb": "disproven_by",
       "signatures": [
         {
-          "from": [
-            "Assumption"
-          ],
-          "to": [
-            "Evidence"
-          ]
+          "from": ["Assumption"],
+          "to": ["Evidence"]
         }
       ],
       "directed": true,
@@ -1580,12 +1340,8 @@
       "verb": "composes",
       "signatures": [
         {
-          "from": [
-            "WorkingCapability"
-          ],
-          "to": [
-            "ComposableCapability"
-          ]
+          "from": ["WorkingCapability"],
+          "to": ["ComposableCapability"]
         }
       ],
       "directed": true,
@@ -1595,12 +1351,8 @@
       "verb": "implements",
       "signatures": [
         {
-          "from": [
-            "ComposableCapability"
-          ],
-          "to": [
-            "CapabilityContract"
-          ]
+          "from": ["ComposableCapability"],
+          "to": ["CapabilityContract"]
         }
       ],
       "directed": true,
@@ -1610,28 +1362,16 @@
       "verb": "depends_on",
       "signatures": [
         {
-          "from": [
-            "ComposableCapability"
-          ],
-          "to": [
-            "ComposableCapability"
-          ]
+          "from": ["ComposableCapability"],
+          "to": ["ComposableCapability"]
         },
         {
-          "from": [
-            "NeedStatement"
-          ],
-          "to": [
-            "NeedStatement"
-          ]
+          "from": ["NeedStatement"],
+          "to": ["NeedStatement"]
         },
         {
-          "from": [
-            "BehaviorStatement"
-          ],
-          "to": [
-            "BehaviorStatement"
-          ]
+          "from": ["BehaviorStatement"],
+          "to": ["BehaviorStatement"]
         }
       ],
       "directed": true,
@@ -1642,12 +1382,8 @@
       "verb": "evidenced_by",
       "signatures": [
         {
-          "from": [
-            "ComposableCapability"
-          ],
-          "to": [
-            "Evidence"
-          ]
+          "from": ["ComposableCapability"],
+          "to": ["Evidence"]
         }
       ],
       "directed": true,
@@ -1657,12 +1393,8 @@
       "verb": "stewarded_by",
       "signatures": [
         {
-          "from": [
-            "ComposableCapability"
-          ],
-          "to": [
-            "Actor"
-          ]
+          "from": ["ComposableCapability"],
+          "to": ["Actor"]
         }
       ],
       "directed": true,
@@ -1672,12 +1404,8 @@
       "verb": "superseded_by",
       "signatures": [
         {
-          "from": [
-            "ComposableCapability"
-          ],
-          "to": [
-            "ComposableCapability"
-          ]
+          "from": ["ComposableCapability"],
+          "to": ["ComposableCapability"]
         }
       ],
       "directed": true,
@@ -1687,12 +1415,8 @@
       "verb": "compiled_into",
       "signatures": [
         {
-          "from": [
-            "BehaviorStatement"
-          ],
-          "to": [
-            "CreationPrompt"
-          ]
+          "from": ["BehaviorStatement"],
+          "to": ["CreationPrompt"]
         }
       ],
       "directed": true,
@@ -1702,12 +1426,8 @@
       "verb": "used_template",
       "signatures": [
         {
-          "from": [
-            "CreationPrompt"
-          ],
-          "to": [
-            "PromptTemplate"
-          ]
+          "from": ["CreationPrompt"],
+          "to": ["PromptTemplate"]
         }
       ],
       "directed": true,
@@ -1717,12 +1437,8 @@
       "verb": "governed_by",
       "signatures": [
         {
-          "from": [
-            "CreationPrompt"
-          ],
-          "to": [
-            "Guardrail"
-          ]
+          "from": ["CreationPrompt"],
+          "to": ["Guardrail"]
         }
       ],
       "directed": true,
@@ -1732,12 +1448,8 @@
       "verb": "dispatched_to",
       "signatures": [
         {
-          "from": [
-            "CreationPrompt"
-          ],
-          "to": [
-            "BuildPlatform"
-          ]
+          "from": ["CreationPrompt"],
+          "to": ["BuildPlatform"]
         }
       ],
       "directed": true,
@@ -1747,12 +1459,8 @@
       "verb": "executed_as",
       "signatures": [
         {
-          "from": [
-            "CreationPrompt"
-          ],
-          "to": [
-            "BuildRun"
-          ]
+          "from": ["CreationPrompt"],
+          "to": ["BuildRun"]
         }
       ],
       "directed": true,
@@ -1762,12 +1470,8 @@
       "verb": "produced_artifact",
       "signatures": [
         {
-          "from": [
-            "BuildRun"
-          ],
-          "to": [
-            "BuildArtifact"
-          ]
+          "from": ["BuildRun"],
+          "to": ["BuildArtifact"]
         }
       ],
       "directed": true,
@@ -1777,12 +1481,8 @@
       "verb": "skeleton_of",
       "signatures": [
         {
-          "from": [
-            "WorkingSkeleton"
-          ],
-          "to": [
-            "ValueMission"
-          ]
+          "from": ["WorkingSkeleton"],
+          "to": ["ValueMission"]
         }
       ],
       "directed": true,
@@ -1792,12 +1492,8 @@
       "verb": "iterated_as",
       "signatures": [
         {
-          "from": [
-            "BuildRun"
-          ],
-          "to": [
-            "BuildRun"
-          ]
+          "from": ["BuildRun"],
+          "to": ["BuildRun"]
         }
       ],
       "directed": true,
@@ -1807,13 +1503,8 @@
       "verb": "verified_by",
       "signatures": [
         {
-          "from": [
-            "BehaviorStatement",
-            "ComposableCapability"
-          ],
-          "to": [
-            "TestRun"
-          ]
+          "from": ["BehaviorStatement", "ComposableCapability"],
+          "to": ["TestRun"]
         }
       ],
       "directed": true,
@@ -1823,13 +1514,8 @@
       "verb": "simulated_by",
       "signatures": [
         {
-          "from": [
-            "WorkingCapability",
-            "ComposableCapability"
-          ],
-          "to": [
-            "SimulationRun"
-          ]
+          "from": ["WorkingCapability", "ComposableCapability"],
+          "to": ["SimulationRun"]
         }
       ],
       "directed": true,
@@ -1839,13 +1525,8 @@
       "verb": "challenged_by",
       "signatures": [
         {
-          "from": [
-            "WorkingCapability",
-            "ComposableCapability"
-          ],
-          "to": [
-            "AdversarialRun"
-          ]
+          "from": ["WorkingCapability", "ComposableCapability"],
+          "to": ["AdversarialRun"]
         }
       ],
       "directed": true,
@@ -1855,13 +1536,8 @@
       "verb": "evaluated_by",
       "signatures": [
         {
-          "from": [
-            "ModelRoute",
-            "Agent"
-          ],
-          "to": [
-            "ModelEvaluation"
-          ]
+          "from": ["ModelRoute", "Agent"],
+          "to": ["ModelEvaluation"]
         }
       ],
       "directed": true,
@@ -1871,13 +1547,8 @@
       "verb": "shadowed_by",
       "signatures": [
         {
-          "from": [
-            "WorkingCapability",
-            "ComposableCapability"
-          ],
-          "to": [
-            "ShadowRun"
-          ]
+          "from": ["WorkingCapability", "ComposableCapability"],
+          "to": ["ShadowRun"]
         }
       ],
       "directed": true,
@@ -1887,12 +1558,8 @@
       "verb": "discrepancy_in",
       "signatures": [
         {
-          "from": [
-            "ShadowRun"
-          ],
-          "to": [
-            "Discrepancy"
-          ]
+          "from": ["ShadowRun"],
+          "to": ["Discrepancy"]
         }
       ],
       "directed": true,
@@ -1902,13 +1569,8 @@
       "verb": "authorised_by",
       "signatures": [
         {
-          "from": [
-            "ExposureAuthorization"
-          ],
-          "to": [
-            "WorkingCapability",
-            "ComposableCapability"
-          ]
+          "from": ["ExposureAuthorization"],
+          "to": ["WorkingCapability", "ComposableCapability"]
         }
       ],
       "directed": true,
@@ -1918,12 +1580,8 @@
       "verb": "exposed_to",
       "signatures": [
         {
-          "from": [
-            "ExposureAuthorization"
-          ],
-          "to": [
-            "ExposurePopulation"
-          ]
+          "from": ["ExposureAuthorization"],
+          "to": ["ExposurePopulation"]
         }
       ],
       "directed": true,
@@ -1933,13 +1591,8 @@
       "verb": "observed_as",
       "signatures": [
         {
-          "from": [
-            "WorkingCapability",
-            "ComposableCapability"
-          ],
-          "to": [
-            "ProductionOutcome"
-          ]
+          "from": ["WorkingCapability", "ComposableCapability"],
+          "to": ["ProductionOutcome"]
         }
       ],
       "directed": true,
@@ -1949,12 +1602,8 @@
       "verb": "values",
       "signatures": [
         {
-          "from": [
-            "ProductionOutcome"
-          ],
-          "to": [
-            "ValueMeasure"
-          ]
+          "from": ["ProductionOutcome"],
+          "to": ["ValueMeasure"]
         }
       ],
       "directed": true,
@@ -1964,12 +1613,8 @@
       "verb": "caused",
       "signatures": [
         {
-          "from": [
-            "ProductionOutcome"
-          ],
-          "to": [
-            "Incident"
-          ]
+          "from": ["ProductionOutcome"],
+          "to": ["Incident"]
         }
       ],
       "directed": true,
@@ -1979,13 +1624,8 @@
       "verb": "decided_from",
       "signatures": [
         {
-          "from": [
-            "ConfirmedDecision"
-          ],
-          "to": [
-            "ValueSignal",
-            "FramingSession"
-          ]
+          "from": ["ConfirmedDecision"],
+          "to": ["ValueSignal", "FramingSession"]
         }
       ],
       "directed": true,
@@ -1995,13 +1635,8 @@
       "verb": "built",
       "signatures": [
         {
-          "from": [
-            "BuildRun"
-          ],
-          "to": [
-            "ComposableCapability",
-            "WorkingCapability"
-          ]
+          "from": ["BuildRun"],
+          "to": ["ComposableCapability", "WorkingCapability"]
         }
       ],
       "directed": true,
@@ -2011,12 +1646,8 @@
       "verb": "renews",
       "signatures": [
         {
-          "from": [
-            "ConfirmedDecision"
-          ],
-          "to": [
-            "ExposureAuthorization"
-          ]
+          "from": ["ConfirmedDecision"],
+          "to": ["ExposureAuthorization"]
         }
       ],
       "directed": true,
@@ -2026,12 +1657,8 @@
       "verb": "authority_granted_by",
       "signatures": [
         {
-          "from": [
-            "*"
-          ],
-          "to": [
-            "AuthorityGrant"
-          ]
+          "from": ["*"],
+          "to": ["AuthorityGrant"]
         }
       ],
       "directed": true,
@@ -2041,12 +1668,8 @@
       "verb": "policy_evaluated_by",
       "signatures": [
         {
-          "from": [
-            "*"
-          ],
-          "to": [
-            "PolicyEvaluation"
-          ]
+          "from": ["*"],
+          "to": ["PolicyEvaluation"]
         }
       ],
       "directed": true,
@@ -2056,12 +1679,8 @@
       "verb": "control_checked_by",
       "signatures": [
         {
-          "from": [
-            "*"
-          ],
-          "to": [
-            "ControlCheck"
-          ]
+          "from": ["*"],
+          "to": ["ControlCheck"]
         }
       ],
       "directed": true,
@@ -2071,12 +1690,8 @@
       "verb": "consent_basis",
       "signatures": [
         {
-          "from": [
-            "CaptureSession"
-          ],
-          "to": [
-            "ConsentRecord"
-          ]
+          "from": ["CaptureSession"],
+          "to": ["ConsentRecord"]
         }
       ],
       "directed": true,
@@ -2086,12 +1701,8 @@
       "verb": "permission_basis",
       "signatures": [
         {
-          "from": [
-            "*"
-          ],
-          "to": [
-            "DataUsePermission"
-          ]
+          "from": ["*"],
+          "to": ["DataUsePermission"]
         }
       ],
       "directed": true,
@@ -2101,12 +1712,8 @@
       "verb": "lessons",
       "signatures": [
         {
-          "from": [
-            "ValueMission"
-          ],
-          "to": [
-            "Lesson"
-          ]
+          "from": ["ValueMission"],
+          "to": ["Lesson"]
         }
       ],
       "directed": true,
@@ -2116,12 +1723,8 @@
       "verb": "contributes",
       "signatures": [
         {
-          "from": [
-            "Lesson"
-          ],
-          "to": [
-            "ReusablePrimitive"
-          ]
+          "from": ["Lesson"],
+          "to": ["ReusablePrimitive"]
         }
       ],
       "directed": true,
@@ -2131,12 +1734,8 @@
       "verb": "published_as",
       "signatures": [
         {
-          "from": [
-            "ReusablePrimitive"
-          ],
-          "to": [
-            "MarketplaceAsset"
-          ]
+          "from": ["ReusablePrimitive"],
+          "to": ["MarketplaceAsset"]
         }
       ],
       "directed": true,
@@ -2146,12 +1745,8 @@
       "verb": "accelerated_by",
       "signatures": [
         {
-          "from": [
-            "ValueCell"
-          ],
-          "to": [
-            "ValueCell"
-          ]
+          "from": ["ValueCell"],
+          "to": ["ValueCell"]
         }
       ],
       "directed": true,
@@ -2161,12 +1756,8 @@
       "verb": "cites",
       "signatures": [
         {
-          "from": [
-            "*"
-          ],
-          "to": [
-            "*"
-          ]
+          "from": ["*"],
+          "to": ["*"]
         }
       ],
       "directed": true,
@@ -2176,12 +1767,8 @@
       "verb": "rendered_as",
       "signatures": [
         {
-          "from": [
-            "*"
-          ],
-          "to": [
-            "Rendition"
-          ]
+          "from": ["*"],
+          "to": ["Rendition"]
         }
       ],
       "directed": true,
@@ -2191,12 +1778,8 @@
       "verb": "flags",
       "signatures": [
         {
-          "from": [
-            "DetectorFinding"
-          ],
-          "to": [
-            "*"
-          ]
+          "from": ["DetectorFinding"],
+          "to": ["*"]
         }
       ],
       "directed": true,
@@ -2206,12 +1789,8 @@
       "verb": "reveals",
       "signatures": [
         {
-          "from": [
-            "DetectorFinding"
-          ],
-          "to": [
-            "AntiPattern"
-          ]
+          "from": ["DetectorFinding"],
+          "to": ["AntiPattern"]
         }
       ],
       "directed": true,
@@ -2221,12 +1800,8 @@
       "verb": "derives_from",
       "signatures": [
         {
-          "from": [
-            "*"
-          ],
-          "to": [
-            "*"
-          ]
+          "from": ["*"],
+          "to": ["*"]
         }
       ],
       "directed": true,
@@ -2237,12 +1812,8 @@
       "verb": "articulated_in",
       "signatures": [
         {
-          "from": [
-            "NeedStatement"
-          ],
-          "to": [
-            "FramingSession"
-          ]
+          "from": ["NeedStatement"],
+          "to": ["FramingSession"]
         }
       ],
       "directed": true,
@@ -2252,12 +1823,8 @@
       "verb": "extracted_from",
       "signatures": [
         {
-          "from": [
-            "*"
-          ],
-          "to": [
-            "CoCreationArtifact"
-          ]
+          "from": ["*"],
+          "to": ["CoCreationArtifact"]
         }
       ],
       "directed": true,
@@ -2267,12 +1834,8 @@
       "verb": "expressed_as",
       "signatures": [
         {
-          "from": [
-            "NeedStatement"
-          ],
-          "to": [
-            "BehaviorStatement"
-          ]
+          "from": ["NeedStatement"],
+          "to": ["BehaviorStatement"]
         }
       ],
       "directed": true,
@@ -2282,12 +1845,8 @@
       "verb": "addresses",
       "signatures": [
         {
-          "from": [
-            "BehaviorStatement"
-          ],
-          "to": [
-            "NeedStatement"
-          ]
+          "from": ["BehaviorStatement"],
+          "to": ["NeedStatement"]
         }
       ],
       "directed": true,
@@ -2297,12 +1856,8 @@
       "verb": "blocks",
       "signatures": [
         {
-          "from": [
-            "*"
-          ],
-          "to": [
-            "*"
-          ]
+          "from": ["*"],
+          "to": ["*"]
         }
       ],
       "directed": true,
@@ -2312,12 +1867,8 @@
       "verb": "relates_to",
       "signatures": [
         {
-          "from": [
-            "*"
-          ],
-          "to": [
-            "*"
-          ]
+          "from": ["*"],
+          "to": ["*"]
         }
       ],
       "directed": true,
@@ -2327,12 +1878,8 @@
       "verb": "contradicts",
       "signatures": [
         {
-          "from": [
-            "*"
-          ],
-          "to": [
-            "*"
-          ]
+          "from": ["*"],
+          "to": ["*"]
         }
       ],
       "directed": false,
@@ -2342,12 +1889,8 @@
       "verb": "supersedes_understanding_of",
       "signatures": [
         {
-          "from": [
-            "NeedStatement"
-          ],
-          "to": [
-            "NeedStatement"
-          ]
+          "from": ["NeedStatement"],
+          "to": ["NeedStatement"]
         }
       ],
       "directed": true,
@@ -2357,12 +1900,8 @@
       "verb": "clarifies",
       "signatures": [
         {
-          "from": [
-            "ExtractedStatement"
-          ],
-          "to": [
-            "*"
-          ]
+          "from": ["ExtractedStatement"],
+          "to": ["*"]
         }
       ],
       "directed": true,
@@ -2372,12 +1911,8 @@
       "verb": "supersedes_statement",
       "signatures": [
         {
-          "from": [
-            "ExtractedStatement"
-          ],
-          "to": [
-            "ExtractedStatement"
-          ]
+          "from": ["ExtractedStatement"],
+          "to": ["ExtractedStatement"]
         }
       ],
       "directed": true,
@@ -2387,12 +1922,8 @@
       "verb": "raises_question",
       "signatures": [
         {
-          "from": [
-            "*"
-          ],
-          "to": [
-            "OpenQuestion"
-          ]
+          "from": ["*"],
+          "to": ["OpenQuestion"]
         }
       ],
       "directed": true,
@@ -2402,12 +1933,8 @@
       "verb": "resolves_question",
       "signatures": [
         {
-          "from": [
-            "ConfirmedDecision"
-          ],
-          "to": [
-            "OpenQuestion"
-          ]
+          "from": ["ConfirmedDecision"],
+          "to": ["OpenQuestion"]
         }
       ],
       "directed": true,
@@ -2417,12 +1944,8 @@
       "verb": "needs_capability",
       "signatures": [
         {
-          "from": [
-            "NeedStatement"
-          ],
-          "to": [
-            "ComposableCapability"
-          ]
+          "from": ["NeedStatement"],
+          "to": ["ComposableCapability"]
         }
       ],
       "directed": true,
@@ -2432,12 +1955,8 @@
       "verb": "references_capability",
       "signatures": [
         {
-          "from": [
-            "*"
-          ],
-          "to": [
-            "ComposableCapability"
-          ]
+          "from": ["*"],
+          "to": ["ComposableCapability"]
         }
       ],
       "directed": true,
@@ -2447,12 +1966,8 @@
       "verb": "mentioned_by",
       "signatures": [
         {
-          "from": [
-            "*"
-          ],
-          "to": [
-            "Actor"
-          ]
+          "from": ["*"],
+          "to": ["Actor"]
         }
       ],
       "directed": true,
@@ -2462,12 +1977,8 @@
       "verb": "affected_by_change",
       "signatures": [
         {
-          "from": [
-            "*"
-          ],
-          "to": [
-            "*"
-          ]
+          "from": ["*"],
+          "to": ["*"]
         }
       ],
       "directed": true,
@@ -2476,20 +1987,10 @@
     }
   ],
   "type_groups": {
-    "Actor": [
-      "Builder",
-      "BusinessCoCreator"
-    ],
-    "Decision": [
-      "ConfirmedDecision",
-      "Decision"
-    ],
-    "DisprovedAssumption": [
-      "Assumption"
-    ],
-    "CaptureSession": [
-      "FramingSession"
-    ],
+    "Actor": ["Builder", "BusinessCoCreator"],
+    "Decision": ["ConfirmedDecision", "Decision"],
+    "DisprovedAssumption": ["Assumption"],
+    "CaptureSession": ["FramingSession"],
     "Evidence": [
       "TestSuite",
       "TestRun",
@@ -2505,9 +2006,7 @@
       "Incident",
       "Rollback"
     ],
-    "Agent": [
-      "ModelRoute"
-    ]
+    "Agent": ["ModelRoute"]
   },
   "transitions": [
     {

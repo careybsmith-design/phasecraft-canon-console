@@ -8,9 +8,16 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "THREAD · Live enterprise value" },
-      { name: "description", content: "Reuse and remix capabilities from permission-scoped signals and enterprise value evidence." },
+      {
+        name: "description",
+        content:
+          "Reuse and remix capabilities from permission-scoped signals and enterprise value evidence.",
+      },
       { property: "og:title", content: "THREAD · Live enterprise value" },
-      { property: "og:description", content: "Act on signals, current mission decisions and reusable capabilities." },
+      {
+        property: "og:description",
+        content: "Act on signals, current mission decisions and reusable capabilities.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],

@@ -30,31 +30,104 @@ export type Question = (typeof QUESTIONS)[number]["q"];
 
 /** Part 5.4 queries with their Part 16.4 budgets (ms). `input` names the start object type, if any. */
 export const TRACES = [
-  { n: 1, fn: "trace_blast_radius", label: "Blast radius of a Behaviour Statement change", input: "BehaviorStatement", budget: 800 },
-  { n: 2, fn: "trace_canon_change_impact", label: "Everything affected by a Guardrail, Pattern or Authority rule change", input: "Canon", budget: 800 },
-  { n: 3, fn: "trace_value_without_owner", label: "Capabilities producing value with no current owner", input: null, budget: 1000 },
-  { n: 4, fn: "trace_production_without_value", label: "In production with no value evidence in the last review period", input: null, budget: 1000 },
-  { n: 5, fn: "trace_behaviors_without_tests", label: "Behaviour statements with no test coverage", input: null, budget: 1000 },
-  { n: 6, fn: "trace_production_without_decision", label: "Production behaviours with no Confirmed Decision ancestor", input: null, budget: 1000 },
-  { n: 7, fn: "trace_expired_exposures", label: "Exposure authorisations past effective_to with no renewal", input: null, budget: 1000 },
-  { n: 8, fn: "trace_incident_to_decision", label: "Causal chain from an Incident back to a Decision", input: "Incident", budget: 1000 },
-  { n: 9, fn: "trace_retirement_impact", label: "Everything affected if a Composable Capability were retired", input: "ComposableCapability", budget: 800 },
-  { n: 10, fn: "trace_full_chain", label: "Full chain for any object, with hop depth and evidence", input: "any", budget: 1500 },
+  {
+    n: 1,
+    fn: "trace_blast_radius",
+    label: "Blast radius of a Behaviour Statement change",
+    input: "BehaviorStatement",
+    budget: 800,
+  },
+  {
+    n: 2,
+    fn: "trace_canon_change_impact",
+    label: "Everything affected by a Guardrail, Pattern or Authority rule change",
+    input: "Canon",
+    budget: 800,
+  },
+  {
+    n: 3,
+    fn: "trace_value_without_owner",
+    label: "Capabilities producing value with no current owner",
+    input: null,
+    budget: 1000,
+  },
+  {
+    n: 4,
+    fn: "trace_production_without_value",
+    label: "In production with no value evidence in the last review period",
+    input: null,
+    budget: 1000,
+  },
+  {
+    n: 5,
+    fn: "trace_behaviors_without_tests",
+    label: "Behaviour statements with no test coverage",
+    input: null,
+    budget: 1000,
+  },
+  {
+    n: 6,
+    fn: "trace_production_without_decision",
+    label: "Production behaviours with no Confirmed Decision ancestor",
+    input: null,
+    budget: 1000,
+  },
+  {
+    n: 7,
+    fn: "trace_expired_exposures",
+    label: "Exposure authorisations past effective_to with no renewal",
+    input: null,
+    budget: 1000,
+  },
+  {
+    n: 8,
+    fn: "trace_incident_to_decision",
+    label: "Causal chain from an Incident back to a Decision",
+    input: "Incident",
+    budget: 1000,
+  },
+  {
+    n: 9,
+    fn: "trace_retirement_impact",
+    label: "Everything affected if a Composable Capability were retired",
+    input: "ComposableCapability",
+    budget: 800,
+  },
+  {
+    n: 10,
+    fn: "trace_full_chain",
+    label: "Full chain for any object, with hop depth and evidence",
+    input: "any",
+    budget: 1500,
+  },
 ] as const;
 export type TraceFn = (typeof TRACES)[number]["fn"];
 
 /** DESIGN DECISION: the "last review period" for query 4 and justification is 90 days until a steward sets it. */
 export const REVIEW_PERIOD_DAYS = 90;
 
-export interface LinkSummary { link: ChainLink; present: boolean; count: number }
+export interface LinkSummary {
+  link: ChainLink;
+  present: boolean;
+  count: number;
+}
 export function completeness(links: LinkSummary[]) {
   const present = links.filter((l) => l.present).length;
-  return { present, total: 8, missing: links.filter((l) => !l.present).map((l) => l.link), score: Math.round((present / 8) * 1000) / 1000 };
+  return {
+    present,
+    total: 8,
+    missing: links.filter((l) => !l.present).map((l) => l.link),
+    score: Math.round((present / 8) * 1000) / 1000,
+  };
 }
 
 /** Part 5.2: state rules for capabilities. Returns the error code or null. */
-export function capabilityStateError(to: string, has: { exposureAuthorisation: boolean; valueMeasure: boolean }): string | null {
-  if ((to === "limited_exposure" || to === "producing_value") && !has.exposureAuthorisation) return "EXPOSURE_NOT_AUTHORISED";
+export function capabilityStateError(
+  to: string,
+  has: { exposureAuthorisation: boolean; valueMeasure: boolean },
+): string | null {
+  if ((to === "limited_exposure" || to === "producing_value") && !has.exposureAuthorisation)
+    return "EXPOSURE_NOT_AUTHORISED";
   if (to === "producing_value" && !has.valueMeasure) return "VALUE_MEASURE_REQUIRED";
   return null;
 }

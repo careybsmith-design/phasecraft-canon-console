@@ -6,8 +6,17 @@
 import { REGISTRY } from "./registry";
 
 export const EXPLORER_VIEWS = [
-  "navigator", "mission", "nebula", "focus", "path", "impact",
-  "need_web", "dependency_web", "decomposition", "contradictions", "integrity",
+  "navigator",
+  "mission",
+  "nebula",
+  "focus",
+  "path",
+  "impact",
+  "need_web",
+  "dependency_web",
+  "decomposition",
+  "contradictions",
+  "integrity",
 ] as const;
 export type ExplorerView = (typeof EXPLORER_VIEWS)[number];
 
@@ -33,7 +42,18 @@ export const CANON_TYPES = REGISTRY.filter((r) => r.family === "Canon").map((r) 
 
 /** Type/verb filters for the subgraph views. Layer = row in the Decomposition Tree. */
 export const SUBGRAPH_VIEWS = {
-  navigator: { types: CANON_TYPES, verbs: ["cites", "derives_from", "relates_to", "contradicts", "blocks", "reveals", "governed_by"] },
+  navigator: {
+    types: CANON_TYPES,
+    verbs: [
+      "cites",
+      "derives_from",
+      "relates_to",
+      "contradicts",
+      "blocks",
+      "reveals",
+      "governed_by",
+    ],
+  },
   need_web: { types: ["NeedStatement"], verbs: ["depends_on", "relates_to", "contradicts"] },
   dependency_web: { types: ["BehaviorStatement"], verbs: ["depends_on"] },
   decomposition: {

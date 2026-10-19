@@ -7,11 +7,30 @@ export interface DispatchRequest {
   run_id: string;
   compiled_prompt: string;
   compiled_hash: string;
-  repro_key: { model_version: string; template_version: string; guardrail_set_version: string; [k: string]: unknown };
+  repro_key: {
+    model_version: string;
+    template_version: string;
+    guardrail_set_version: string;
+    [k: string]: unknown;
+  };
   cost_ceiling: number;
 }
-export interface BuildStatus { state: "running" | "succeeded" | "failed"; cost: number | null; duration_ms: number | null; failure_reason?: string; secrets_scan: "clean" | string }
-export interface Artifact { kind: string; uri: string; hash: string; commit?: string; repository?: string; diff_ref?: string; files_changed?: string[] }
+export interface BuildStatus {
+  state: "running" | "succeeded" | "failed";
+  cost: number | null;
+  duration_ms: number | null;
+  failure_reason?: string;
+  secrets_scan: "clean" | string;
+}
+export interface Artifact {
+  kind: string;
+  uri: string;
+  hash: string;
+  commit?: string;
+  repository?: string;
+  diff_ref?: string;
+  files_changed?: string[];
+}
 
 export interface BuildPlatform {
   mode: "live" | "simulated";
