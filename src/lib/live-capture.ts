@@ -2,7 +2,11 @@
  * Live speech capture (browser side). Records microphone PCM with the Web Audio API,
  * encodes complete WAV chunks every few seconds, and uploads them through a durable
  * outbox: chunks are buffered in IndexedDB and retried until the server acknowledges
- * them, so a network drop cannot lose captured speech (8A.13 zero loss).
+ * them, so a network drop cannot lose captured speech once it is durably buffered
+ * (8A.13). Samples are held in memory until the IndexedDB write succeeds — a storage
+ * failure (quota, abort) keeps the audio in memory and retries it with the next
+ * window. Only truly silent windows (no audible energy in the samples) are
+ * discarded; short or quiet-but-audible speech is always kept.
  */
 
 export interface CaptureChunk {
@@ -146,6 +150,9 @@ export async function startLiveCapture(opts: {
   let windowStart = 0;
   let stopped = false;
   let seq = 0;
+  // Flushes are serialized: a window never starts persisting while the previous
+  // one is in flight, so the buffer is never cleared under an unfinished write.
+  let chain: Promise<void> = Promise.resolve();
 
   node.onaudioprocess = (event) => {
     if (stopped) return;
@@ -154,23 +161,44 @@ export async function startLiveCapture(opts: {
   source.connect(node);
   node.connect(audioContext.destination);
 
-  const flush = async () => {
+  const doFlush = async () => {
     if (!current.length) return;
-    const chunks = current;
-    current = [];
+    const n = current.length;
+    const chunks = current.slice(0, n);
+    const offset = windowStart;
+    windowStart += chunkMs;
+    // Silence is detected from the samples, not the byte size: a window with no
+    // audible energy carries no speech and is dropped; any audible window is
+    // kept however short it is.
+    let peak = 0;
+    for (const c of chunks)
+      for (const v of c) {
+        const a = Math.abs(v);
+        if (a > peak) peak = a;
+      }
+    if (peak < 1e-4) {
+      current.splice(0, n);
+      return;
+    }
     const wav = encodeWav(chunks, audioContext.sampleRate);
-    if (wav.byteLength < 2048) return; // silence-only window
     const chunk: CaptureChunk = {
       id: `${opts.sessionId}-${Date.now()}-${seq++}`,
       accountId: opts.accountId,
       sessionId: opts.sessionId,
       speakerId: opts.speakerId,
-      tOffsetMs: windowStart,
+      tOffsetMs: offset,
       wav,
       attempts: 0,
     };
-    windowStart += chunkMs;
-    await outboxPut(chunk);
+    try {
+      await outboxPut(chunk); // durable first
+    } catch (e) {
+      // Persistence failed (quota, abort, storage): the samples stay in the
+      // buffer and are retried with the next window — nothing is cleared.
+      opts.onError?.(`buffering failed, audio retained: ${(e as Error).message}`);
+      return;
+    }
+    current.splice(0, n); // clear only after the durable write succeeded
     try {
       await opts.onChunk(chunk);
       await outboxDelete(chunk.id);
@@ -178,6 +206,10 @@ export async function startLiveCapture(opts: {
       opts.onError?.((e as Error).message);
       // stays in the outbox; flushOutbox retries it
     }
+  };
+  const flush = () => {
+    chain = chain.then(doFlush);
+    return chain;
   };
 
   const timer = window.setInterval(() => {
@@ -193,7 +225,7 @@ export async function startLiveCapture(opts: {
       node.disconnect();
       source.disconnect();
       node.onaudioprocess = null;
-      await flush();
+      await flush(); // drain in-flight work and the final window
       await audioContext.close();
     },
   };
