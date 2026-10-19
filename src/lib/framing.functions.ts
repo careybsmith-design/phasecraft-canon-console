@@ -3303,9 +3303,12 @@ export const ingestOutlookMessage = createServerFn({ method: "POST" })
       if (ar.ok) {
         const db = await (await import("@/integrations/supabase/client.server")).supabaseAdmin;
         const session = await loadSessionFor(db, context.userId, data.session_id);
-        for (const a of
-          (ar.json.value as Array<{ id: string; name?: string; contentType?: string; size?: number }>) ??
-          []) {
+        for (const a of (ar.json.value as Array<{
+          id: string;
+          name?: string;
+          contentType?: string;
+          size?: number;
+        }>) ?? []) {
           const name = a.name ?? "attachment";
           const contentType = a.contentType ?? "application/octet-stream";
           const size = a.size ?? 0;
