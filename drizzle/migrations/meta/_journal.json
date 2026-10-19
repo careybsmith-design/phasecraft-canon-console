@@ -519,6 +519,13 @@
       "when": 1792374911248,
       "tag": "0073_signal_intake_decision_signal_ref",
       "breakpoints": true
+    },
+    {
+      "idx": 74,
+      "version": "7",
+      "when": 1792377804533,
+      "tag": "0074_signal_intake_si1_selftest",
+      "breakpoints": true
     }
   ]
 }

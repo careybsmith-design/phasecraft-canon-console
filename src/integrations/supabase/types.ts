@@ -3601,6 +3601,7 @@ export type Database = {
         Args: { p: Json; p_actor: Json; p_operation: string }
         Returns: Json
       }
+      thread_signal_intake_selftest: { Args: never; Returns: Json }
       thread_sync_tool_contracts: {
         Args: { p: Json; p_version: string }
         Returns: number
