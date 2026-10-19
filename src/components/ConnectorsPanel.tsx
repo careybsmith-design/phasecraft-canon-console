@@ -34,11 +34,10 @@ function errText(e: unknown): string {
 
 function waitForOAuthCompletion(popup: Window, connectorId: string): Promise<string | null> {
   return new Promise((resolve, reject) => {
-    let poll: number | undefined;
-    const cleanup = () => {
+    function cleanup() {
       window.removeEventListener("message", onMessage);
-      if (poll !== undefined) window.clearInterval(poll);
-    };
+      window.clearInterval(poll);
+    }
     const onMessage = (event: MessageEvent) => {
       const type = event.data?.type;
       if (
@@ -57,7 +56,7 @@ function waitForOAuthCompletion(popup: Window, connectorId: string): Promise<str
       reject(new Error("OAuth connection failed."));
     };
     window.addEventListener("message", onMessage);
-    poll = window.setInterval(() => {
+    const poll = window.setInterval(() => {
       if (!popup.closed) return;
       cleanup();
       reject(new Error("OAuth window closed before completion."));
