@@ -368,7 +368,7 @@ export function MissionForm({
                   onChange={(e) => setSignal(e.target.value)}
                   className="h-9 w-full rounded-md border bg-background px-2 text-sm"
                 >
-                  <option value="">Select signal</option>
+                  <option value="">Select a promoted signal</option>
                   {[...promoted]
                     .sort(
                       (a, b) =>
@@ -386,6 +386,10 @@ export function MissionForm({
                     No promoted signal exists yet — a mission can only begin from one.
                   </p>
                 )}
+                <p className="text-xs text-muted-foreground">
+                  Only promoted signals are available as mission sources; newly saved signals remain
+                  in the Signal Register until promoted.
+                </p>
                 <Button variant="outline" size="sm" asChild>
                   <Link to="/signals">Record a new signal</Link>
                 </Button>

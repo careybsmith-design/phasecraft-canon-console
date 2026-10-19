@@ -1,5 +1,9 @@
 # THREAD roadmap
 
+## Signal recording validation — 19 October 2026
+
+- [x] Validate direct and typed signal saving, durable intake provenance and promoted-only mission selection; make recording controls and saved outcomes visible without changing promotion authority. Signed-in 503×612 run saved labelled validation signals VS-2026-0011 (direct, detected) and VS-2026-0012 (typed, promoted), reloaded both, and selected VS-2026-0012 in Mission UI. Confirmed matching intake events and ledger versions; 31 targeted tests pass, preview build OK. Evidence: docs/THREAD-signal-saving-validation-2026-10-19.md.
+
 ## Session-to-mission containment — 19 October 2026
 
 - [x] Add optional start association, retrospective association/reversal on session and mission surfaces, and shared human/MCP operation (0081–0085).
