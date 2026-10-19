@@ -1,3792 +1,3786 @@
-export type Json =
-  | string
-  | number
-  | boolean
-  | null
-  | { [key: string]: Json | undefined }
-  | Json[]
+export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 
 export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "14.18"
-  }
+    PostgrestVersion: "14.18";
+  };
   public: {
     Tables: {
       adapter_bindings: {
         Row: {
-          adapter: string
-          environment: string
-          mode: string
-        }
+          adapter: string;
+          environment: string;
+          mode: string;
+        };
         Insert: {
-          adapter: string
-          environment: string
-          mode: string
-        }
+          adapter: string;
+          environment: string;
+          mode: string;
+        };
         Update: {
-          adapter?: string
-          environment?: string
-          mode?: string
-        }
-        Relationships: []
-      }
+          adapter?: string;
+          environment?: string;
+          mode?: string;
+        };
+        Relationships: [];
+      };
       agent_calls: {
         Row: {
-          agent_id: string
-          authority_used: Database["public"]["Enums"]["authority_level"]
-          confirmation_id: string | null
-          cost: number
-          duration_ms: number | null
-          error: string | null
-          finished_at: string | null
-          id: string
-          input_hash: string
-          ledger_seq: number | null
-          method: string
-          origin_tags: Json
-          output_hash: string | null
-          refusal_code: string | null
-          started_at: string
-          status: string
-          tool: string
-        }
+          agent_id: string;
+          authority_used: Database["public"]["Enums"]["authority_level"];
+          confirmation_id: string | null;
+          cost: number;
+          duration_ms: number | null;
+          error: string | null;
+          finished_at: string | null;
+          id: string;
+          input_hash: string;
+          ledger_seq: number | null;
+          method: string;
+          origin_tags: Json;
+          output_hash: string | null;
+          refusal_code: string | null;
+          started_at: string;
+          status: string;
+          tool: string;
+        };
         Insert: {
-          agent_id: string
-          authority_used: Database["public"]["Enums"]["authority_level"]
-          confirmation_id?: string | null
-          cost?: number
-          duration_ms?: number | null
-          error?: string | null
-          finished_at?: string | null
-          id?: string
-          input_hash: string
-          ledger_seq?: number | null
-          method?: string
-          origin_tags?: Json
-          output_hash?: string | null
-          refusal_code?: string | null
-          started_at?: string
-          status: string
-          tool: string
-        }
+          agent_id: string;
+          authority_used: Database["public"]["Enums"]["authority_level"];
+          confirmation_id?: string | null;
+          cost?: number;
+          duration_ms?: number | null;
+          error?: string | null;
+          finished_at?: string | null;
+          id?: string;
+          input_hash: string;
+          ledger_seq?: number | null;
+          method?: string;
+          origin_tags?: Json;
+          output_hash?: string | null;
+          refusal_code?: string | null;
+          started_at?: string;
+          status: string;
+          tool: string;
+        };
         Update: {
-          agent_id?: string
-          authority_used?: Database["public"]["Enums"]["authority_level"]
-          confirmation_id?: string | null
-          cost?: number
-          duration_ms?: number | null
-          error?: string | null
-          finished_at?: string | null
-          id?: string
-          input_hash?: string
-          ledger_seq?: number | null
-          method?: string
-          origin_tags?: Json
-          output_hash?: string | null
-          refusal_code?: string | null
-          started_at?: string
-          status?: string
-          tool?: string
-        }
+          agent_id?: string;
+          authority_used?: Database["public"]["Enums"]["authority_level"];
+          confirmation_id?: string | null;
+          cost?: number;
+          duration_ms?: number | null;
+          error?: string | null;
+          finished_at?: string | null;
+          id?: string;
+          input_hash?: string;
+          ledger_seq?: number | null;
+          method?: string;
+          origin_tags?: Json;
+          output_hash?: string | null;
+          refusal_code?: string | null;
+          started_at?: string;
+          status?: string;
+          tool?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "agent_calls_agent_id_fkey"
-            columns: ["agent_id"]
-            isOneToOne: false
-            referencedRelation: "agents"
-            referencedColumns: ["id"]
+            foreignKeyName: "agent_calls_agent_id_fkey";
+            columns: ["agent_id"];
+            isOneToOne: false;
+            referencedRelation: "agents";
+            referencedColumns: ["id"];
           },
-        ]
-      }
+        ];
+      };
       agent_notifications: {
         Row: {
-          agent_id: string
-          body: Json
-          created_at: string
-          delivered_at: string | null
-          id: number
-          ledger_seq: number
-          object_id: string | null
-          topic: string
-        }
+          agent_id: string;
+          body: Json;
+          created_at: string;
+          delivered_at: string | null;
+          id: number;
+          ledger_seq: number;
+          object_id: string | null;
+          topic: string;
+        };
         Insert: {
-          agent_id: string
-          body: Json
-          created_at?: string
-          delivered_at?: string | null
-          id?: number
-          ledger_seq: number
-          object_id?: string | null
-          topic: string
-        }
+          agent_id: string;
+          body: Json;
+          created_at?: string;
+          delivered_at?: string | null;
+          id?: number;
+          ledger_seq: number;
+          object_id?: string | null;
+          topic: string;
+        };
         Update: {
-          agent_id?: string
-          body?: Json
-          created_at?: string
-          delivered_at?: string | null
-          id?: number
-          ledger_seq?: number
-          object_id?: string | null
-          topic?: string
-        }
+          agent_id?: string;
+          body?: Json;
+          created_at?: string;
+          delivered_at?: string | null;
+          id?: number;
+          ledger_seq?: number;
+          object_id?: string | null;
+          topic?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "agent_notifications_agent_id_fkey"
-            columns: ["agent_id"]
-            isOneToOne: false
-            referencedRelation: "agents"
-            referencedColumns: ["id"]
+            foreignKeyName: "agent_notifications_agent_id_fkey";
+            columns: ["agent_id"];
+            isOneToOne: false;
+            referencedRelation: "agents";
+            referencedColumns: ["id"];
           },
-        ]
-      }
+        ];
+      };
       agents: {
         Row: {
-          a2a_card: Json | null
-          auth_user_id: string | null
-          authority_ceiling: Database["public"]["Enums"]["authority_level"]
-          cost_cap: number
-          created_at: string
-          id: string
-          mandate: string | null
-          name: string
-          owner_id: string | null
-          quota: Json
-          revoked_at: string | null
-          revoked_reason: string | null
-          state: string
-          token_hash: string
-          token_prefix: string | null
-        }
+          a2a_card: Json | null;
+          auth_user_id: string | null;
+          authority_ceiling: Database["public"]["Enums"]["authority_level"];
+          cost_cap: number;
+          created_at: string;
+          id: string;
+          mandate: string | null;
+          name: string;
+          owner_id: string | null;
+          quota: Json;
+          revoked_at: string | null;
+          revoked_reason: string | null;
+          state: string;
+          token_hash: string;
+          token_prefix: string | null;
+        };
         Insert: {
-          a2a_card?: Json | null
-          auth_user_id?: string | null
-          authority_ceiling: Database["public"]["Enums"]["authority_level"]
-          cost_cap: number
-          created_at?: string
-          id?: string
-          mandate?: string | null
-          name: string
-          owner_id?: string | null
-          quota: Json
-          revoked_at?: string | null
-          revoked_reason?: string | null
-          state?: string
-          token_hash: string
-          token_prefix?: string | null
-        }
+          a2a_card?: Json | null;
+          auth_user_id?: string | null;
+          authority_ceiling: Database["public"]["Enums"]["authority_level"];
+          cost_cap: number;
+          created_at?: string;
+          id?: string;
+          mandate?: string | null;
+          name: string;
+          owner_id?: string | null;
+          quota: Json;
+          revoked_at?: string | null;
+          revoked_reason?: string | null;
+          state?: string;
+          token_hash: string;
+          token_prefix?: string | null;
+        };
         Update: {
-          a2a_card?: Json | null
-          auth_user_id?: string | null
-          authority_ceiling?: Database["public"]["Enums"]["authority_level"]
-          cost_cap?: number
-          created_at?: string
-          id?: string
-          mandate?: string | null
-          name?: string
-          owner_id?: string | null
-          quota?: Json
-          revoked_at?: string | null
-          revoked_reason?: string | null
-          state?: string
-          token_hash?: string
-          token_prefix?: string | null
-        }
-        Relationships: []
-      }
+          a2a_card?: Json | null;
+          auth_user_id?: string | null;
+          authority_ceiling?: Database["public"]["Enums"]["authority_level"];
+          cost_cap?: number;
+          created_at?: string;
+          id?: string;
+          mandate?: string | null;
+          name?: string;
+          owner_id?: string | null;
+          quota?: Json;
+          revoked_at?: string | null;
+          revoked_reason?: string | null;
+          state?: string;
+          token_hash?: string;
+          token_prefix?: string | null;
+        };
+        Relationships: [];
+      };
       app_user_connections: {
         Row: {
-          connection_key_ciphertext: string
-          connector_id: string
-          created_at: string
-          id: string
-          updated_at: string
-          user_id: string
-        }
+          connection_key_ciphertext: string;
+          connector_id: string;
+          created_at: string;
+          id: string;
+          updated_at: string;
+          user_id: string;
+        };
         Insert: {
-          connection_key_ciphertext: string
-          connector_id: string
-          created_at?: string
-          id?: string
-          updated_at?: string
-          user_id: string
-        }
+          connection_key_ciphertext: string;
+          connector_id: string;
+          created_at?: string;
+          id?: string;
+          updated_at?: string;
+          user_id: string;
+        };
         Update: {
-          connection_key_ciphertext?: string
-          connector_id?: string
-          created_at?: string
-          id?: string
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
+          connection_key_ciphertext?: string;
+          connector_id?: string;
+          created_at?: string;
+          id?: string;
+          updated_at?: string;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
       authority_history: {
         Row: {
-          at: string
-          cause: string
-          evidence_refs: string[]
-          from_level: Database["public"]["Enums"]["authority_level"] | null
-          id: number
-          object_id: string
-          to_level: Database["public"]["Enums"]["authority_level"]
-          trigger: string | null
-          trigger_ref: string | null
-          txid: number
-        }
+          at: string;
+          cause: string;
+          evidence_refs: string[];
+          from_level: Database["public"]["Enums"]["authority_level"] | null;
+          id: number;
+          object_id: string;
+          to_level: Database["public"]["Enums"]["authority_level"];
+          trigger: string | null;
+          trigger_ref: string | null;
+          txid: number;
+        };
         Insert: {
-          at?: string
-          cause: string
-          evidence_refs: string[]
-          from_level?: Database["public"]["Enums"]["authority_level"] | null
-          id?: number
-          object_id: string
-          to_level: Database["public"]["Enums"]["authority_level"]
-          trigger?: string | null
-          trigger_ref?: string | null
-          txid?: number
-        }
+          at?: string;
+          cause: string;
+          evidence_refs: string[];
+          from_level?: Database["public"]["Enums"]["authority_level"] | null;
+          id?: number;
+          object_id: string;
+          to_level: Database["public"]["Enums"]["authority_level"];
+          trigger?: string | null;
+          trigger_ref?: string | null;
+          txid?: number;
+        };
         Update: {
-          at?: string
-          cause?: string
-          evidence_refs?: string[]
-          from_level?: Database["public"]["Enums"]["authority_level"] | null
-          id?: number
-          object_id?: string
-          to_level?: Database["public"]["Enums"]["authority_level"]
-          trigger?: string | null
-          trigger_ref?: string | null
-          txid?: number
-        }
+          at?: string;
+          cause?: string;
+          evidence_refs?: string[];
+          from_level?: Database["public"]["Enums"]["authority_level"] | null;
+          id?: number;
+          object_id?: string;
+          to_level?: Database["public"]["Enums"]["authority_level"];
+          trigger?: string | null;
+          trigger_ref?: string | null;
+          txid?: number;
+        };
         Relationships: [
           {
-            foreignKeyName: "authority_history_object_id_fkey"
-            columns: ["object_id"]
-            isOneToOne: false
-            referencedRelation: "objects"
-            referencedColumns: ["id"]
+            foreignKeyName: "authority_history_object_id_fkey";
+            columns: ["object_id"];
+            isOneToOne: false;
+            referencedRelation: "objects";
+            referencedColumns: ["id"];
           },
-        ]
-      }
+        ];
+      };
       build_platforms: {
         Row: {
-          capture: string
-          cleared_classes: Database["public"]["Enums"]["data_classification"][]
-          hosting: string
-          label: string
-          live_determinism: string
-          model_route: string
-          platform: string
-        }
+          capture: string;
+          cleared_classes: Database["public"]["Enums"]["data_classification"][];
+          hosting: string;
+          label: string;
+          live_determinism: string;
+          model_route: string;
+          platform: string;
+        };
         Insert: {
-          capture: string
-          cleared_classes: Database["public"]["Enums"]["data_classification"][]
-          hosting: string
-          label: string
-          live_determinism: string
-          model_route: string
-          platform: string
-        }
+          capture: string;
+          cleared_classes: Database["public"]["Enums"]["data_classification"][];
+          hosting: string;
+          label: string;
+          live_determinism: string;
+          model_route: string;
+          platform: string;
+        };
         Update: {
-          capture?: string
-          cleared_classes?: Database["public"]["Enums"]["data_classification"][]
-          hosting?: string
-          label?: string
-          live_determinism?: string
-          model_route?: string
-          platform?: string
-        }
-        Relationships: []
-      }
+          capture?: string;
+          cleared_classes?: Database["public"]["Enums"]["data_classification"][];
+          hosting?: string;
+          label?: string;
+          live_determinism?: string;
+          model_route?: string;
+          platform?: string;
+        };
+        Relationships: [];
+      };
       build_runs: {
         Row: {
-          adapter_mode: string
-          artifacts: Json
-          completed_at: string | null
-          cost_actual: number | null
-          cost_ceiling: number
-          dispatched_at: string
-          duration_ms: number | null
-          estimated_cost: number | null
-          external_run_id: string | null
-          failure_reason: string | null
-          object_id: string
-          platform: string
-          prompt_id: string
-          replay_mode: string | null
-          replay_of: string | null
-          replay_result: Json | null
-          repro_key: Json
-          result_payload_hash: string | null
-          status: string
-        }
+          adapter_mode: string;
+          artifacts: Json;
+          completed_at: string | null;
+          cost_actual: number | null;
+          cost_ceiling: number;
+          dispatched_at: string;
+          duration_ms: number | null;
+          estimated_cost: number | null;
+          external_run_id: string | null;
+          failure_reason: string | null;
+          object_id: string;
+          platform: string;
+          prompt_id: string;
+          replay_mode: string | null;
+          replay_of: string | null;
+          replay_result: Json | null;
+          repro_key: Json;
+          result_payload_hash: string | null;
+          status: string;
+        };
         Insert: {
-          adapter_mode: string
-          artifacts?: Json
-          completed_at?: string | null
-          cost_actual?: number | null
-          cost_ceiling: number
-          dispatched_at?: string
-          duration_ms?: number | null
-          estimated_cost?: number | null
-          external_run_id?: string | null
-          failure_reason?: string | null
-          object_id: string
-          platform: string
-          prompt_id: string
-          replay_mode?: string | null
-          replay_of?: string | null
-          replay_result?: Json | null
-          repro_key: Json
-          result_payload_hash?: string | null
-          status?: string
-        }
+          adapter_mode: string;
+          artifacts?: Json;
+          completed_at?: string | null;
+          cost_actual?: number | null;
+          cost_ceiling: number;
+          dispatched_at?: string;
+          duration_ms?: number | null;
+          estimated_cost?: number | null;
+          external_run_id?: string | null;
+          failure_reason?: string | null;
+          object_id: string;
+          platform: string;
+          prompt_id: string;
+          replay_mode?: string | null;
+          replay_of?: string | null;
+          replay_result?: Json | null;
+          repro_key: Json;
+          result_payload_hash?: string | null;
+          status?: string;
+        };
         Update: {
-          adapter_mode?: string
-          artifacts?: Json
-          completed_at?: string | null
-          cost_actual?: number | null
-          cost_ceiling?: number
-          dispatched_at?: string
-          duration_ms?: number | null
-          estimated_cost?: number | null
-          external_run_id?: string | null
-          failure_reason?: string | null
-          object_id?: string
-          platform?: string
-          prompt_id?: string
-          replay_mode?: string | null
-          replay_of?: string | null
-          replay_result?: Json | null
-          repro_key?: Json
-          result_payload_hash?: string | null
-          status?: string
-        }
+          adapter_mode?: string;
+          artifacts?: Json;
+          completed_at?: string | null;
+          cost_actual?: number | null;
+          cost_ceiling?: number;
+          dispatched_at?: string;
+          duration_ms?: number | null;
+          estimated_cost?: number | null;
+          external_run_id?: string | null;
+          failure_reason?: string | null;
+          object_id?: string;
+          platform?: string;
+          prompt_id?: string;
+          replay_mode?: string | null;
+          replay_of?: string | null;
+          replay_result?: Json | null;
+          repro_key?: Json;
+          result_payload_hash?: string | null;
+          status?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "build_runs_object_id_fkey"
-            columns: ["object_id"]
-            isOneToOne: true
-            referencedRelation: "objects"
-            referencedColumns: ["id"]
+            foreignKeyName: "build_runs_object_id_fkey";
+            columns: ["object_id"];
+            isOneToOne: true;
+            referencedRelation: "objects";
+            referencedColumns: ["id"];
           },
           {
-            foreignKeyName: "build_runs_prompt_id_fkey"
-            columns: ["prompt_id"]
-            isOneToOne: false
-            referencedRelation: "creation_prompts"
-            referencedColumns: ["object_id"]
+            foreignKeyName: "build_runs_prompt_id_fkey";
+            columns: ["prompt_id"];
+            isOneToOne: false;
+            referencedRelation: "creation_prompts";
+            referencedColumns: ["object_id"];
           },
           {
-            foreignKeyName: "build_runs_replay_of_fkey"
-            columns: ["replay_of"]
-            isOneToOne: false
-            referencedRelation: "build_runs"
-            referencedColumns: ["object_id"]
+            foreignKeyName: "build_runs_replay_of_fkey";
+            columns: ["replay_of"];
+            isOneToOne: false;
+            referencedRelation: "build_runs";
+            referencedColumns: ["object_id"];
           },
-        ]
-      }
+        ];
+      };
       canon_challenges: {
         Row: {
-          argument: string
-          author: Json
-          change_id: string
-          created_at: string
-          evidence_refs: string[]
-          id: string
-          origin: string
-        }
+          argument: string;
+          author: Json;
+          change_id: string;
+          created_at: string;
+          evidence_refs: string[];
+          id: string;
+          origin: string;
+        };
         Insert: {
-          argument: string
-          author: Json
-          change_id: string
-          created_at?: string
-          evidence_refs?: string[]
-          id: string
-          origin: string
-        }
+          argument: string;
+          author: Json;
+          change_id: string;
+          created_at?: string;
+          evidence_refs?: string[];
+          id: string;
+          origin: string;
+        };
         Update: {
-          argument?: string
-          author?: Json
-          change_id?: string
-          created_at?: string
-          evidence_refs?: string[]
-          id?: string
-          origin?: string
-        }
+          argument?: string;
+          author?: Json;
+          change_id?: string;
+          created_at?: string;
+          evidence_refs?: string[];
+          id?: string;
+          origin?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "canon_challenges_change_id_fkey"
-            columns: ["change_id"]
-            isOneToOne: false
-            referencedRelation: "canon_changes"
-            referencedColumns: ["id"]
+            foreignKeyName: "canon_challenges_change_id_fkey";
+            columns: ["change_id"];
+            isOneToOne: false;
+            referencedRelation: "canon_changes";
+            referencedColumns: ["id"];
           },
-        ]
-      }
+        ];
+      };
       canon_changes: {
         Row: {
-          applied_version: number | null
-          base_version: number
-          challenge_closes_at: string
-          decided_at: string | null
-          decided_by: Json | null
-          decision_object_id: string | null
-          decision_rationale: string | null
-          evidence_refs: string[]
-          id: string
-          object_id: string
-          patch: Json
-          proposed_at: string
-          proposed_by: Json
-          rationale: string
-          state: string
-        }
+          applied_version: number | null;
+          base_version: number;
+          challenge_closes_at: string;
+          decided_at: string | null;
+          decided_by: Json | null;
+          decision_object_id: string | null;
+          decision_rationale: string | null;
+          evidence_refs: string[];
+          id: string;
+          object_id: string;
+          patch: Json;
+          proposed_at: string;
+          proposed_by: Json;
+          rationale: string;
+          state: string;
+        };
         Insert: {
-          applied_version?: number | null
-          base_version: number
-          challenge_closes_at: string
-          decided_at?: string | null
-          decided_by?: Json | null
-          decision_object_id?: string | null
-          decision_rationale?: string | null
-          evidence_refs: string[]
-          id: string
-          object_id: string
-          patch: Json
-          proposed_at?: string
-          proposed_by: Json
-          rationale: string
-          state?: string
-        }
+          applied_version?: number | null;
+          base_version: number;
+          challenge_closes_at: string;
+          decided_at?: string | null;
+          decided_by?: Json | null;
+          decision_object_id?: string | null;
+          decision_rationale?: string | null;
+          evidence_refs: string[];
+          id: string;
+          object_id: string;
+          patch: Json;
+          proposed_at?: string;
+          proposed_by: Json;
+          rationale: string;
+          state?: string;
+        };
         Update: {
-          applied_version?: number | null
-          base_version?: number
-          challenge_closes_at?: string
-          decided_at?: string | null
-          decided_by?: Json | null
-          decision_object_id?: string | null
-          decision_rationale?: string | null
-          evidence_refs?: string[]
-          id?: string
-          object_id?: string
-          patch?: Json
-          proposed_at?: string
-          proposed_by?: Json
-          rationale?: string
-          state?: string
-        }
+          applied_version?: number | null;
+          base_version?: number;
+          challenge_closes_at?: string;
+          decided_at?: string | null;
+          decided_by?: Json | null;
+          decision_object_id?: string | null;
+          decision_rationale?: string | null;
+          evidence_refs?: string[];
+          id?: string;
+          object_id?: string;
+          patch?: Json;
+          proposed_at?: string;
+          proposed_by?: Json;
+          rationale?: string;
+          state?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "canon_changes_decision_object_id_fkey"
-            columns: ["decision_object_id"]
-            isOneToOne: false
-            referencedRelation: "objects"
-            referencedColumns: ["id"]
+            foreignKeyName: "canon_changes_decision_object_id_fkey";
+            columns: ["decision_object_id"];
+            isOneToOne: false;
+            referencedRelation: "objects";
+            referencedColumns: ["id"];
           },
           {
-            foreignKeyName: "canon_changes_object_id_fkey"
-            columns: ["object_id"]
-            isOneToOne: false
-            referencedRelation: "objects"
-            referencedColumns: ["id"]
+            foreignKeyName: "canon_changes_object_id_fkey";
+            columns: ["object_id"];
+            isOneToOne: false;
+            referencedRelation: "objects";
+            referencedColumns: ["id"];
           },
-        ]
-      }
+        ];
+      };
       canon_settings: {
         Row: {
-          decided_by: string | null
-          decision_id: string | null
-          key: string
-          status: string
-          value: Json | null
-        }
+          decided_by: string | null;
+          decision_id: string | null;
+          key: string;
+          status: string;
+          value: Json | null;
+        };
         Insert: {
-          decided_by?: string | null
-          decision_id?: string | null
-          key: string
-          status: string
-          value?: Json | null
-        }
+          decided_by?: string | null;
+          decision_id?: string | null;
+          key: string;
+          status: string;
+          value?: Json | null;
+        };
         Update: {
-          decided_by?: string | null
-          decision_id?: string | null
-          key?: string
-          status?: string
-          value?: Json | null
-        }
-        Relationships: []
-      }
+          decided_by?: string | null;
+          decision_id?: string | null;
+          key?: string;
+          status?: string;
+          value?: Json | null;
+        };
+        Relationships: [];
+      };
       capability_usage: {
         Row: {
-          adapter_mode: string
-          at: string
-          capability_id: string
-          composition_id: string | null
-          consumer: string
-          cost: number
-          id: number
-          latency_ms: number | null
-          outcome: string
-        }
+          adapter_mode: string;
+          at: string;
+          capability_id: string;
+          composition_id: string | null;
+          consumer: string;
+          cost: number;
+          id: number;
+          latency_ms: number | null;
+          outcome: string;
+        };
         Insert: {
-          adapter_mode?: string
-          at?: string
-          capability_id: string
-          composition_id?: string | null
-          consumer: string
-          cost?: number
-          id?: number
-          latency_ms?: number | null
-          outcome: string
-        }
+          adapter_mode?: string;
+          at?: string;
+          capability_id: string;
+          composition_id?: string | null;
+          consumer: string;
+          cost?: number;
+          id?: number;
+          latency_ms?: number | null;
+          outcome: string;
+        };
         Update: {
-          adapter_mode?: string
-          at?: string
-          capability_id?: string
-          composition_id?: string | null
-          consumer?: string
-          cost?: number
-          id?: number
-          latency_ms?: number | null
-          outcome?: string
-        }
+          adapter_mode?: string;
+          at?: string;
+          capability_id?: string;
+          composition_id?: string | null;
+          consumer?: string;
+          cost?: number;
+          id?: number;
+          latency_ms?: number | null;
+          outcome?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "capability_usage_capability_id_fkey"
-            columns: ["capability_id"]
-            isOneToOne: false
-            referencedRelation: "objects"
-            referencedColumns: ["id"]
+            foreignKeyName: "capability_usage_capability_id_fkey";
+            columns: ["capability_id"];
+            isOneToOne: false;
+            referencedRelation: "objects";
+            referencedColumns: ["id"];
           },
           {
-            foreignKeyName: "capability_usage_composition_id_fkey"
-            columns: ["composition_id"]
-            isOneToOne: false
-            referencedRelation: "objects"
-            referencedColumns: ["id"]
+            foreignKeyName: "capability_usage_composition_id_fkey";
+            columns: ["composition_id"];
+            isOneToOne: false;
+            referencedRelation: "objects";
+            referencedColumns: ["id"];
           },
-        ]
-      }
+        ];
+      };
       classification_corrections: {
         Row: {
-          by_actor: string
-          created_at: string
-          from_class: string
-          id: string
-          note: string | null
-          session_id: string
-          statement_id: string
-          to_class: string
-        }
+          by_actor: string;
+          created_at: string;
+          from_class: string;
+          id: string;
+          note: string | null;
+          session_id: string;
+          statement_id: string;
+          to_class: string;
+        };
         Insert: {
-          by_actor: string
-          created_at?: string
-          from_class: string
-          id?: string
-          note?: string | null
-          session_id: string
-          statement_id: string
-          to_class: string
-        }
+          by_actor: string;
+          created_at?: string;
+          from_class: string;
+          id?: string;
+          note?: string | null;
+          session_id: string;
+          statement_id: string;
+          to_class: string;
+        };
         Update: {
-          by_actor?: string
-          created_at?: string
-          from_class?: string
-          id?: string
-          note?: string | null
-          session_id?: string
-          statement_id?: string
-          to_class?: string
-        }
+          by_actor?: string;
+          created_at?: string;
+          from_class?: string;
+          id?: string;
+          note?: string | null;
+          session_id?: string;
+          statement_id?: string;
+          to_class?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "classification_corrections_session_id_fkey"
-            columns: ["session_id"]
-            isOneToOne: false
-            referencedRelation: "objects"
-            referencedColumns: ["id"]
+            foreignKeyName: "classification_corrections_session_id_fkey";
+            columns: ["session_id"];
+            isOneToOne: false;
+            referencedRelation: "objects";
+            referencedColumns: ["id"];
           },
           {
-            foreignKeyName: "classification_corrections_statement_id_fkey"
-            columns: ["statement_id"]
-            isOneToOne: false
-            referencedRelation: "objects"
-            referencedColumns: ["id"]
+            foreignKeyName: "classification_corrections_statement_id_fkey";
+            columns: ["statement_id"];
+            isOneToOne: false;
+            referencedRelation: "objects";
+            referencedColumns: ["id"];
           },
-        ]
-      }
+        ];
+      };
       confidence_history: {
         Row: {
-          at: string
-          bundle: Json
-          computed_by: string
-          id: number
-          object_id: string
-          overall: number
-          rule_version: string
-        }
+          at: string;
+          bundle: Json;
+          computed_by: string;
+          id: number;
+          object_id: string;
+          overall: number;
+          rule_version: string;
+        };
         Insert: {
-          at?: string
-          bundle: Json
-          computed_by: string
-          id?: number
-          object_id: string
-          overall: number
-          rule_version: string
-        }
+          at?: string;
+          bundle: Json;
+          computed_by: string;
+          id?: number;
+          object_id: string;
+          overall: number;
+          rule_version: string;
+        };
         Update: {
-          at?: string
-          bundle?: Json
-          computed_by?: string
-          id?: number
-          object_id?: string
-          overall?: number
-          rule_version?: string
-        }
+          at?: string;
+          bundle?: Json;
+          computed_by?: string;
+          id?: number;
+          object_id?: string;
+          overall?: number;
+          rule_version?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "confidence_history_object_id_fkey"
-            columns: ["object_id"]
-            isOneToOne: false
-            referencedRelation: "objects"
-            referencedColumns: ["id"]
+            foreignKeyName: "confidence_history_object_id_fkey";
+            columns: ["object_id"];
+            isOneToOne: false;
+            referencedRelation: "objects";
+            referencedColumns: ["id"];
           },
           {
-            foreignKeyName: "confidence_history_rule_version_fkey"
-            columns: ["rule_version"]
-            isOneToOne: false
-            referencedRelation: "confidence_rules"
-            referencedColumns: ["version"]
+            foreignKeyName: "confidence_history_rule_version_fkey";
+            columns: ["rule_version"];
+            isOneToOne: false;
+            referencedRelation: "confidence_rules";
+            referencedColumns: ["version"];
           },
-        ]
-      }
+        ];
+      };
       confidence_rules: {
         Row: {
-          definition: Json
-          published_at: string
-          version: string
-        }
+          definition: Json;
+          published_at: string;
+          version: string;
+        };
         Insert: {
-          definition: Json
-          published_at: string
-          version: string
-        }
+          definition: Json;
+          published_at: string;
+          version: string;
+        };
         Update: {
-          definition?: Json
-          published_at?: string
-          version?: string
-        }
-        Relationships: []
-      }
+          definition?: Json;
+          published_at?: string;
+          version?: string;
+        };
+        Relationships: [];
+      };
       confirmation_tokens: {
         Row: {
-          agent_id: string
-          consumed_at: string | null
-          consumed_call: string | null
-          expires_at: string
-          id: string
-          input_hash: string
-          issued_at: string
-          issued_by: string
-          ledger_seq: number | null
-          reason: string
-          tool: string
-        }
+          agent_id: string;
+          consumed_at: string | null;
+          consumed_call: string | null;
+          expires_at: string;
+          id: string;
+          input_hash: string;
+          issued_at: string;
+          issued_by: string;
+          ledger_seq: number | null;
+          reason: string;
+          tool: string;
+        };
         Insert: {
-          agent_id: string
-          consumed_at?: string | null
-          consumed_call?: string | null
-          expires_at: string
-          id?: string
-          input_hash: string
-          issued_at?: string
-          issued_by: string
-          ledger_seq?: number | null
-          reason: string
-          tool: string
-        }
+          agent_id: string;
+          consumed_at?: string | null;
+          consumed_call?: string | null;
+          expires_at: string;
+          id?: string;
+          input_hash: string;
+          issued_at?: string;
+          issued_by: string;
+          ledger_seq?: number | null;
+          reason: string;
+          tool: string;
+        };
         Update: {
-          agent_id?: string
-          consumed_at?: string | null
-          consumed_call?: string | null
-          expires_at?: string
-          id?: string
-          input_hash?: string
-          issued_at?: string
-          issued_by?: string
-          ledger_seq?: number | null
-          reason?: string
-          tool?: string
-        }
+          agent_id?: string;
+          consumed_at?: string | null;
+          consumed_call?: string | null;
+          expires_at?: string;
+          id?: string;
+          input_hash?: string;
+          issued_at?: string;
+          issued_by?: string;
+          ledger_seq?: number | null;
+          reason?: string;
+          tool?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "confirmation_tokens_agent_id_fkey"
-            columns: ["agent_id"]
-            isOneToOne: false
-            referencedRelation: "agents"
-            referencedColumns: ["id"]
+            foreignKeyName: "confirmation_tokens_agent_id_fkey";
+            columns: ["agent_id"];
+            isOneToOne: false;
+            referencedRelation: "agents";
+            referencedColumns: ["id"];
           },
-        ]
-      }
+        ];
+      };
       consent_records: {
         Row: {
-          granted_at: string
-          id: string
-          modalities: string[]
-          participant_id: string
-          session_id: string
-          withdrawn_at: string | null
-        }
+          granted_at: string;
+          id: string;
+          modalities: string[];
+          participant_id: string;
+          session_id: string;
+          withdrawn_at: string | null;
+        };
         Insert: {
-          granted_at: string
-          id: string
-          modalities: string[]
-          participant_id: string
-          session_id: string
-          withdrawn_at?: string | null
-        }
+          granted_at: string;
+          id: string;
+          modalities: string[];
+          participant_id: string;
+          session_id: string;
+          withdrawn_at?: string | null;
+        };
         Update: {
-          granted_at?: string
-          id?: string
-          modalities?: string[]
-          participant_id?: string
-          session_id?: string
-          withdrawn_at?: string | null
-        }
-        Relationships: []
-      }
+          granted_at?: string;
+          id?: string;
+          modalities?: string[];
+          participant_id?: string;
+          session_id?: string;
+          withdrawn_at?: string | null;
+        };
+        Relationships: [];
+      };
       cost_ceilings: {
         Row: {
-          ceiling: number
-          scope: string
-          scope_id: string
-          set_at: string
-          set_by: Json
-        }
+          ceiling: number;
+          scope: string;
+          scope_id: string;
+          set_at: string;
+          set_by: Json;
+        };
         Insert: {
-          ceiling: number
-          scope: string
-          scope_id: string
-          set_at?: string
-          set_by: Json
-        }
+          ceiling: number;
+          scope: string;
+          scope_id: string;
+          set_at?: string;
+          set_by: Json;
+        };
         Update: {
-          ceiling?: number
-          scope?: string
-          scope_id?: string
-          set_at?: string
-          set_by?: Json
-        }
+          ceiling?: number;
+          scope?: string;
+          scope_id?: string;
+          set_at?: string;
+          set_by?: Json;
+        };
         Relationships: [
           {
-            foreignKeyName: "cost_ceilings_scope_id_fkey"
-            columns: ["scope_id"]
-            isOneToOne: false
-            referencedRelation: "objects"
-            referencedColumns: ["id"]
+            foreignKeyName: "cost_ceilings_scope_id_fkey";
+            columns: ["scope_id"];
+            isOneToOne: false;
+            referencedRelation: "objects";
+            referencedColumns: ["id"];
           },
-        ]
-      }
+        ];
+      };
       creation_prompts: {
         Row: {
-          compiled_hash: string
-          compiled_text: string
-          object_id: string
-          reuse_check_id: string
-          source_behavior_ids: string[]
-          template_id: string
-          template_version: string
-        }
+          compiled_hash: string;
+          compiled_text: string;
+          object_id: string;
+          reuse_check_id: string;
+          source_behavior_ids: string[];
+          template_id: string;
+          template_version: string;
+        };
         Insert: {
-          compiled_hash: string
-          compiled_text: string
-          object_id: string
-          reuse_check_id: string
-          source_behavior_ids: string[]
-          template_id: string
-          template_version: string
-        }
+          compiled_hash: string;
+          compiled_text: string;
+          object_id: string;
+          reuse_check_id: string;
+          source_behavior_ids: string[];
+          template_id: string;
+          template_version: string;
+        };
         Update: {
-          compiled_hash?: string
-          compiled_text?: string
-          object_id?: string
-          reuse_check_id?: string
-          source_behavior_ids?: string[]
-          template_id?: string
-          template_version?: string
-        }
+          compiled_hash?: string;
+          compiled_text?: string;
+          object_id?: string;
+          reuse_check_id?: string;
+          source_behavior_ids?: string[];
+          template_id?: string;
+          template_version?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "creation_prompts_object_id_fkey"
-            columns: ["object_id"]
-            isOneToOne: true
-            referencedRelation: "objects"
-            referencedColumns: ["id"]
+            foreignKeyName: "creation_prompts_object_id_fkey";
+            columns: ["object_id"];
+            isOneToOne: true;
+            referencedRelation: "objects";
+            referencedColumns: ["id"];
           },
           {
-            foreignKeyName: "creation_prompts_reuse_check_id_fkey"
-            columns: ["reuse_check_id"]
-            isOneToOne: false
-            referencedRelation: "reuse_checks"
-            referencedColumns: ["id"]
+            foreignKeyName: "creation_prompts_reuse_check_id_fkey";
+            columns: ["reuse_check_id"];
+            isOneToOne: false;
+            referencedRelation: "reuse_checks";
+            referencedColumns: ["id"];
           },
-        ]
-      }
+        ];
+      };
       detection_observations: {
         Row: {
-          created_at: string
-          evidence_refs: string[]
-          expires_at: string
-          facts: Json
-          id: string
-          owner_id: string
-          rationale: string
-          subject_id: string | null
-        }
+          created_at: string;
+          evidence_refs: string[];
+          expires_at: string;
+          facts: Json;
+          id: string;
+          owner_id: string;
+          rationale: string;
+          subject_id: string | null;
+        };
         Insert: {
-          created_at?: string
-          evidence_refs?: string[]
-          expires_at?: string
-          facts: Json
-          id?: string
-          owner_id: string
-          rationale: string
-          subject_id?: string | null
-        }
+          created_at?: string;
+          evidence_refs?: string[];
+          expires_at?: string;
+          facts: Json;
+          id?: string;
+          owner_id: string;
+          rationale: string;
+          subject_id?: string | null;
+        };
         Update: {
-          created_at?: string
-          evidence_refs?: string[]
-          expires_at?: string
-          facts?: Json
-          id?: string
-          owner_id?: string
-          rationale?: string
-          subject_id?: string | null
-        }
+          created_at?: string;
+          evidence_refs?: string[];
+          expires_at?: string;
+          facts?: Json;
+          id?: string;
+          owner_id?: string;
+          rationale?: string;
+          subject_id?: string | null;
+        };
         Relationships: [
           {
-            foreignKeyName: "detection_observations_subject_id_fkey"
-            columns: ["subject_id"]
-            isOneToOne: false
-            referencedRelation: "objects"
-            referencedColumns: ["id"]
+            foreignKeyName: "detection_observations_subject_id_fkey";
+            columns: ["subject_id"];
+            isOneToOne: false;
+            referencedRelation: "objects";
+            referencedColumns: ["id"];
           },
-        ]
-      }
+        ];
+      };
       detector_findings: {
         Row: {
-          accepted_by: string | null
-          accepted_until: string | null
-          created_at: string
-          detector_key: string
-          evidence: Json
-          id: string
-          object_id: string | null
-          owner_id: string
-          resolution: Json
-          resolved_at: string | null
-          severity: string
-          state: string
-        }
+          accepted_by: string | null;
+          accepted_until: string | null;
+          created_at: string;
+          detector_key: string;
+          evidence: Json;
+          id: string;
+          object_id: string | null;
+          owner_id: string;
+          resolution: Json;
+          resolved_at: string | null;
+          severity: string;
+          state: string;
+        };
         Insert: {
-          accepted_by?: string | null
-          accepted_until?: string | null
-          created_at?: string
-          detector_key: string
-          evidence: Json
-          id: string
-          object_id?: string | null
-          owner_id: string
-          resolution?: Json
-          resolved_at?: string | null
-          severity: string
-          state: string
-        }
+          accepted_by?: string | null;
+          accepted_until?: string | null;
+          created_at?: string;
+          detector_key: string;
+          evidence: Json;
+          id: string;
+          object_id?: string | null;
+          owner_id: string;
+          resolution?: Json;
+          resolved_at?: string | null;
+          severity: string;
+          state: string;
+        };
         Update: {
-          accepted_by?: string | null
-          accepted_until?: string | null
-          created_at?: string
-          detector_key?: string
-          evidence?: Json
-          id?: string
-          object_id?: string | null
-          owner_id?: string
-          resolution?: Json
-          resolved_at?: string | null
-          severity?: string
-          state?: string
-        }
+          accepted_by?: string | null;
+          accepted_until?: string | null;
+          created_at?: string;
+          detector_key?: string;
+          evidence?: Json;
+          id?: string;
+          object_id?: string | null;
+          owner_id?: string;
+          resolution?: Json;
+          resolved_at?: string | null;
+          severity?: string;
+          state?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "detector_findings_detector_key_fkey"
-            columns: ["detector_key"]
-            isOneToOne: false
-            referencedRelation: "detectors"
-            referencedColumns: ["key"]
+            foreignKeyName: "detector_findings_detector_key_fkey";
+            columns: ["detector_key"];
+            isOneToOne: false;
+            referencedRelation: "detectors";
+            referencedColumns: ["key"];
           },
-        ]
-      }
+        ];
+      };
       detectors: {
         Row: {
-          event_triggers: string[] | null
-          family: string
-          key: string
-          owner_id: string
-          params: Json
-          schedule: string | null
-          version: string
-        }
+          event_triggers: string[] | null;
+          family: string;
+          key: string;
+          owner_id: string;
+          params: Json;
+          schedule: string | null;
+          version: string;
+        };
         Insert: {
-          event_triggers?: string[] | null
-          family: string
-          key: string
-          owner_id: string
-          params: Json
-          schedule?: string | null
-          version: string
-        }
+          event_triggers?: string[] | null;
+          family: string;
+          key: string;
+          owner_id: string;
+          params: Json;
+          schedule?: string | null;
+          version: string;
+        };
         Update: {
-          event_triggers?: string[] | null
-          family?: string
-          key?: string
-          owner_id?: string
-          params?: Json
-          schedule?: string | null
-          version?: string
-        }
-        Relationships: []
-      }
+          event_triggers?: string[] | null;
+          family?: string;
+          key?: string;
+          owner_id?: string;
+          params?: Json;
+          schedule?: string | null;
+          version?: string;
+        };
+        Relationships: [];
+      };
       edges: {
         Row: {
-          authority_used: Database["public"]["Enums"]["authority_level"]
-          confidence: number | null
-          created_at: string
-          created_by: Json
-          evidence_refs: string[]
-          from_id: string
-          id: string
-          kind: string | null
-          rationale: string | null
-          retired_at: string | null
-          source: string
-          to_id: string
-          verb: string
-        }
+          authority_used: Database["public"]["Enums"]["authority_level"];
+          confidence: number | null;
+          created_at: string;
+          created_by: Json;
+          evidence_refs: string[];
+          from_id: string;
+          id: string;
+          kind: string | null;
+          rationale: string | null;
+          retired_at: string | null;
+          source: string;
+          to_id: string;
+          verb: string;
+        };
         Insert: {
-          authority_used: Database["public"]["Enums"]["authority_level"]
-          confidence?: number | null
-          created_at?: string
-          created_by: Json
-          evidence_refs?: string[]
-          from_id: string
-          id: string
-          kind?: string | null
-          rationale?: string | null
-          retired_at?: string | null
-          source: string
-          to_id: string
-          verb: string
-        }
+          authority_used: Database["public"]["Enums"]["authority_level"];
+          confidence?: number | null;
+          created_at?: string;
+          created_by: Json;
+          evidence_refs?: string[];
+          from_id: string;
+          id: string;
+          kind?: string | null;
+          rationale?: string | null;
+          retired_at?: string | null;
+          source: string;
+          to_id: string;
+          verb: string;
+        };
         Update: {
-          authority_used?: Database["public"]["Enums"]["authority_level"]
-          confidence?: number | null
-          created_at?: string
-          created_by?: Json
-          evidence_refs?: string[]
-          from_id?: string
-          id?: string
-          kind?: string | null
-          rationale?: string | null
-          retired_at?: string | null
-          source?: string
-          to_id?: string
-          verb?: string
-        }
+          authority_used?: Database["public"]["Enums"]["authority_level"];
+          confidence?: number | null;
+          created_at?: string;
+          created_by?: Json;
+          evidence_refs?: string[];
+          from_id?: string;
+          id?: string;
+          kind?: string | null;
+          rationale?: string | null;
+          retired_at?: string | null;
+          source?: string;
+          to_id?: string;
+          verb?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "edges_from_id_fkey"
-            columns: ["from_id"]
-            isOneToOne: false
-            referencedRelation: "objects"
-            referencedColumns: ["id"]
+            foreignKeyName: "edges_from_id_fkey";
+            columns: ["from_id"];
+            isOneToOne: false;
+            referencedRelation: "objects";
+            referencedColumns: ["id"];
           },
           {
-            foreignKeyName: "edges_to_id_fkey"
-            columns: ["to_id"]
-            isOneToOne: false
-            referencedRelation: "objects"
-            referencedColumns: ["id"]
+            foreignKeyName: "edges_to_id_fkey";
+            columns: ["to_id"];
+            isOneToOne: false;
+            referencedRelation: "objects";
+            referencedColumns: ["id"];
           },
           {
-            foreignKeyName: "edges_verb_fkey"
-            columns: ["verb"]
-            isOneToOne: false
-            referencedRelation: "relationship_verbs"
-            referencedColumns: ["verb"]
+            foreignKeyName: "edges_verb_fkey";
+            columns: ["verb"];
+            isOneToOne: false;
+            referencedRelation: "relationship_verbs";
+            referencedColumns: ["verb"];
           },
-        ]
-      }
+        ];
+      };
       extraction_eval_items: {
         Row: {
-          created_at: string
-          expected_classification: string
-          expected_object_type: string | null
-          id: string
-          label_source: string
-          speaker_has_decision_authority: boolean
-          text: string
-        }
+          created_at: string;
+          expected_classification: string;
+          expected_object_type: string | null;
+          id: string;
+          label_source: string;
+          speaker_has_decision_authority: boolean;
+          text: string;
+        };
         Insert: {
-          created_at?: string
-          expected_classification: string
-          expected_object_type?: string | null
-          id?: string
-          label_source: string
-          speaker_has_decision_authority: boolean
-          text: string
-        }
+          created_at?: string;
+          expected_classification: string;
+          expected_object_type?: string | null;
+          id?: string;
+          label_source: string;
+          speaker_has_decision_authority: boolean;
+          text: string;
+        };
         Update: {
-          created_at?: string
-          expected_classification?: string
-          expected_object_type?: string | null
-          id?: string
-          label_source?: string
-          speaker_has_decision_authority?: boolean
-          text?: string
-        }
-        Relationships: []
-      }
+          created_at?: string;
+          expected_classification?: string;
+          expected_object_type?: string | null;
+          id?: string;
+          label_source?: string;
+          speaker_has_decision_authority?: boolean;
+          text?: string;
+        };
+        Relationships: [];
+      };
       extraction_revisions: {
         Row: {
-          adapter_mode: string
-          extractor_version: string
-          finished_at: string | null
-          id: string
-          model: string | null
-          model_route: string
-          preserved_confirmations: number
-          revision: number
-          session_id: string
-          started_at: string
-          statements: number
-          superseded_drafts: number
-        }
+          adapter_mode: string;
+          extractor_version: string;
+          finished_at: string | null;
+          id: string;
+          model: string | null;
+          model_route: string;
+          preserved_confirmations: number;
+          revision: number;
+          session_id: string;
+          started_at: string;
+          statements: number;
+          superseded_drafts: number;
+        };
         Insert: {
-          adapter_mode: string
-          extractor_version: string
-          finished_at?: string | null
-          id?: string
-          model?: string | null
-          model_route: string
-          preserved_confirmations?: number
-          revision: number
-          session_id: string
-          started_at?: string
-          statements?: number
-          superseded_drafts?: number
-        }
+          adapter_mode: string;
+          extractor_version: string;
+          finished_at?: string | null;
+          id?: string;
+          model?: string | null;
+          model_route: string;
+          preserved_confirmations?: number;
+          revision: number;
+          session_id: string;
+          started_at?: string;
+          statements?: number;
+          superseded_drafts?: number;
+        };
         Update: {
-          adapter_mode?: string
-          extractor_version?: string
-          finished_at?: string | null
-          id?: string
-          model?: string | null
-          model_route?: string
-          preserved_confirmations?: number
-          revision?: number
-          session_id?: string
-          started_at?: string
-          statements?: number
-          superseded_drafts?: number
-        }
+          adapter_mode?: string;
+          extractor_version?: string;
+          finished_at?: string | null;
+          id?: string;
+          model?: string | null;
+          model_route?: string;
+          preserved_confirmations?: number;
+          revision?: number;
+          session_id?: string;
+          started_at?: string;
+          statements?: number;
+          superseded_drafts?: number;
+        };
         Relationships: [
           {
-            foreignKeyName: "extraction_revisions_session_id_fkey"
-            columns: ["session_id"]
-            isOneToOne: false
-            referencedRelation: "objects"
-            referencedColumns: ["id"]
+            foreignKeyName: "extraction_revisions_session_id_fkey";
+            columns: ["session_id"];
+            isOneToOne: false;
+            referencedRelation: "objects";
+            referencedColumns: ["id"];
           },
-        ]
-      }
+        ];
+      };
       extraction_spans: {
         Row: {
-          char_end: number | null
-          char_start: number | null
-          drawing_region: Json | null
-          end_ms: number | null
-          log_end: number | null
-          log_start: number | null
-          object_id: string
-          source_ref: string
-          span_kind: string
-          speaker_id: string | null
-          start_ms: number | null
-        }
+          char_end: number | null;
+          char_start: number | null;
+          drawing_region: Json | null;
+          end_ms: number | null;
+          log_end: number | null;
+          log_start: number | null;
+          object_id: string;
+          source_ref: string;
+          span_kind: string;
+          speaker_id: string | null;
+          start_ms: number | null;
+        };
         Insert: {
-          char_end?: number | null
-          char_start?: number | null
-          drawing_region?: Json | null
-          end_ms?: number | null
-          log_end?: number | null
-          log_start?: number | null
-          object_id: string
-          source_ref: string
-          span_kind?: string
-          speaker_id?: string | null
-          start_ms?: number | null
-        }
+          char_end?: number | null;
+          char_start?: number | null;
+          drawing_region?: Json | null;
+          end_ms?: number | null;
+          log_end?: number | null;
+          log_start?: number | null;
+          object_id: string;
+          source_ref: string;
+          span_kind?: string;
+          speaker_id?: string | null;
+          start_ms?: number | null;
+        };
         Update: {
-          char_end?: number | null
-          char_start?: number | null
-          drawing_region?: Json | null
-          end_ms?: number | null
-          log_end?: number | null
-          log_start?: number | null
-          object_id?: string
-          source_ref?: string
-          span_kind?: string
-          speaker_id?: string | null
-          start_ms?: number | null
-        }
+          char_end?: number | null;
+          char_start?: number | null;
+          drawing_region?: Json | null;
+          end_ms?: number | null;
+          log_end?: number | null;
+          log_start?: number | null;
+          object_id?: string;
+          source_ref?: string;
+          span_kind?: string;
+          speaker_id?: string | null;
+          start_ms?: number | null;
+        };
         Relationships: [
           {
-            foreignKeyName: "extraction_spans_object_id_fkey"
-            columns: ["object_id"]
-            isOneToOne: false
-            referencedRelation: "objects"
-            referencedColumns: ["id"]
+            foreignKeyName: "extraction_spans_object_id_fkey";
+            columns: ["object_id"];
+            isOneToOne: false;
+            referencedRelation: "objects";
+            referencedColumns: ["id"];
           },
           {
-            foreignKeyName: "spans_source_object"
-            columns: ["source_ref"]
-            isOneToOne: false
-            referencedRelation: "objects"
-            referencedColumns: ["id"]
+            foreignKeyName: "spans_source_object";
+            columns: ["source_ref"];
+            isOneToOne: false;
+            referencedRelation: "objects";
+            referencedColumns: ["id"];
           },
-        ]
-      }
+        ];
+      };
       extraction_timings: {
         Row: {
-          created_at: string
-          id: number
-          latency_ms: number
-          session_id: string
-          stage: string
-          statement_id: string | null
-        }
+          created_at: string;
+          id: number;
+          latency_ms: number;
+          session_id: string;
+          stage: string;
+          statement_id: string | null;
+        };
         Insert: {
-          created_at?: string
-          id?: number
-          latency_ms: number
-          session_id: string
-          stage: string
-          statement_id?: string | null
-        }
+          created_at?: string;
+          id?: number;
+          latency_ms: number;
+          session_id: string;
+          stage: string;
+          statement_id?: string | null;
+        };
         Update: {
-          created_at?: string
-          id?: number
-          latency_ms?: number
-          session_id?: string
-          stage?: string
-          statement_id?: string | null
-        }
+          created_at?: string;
+          id?: number;
+          latency_ms?: number;
+          session_id?: string;
+          stage?: string;
+          statement_id?: string | null;
+        };
         Relationships: [
           {
-            foreignKeyName: "extraction_timings_session_id_fkey"
-            columns: ["session_id"]
-            isOneToOne: false
-            referencedRelation: "objects"
-            referencedColumns: ["id"]
+            foreignKeyName: "extraction_timings_session_id_fkey";
+            columns: ["session_id"];
+            isOneToOne: false;
+            referencedRelation: "objects";
+            referencedColumns: ["id"];
           },
           {
-            foreignKeyName: "extraction_timings_statement_id_fkey"
-            columns: ["statement_id"]
-            isOneToOne: false
-            referencedRelation: "objects"
-            referencedColumns: ["id"]
+            foreignKeyName: "extraction_timings_statement_id_fkey";
+            columns: ["statement_id"];
+            isOneToOne: false;
+            referencedRelation: "objects";
+            referencedColumns: ["id"];
           },
-        ]
-      }
+        ];
+      };
       framing_live_findings: {
         Row: {
-          created_at: string
-          id: string
-          kind: string
-          latency_ms: number | null
-          message: string
-          payload: Json
-          related_object_id: string | null
-          resolution: Json | null
-          resolved_at: string | null
-          session_id: string
-          state: string
-          statement_id: string | null
-        }
+          created_at: string;
+          id: string;
+          kind: string;
+          latency_ms: number | null;
+          message: string;
+          payload: Json;
+          related_object_id: string | null;
+          resolution: Json | null;
+          resolved_at: string | null;
+          session_id: string;
+          state: string;
+          statement_id: string | null;
+        };
         Insert: {
-          created_at?: string
-          id?: string
-          kind: string
-          latency_ms?: number | null
-          message: string
-          payload?: Json
-          related_object_id?: string | null
-          resolution?: Json | null
-          resolved_at?: string | null
-          session_id: string
-          state?: string
-          statement_id?: string | null
-        }
+          created_at?: string;
+          id?: string;
+          kind: string;
+          latency_ms?: number | null;
+          message: string;
+          payload?: Json;
+          related_object_id?: string | null;
+          resolution?: Json | null;
+          resolved_at?: string | null;
+          session_id: string;
+          state?: string;
+          statement_id?: string | null;
+        };
         Update: {
-          created_at?: string
-          id?: string
-          kind?: string
-          latency_ms?: number | null
-          message?: string
-          payload?: Json
-          related_object_id?: string | null
-          resolution?: Json | null
-          resolved_at?: string | null
-          session_id?: string
-          state?: string
-          statement_id?: string | null
-        }
+          created_at?: string;
+          id?: string;
+          kind?: string;
+          latency_ms?: number | null;
+          message?: string;
+          payload?: Json;
+          related_object_id?: string | null;
+          resolution?: Json | null;
+          resolved_at?: string | null;
+          session_id?: string;
+          state?: string;
+          statement_id?: string | null;
+        };
         Relationships: [
           {
-            foreignKeyName: "framing_live_findings_related_object_id_fkey"
-            columns: ["related_object_id"]
-            isOneToOne: false
-            referencedRelation: "objects"
-            referencedColumns: ["id"]
+            foreignKeyName: "framing_live_findings_related_object_id_fkey";
+            columns: ["related_object_id"];
+            isOneToOne: false;
+            referencedRelation: "objects";
+            referencedColumns: ["id"];
           },
           {
-            foreignKeyName: "framing_live_findings_session_id_fkey"
-            columns: ["session_id"]
-            isOneToOne: false
-            referencedRelation: "objects"
-            referencedColumns: ["id"]
+            foreignKeyName: "framing_live_findings_session_id_fkey";
+            columns: ["session_id"];
+            isOneToOne: false;
+            referencedRelation: "objects";
+            referencedColumns: ["id"];
           },
           {
-            foreignKeyName: "framing_live_findings_statement_id_fkey"
-            columns: ["statement_id"]
-            isOneToOne: false
-            referencedRelation: "objects"
-            referencedColumns: ["id"]
+            foreignKeyName: "framing_live_findings_statement_id_fkey";
+            columns: ["statement_id"];
+            isOneToOne: false;
+            referencedRelation: "objects";
+            referencedColumns: ["id"];
           },
-        ]
-      }
+        ];
+      };
       graph_layouts: {
         Row: {
-          cluster: string
-          computed_at: string
-          object_id: string
-          x: number
-          y: number
-        }
+          cluster: string;
+          computed_at: string;
+          object_id: string;
+          x: number;
+          y: number;
+        };
         Insert: {
-          cluster: string
-          computed_at?: string
-          object_id: string
-          x: number
-          y: number
-        }
+          cluster: string;
+          computed_at?: string;
+          object_id: string;
+          x: number;
+          y: number;
+        };
         Update: {
-          cluster?: string
-          computed_at?: string
-          object_id?: string
-          x?: number
-          y?: number
-        }
+          cluster?: string;
+          computed_at?: string;
+          object_id?: string;
+          x?: number;
+          y?: number;
+        };
         Relationships: [
           {
-            foreignKeyName: "graph_layouts_object_id_fkey"
-            columns: ["object_id"]
-            isOneToOne: true
-            referencedRelation: "objects"
-            referencedColumns: ["id"]
+            foreignKeyName: "graph_layouts_object_id_fkey";
+            columns: ["object_id"];
+            isOneToOne: true;
+            referencedRelation: "objects";
+            referencedColumns: ["id"];
           },
-        ]
-      }
+        ];
+      };
       guardrails: {
         Row: {
-          active: boolean
-          category: string
-          enforcement: string
-          evaluator: string
-          id: string
-          params: Json
-          proposed_by: string
-          version: string
-        }
+          active: boolean;
+          category: string;
+          enforcement: string;
+          evaluator: string;
+          id: string;
+          params: Json;
+          proposed_by: string;
+          version: string;
+        };
         Insert: {
-          active?: boolean
-          category: string
-          enforcement?: string
-          evaluator: string
-          id: string
-          params: Json
-          proposed_by?: string
-          version: string
-        }
+          active?: boolean;
+          category: string;
+          enforcement?: string;
+          evaluator: string;
+          id: string;
+          params: Json;
+          proposed_by?: string;
+          version: string;
+        };
         Update: {
-          active?: boolean
-          category?: string
-          enforcement?: string
-          evaluator?: string
-          id?: string
-          params?: Json
-          proposed_by?: string
-          version?: string
-        }
-        Relationships: []
-      }
+          active?: boolean;
+          category?: string;
+          enforcement?: string;
+          evaluator?: string;
+          id?: string;
+          params?: Json;
+          proposed_by?: string;
+          version?: string;
+        };
+        Relationships: [];
+      };
       iterations: {
         Row: {
-          at: string
-          declared_class: string
-          detected_class: string
-          diff: Json
-          from_run: string
-          object_id: string
-          scope_change_flag: boolean
-          to_run: string
-        }
+          at: string;
+          declared_class: string;
+          detected_class: string;
+          diff: Json;
+          from_run: string;
+          object_id: string;
+          scope_change_flag: boolean;
+          to_run: string;
+        };
         Insert: {
-          at?: string
-          declared_class: string
-          detected_class: string
-          diff: Json
-          from_run: string
-          object_id: string
-          scope_change_flag: boolean
-          to_run: string
-        }
+          at?: string;
+          declared_class: string;
+          detected_class: string;
+          diff: Json;
+          from_run: string;
+          object_id: string;
+          scope_change_flag: boolean;
+          to_run: string;
+        };
         Update: {
-          at?: string
-          declared_class?: string
-          detected_class?: string
-          diff?: Json
-          from_run?: string
-          object_id?: string
-          scope_change_flag?: boolean
-          to_run?: string
-        }
+          at?: string;
+          declared_class?: string;
+          detected_class?: string;
+          diff?: Json;
+          from_run?: string;
+          object_id?: string;
+          scope_change_flag?: boolean;
+          to_run?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "iterations_from_run_fkey"
-            columns: ["from_run"]
-            isOneToOne: false
-            referencedRelation: "build_runs"
-            referencedColumns: ["object_id"]
+            foreignKeyName: "iterations_from_run_fkey";
+            columns: ["from_run"];
+            isOneToOne: false;
+            referencedRelation: "build_runs";
+            referencedColumns: ["object_id"];
           },
           {
-            foreignKeyName: "iterations_object_id_fkey"
-            columns: ["object_id"]
-            isOneToOne: true
-            referencedRelation: "objects"
-            referencedColumns: ["id"]
+            foreignKeyName: "iterations_object_id_fkey";
+            columns: ["object_id"];
+            isOneToOne: true;
+            referencedRelation: "objects";
+            referencedColumns: ["id"];
           },
           {
-            foreignKeyName: "iterations_to_run_fkey"
-            columns: ["to_run"]
-            isOneToOne: false
-            referencedRelation: "build_runs"
-            referencedColumns: ["object_id"]
+            foreignKeyName: "iterations_to_run_fkey";
+            columns: ["to_run"];
+            isOneToOne: false;
+            referencedRelation: "build_runs";
+            referencedColumns: ["object_id"];
           },
-        ]
-      }
+        ];
+      };
       ledger: {
         Row: {
-          action: string
-          actor: Json
-          adapter_mode: string
-          authority_used: Database["public"]["Enums"]["authority_level"] | null
-          evidence_refs: string[]
-          hash: string
-          object_id: string | null
-          object_version: number | null
-          occurred_at: string
-          payload: Json
-          prev_hash: string
-          provenance_chain_id: string
-          seq: number
-          txid: number
-        }
+          action: string;
+          actor: Json;
+          adapter_mode: string;
+          authority_used: Database["public"]["Enums"]["authority_level"] | null;
+          evidence_refs: string[];
+          hash: string;
+          object_id: string | null;
+          object_version: number | null;
+          occurred_at: string;
+          payload: Json;
+          prev_hash: string;
+          provenance_chain_id: string;
+          seq: number;
+          txid: number;
+        };
         Insert: {
-          action: string
-          actor: Json
-          adapter_mode?: string
-          authority_used?: Database["public"]["Enums"]["authority_level"] | null
-          evidence_refs?: string[]
-          hash: string
-          object_id?: string | null
-          object_version?: number | null
-          occurred_at?: string
-          payload: Json
-          prev_hash: string
-          provenance_chain_id: string
-          seq?: number
-          txid?: number
-        }
+          action: string;
+          actor: Json;
+          adapter_mode?: string;
+          authority_used?: Database["public"]["Enums"]["authority_level"] | null;
+          evidence_refs?: string[];
+          hash: string;
+          object_id?: string | null;
+          object_version?: number | null;
+          occurred_at?: string;
+          payload: Json;
+          prev_hash: string;
+          provenance_chain_id: string;
+          seq?: number;
+          txid?: number;
+        };
         Update: {
-          action?: string
-          actor?: Json
-          adapter_mode?: string
-          authority_used?: Database["public"]["Enums"]["authority_level"] | null
-          evidence_refs?: string[]
-          hash?: string
-          object_id?: string | null
-          object_version?: number | null
-          occurred_at?: string
-          payload?: Json
-          prev_hash?: string
-          provenance_chain_id?: string
-          seq?: number
-          txid?: number
-        }
-        Relationships: []
-      }
+          action?: string;
+          actor?: Json;
+          adapter_mode?: string;
+          authority_used?: Database["public"]["Enums"]["authority_level"] | null;
+          evidence_refs?: string[];
+          hash?: string;
+          object_id?: string | null;
+          object_version?: number | null;
+          occurred_at?: string;
+          payload?: Json;
+          prev_hash?: string;
+          provenance_chain_id?: string;
+          seq?: number;
+          txid?: number;
+        };
+        Relationships: [];
+      };
       legacy_aliases: {
         Row: {
-          alias: string
-          object_id: string
-          source_system: string
-        }
+          alias: string;
+          object_id: string;
+          source_system: string;
+        };
         Insert: {
-          alias: string
-          object_id: string
-          source_system: string
-        }
+          alias: string;
+          object_id: string;
+          source_system: string;
+        };
         Update: {
-          alias?: string
-          object_id?: string
-          source_system?: string
-        }
+          alias?: string;
+          object_id?: string;
+          source_system?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "legacy_aliases_object_id_fkey"
-            columns: ["object_id"]
-            isOneToOne: false
-            referencedRelation: "objects"
-            referencedColumns: ["id"]
+            foreignKeyName: "legacy_aliases_object_id_fkey";
+            columns: ["object_id"];
+            isOneToOne: false;
+            referencedRelation: "objects";
+            referencedColumns: ["id"];
           },
-        ]
-      }
+        ];
+      };
       lifecycle_initial_states: {
         Row: {
-          lifecycle_family: string
-          state: string
-        }
+          lifecycle_family: string;
+          state: string;
+        };
         Insert: {
-          lifecycle_family: string
-          state: string
-        }
+          lifecycle_family: string;
+          state: string;
+        };
         Update: {
-          lifecycle_family?: string
-          state?: string
-        }
-        Relationships: []
-      }
+          lifecycle_family?: string;
+          state?: string;
+        };
+        Relationships: [];
+      };
       lifecycle_transitions: {
         Row: {
-          from_state: string
-          lifecycle_family: string
-          to_state: string
-        }
+          from_state: string;
+          lifecycle_family: string;
+          to_state: string;
+        };
         Insert: {
-          from_state: string
-          lifecycle_family: string
-          to_state: string
-        }
+          from_state: string;
+          lifecycle_family: string;
+          to_state: string;
+        };
         Update: {
-          from_state?: string
-          lifecycle_family?: string
-          to_state?: string
-        }
-        Relationships: []
-      }
+          from_state?: string;
+          lifecycle_family?: string;
+          to_state?: string;
+        };
+        Relationships: [];
+      };
       mcp_subscriptions: {
         Row: {
-          agent_id: string
-          created_at: string
-          id: string
-          object_id: string | null
-          topic: string
-        }
+          agent_id: string;
+          created_at: string;
+          id: string;
+          object_id: string | null;
+          topic: string;
+        };
         Insert: {
-          agent_id: string
-          created_at?: string
-          id?: string
-          object_id?: string | null
-          topic: string
-        }
+          agent_id: string;
+          created_at?: string;
+          id?: string;
+          object_id?: string | null;
+          topic: string;
+        };
         Update: {
-          agent_id?: string
-          created_at?: string
-          id?: string
-          object_id?: string | null
-          topic?: string
-        }
+          agent_id?: string;
+          created_at?: string;
+          id?: string;
+          object_id?: string | null;
+          topic?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "mcp_subscriptions_agent_id_fkey"
-            columns: ["agent_id"]
-            isOneToOne: false
-            referencedRelation: "agents"
-            referencedColumns: ["id"]
+            foreignKeyName: "mcp_subscriptions_agent_id_fkey";
+            columns: ["agent_id"];
+            isOneToOne: false;
+            referencedRelation: "agents";
+            referencedColumns: ["id"];
           },
-        ]
-      }
+        ];
+      };
       model_routes: {
         Row: {
-          attestation_expiry: string | null
-          cleared_tiers: string[]
-          eval_status: string
-          invocation_logging_off: boolean
-          model_version_pin: string | null
-          object_id: string
-          permitted_task_classes: string[]
-          refreshed_at: string
-          route_key: string
-          source_version: number
-        }
+          attestation_expiry: string | null;
+          cleared_tiers: string[];
+          eval_status: string;
+          invocation_logging_off: boolean;
+          model_version_pin: string | null;
+          object_id: string;
+          permitted_task_classes: string[];
+          refreshed_at: string;
+          route_key: string;
+          source_version: number;
+        };
         Insert: {
-          attestation_expiry?: string | null
-          cleared_tiers?: string[]
-          eval_status?: string
-          invocation_logging_off?: boolean
-          model_version_pin?: string | null
-          object_id: string
-          permitted_task_classes?: string[]
-          refreshed_at?: string
-          route_key: string
-          source_version: number
-        }
+          attestation_expiry?: string | null;
+          cleared_tiers?: string[];
+          eval_status?: string;
+          invocation_logging_off?: boolean;
+          model_version_pin?: string | null;
+          object_id: string;
+          permitted_task_classes?: string[];
+          refreshed_at?: string;
+          route_key: string;
+          source_version: number;
+        };
         Update: {
-          attestation_expiry?: string | null
-          cleared_tiers?: string[]
-          eval_status?: string
-          invocation_logging_off?: boolean
-          model_version_pin?: string | null
-          object_id?: string
-          permitted_task_classes?: string[]
-          refreshed_at?: string
-          route_key?: string
-          source_version?: number
-        }
+          attestation_expiry?: string | null;
+          cleared_tiers?: string[];
+          eval_status?: string;
+          invocation_logging_off?: boolean;
+          model_version_pin?: string | null;
+          object_id?: string;
+          permitted_task_classes?: string[];
+          refreshed_at?: string;
+          route_key?: string;
+          source_version?: number;
+        };
         Relationships: [
           {
-            foreignKeyName: "model_routes_object_id_fkey"
-            columns: ["object_id"]
-            isOneToOne: true
-            referencedRelation: "objects"
-            referencedColumns: ["id"]
+            foreignKeyName: "model_routes_object_id_fkey";
+            columns: ["object_id"];
+            isOneToOne: true;
+            referencedRelation: "objects";
+            referencedColumns: ["id"];
           },
-        ]
-      }
+        ];
+      };
       notifications: {
         Row: {
-          body: Json
-          created_at: string
-          decision_id: string | null
-          id: string
-          recipient_id: string
-          trigger_event_id: number | null
-        }
+          body: Json;
+          created_at: string;
+          decision_id: string | null;
+          id: string;
+          recipient_id: string;
+          trigger_event_id: number | null;
+        };
         Insert: {
-          body: Json
-          created_at?: string
-          decision_id?: string | null
-          id: string
-          recipient_id: string
-          trigger_event_id?: number | null
-        }
+          body: Json;
+          created_at?: string;
+          decision_id?: string | null;
+          id: string;
+          recipient_id: string;
+          trigger_event_id?: number | null;
+        };
         Update: {
-          body?: Json
-          created_at?: string
-          decision_id?: string | null
-          id?: string
-          recipient_id?: string
-          trigger_event_id?: number | null
-        }
-        Relationships: []
-      }
+          body?: Json;
+          created_at?: string;
+          decision_id?: string | null;
+          id?: string;
+          recipient_id?: string;
+          trigger_event_id?: number | null;
+        };
+        Relationships: [];
+      };
       object_embeddings: {
         Row: {
-          embedding: string
-          model: string
-          object_id: string
-        }
+          embedding: string;
+          model: string;
+          object_id: string;
+        };
         Insert: {
-          embedding: string
-          model: string
-          object_id: string
-        }
+          embedding: string;
+          model: string;
+          object_id: string;
+        };
         Update: {
-          embedding?: string
-          model?: string
-          object_id?: string
-        }
+          embedding?: string;
+          model?: string;
+          object_id?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "object_embeddings_object_id_fkey"
-            columns: ["object_id"]
-            isOneToOne: true
-            referencedRelation: "objects"
-            referencedColumns: ["id"]
+            foreignKeyName: "object_embeddings_object_id_fkey";
+            columns: ["object_id"];
+            isOneToOne: true;
+            referencedRelation: "objects";
+            referencedColumns: ["id"];
           },
-        ]
-      }
+        ];
+      };
       object_embeddings_restricted: {
         Row: {
-          embedding: string
-          model: string
-          object_id: string
-        }
+          embedding: string;
+          model: string;
+          object_id: string;
+        };
         Insert: {
-          embedding: string
-          model: string
-          object_id: string
-        }
+          embedding: string;
+          model: string;
+          object_id: string;
+        };
         Update: {
-          embedding?: string
-          model?: string
-          object_id?: string
-        }
+          embedding?: string;
+          model?: string;
+          object_id?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "object_embeddings_restricted_object_id_fkey"
-            columns: ["object_id"]
-            isOneToOne: true
-            referencedRelation: "objects"
-            referencedColumns: ["id"]
+            foreignKeyName: "object_embeddings_restricted_object_id_fkey";
+            columns: ["object_id"];
+            isOneToOne: true;
+            referencedRelation: "objects";
+            referencedColumns: ["id"];
           },
-        ]
-      }
+        ];
+      };
       object_type_registry: {
         Row: {
-          body_schema: Json
-          discovery_descriptor: Json
-          family: string
-          lifecycle_family: string
-          ref_prefix: string
-          schema_version: string
-          type: string
-        }
+          body_schema: Json;
+          discovery_descriptor: Json;
+          family: string;
+          lifecycle_family: string;
+          ref_prefix: string;
+          schema_version: string;
+          type: string;
+        };
         Insert: {
-          body_schema: Json
-          discovery_descriptor: Json
-          family: string
-          lifecycle_family: string
-          ref_prefix: string
-          schema_version: string
-          type: string
-        }
+          body_schema: Json;
+          discovery_descriptor: Json;
+          family: string;
+          lifecycle_family: string;
+          ref_prefix: string;
+          schema_version: string;
+          type: string;
+        };
         Update: {
-          body_schema?: Json
-          discovery_descriptor?: Json
-          family?: string
-          lifecycle_family?: string
-          ref_prefix?: string
-          schema_version?: string
-          type?: string
-        }
+          body_schema?: Json;
+          discovery_descriptor?: Json;
+          family?: string;
+          lifecycle_family?: string;
+          ref_prefix?: string;
+          schema_version?: string;
+          type?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "object_type_registry_lifecycle_family_fkey"
-            columns: ["lifecycle_family"]
-            isOneToOne: false
-            referencedRelation: "lifecycle_initial_states"
-            referencedColumns: ["lifecycle_family"]
+            foreignKeyName: "object_type_registry_lifecycle_family_fkey";
+            columns: ["lifecycle_family"];
+            isOneToOne: false;
+            referencedRelation: "lifecycle_initial_states";
+            referencedColumns: ["lifecycle_family"];
           },
-        ]
-      }
+        ];
+      };
       object_versions: {
         Row: {
-          authority_level: Database["public"]["Enums"]["authority_level"]
-          body: Json
-          builder_id: string | null
-          citations: Json
-          co_creator_id: string | null
-          confidence_bundle: Json | null
-          consequence_class: Database["public"]["Enums"]["consequence_class"]
-          content_hash: string
-          created_at: string
-          created_by: Json
-          data_classification: Database["public"]["Enums"]["data_classification"]
-          derived_from: string[]
-          effective_from: string
-          evidence_refs: string[]
-          expiration_condition: Json
-          expires_at: string | null
-          human_ref: string
-          id: string
-          is_tombstone: boolean
-          lifecycle_state: string
-          machine_description: string
-          open_questions: string[]
-          owner_id: string
-          permission: Json
-          permitted_uses: string[]
-          provenance_chain_id: string
-          retired_at: string | null
-          retirement_path: Json
-          retirement_reason: string | null
-          review_date: string
-          risk_tier: Database["public"]["Enums"]["risk_tier"]
-          schema_version: string
-          search: unknown
-          simulated: boolean | null
-          statement: string
-          steward_id: string | null
-          superseded_by: string[]
-          supersedes: string[]
-          title: string
-          type: string
-          updated_at: string
-          updated_by: Json
-          version: number
-        }
+          authority_level: Database["public"]["Enums"]["authority_level"];
+          body: Json;
+          builder_id: string | null;
+          citations: Json;
+          co_creator_id: string | null;
+          confidence_bundle: Json | null;
+          consequence_class: Database["public"]["Enums"]["consequence_class"];
+          content_hash: string;
+          created_at: string;
+          created_by: Json;
+          data_classification: Database["public"]["Enums"]["data_classification"];
+          derived_from: string[];
+          effective_from: string;
+          evidence_refs: string[];
+          expiration_condition: Json;
+          expires_at: string | null;
+          human_ref: string;
+          id: string;
+          is_tombstone: boolean;
+          lifecycle_state: string;
+          machine_description: string;
+          open_questions: string[];
+          owner_id: string;
+          permission: Json;
+          permitted_uses: string[];
+          provenance_chain_id: string;
+          retired_at: string | null;
+          retirement_path: Json;
+          retirement_reason: string | null;
+          review_date: string;
+          risk_tier: Database["public"]["Enums"]["risk_tier"];
+          schema_version: string;
+          search: unknown;
+          simulated: boolean | null;
+          statement: string;
+          steward_id: string | null;
+          superseded_by: string[];
+          supersedes: string[];
+          title: string;
+          type: string;
+          updated_at: string;
+          updated_by: Json;
+          version: number;
+        };
         Insert: {
-          authority_level?: Database["public"]["Enums"]["authority_level"]
-          body?: Json
-          builder_id?: string | null
-          citations?: Json
-          co_creator_id?: string | null
-          confidence_bundle?: Json | null
-          consequence_class?: Database["public"]["Enums"]["consequence_class"]
-          content_hash: string
-          created_at?: string
-          created_by: Json
-          data_classification: Database["public"]["Enums"]["data_classification"]
-          derived_from?: string[]
-          effective_from?: string
-          evidence_refs?: string[]
-          expiration_condition: Json
-          expires_at?: string | null
-          human_ref: string
-          id: string
-          is_tombstone?: boolean
-          lifecycle_state: string
-          machine_description: string
-          open_questions?: string[]
-          owner_id: string
-          permission: Json
-          permitted_uses?: string[]
-          provenance_chain_id: string
-          retired_at?: string | null
-          retirement_path: Json
-          retirement_reason?: string | null
-          review_date: string
-          risk_tier: Database["public"]["Enums"]["risk_tier"]
-          schema_version: string
-          search?: unknown
-          simulated?: boolean | null
-          statement: string
-          steward_id?: string | null
-          superseded_by?: string[]
-          supersedes?: string[]
-          title: string
-          type: string
-          updated_at?: string
-          updated_by: Json
-          version?: number
-        }
+          authority_level?: Database["public"]["Enums"]["authority_level"];
+          body?: Json;
+          builder_id?: string | null;
+          citations?: Json;
+          co_creator_id?: string | null;
+          confidence_bundle?: Json | null;
+          consequence_class?: Database["public"]["Enums"]["consequence_class"];
+          content_hash: string;
+          created_at?: string;
+          created_by: Json;
+          data_classification: Database["public"]["Enums"]["data_classification"];
+          derived_from?: string[];
+          effective_from?: string;
+          evidence_refs?: string[];
+          expiration_condition: Json;
+          expires_at?: string | null;
+          human_ref: string;
+          id: string;
+          is_tombstone?: boolean;
+          lifecycle_state: string;
+          machine_description: string;
+          open_questions?: string[];
+          owner_id: string;
+          permission: Json;
+          permitted_uses?: string[];
+          provenance_chain_id: string;
+          retired_at?: string | null;
+          retirement_path: Json;
+          retirement_reason?: string | null;
+          review_date: string;
+          risk_tier: Database["public"]["Enums"]["risk_tier"];
+          schema_version: string;
+          search?: unknown;
+          simulated?: boolean | null;
+          statement: string;
+          steward_id?: string | null;
+          superseded_by?: string[];
+          supersedes?: string[];
+          title: string;
+          type: string;
+          updated_at?: string;
+          updated_by: Json;
+          version?: number;
+        };
         Update: {
-          authority_level?: Database["public"]["Enums"]["authority_level"]
-          body?: Json
-          builder_id?: string | null
-          citations?: Json
-          co_creator_id?: string | null
-          confidence_bundle?: Json | null
-          consequence_class?: Database["public"]["Enums"]["consequence_class"]
-          content_hash?: string
-          created_at?: string
-          created_by?: Json
-          data_classification?: Database["public"]["Enums"]["data_classification"]
-          derived_from?: string[]
-          effective_from?: string
-          evidence_refs?: string[]
-          expiration_condition?: Json
-          expires_at?: string | null
-          human_ref?: string
-          id?: string
-          is_tombstone?: boolean
-          lifecycle_state?: string
-          machine_description?: string
-          open_questions?: string[]
-          owner_id?: string
-          permission?: Json
-          permitted_uses?: string[]
-          provenance_chain_id?: string
-          retired_at?: string | null
-          retirement_path?: Json
-          retirement_reason?: string | null
-          review_date?: string
-          risk_tier?: Database["public"]["Enums"]["risk_tier"]
-          schema_version?: string
-          search?: unknown
-          simulated?: boolean | null
-          statement?: string
-          steward_id?: string | null
-          superseded_by?: string[]
-          supersedes?: string[]
-          title?: string
-          type?: string
-          updated_at?: string
-          updated_by?: Json
-          version?: number
-        }
-        Relationships: []
-      }
+          authority_level?: Database["public"]["Enums"]["authority_level"];
+          body?: Json;
+          builder_id?: string | null;
+          citations?: Json;
+          co_creator_id?: string | null;
+          confidence_bundle?: Json | null;
+          consequence_class?: Database["public"]["Enums"]["consequence_class"];
+          content_hash?: string;
+          created_at?: string;
+          created_by?: Json;
+          data_classification?: Database["public"]["Enums"]["data_classification"];
+          derived_from?: string[];
+          effective_from?: string;
+          evidence_refs?: string[];
+          expiration_condition?: Json;
+          expires_at?: string | null;
+          human_ref?: string;
+          id?: string;
+          is_tombstone?: boolean;
+          lifecycle_state?: string;
+          machine_description?: string;
+          open_questions?: string[];
+          owner_id?: string;
+          permission?: Json;
+          permitted_uses?: string[];
+          provenance_chain_id?: string;
+          retired_at?: string | null;
+          retirement_path?: Json;
+          retirement_reason?: string | null;
+          review_date?: string;
+          risk_tier?: Database["public"]["Enums"]["risk_tier"];
+          schema_version?: string;
+          search?: unknown;
+          simulated?: boolean | null;
+          statement?: string;
+          steward_id?: string | null;
+          superseded_by?: string[];
+          supersedes?: string[];
+          title?: string;
+          type?: string;
+          updated_at?: string;
+          updated_by?: Json;
+          version?: number;
+        };
+        Relationships: [];
+      };
       objects: {
         Row: {
-          authority_level: Database["public"]["Enums"]["authority_level"]
-          body: Json
-          builder_id: string | null
-          citations: Json
-          co_creator_id: string | null
-          confidence_bundle: Json | null
-          consequence_class: Database["public"]["Enums"]["consequence_class"]
-          content_hash: string
-          created_at: string
-          created_by: Json
-          data_classification: Database["public"]["Enums"]["data_classification"]
-          derived_from: string[]
-          effective_from: string
-          evidence_refs: string[]
-          expiration_condition: Json
-          expires_at: string | null
-          human_ref: string
-          id: string
-          is_tombstone: boolean
-          lifecycle_state: string
-          machine_description: string
-          open_questions: string[]
-          owner_id: string
-          permission: Json
-          permitted_uses: string[]
-          provenance_chain_id: string
-          retired_at: string | null
-          retirement_path: Json
-          retirement_reason: string | null
-          review_date: string
-          risk_tier: Database["public"]["Enums"]["risk_tier"]
-          schema_version: string
-          search: unknown
-          simulated: boolean | null
-          statement: string
-          steward_id: string | null
-          superseded_by: string[]
-          supersedes: string[]
-          title: string
-          type: string
-          updated_at: string
-          updated_by: Json
-          version: number
-        }
+          authority_level: Database["public"]["Enums"]["authority_level"];
+          body: Json;
+          builder_id: string | null;
+          citations: Json;
+          co_creator_id: string | null;
+          confidence_bundle: Json | null;
+          consequence_class: Database["public"]["Enums"]["consequence_class"];
+          content_hash: string;
+          created_at: string;
+          created_by: Json;
+          data_classification: Database["public"]["Enums"]["data_classification"];
+          derived_from: string[];
+          effective_from: string;
+          evidence_refs: string[];
+          expiration_condition: Json;
+          expires_at: string | null;
+          human_ref: string;
+          id: string;
+          is_tombstone: boolean;
+          lifecycle_state: string;
+          machine_description: string;
+          open_questions: string[];
+          owner_id: string;
+          permission: Json;
+          permitted_uses: string[];
+          provenance_chain_id: string;
+          retired_at: string | null;
+          retirement_path: Json;
+          retirement_reason: string | null;
+          review_date: string;
+          risk_tier: Database["public"]["Enums"]["risk_tier"];
+          schema_version: string;
+          search: unknown;
+          simulated: boolean | null;
+          statement: string;
+          steward_id: string | null;
+          superseded_by: string[];
+          supersedes: string[];
+          title: string;
+          type: string;
+          updated_at: string;
+          updated_by: Json;
+          version: number;
+        };
         Insert: {
-          authority_level?: Database["public"]["Enums"]["authority_level"]
-          body?: Json
-          builder_id?: string | null
-          citations?: Json
-          co_creator_id?: string | null
-          confidence_bundle?: Json | null
-          consequence_class?: Database["public"]["Enums"]["consequence_class"]
-          content_hash: string
-          created_at?: string
-          created_by: Json
-          data_classification: Database["public"]["Enums"]["data_classification"]
-          derived_from?: string[]
-          effective_from?: string
-          evidence_refs?: string[]
-          expiration_condition: Json
-          expires_at?: string | null
-          human_ref: string
-          id: string
-          is_tombstone?: boolean
-          lifecycle_state: string
-          machine_description: string
-          open_questions?: string[]
-          owner_id: string
-          permission: Json
-          permitted_uses?: string[]
-          provenance_chain_id: string
-          retired_at?: string | null
-          retirement_path: Json
-          retirement_reason?: string | null
-          review_date: string
-          risk_tier: Database["public"]["Enums"]["risk_tier"]
-          schema_version: string
-          search?: unknown
-          simulated?: boolean | null
-          statement: string
-          steward_id?: string | null
-          superseded_by?: string[]
-          supersedes?: string[]
-          title: string
-          type: string
-          updated_at?: string
-          updated_by: Json
-          version?: number
-        }
+          authority_level?: Database["public"]["Enums"]["authority_level"];
+          body?: Json;
+          builder_id?: string | null;
+          citations?: Json;
+          co_creator_id?: string | null;
+          confidence_bundle?: Json | null;
+          consequence_class?: Database["public"]["Enums"]["consequence_class"];
+          content_hash: string;
+          created_at?: string;
+          created_by: Json;
+          data_classification: Database["public"]["Enums"]["data_classification"];
+          derived_from?: string[];
+          effective_from?: string;
+          evidence_refs?: string[];
+          expiration_condition: Json;
+          expires_at?: string | null;
+          human_ref: string;
+          id: string;
+          is_tombstone?: boolean;
+          lifecycle_state: string;
+          machine_description: string;
+          open_questions?: string[];
+          owner_id: string;
+          permission: Json;
+          permitted_uses?: string[];
+          provenance_chain_id: string;
+          retired_at?: string | null;
+          retirement_path: Json;
+          retirement_reason?: string | null;
+          review_date: string;
+          risk_tier: Database["public"]["Enums"]["risk_tier"];
+          schema_version: string;
+          search?: unknown;
+          simulated?: boolean | null;
+          statement: string;
+          steward_id?: string | null;
+          superseded_by?: string[];
+          supersedes?: string[];
+          title: string;
+          type: string;
+          updated_at?: string;
+          updated_by: Json;
+          version?: number;
+        };
         Update: {
-          authority_level?: Database["public"]["Enums"]["authority_level"]
-          body?: Json
-          builder_id?: string | null
-          citations?: Json
-          co_creator_id?: string | null
-          confidence_bundle?: Json | null
-          consequence_class?: Database["public"]["Enums"]["consequence_class"]
-          content_hash?: string
-          created_at?: string
-          created_by?: Json
-          data_classification?: Database["public"]["Enums"]["data_classification"]
-          derived_from?: string[]
-          effective_from?: string
-          evidence_refs?: string[]
-          expiration_condition?: Json
-          expires_at?: string | null
-          human_ref?: string
-          id?: string
-          is_tombstone?: boolean
-          lifecycle_state?: string
-          machine_description?: string
-          open_questions?: string[]
-          owner_id?: string
-          permission?: Json
-          permitted_uses?: string[]
-          provenance_chain_id?: string
-          retired_at?: string | null
-          retirement_path?: Json
-          retirement_reason?: string | null
-          review_date?: string
-          risk_tier?: Database["public"]["Enums"]["risk_tier"]
-          schema_version?: string
-          search?: unknown
-          simulated?: boolean | null
-          statement?: string
-          steward_id?: string | null
-          superseded_by?: string[]
-          supersedes?: string[]
-          title?: string
-          type?: string
-          updated_at?: string
-          updated_by?: Json
-          version?: number
-        }
+          authority_level?: Database["public"]["Enums"]["authority_level"];
+          body?: Json;
+          builder_id?: string | null;
+          citations?: Json;
+          co_creator_id?: string | null;
+          confidence_bundle?: Json | null;
+          consequence_class?: Database["public"]["Enums"]["consequence_class"];
+          content_hash?: string;
+          created_at?: string;
+          created_by?: Json;
+          data_classification?: Database["public"]["Enums"]["data_classification"];
+          derived_from?: string[];
+          effective_from?: string;
+          evidence_refs?: string[];
+          expiration_condition?: Json;
+          expires_at?: string | null;
+          human_ref?: string;
+          id?: string;
+          is_tombstone?: boolean;
+          lifecycle_state?: string;
+          machine_description?: string;
+          open_questions?: string[];
+          owner_id?: string;
+          permission?: Json;
+          permitted_uses?: string[];
+          provenance_chain_id?: string;
+          retired_at?: string | null;
+          retirement_path?: Json;
+          retirement_reason?: string | null;
+          review_date?: string;
+          risk_tier?: Database["public"]["Enums"]["risk_tier"];
+          schema_version?: string;
+          search?: unknown;
+          simulated?: boolean | null;
+          statement?: string;
+          steward_id?: string | null;
+          superseded_by?: string[];
+          supersedes?: string[];
+          title?: string;
+          type?: string;
+          updated_at?: string;
+          updated_by?: Json;
+          version?: number;
+        };
         Relationships: [
           {
-            foreignKeyName: "objects_type_fkey"
-            columns: ["type"]
-            isOneToOne: false
-            referencedRelation: "object_type_registry"
-            referencedColumns: ["type"]
+            foreignKeyName: "objects_type_fkey";
+            columns: ["type"];
+            isOneToOne: false;
+            referencedRelation: "object_type_registry";
+            referencedColumns: ["type"];
           },
-        ]
-      }
+        ];
+      };
       ref_sequences: {
         Row: {
-          next: number
-          prefix: string
-          year: number
-        }
+          next: number;
+          prefix: string;
+          year: number;
+        };
         Insert: {
-          next: number
-          prefix: string
-          year: number
-        }
+          next: number;
+          prefix: string;
+          year: number;
+        };
         Update: {
-          next?: number
-          prefix?: string
-          year?: number
-        }
-        Relationships: []
-      }
+          next?: number;
+          prefix?: string;
+          year?: number;
+        };
+        Relationships: [];
+      };
       relationship_verbs: {
         Row: {
-          acyclic: boolean
-          computed: boolean
-          directed: boolean
-          from_types: string[]
-          impact: string
-          signatures: Json
-          to_types: string[]
-          verb: string
-        }
+          acyclic: boolean;
+          computed: boolean;
+          directed: boolean;
+          from_types: string[];
+          impact: string;
+          signatures: Json;
+          to_types: string[];
+          verb: string;
+        };
         Insert: {
-          acyclic?: boolean
-          computed?: boolean
-          directed?: boolean
-          from_types: string[]
-          impact?: string
-          signatures?: Json
-          to_types: string[]
-          verb: string
-        }
+          acyclic?: boolean;
+          computed?: boolean;
+          directed?: boolean;
+          from_types: string[];
+          impact?: string;
+          signatures?: Json;
+          to_types: string[];
+          verb: string;
+        };
         Update: {
-          acyclic?: boolean
-          computed?: boolean
-          directed?: boolean
-          from_types?: string[]
-          impact?: string
-          signatures?: Json
-          to_types?: string[]
-          verb?: string
-        }
-        Relationships: []
-      }
+          acyclic?: boolean;
+          computed?: boolean;
+          directed?: boolean;
+          from_types?: string[];
+          impact?: string;
+          signatures?: Json;
+          to_types?: string[];
+          verb?: string;
+        };
+        Relationships: [];
+      };
       rendition_kinds: {
         Row: {
-          kind: string
-          label: string
-          media: string
-        }
+          kind: string;
+          label: string;
+          media: string;
+        };
         Insert: {
-          kind: string
-          label: string
-          media: string
-        }
+          kind: string;
+          label: string;
+          media: string;
+        };
         Update: {
-          kind?: string
-          label?: string
-          media?: string
-        }
-        Relationships: []
-      }
+          kind?: string;
+          label?: string;
+          media?: string;
+        };
+        Relationships: [];
+      };
       rendition_regen_queue: {
         Row: {
-          done_at: string | null
-          enqueued_at: string
-          id: number
-          reason: string
-          rendition_id: string
-        }
+          done_at: string | null;
+          enqueued_at: string;
+          id: number;
+          reason: string;
+          rendition_id: string;
+        };
         Insert: {
-          done_at?: string | null
-          enqueued_at?: string
-          id?: number
-          reason: string
-          rendition_id: string
-        }
+          done_at?: string | null;
+          enqueued_at?: string;
+          id?: number;
+          reason: string;
+          rendition_id: string;
+        };
         Update: {
-          done_at?: string | null
-          enqueued_at?: string
-          id?: number
-          reason?: string
-          rendition_id?: string
-        }
+          done_at?: string | null;
+          enqueued_at?: string;
+          id?: number;
+          reason?: string;
+          rendition_id?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "rendition_regen_queue_rendition_id_fkey"
-            columns: ["rendition_id"]
-            isOneToOne: false
-            referencedRelation: "renditions"
-            referencedColumns: ["id"]
+            foreignKeyName: "rendition_regen_queue_rendition_id_fkey";
+            columns: ["rendition_id"];
+            isOneToOne: false;
+            referencedRelation: "renditions";
+            referencedColumns: ["id"];
           },
-        ]
-      }
+        ];
+      };
       renditions: {
         Row: {
-          body: Json | null
-          citations: Json
-          delete_after: string | null
-          deleted_at: string | null
-          expires_at: string
-          generated_at: string
-          generated_from: Json
-          generator: Json
-          human_ref: string | null
-          id: string
-          kind: string
-          marker: string
-          permission_context: Json
-          request: Json
-          sources_hash: string | null
-          stale_at: string | null
-          stale_reason: string | null
-          state: string
-          storage_path: string | null
-        }
+          body: Json | null;
+          citations: Json;
+          delete_after: string | null;
+          deleted_at: string | null;
+          expires_at: string;
+          generated_at: string;
+          generated_from: Json;
+          generator: Json;
+          human_ref: string | null;
+          id: string;
+          kind: string;
+          marker: string;
+          permission_context: Json;
+          request: Json;
+          sources_hash: string | null;
+          stale_at: string | null;
+          stale_reason: string | null;
+          state: string;
+          storage_path: string | null;
+        };
         Insert: {
-          body?: Json | null
-          citations: Json
-          delete_after?: string | null
-          deleted_at?: string | null
-          expires_at: string
-          generated_at?: string
-          generated_from: Json
-          generator: Json
-          human_ref?: string | null
-          id: string
-          kind: string
-          marker?: string
-          permission_context: Json
-          request?: Json
-          sources_hash?: string | null
-          stale_at?: string | null
-          stale_reason?: string | null
-          state?: string
-          storage_path?: string | null
-        }
+          body?: Json | null;
+          citations: Json;
+          delete_after?: string | null;
+          deleted_at?: string | null;
+          expires_at: string;
+          generated_at?: string;
+          generated_from: Json;
+          generator: Json;
+          human_ref?: string | null;
+          id: string;
+          kind: string;
+          marker?: string;
+          permission_context: Json;
+          request?: Json;
+          sources_hash?: string | null;
+          stale_at?: string | null;
+          stale_reason?: string | null;
+          state?: string;
+          storage_path?: string | null;
+        };
         Update: {
-          body?: Json | null
-          citations?: Json
-          delete_after?: string | null
-          deleted_at?: string | null
-          expires_at?: string
-          generated_at?: string
-          generated_from?: Json
-          generator?: Json
-          human_ref?: string | null
-          id?: string
-          kind?: string
-          marker?: string
-          permission_context?: Json
-          request?: Json
-          sources_hash?: string | null
-          stale_at?: string | null
-          stale_reason?: string | null
-          state?: string
-          storage_path?: string | null
-        }
-        Relationships: []
-      }
+          body?: Json | null;
+          citations?: Json;
+          delete_after?: string | null;
+          deleted_at?: string | null;
+          expires_at?: string;
+          generated_at?: string;
+          generated_from?: Json;
+          generator?: Json;
+          human_ref?: string | null;
+          id?: string;
+          kind?: string;
+          marker?: string;
+          permission_context?: Json;
+          request?: Json;
+          sources_hash?: string | null;
+          stale_at?: string | null;
+          stale_reason?: string | null;
+          state?: string;
+          storage_path?: string | null;
+        };
+        Relationships: [];
+      };
       reuse_checks: {
         Row: {
-          behavior_statement_id: string | null
-          checked_at: string
-          checked_by: Json
-          decision: string
-          id: string
-          intent_shape: Json
-          query_text: string
-          rationale: string
-          results: Json
-        }
+          behavior_statement_id: string | null;
+          checked_at: string;
+          checked_by: Json;
+          decision: string;
+          id: string;
+          intent_shape: Json;
+          query_text: string;
+          rationale: string;
+          results: Json;
+        };
         Insert: {
-          behavior_statement_id?: string | null
-          checked_at?: string
-          checked_by: Json
-          decision: string
-          id: string
-          intent_shape: Json
-          query_text: string
-          rationale: string
-          results: Json
-        }
+          behavior_statement_id?: string | null;
+          checked_at?: string;
+          checked_by: Json;
+          decision: string;
+          id: string;
+          intent_shape: Json;
+          query_text: string;
+          rationale: string;
+          results: Json;
+        };
         Update: {
-          behavior_statement_id?: string | null
-          checked_at?: string
-          checked_by?: Json
-          decision?: string
-          id?: string
-          intent_shape?: Json
-          query_text?: string
-          rationale?: string
-          results?: Json
-        }
+          behavior_statement_id?: string | null;
+          checked_at?: string;
+          checked_by?: Json;
+          decision?: string;
+          id?: string;
+          intent_shape?: Json;
+          query_text?: string;
+          rationale?: string;
+          results?: Json;
+        };
         Relationships: [
           {
-            foreignKeyName: "reuse_checks_behavior_statement_id_fkey"
-            columns: ["behavior_statement_id"]
-            isOneToOne: false
-            referencedRelation: "objects"
-            referencedColumns: ["id"]
+            foreignKeyName: "reuse_checks_behavior_statement_id_fkey";
+            columns: ["behavior_statement_id"];
+            isOneToOne: false;
+            referencedRelation: "objects";
+            referencedColumns: ["id"];
           },
-        ]
-      }
+        ];
+      };
       risk_assessments: {
         Row: {
-          computed_at: string
-          computed_by: string
-          computed_tier: Database["public"]["Enums"]["risk_tier"]
-          id: string
-          inputs: Json
-          object_id: string
-          override_rationale: string | null
-          override_tier: Database["public"]["Enums"]["risk_tier"] | null
-          reasons: Json
-          treatment: string
-        }
+          computed_at: string;
+          computed_by: string;
+          computed_tier: Database["public"]["Enums"]["risk_tier"];
+          id: string;
+          inputs: Json;
+          object_id: string;
+          override_rationale: string | null;
+          override_tier: Database["public"]["Enums"]["risk_tier"] | null;
+          reasons: Json;
+          treatment: string;
+        };
         Insert: {
-          computed_at?: string
-          computed_by: string
-          computed_tier: Database["public"]["Enums"]["risk_tier"]
-          id?: string
-          inputs: Json
-          object_id: string
-          override_rationale?: string | null
-          override_tier?: Database["public"]["Enums"]["risk_tier"] | null
-          reasons?: Json
-          treatment: string
-        }
+          computed_at?: string;
+          computed_by: string;
+          computed_tier: Database["public"]["Enums"]["risk_tier"];
+          id?: string;
+          inputs: Json;
+          object_id: string;
+          override_rationale?: string | null;
+          override_tier?: Database["public"]["Enums"]["risk_tier"] | null;
+          reasons?: Json;
+          treatment: string;
+        };
         Update: {
-          computed_at?: string
-          computed_by?: string
-          computed_tier?: Database["public"]["Enums"]["risk_tier"]
-          id?: string
-          inputs?: Json
-          object_id?: string
-          override_rationale?: string | null
-          override_tier?: Database["public"]["Enums"]["risk_tier"] | null
-          reasons?: Json
-          treatment?: string
-        }
+          computed_at?: string;
+          computed_by?: string;
+          computed_tier?: Database["public"]["Enums"]["risk_tier"];
+          id?: string;
+          inputs?: Json;
+          object_id?: string;
+          override_rationale?: string | null;
+          override_tier?: Database["public"]["Enums"]["risk_tier"] | null;
+          reasons?: Json;
+          treatment?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "risk_assessments_object_id_fkey"
-            columns: ["object_id"]
-            isOneToOne: false
-            referencedRelation: "objects"
-            referencedColumns: ["id"]
+            foreignKeyName: "risk_assessments_object_id_fkey";
+            columns: ["object_id"];
+            isOneToOne: false;
+            referencedRelation: "objects";
+            referencedColumns: ["id"];
           },
-        ]
-      }
+        ];
+      };
       session_events: {
         Row: {
-          id: number
-          kind: string
-          payload: Json
-          ref: string | null
-          session_id: string
-          speaker_id: string | null
-          t_offset_ms: number
-        }
+          id: number;
+          kind: string;
+          payload: Json;
+          ref: string | null;
+          session_id: string;
+          speaker_id: string | null;
+          t_offset_ms: number;
+        };
         Insert: {
-          id?: number
-          kind: string
-          payload: Json
-          ref?: string | null
-          session_id: string
-          speaker_id?: string | null
-          t_offset_ms: number
-        }
+          id?: number;
+          kind: string;
+          payload: Json;
+          ref?: string | null;
+          session_id: string;
+          speaker_id?: string | null;
+          t_offset_ms: number;
+        };
         Update: {
-          id?: number
-          kind?: string
-          payload?: Json
-          ref?: string | null
-          session_id?: string
-          speaker_id?: string | null
-          t_offset_ms?: number
-        }
-        Relationships: []
-      }
+          id?: number;
+          kind?: string;
+          payload?: Json;
+          ref?: string | null;
+          session_id?: string;
+          speaker_id?: string | null;
+          t_offset_ms?: number;
+        };
+        Relationships: [];
+      };
       signal_intake_captures: {
         Row: {
-          consent_confirmed: boolean
-          created_at: string
-          id: string
-          modalities: Json
-          owner_id: string
-          purpose: string
-          resolved_at: string | null
-          status: string
-        }
+          consent_confirmed: boolean;
+          created_at: string;
+          id: string;
+          modalities: Json;
+          owner_id: string;
+          purpose: string;
+          resolved_at: string | null;
+          status: string;
+        };
         Insert: {
-          consent_confirmed: boolean
-          created_at?: string
-          id?: string
-          modalities: Json
-          owner_id: string
-          purpose: string
-          resolved_at?: string | null
-          status?: string
-        }
+          consent_confirmed: boolean;
+          created_at?: string;
+          id?: string;
+          modalities: Json;
+          owner_id: string;
+          purpose: string;
+          resolved_at?: string | null;
+          status?: string;
+        };
         Update: {
-          consent_confirmed?: boolean
-          created_at?: string
-          id?: string
-          modalities?: Json
-          owner_id?: string
-          purpose?: string
-          resolved_at?: string | null
-          status?: string
-        }
-        Relationships: []
-      }
+          consent_confirmed?: boolean;
+          created_at?: string;
+          id?: string;
+          modalities?: Json;
+          owner_id?: string;
+          purpose?: string;
+          resolved_at?: string | null;
+          status?: string;
+        };
+        Relationships: [];
+      };
       signal_intake_events: {
         Row: {
-          created_at: string
-          data_classification: Database["public"]["Enums"]["data_classification"]
-          duplicate_of: string | null
-          extraction_method: string
-          id: string
-          model_route: string | null
-          origin: Database["public"]["Enums"]["signal_origin"]
-          raw_input_ref: string | null
-          signal_id: string | null
-          source_ref: string | null
-          status: Database["public"]["Enums"]["intake_status"]
-          submitted_by: Json
-        }
+          created_at: string;
+          data_classification: Database["public"]["Enums"]["data_classification"];
+          duplicate_of: string | null;
+          extraction_method: string;
+          id: string;
+          model_route: string | null;
+          origin: Database["public"]["Enums"]["signal_origin"];
+          raw_input_ref: string | null;
+          signal_id: string | null;
+          source_ref: string | null;
+          status: Database["public"]["Enums"]["intake_status"];
+          submitted_by: Json;
+        };
         Insert: {
-          created_at?: string
-          data_classification?: Database["public"]["Enums"]["data_classification"]
-          duplicate_of?: string | null
-          extraction_method: string
-          id?: string
-          model_route?: string | null
-          origin: Database["public"]["Enums"]["signal_origin"]
-          raw_input_ref?: string | null
-          signal_id?: string | null
-          source_ref?: string | null
-          status?: Database["public"]["Enums"]["intake_status"]
-          submitted_by: Json
-        }
+          created_at?: string;
+          data_classification?: Database["public"]["Enums"]["data_classification"];
+          duplicate_of?: string | null;
+          extraction_method: string;
+          id?: string;
+          model_route?: string | null;
+          origin: Database["public"]["Enums"]["signal_origin"];
+          raw_input_ref?: string | null;
+          signal_id?: string | null;
+          source_ref?: string | null;
+          status?: Database["public"]["Enums"]["intake_status"];
+          submitted_by: Json;
+        };
         Update: {
-          created_at?: string
-          data_classification?: Database["public"]["Enums"]["data_classification"]
-          duplicate_of?: string | null
-          extraction_method?: string
-          id?: string
-          model_route?: string | null
-          origin?: Database["public"]["Enums"]["signal_origin"]
-          raw_input_ref?: string | null
-          signal_id?: string | null
-          source_ref?: string | null
-          status?: Database["public"]["Enums"]["intake_status"]
-          submitted_by?: Json
-        }
+          created_at?: string;
+          data_classification?: Database["public"]["Enums"]["data_classification"];
+          duplicate_of?: string | null;
+          extraction_method?: string;
+          id?: string;
+          model_route?: string | null;
+          origin?: Database["public"]["Enums"]["signal_origin"];
+          raw_input_ref?: string | null;
+          signal_id?: string | null;
+          source_ref?: string | null;
+          status?: Database["public"]["Enums"]["intake_status"];
+          submitted_by?: Json;
+        };
         Relationships: [
           {
-            foreignKeyName: "signal_intake_events_duplicate_of_fkey"
-            columns: ["duplicate_of"]
-            isOneToOne: false
-            referencedRelation: "objects"
-            referencedColumns: ["id"]
+            foreignKeyName: "signal_intake_events_duplicate_of_fkey";
+            columns: ["duplicate_of"];
+            isOneToOne: false;
+            referencedRelation: "objects";
+            referencedColumns: ["id"];
           },
           {
-            foreignKeyName: "signal_intake_events_signal_id_fkey"
-            columns: ["signal_id"]
-            isOneToOne: false
-            referencedRelation: "objects"
-            referencedColumns: ["id"]
+            foreignKeyName: "signal_intake_events_signal_id_fkey";
+            columns: ["signal_id"];
+            isOneToOne: false;
+            referencedRelation: "objects";
+            referencedColumns: ["id"];
           },
-        ]
-      }
+        ];
+      };
       surface_follows: {
         Row: {
-          created_at: string
-          kind: string
-          user_id: string
-          value: string
-        }
+          created_at: string;
+          kind: string;
+          user_id: string;
+          value: string;
+        };
         Insert: {
-          created_at?: string
-          kind: string
-          user_id: string
-          value: string
-        }
+          created_at?: string;
+          kind: string;
+          user_id: string;
+          value: string;
+        };
         Update: {
-          created_at?: string
-          kind?: string
-          user_id?: string
-          value?: string
-        }
-        Relationships: []
-      }
+          created_at?: string;
+          kind?: string;
+          user_id?: string;
+          value?: string;
+        };
+        Relationships: [];
+      };
       tool_contracts: {
         Row: {
-          contract: Json
-          name: string
-          version: string
-        }
+          contract: Json;
+          name: string;
+          version: string;
+        };
         Insert: {
-          contract: Json
-          name: string
-          version: string
-        }
+          contract: Json;
+          name: string;
+          version: string;
+        };
         Update: {
-          contract?: Json
-          name?: string
-          version?: string
-        }
-        Relationships: []
-      }
+          contract?: Json;
+          name?: string;
+          version?: string;
+        };
+        Relationships: [];
+      };
       usage_sessions: {
         Row: {
-          actor_id: string
-          ended_at: string | null
-          id: string
-          mutating_actions: number
-          reads: number
-          started_at: string
-        }
+          actor_id: string;
+          ended_at: string | null;
+          id: string;
+          mutating_actions: number;
+          reads: number;
+          started_at: string;
+        };
         Insert: {
-          actor_id: string
-          ended_at?: string | null
-          id: string
-          mutating_actions?: number
-          reads?: number
-          started_at: string
-        }
+          actor_id: string;
+          ended_at?: string | null;
+          id: string;
+          mutating_actions?: number;
+          reads?: number;
+          started_at: string;
+        };
         Update: {
-          actor_id?: string
-          ended_at?: string | null
-          id?: string
-          mutating_actions?: number
-          reads?: number
-          started_at?: string
-        }
-        Relationships: []
-      }
+          actor_id?: string;
+          ended_at?: string | null;
+          id?: string;
+          mutating_actions?: number;
+          reads?: number;
+          started_at?: string;
+        };
+        Relationships: [];
+      };
       user_roles: {
         Row: {
-          role: Database["public"]["Enums"]["app_role"]
-          user_id: string
-        }
+          role: Database["public"]["Enums"]["app_role"];
+          user_id: string;
+        };
         Insert: {
-          role: Database["public"]["Enums"]["app_role"]
-          user_id: string
-        }
+          role: Database["public"]["Enums"]["app_role"];
+          user_id: string;
+        };
         Update: {
-          role?: Database["public"]["Enums"]["app_role"]
-          user_id?: string
-        }
-        Relationships: []
-      }
-    }
+          role?: Database["public"]["Enums"]["app_role"];
+          user_id?: string;
+        };
+        Relationships: [];
+      };
+    };
     Views: {
-      [_ in never]: never
-    }
+      [_ in never]: never;
+    };
     Functions: {
-      _assert_actor: { Args: { _actor: Json }; Returns: undefined }
+      _assert_actor: { Args: { _actor: Json }; Returns: undefined };
       _assert_can_write: {
         Args: {
-          _actor: Json
-          _o: Database["public"]["Tables"]["objects"]["Row"]
-        }
-        Returns: undefined
-      }
+          _actor: Json;
+          _o: Database["public"]["Tables"]["objects"]["Row"];
+        };
+        Returns: undefined;
+      };
       _assert_independent_judgment: {
-        Args: { p_actor: Json; p_capability: string; p_judgment: string }
-        Returns: undefined
-      }
+        Args: { p_actor: Json; p_capability: string; p_judgment: string };
+        Returns: undefined;
+      };
       _audit_current_evidence: {
-        Args: { o: Database["public"]["Tables"]["objects"]["Row"] }
-        Returns: boolean
-      }
+        Args: { o: Database["public"]["Tables"]["objects"]["Row"] };
+        Returns: boolean;
+      };
       _audit_tier4_judgment: {
-        Args: { p_actor: Json; p_capability: string; p_judgment: string }
-        Returns: undefined
-      }
+        Args: { p_actor: Json; p_capability: string; p_judgment: string };
+        Returns: undefined;
+      };
       _authority_rank: {
-        Args: { _l: Database["public"]["Enums"]["authority_level"] }
-        Returns: number
-      }
+        Args: { _l: Database["public"]["Enums"]["authority_level"] };
+        Returns: number;
+      };
       _can_read_as: {
         Args: {
-          _cls: Database["public"]["Enums"]["data_classification"]
-          _perm: Json
-          _uid: string
-        }
-        Returns: boolean
-      }
-      _canon_challenge_agent: { Args: { p_change: string }; Returns: number }
+          _cls: Database["public"]["Enums"]["data_classification"];
+          _perm: Json;
+          _uid: string;
+        };
+        Returns: boolean;
+      };
+      _canon_challenge_agent: { Args: { p_change: string }; Returns: number };
       _canon_ledger: {
         Args: {
-          o: Database["public"]["Tables"]["objects"]["Row"]
-          p_action: string
-          p_actor: Json
-          p_payload: Json
-        }
-        Returns: undefined
-      }
-      _capability_gaps: { Args: { _body: Json }; Returns: string[] }
-      _chain_obj: { Args: { _ids: string[] }; Returns: Json }
-      _cite: { Args: { _objs: Json }; Returns: Json }
-      _classify_iteration: { Args: { d: Json }; Returns: string }
+          o: Database["public"]["Tables"]["objects"]["Row"];
+          p_action: string;
+          p_actor: Json;
+          p_payload: Json;
+        };
+        Returns: undefined;
+      };
+      _capability_gaps: { Args: { _body: Json }; Returns: string[] };
+      _chain_obj: { Args: { _ids: string[] }; Returns: Json };
+      _cite: { Args: { _objs: Json }; Returns: Json };
+      _classify_iteration: { Args: { d: Json }; Returns: string };
       _demotion_target: {
         Args: {
-          _from: Database["public"]["Enums"]["authority_level"]
-          _trigger: string
-        }
-        Returns: Database["public"]["Enums"]["authority_level"]
-      }
+          _from: Database["public"]["Enums"]["authority_level"];
+          _trigger: string;
+        };
+        Returns: Database["public"]["Enums"]["authority_level"];
+      };
       _edge_signature_ok: {
-        Args: { _from: string; _to: string; _verb: string }
-        Returns: boolean
-      }
-      _expand_type_group: { Args: { _name: string }; Returns: string[] }
-      _explain: { Args: { p_chain: Json; p_question: string }; Returns: Json }
+        Args: { _from: string; _to: string; _verb: string };
+        Returns: boolean;
+      };
+      _expand_type_group: { Args: { _name: string }; Returns: string[] };
+      _explain: { Args: { p_chain: Json; p_question: string }; Returns: Json };
       _framing_confirmer_ok: {
-        Args: { _actor: string; _session: string }
-        Returns: boolean
-      }
-      _fwd: { Args: { _ids: string[]; _verb: string }; Returns: string[] }
+        Args: { _actor: string; _session: string };
+        Returns: boolean;
+      };
+      _fwd: { Args: { _ids: string[]; _verb: string }; Returns: string[] };
       _fx_payload: {
-        Args: { _body: Json; _title: string; _type: string }
-        Returns: Json
-      }
-      _guardrail_set_version: { Args: never; Returns: string }
-      _is_current_member: { Args: { _u: string }; Returns: boolean }
+        Args: { _body: Json; _title: string; _type: string };
+        Returns: Json;
+      };
+      _guardrail_set_version: { Args: never; Returns: string };
+      _is_current_member: { Args: { _u: string }; Returns: boolean };
       _ledger_write: {
         Args: {
-          _action: string
-          _actor: Json
-          _chain: string
-          _extra: Json
-          _o: Database["public"]["Tables"]["objects"]["Row"]
-        }
-        Returns: undefined
-      }
-      _list: { Args: { _q: string; _rows: Json }; Returns: Json }
+          _action: string;
+          _actor: Json;
+          _chain: string;
+          _extra: Json;
+          _o: Database["public"]["Tables"]["objects"]["Row"];
+        };
+        Returns: undefined;
+      };
+      _list: { Args: { _q: string; _rows: Json }; Returns: Json };
       _load_for_write: {
-        Args: { p_actor: Json; p_expected_version: number; p_id: string }
+        Args: { p_actor: Json; p_expected_version: number; p_id: string };
         Returns: {
-          authority_level: Database["public"]["Enums"]["authority_level"]
-          body: Json
-          builder_id: string | null
-          citations: Json
-          co_creator_id: string | null
-          confidence_bundle: Json | null
-          consequence_class: Database["public"]["Enums"]["consequence_class"]
-          content_hash: string
-          created_at: string
-          created_by: Json
-          data_classification: Database["public"]["Enums"]["data_classification"]
-          derived_from: string[]
-          effective_from: string
-          evidence_refs: string[]
-          expiration_condition: Json
-          expires_at: string | null
-          human_ref: string
-          id: string
-          is_tombstone: boolean
-          lifecycle_state: string
-          machine_description: string
-          open_questions: string[]
-          owner_id: string
-          permission: Json
-          permitted_uses: string[]
-          provenance_chain_id: string
-          retired_at: string | null
-          retirement_path: Json
-          retirement_reason: string | null
-          review_date: string
-          risk_tier: Database["public"]["Enums"]["risk_tier"]
-          schema_version: string
-          search: unknown
-          simulated: boolean | null
-          statement: string
-          steward_id: string | null
-          superseded_by: string[]
-          supersedes: string[]
-          title: string
-          type: string
-          updated_at: string
-          updated_by: Json
-          version: number
-        }
+          authority_level: Database["public"]["Enums"]["authority_level"];
+          body: Json;
+          builder_id: string | null;
+          citations: Json;
+          co_creator_id: string | null;
+          confidence_bundle: Json | null;
+          consequence_class: Database["public"]["Enums"]["consequence_class"];
+          content_hash: string;
+          created_at: string;
+          created_by: Json;
+          data_classification: Database["public"]["Enums"]["data_classification"];
+          derived_from: string[];
+          effective_from: string;
+          evidence_refs: string[];
+          expiration_condition: Json;
+          expires_at: string | null;
+          human_ref: string;
+          id: string;
+          is_tombstone: boolean;
+          lifecycle_state: string;
+          machine_description: string;
+          open_questions: string[];
+          owner_id: string;
+          permission: Json;
+          permitted_uses: string[];
+          provenance_chain_id: string;
+          retired_at: string | null;
+          retirement_path: Json;
+          retirement_reason: string | null;
+          review_date: string;
+          risk_tier: Database["public"]["Enums"]["risk_tier"];
+          schema_version: string;
+          search: unknown;
+          simulated: boolean | null;
+          statement: string;
+          steward_id: string | null;
+          superseded_by: string[];
+          supersedes: string[];
+          title: string;
+          type: string;
+          updated_at: string;
+          updated_by: Json;
+          version: number;
+        };
         SetofOptions: {
-          from: "*"
-          to: "objects"
-          isOneToOne: true
-          isSetofReturn: false
-        }
-      }
+          from: "*";
+          to: "objects";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       _max_classification: {
-        Args: { _ids: string[] }
-        Returns: Database["public"]["Enums"]["data_classification"]
-      }
+        Args: { _ids: string[] };
+        Returns: Database["public"]["Enums"]["data_classification"];
+      };
       _mcp_ledger: {
-        Args: { _action: string; _actor: Json; _object: string; _payload: Json }
-        Returns: number
-      }
+        Args: { _action: string; _actor: Json; _object: string; _payload: Json };
+        Returns: number;
+      };
       _of_type: {
-        Args: { _ids: string[]; _types: string[] }
-        Returns: string[]
-      }
+        Args: { _ids: string[]; _types: string[] };
+        Returns: string[];
+      };
       _p4_cap_body: {
-        Args: { _ins: string[]; _outs: string[]; _title: string }
-        Returns: Json
-      }
-      _p7_discrepancies: { Args: { p: Json }; Returns: Json }
+        Args: { _ins: string[]; _outs: string[]; _title: string };
+        Returns: Json;
+      };
+      _p7_discrepancies: { Args: { p: Json }; Returns: Json };
       _p7_envelope: {
         Args: {
-          p_body: Json
-          p_owner: string
-          p_rationale: string
-          p_statement: string
-          p_title: string
-          p_type: string
-        }
-        Returns: Json
-      }
-      _phase10_register: { Args: never; Returns: undefined }
+          p_body: Json;
+          p_owner: string;
+          p_rationale: string;
+          p_statement: string;
+          p_title: string;
+          p_type: string;
+        };
+        Returns: Json;
+      };
+      _phase10_register: { Args: never; Returns: undefined };
       _prod_caps: {
-        Args: never
+        Args: never;
         Returns: {
-          authority_level: Database["public"]["Enums"]["authority_level"]
-          body: Json
-          builder_id: string | null
-          citations: Json
-          co_creator_id: string | null
-          confidence_bundle: Json | null
-          consequence_class: Database["public"]["Enums"]["consequence_class"]
-          content_hash: string
-          created_at: string
-          created_by: Json
-          data_classification: Database["public"]["Enums"]["data_classification"]
-          derived_from: string[]
-          effective_from: string
-          evidence_refs: string[]
-          expiration_condition: Json
-          expires_at: string | null
-          human_ref: string
-          id: string
-          is_tombstone: boolean
-          lifecycle_state: string
-          machine_description: string
-          open_questions: string[]
-          owner_id: string
-          permission: Json
-          permitted_uses: string[]
-          provenance_chain_id: string
-          retired_at: string | null
-          retirement_path: Json
-          retirement_reason: string | null
-          review_date: string
-          risk_tier: Database["public"]["Enums"]["risk_tier"]
-          schema_version: string
-          search: unknown
-          simulated: boolean | null
-          statement: string
-          steward_id: string | null
-          superseded_by: string[]
-          supersedes: string[]
-          title: string
-          type: string
-          updated_at: string
-          updated_by: Json
-          version: number
-        }[]
+          authority_level: Database["public"]["Enums"]["authority_level"];
+          body: Json;
+          builder_id: string | null;
+          citations: Json;
+          co_creator_id: string | null;
+          confidence_bundle: Json | null;
+          consequence_class: Database["public"]["Enums"]["consequence_class"];
+          content_hash: string;
+          created_at: string;
+          created_by: Json;
+          data_classification: Database["public"]["Enums"]["data_classification"];
+          derived_from: string[];
+          effective_from: string;
+          evidence_refs: string[];
+          expiration_condition: Json;
+          expires_at: string | null;
+          human_ref: string;
+          id: string;
+          is_tombstone: boolean;
+          lifecycle_state: string;
+          machine_description: string;
+          open_questions: string[];
+          owner_id: string;
+          permission: Json;
+          permitted_uses: string[];
+          provenance_chain_id: string;
+          retired_at: string | null;
+          retirement_path: Json;
+          retirement_reason: string | null;
+          review_date: string;
+          risk_tier: Database["public"]["Enums"]["risk_tier"];
+          schema_version: string;
+          search: unknown;
+          simulated: boolean | null;
+          statement: string;
+          steward_id: string | null;
+          superseded_by: string[];
+          supersedes: string[];
+          title: string;
+          type: string;
+          updated_at: string;
+          updated_by: Json;
+          version: number;
+        }[];
         SetofOptions: {
-          from: "*"
-          to: "objects"
-          isOneToOne: false
-          isSetofReturn: true
-        }
-      }
-      _prohibited_inference: { Args: { t: string }; Returns: Json }
-      _prohibited_inference_base: { Args: { t: string }; Returns: Json }
-      _rejected_measure: { Args: { t: string }; Returns: boolean }
+          from: "*";
+          to: "objects";
+          isOneToOne: false;
+          isSetofReturn: true;
+        };
+      };
+      _prohibited_inference: { Args: { t: string }; Returns: Json };
+      _prohibited_inference_base: { Args: { t: string }; Returns: Json };
+      _rejected_measure: { Args: { t: string }; Returns: boolean };
       _rendition_ledger: {
-        Args: { _action: string; _actor: Json; _mode: string; _payload: Json }
-        Returns: number
-      }
-      _rev: { Args: { _ids: string[]; _verb: string }; Returns: string[] }
-      _selftest_body: { Args: { _refs: Json; _type: string }; Returns: Json }
+        Args: { _action: string; _actor: Json; _mode: string; _payload: Json };
+        Returns: number;
+      };
+      _rev: { Args: { _ids: string[]; _verb: string }; Returns: string[] };
+      _selftest_body: { Args: { _refs: Json; _type: string }; Returns: Json };
       _selftest_next_state: {
-        Args: { _family: string; _from: string }
-        Returns: string
-      }
-      _selftest_refs: { Args: { _actor: Json }; Returns: Json }
+        Args: { _family: string; _from: string };
+        Returns: string;
+      };
+      _selftest_refs: { Args: { _actor: Json }; Returns: Json };
       _sim_build_digest: {
         Args: {
-          _compiled_hash: string
-          _gsv: string
-          _model_version: string
-          _platform: string
-          _template_version: string
-        }
-        Returns: string
-      }
+          _compiled_hash: string;
+          _gsv: string;
+          _model_version: string;
+          _platform: string;
+          _template_version: string;
+        };
+        Returns: string;
+      };
       _thread_apply: {
         Args: {
-          _action: string
-          _extra: Json
-          n: Database["public"]["Tables"]["objects"]["Row"]
-          p_actor: Json
-        }
+          _action: string;
+          _extra: Json;
+          n: Database["public"]["Tables"]["objects"]["Row"];
+          p_actor: Json;
+        };
         Returns: {
-          authority_level: Database["public"]["Enums"]["authority_level"]
-          body: Json
-          builder_id: string | null
-          citations: Json
-          co_creator_id: string | null
-          confidence_bundle: Json | null
-          consequence_class: Database["public"]["Enums"]["consequence_class"]
-          content_hash: string
-          created_at: string
-          created_by: Json
-          data_classification: Database["public"]["Enums"]["data_classification"]
-          derived_from: string[]
-          effective_from: string
-          evidence_refs: string[]
-          expiration_condition: Json
-          expires_at: string | null
-          human_ref: string
-          id: string
-          is_tombstone: boolean
-          lifecycle_state: string
-          machine_description: string
-          open_questions: string[]
-          owner_id: string
-          permission: Json
-          permitted_uses: string[]
-          provenance_chain_id: string
-          retired_at: string | null
-          retirement_path: Json
-          retirement_reason: string | null
-          review_date: string
-          risk_tier: Database["public"]["Enums"]["risk_tier"]
-          schema_version: string
-          search: unknown
-          simulated: boolean | null
-          statement: string
-          steward_id: string | null
-          superseded_by: string[]
-          supersedes: string[]
-          title: string
-          type: string
-          updated_at: string
-          updated_by: Json
-          version: number
-        }
+          authority_level: Database["public"]["Enums"]["authority_level"];
+          body: Json;
+          builder_id: string | null;
+          citations: Json;
+          co_creator_id: string | null;
+          confidence_bundle: Json | null;
+          consequence_class: Database["public"]["Enums"]["consequence_class"];
+          content_hash: string;
+          created_at: string;
+          created_by: Json;
+          data_classification: Database["public"]["Enums"]["data_classification"];
+          derived_from: string[];
+          effective_from: string;
+          evidence_refs: string[];
+          expiration_condition: Json;
+          expires_at: string | null;
+          human_ref: string;
+          id: string;
+          is_tombstone: boolean;
+          lifecycle_state: string;
+          machine_description: string;
+          open_questions: string[];
+          owner_id: string;
+          permission: Json;
+          permitted_uses: string[];
+          provenance_chain_id: string;
+          retired_at: string | null;
+          retirement_path: Json;
+          retirement_reason: string | null;
+          review_date: string;
+          risk_tier: Database["public"]["Enums"]["risk_tier"];
+          schema_version: string;
+          search: unknown;
+          simulated: boolean | null;
+          statement: string;
+          steward_id: string | null;
+          superseded_by: string[];
+          supersedes: string[];
+          title: string;
+          type: string;
+          updated_at: string;
+          updated_by: Json;
+          version: number;
+        };
         SetofOptions: {
-          from: "*"
-          to: "objects"
-          isOneToOne: true
-          isSetofReturn: false
-        }
-      }
-      _thread_phase6_selftest_v1: { Args: never; Returns: Json }
-      anti_wiki_action_ratio: { Args: { p_window?: string }; Returns: Json }
-      artifact_modality: { Args: { _kind: string }; Returns: string }
+          from: "*";
+          to: "objects";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
+      _thread_phase6_selftest_v1: { Args: never; Returns: Json };
+      anti_wiki_action_ratio: { Args: { p_window?: string }; Returns: Json };
+      artifact_modality: { Args: { _kind: string }; Returns: string };
       assert_transition: {
-        Args: { _from: string; _to: string; _type: string }
-        Returns: undefined
-      }
-      aw16_state_ownership_scan: { Args: never; Returns: Json }
-      can_reach_creation: { Args: { p_behavior: string }; Returns: boolean }
+        Args: { _from: string; _to: string; _type: string };
+        Returns: undefined;
+      };
+      aw16_state_ownership_scan: { Args: never; Returns: Json };
+      can_reach_creation: { Args: { p_behavior: string }; Returns: boolean };
       can_read_object: {
         Args: {
-          _cls: Database["public"]["Enums"]["data_classification"]
-          _perm: Json
-        }
-        Returns: boolean
-      }
-      can_read_session: { Args: { _s: string }; Returns: boolean }
-      canon_drift_report: { Args: never; Returns: Json }
-      chain_completeness: { Args: { p_id: string }; Returns: Json }
+          _cls: Database["public"]["Enums"]["data_classification"];
+          _perm: Json;
+        };
+        Returns: boolean;
+      };
+      can_read_session: { Args: { _s: string }; Returns: boolean };
+      canon_drift_report: { Args: never; Returns: Json };
+      chain_completeness: { Args: { p_id: string }; Returns: Json };
       composition_effective_authority: {
-        Args: { p_id: string }
-        Returns: Database["public"]["Enums"]["authority_level"]
-      }
-      decision_ancestor: { Args: { p_behavior: string }; Returns: string }
+        Args: { p_id: string };
+        Returns: Database["public"]["Enums"]["authority_level"];
+      };
+      decision_ancestor: { Args: { p_behavior: string }; Returns: string };
       detection_candidates: {
-        Args: never
+        Args: never;
         Returns: {
-          detector_key: string
-          evidence: Json
-          object_id: string
-          severity: string
-        }[]
-      }
+          detector_key: string;
+          evidence: Json;
+          object_id: string;
+          severity: string;
+        }[];
+      };
       detection_catalogue: {
-        Args: never
+        Args: never;
         Returns: {
-          fact: string
-          family: string
-          key: string
-          remediation: string
-        }[]
-      }
-      evidence_chain: { Args: { p_id: string }; Returns: Json }
+          fact: string;
+          family: string;
+          key: string;
+          remediation: string;
+        }[];
+      };
+      evidence_chain: { Args: { p_id: string }; Returns: Json };
       explain_capability: {
-        Args: { p_id: string; p_question: string }
-        Returns: Json
-      }
-      explain_capability_all: { Args: { p_id: string }; Returns: Json }
+        Args: { p_id: string; p_question: string };
+        Returns: Json;
+      };
+      explain_capability_all: { Args: { p_id: string }; Returns: Json };
       fabric_search: {
         Args: {
-          p_domain: string
-          p_inputs: string[]
-          p_limit?: number
-          p_outcome: string
-          p_outputs: string[]
-        }
-        Returns: Json
-      }
+          p_domain: string;
+          p_inputs: string[];
+          p_limit?: number;
+          p_outcome: string;
+          p_outputs: string[];
+        };
+        Returns: Json;
+      };
       framing_related_objects: {
         Args: {
-          p_limit?: number
-          p_session: string
-          p_text: string
-          p_types: string[]
-        }
-        Returns: Json
-      }
+          p_limit?: number;
+          p_session: string;
+          p_text: string;
+          p_types: string[];
+        };
+        Returns: Json;
+      };
       get_intent_to_value_time: {
-        Args: { p_capability: string }
-        Returns: Json
-      }
+        Args: { p_capability: string };
+        Returns: Json;
+      };
       graph_closure: {
-        Args: { p_depth?: number; p_root: string }
-        Returns: Json
-      }
-      graph_contradictions: { Args: never; Returns: Json }
-      graph_cycles: { Args: { p_verbs?: string[] }; Returns: Json }
+        Args: { p_depth?: number; p_root: string };
+        Returns: Json;
+      };
+      graph_contradictions: { Args: never; Returns: Json };
+      graph_cycles: { Args: { p_verbs?: string[] }; Returns: Json };
       graph_edge_json: {
-        Args: { e: Database["public"]["Tables"]["edges"]["Row"] }
-        Returns: Json
-      }
+        Args: { e: Database["public"]["Tables"]["edges"]["Row"] };
+        Returns: Json;
+      };
       graph_nebula: {
         Args: {
-          p_cluster?: string
-          p_edge_budget?: number
-          p_node_budget?: number
-        }
-        Returns: Json
-      }
+          p_cluster?: string;
+          p_edge_budget?: number;
+          p_node_budget?: number;
+        };
+        Returns: Json;
+      };
       graph_neighbourhood: {
         Args: {
-          p_depth?: number
-          p_edge_budget?: number
-          p_root: string
-          p_verbs?: string[]
-        }
-        Returns: Json
-      }
+          p_depth?: number;
+          p_edge_budget?: number;
+          p_root: string;
+          p_verbs?: string[];
+        };
+        Returns: Json;
+      };
       graph_node_json: {
-        Args: { o: Database["public"]["Tables"]["objects"]["Row"] }
-        Returns: Json
-      }
-      graph_orphans: { Args: { p_limit?: number }; Returns: Json }
+        Args: { o: Database["public"]["Tables"]["objects"]["Row"] };
+        Returns: Json;
+      };
+      graph_orphans: { Args: { p_limit?: number }; Returns: Json };
       graph_paths: {
         Args: {
-          p_from: string
-          p_limit?: number
-          p_max_depth?: number
-          p_to: string
-        }
-        Returns: Json
-      }
+          p_from: string;
+          p_limit?: number;
+          p_max_depth?: number;
+          p_to: string;
+        };
+        Returns: Json;
+      };
       graph_subgraph: {
         Args: {
-          p_edge_budget?: number
-          p_node_budget?: number
-          p_types: string[]
-          p_verbs: string[]
-        }
-        Returns: Json
-      }
+          p_edge_budget?: number;
+          p_node_budget?: number;
+          p_types: string[];
+          p_verbs: string[];
+        };
+        Returns: Json;
+      };
       has_role: {
-        Args: { _role: Database["public"]["Enums"]["app_role"]; _uid: string }
-        Returns: boolean
-      }
-      human_surface_context: { Args: { p_root?: string }; Returns: Json }
-      is_prohibited_lifecycle_state: { Args: { s: string }; Returns: boolean }
+        Args: { _role: Database["public"]["Enums"]["app_role"]; _uid: string };
+        Returns: boolean;
+      };
+      human_surface_context: { Args: { p_root?: string }; Returns: Json };
+      is_prohibited_lifecycle_state: { Args: { s: string }; Returns: boolean };
       least_auth: {
         Args: {
-          a: Database["public"]["Enums"]["authority_level"]
-          b: Database["public"]["Enums"]["authority_level"]
-        }
-        Returns: Database["public"]["Enums"]["authority_level"]
-      }
+          a: Database["public"]["Enums"]["authority_level"];
+          b: Database["public"]["Enums"]["authority_level"];
+        };
+        Returns: Database["public"]["Enums"]["authority_level"];
+      };
       ledger_row_hash: {
-        Args: { l: Database["public"]["Tables"]["ledger"]["Row"] }
-        Returns: string
-      }
-      next_human_ref: { Args: { _type: string }; Returns: string }
+        Args: { l: Database["public"]["Tables"]["ledger"]["Row"] };
+        Returns: string;
+      };
+      next_human_ref: { Args: { _type: string }; Returns: string };
       object_content_hash: {
-        Args: { o: Database["public"]["Tables"]["objects"]["Row"] }
-        Returns: string
-      }
-      phase10_action_ratios: { Args: never; Returns: Json }
+        Args: { o: Database["public"]["Tables"]["objects"]["Row"] };
+        Returns: string;
+      };
+      phase10_action_ratios: { Args: never; Returns: Json };
       phase10_elapsed_hours: {
-        Args: { p_end: string; p_start: string }
-        Returns: number
-      }
-      phase10_flow_intervals: { Args: never; Returns: Json }
-      phase10_measurements: { Args: never; Returns: Json }
-      phase10_measurements_extended: { Args: never; Returns: Json }
-      phase10_schema_check: { Args: never; Returns: Json }
-      phase12_assurance_checks: { Args: never; Returns: Json }
-      show_limit: { Args: never; Returns: number }
-      show_trgm: { Args: { "": string }; Returns: string[] }
+        Args: { p_end: string; p_start: string };
+        Returns: number;
+      };
+      phase10_flow_intervals: { Args: never; Returns: Json };
+      phase10_measurements: { Args: never; Returns: Json };
+      phase10_measurements_extended: { Args: never; Returns: Json };
+      phase10_schema_check: { Args: never; Returns: Json };
+      phase12_assurance_checks: { Args: never; Returns: Json };
+      show_limit: { Args: never; Returns: number };
+      show_trgm: { Args: { "": string }; Returns: string[] };
       thread_a2a_message: {
-        Args: { p: Json; p_from: string; p_to: string }
-        Returns: number
-      }
+        Args: { p: Json; p_from: string; p_to: string };
+        Returns: number;
+      };
       thread_add_canon_challenge: {
         Args: {
-          p_actor: Json
-          p_argument: string
-          p_change_id: string
-          p_evidence_refs?: Json
-        }
+          p_actor: Json;
+          p_argument: string;
+          p_change_id: string;
+          p_evidence_refs?: Json;
+        };
         Returns: {
-          argument: string
-          author: Json
-          change_id: string
-          created_at: string
-          evidence_refs: string[]
-          id: string
-          origin: string
-        }
+          argument: string;
+          author: Json;
+          change_id: string;
+          created_at: string;
+          evidence_refs: string[];
+          id: string;
+          origin: string;
+        };
         SetofOptions: {
-          from: "*"
-          to: "canon_challenges"
-          isOneToOne: true
-          isSetofReturn: false
-        }
-      }
+          from: "*";
+          to: "canon_challenges";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       thread_agent_begin_call: {
         Args: {
-          p_authority_required: Database["public"]["Enums"]["authority_level"]
-          p_confirmation: string
-          p_cost: number
-          p_high_consequence: boolean
-          p_input_hash: string
-          p_method?: string
-          p_token_hash: string
-          p_tool: string
-        }
-        Returns: Json
-      }
+          p_authority_required: Database["public"]["Enums"]["authority_level"];
+          p_confirmation: string;
+          p_cost: number;
+          p_high_consequence: boolean;
+          p_input_hash: string;
+          p_method?: string;
+          p_token_hash: string;
+          p_tool: string;
+        };
+        Returns: Json;
+      };
       thread_agent_end_call: {
         Args: {
-          p_call: string
-          p_error: string
-          p_origin_tags: Json
-          p_output_hash: string
-          p_status: string
-        }
-        Returns: number
-      }
+          p_call: string;
+          p_error: string;
+          p_origin_tags: Json;
+          p_output_hash: string;
+          p_status: string;
+        };
+        Returns: number;
+      };
       thread_assert_model_route: {
         Args: {
-          p_class: string
-          p_model: string
-          p_route: string
-          p_task: string
-        }
-        Returns: boolean
-      }
-      thread_audit_security_selftest: { Args: never; Returns: Json }
+          p_class: string;
+          p_model: string;
+          p_route: string;
+          p_task: string;
+        };
+        Returns: boolean;
+      };
+      thread_audit_security_selftest: { Args: never; Returns: Json };
       thread_authority_event: {
         Args: {
-          p_actor: Json
-          p_evidence?: string[]
-          p_id: string
-          p_trigger: string
-        }
-        Returns: Json
-      }
-      thread_authority_sweep: { Args: { p_actor: Json }; Returns: Json }
+          p_actor: Json;
+          p_evidence?: string[];
+          p_id: string;
+          p_trigger: string;
+        };
+        Returns: Json;
+      };
+      thread_authority_sweep: { Args: { p_actor: Json }; Returns: Json };
       thread_authorize_exposure: {
-        Args: { p: Json; p_actor: Json; p_capability: string }
-        Returns: Json
-      }
+        Args: { p: Json; p_actor: Json; p_capability: string };
+        Returns: Json;
+      };
       thread_bind_external_build: {
-        Args: { p_actor: Json; p_external: string; p_run: string }
-        Returns: Json
-      }
+        Args: { p_actor: Json; p_external: string; p_run: string };
+        Returns: Json;
+      };
       thread_compile_creation_prompt: {
-        Args: { p: Json; p_actor: Json }
+        Args: { p: Json; p_actor: Json };
         Returns: {
-          authority_level: Database["public"]["Enums"]["authority_level"]
-          body: Json
-          builder_id: string | null
-          citations: Json
-          co_creator_id: string | null
-          confidence_bundle: Json | null
-          consequence_class: Database["public"]["Enums"]["consequence_class"]
-          content_hash: string
-          created_at: string
-          created_by: Json
-          data_classification: Database["public"]["Enums"]["data_classification"]
-          derived_from: string[]
-          effective_from: string
-          evidence_refs: string[]
-          expiration_condition: Json
-          expires_at: string | null
-          human_ref: string
-          id: string
-          is_tombstone: boolean
-          lifecycle_state: string
-          machine_description: string
-          open_questions: string[]
-          owner_id: string
-          permission: Json
-          permitted_uses: string[]
-          provenance_chain_id: string
-          retired_at: string | null
-          retirement_path: Json
-          retirement_reason: string | null
-          review_date: string
-          risk_tier: Database["public"]["Enums"]["risk_tier"]
-          schema_version: string
-          search: unknown
-          simulated: boolean | null
-          statement: string
-          steward_id: string | null
-          superseded_by: string[]
-          supersedes: string[]
-          title: string
-          type: string
-          updated_at: string
-          updated_by: Json
-          version: number
-        }
+          authority_level: Database["public"]["Enums"]["authority_level"];
+          body: Json;
+          builder_id: string | null;
+          citations: Json;
+          co_creator_id: string | null;
+          confidence_bundle: Json | null;
+          consequence_class: Database["public"]["Enums"]["consequence_class"];
+          content_hash: string;
+          created_at: string;
+          created_by: Json;
+          data_classification: Database["public"]["Enums"]["data_classification"];
+          derived_from: string[];
+          effective_from: string;
+          evidence_refs: string[];
+          expiration_condition: Json;
+          expires_at: string | null;
+          human_ref: string;
+          id: string;
+          is_tombstone: boolean;
+          lifecycle_state: string;
+          machine_description: string;
+          open_questions: string[];
+          owner_id: string;
+          permission: Json;
+          permitted_uses: string[];
+          provenance_chain_id: string;
+          retired_at: string | null;
+          retirement_path: Json;
+          retirement_reason: string | null;
+          review_date: string;
+          risk_tier: Database["public"]["Enums"]["risk_tier"];
+          schema_version: string;
+          search: unknown;
+          simulated: boolean | null;
+          statement: string;
+          steward_id: string | null;
+          superseded_by: string[];
+          supersedes: string[];
+          title: string;
+          type: string;
+          updated_at: string;
+          updated_by: Json;
+          version: number;
+        };
         SetofOptions: {
-          from: "*"
-          to: "objects"
-          isOneToOne: true
-          isSetofReturn: false
-        }
-      }
+          from: "*";
+          to: "objects";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       thread_compose_capabilities: {
         Args: {
-          p_actor: Json
-          p_ids: string[]
-          p_scenario: string
-          p_title: string
-        }
-        Returns: Json
-      }
+          p_actor: Json;
+          p_ids: string[];
+          p_scenario: string;
+          p_title: string;
+        };
+        Returns: Json;
+      };
       thread_create_edge: {
-        Args: { p: Json; p_actor: Json }
+        Args: { p: Json; p_actor: Json };
         Returns: {
-          authority_used: Database["public"]["Enums"]["authority_level"]
-          confidence: number | null
-          created_at: string
-          created_by: Json
-          evidence_refs: string[]
-          from_id: string
-          id: string
-          kind: string | null
-          rationale: string | null
-          retired_at: string | null
-          source: string
-          to_id: string
-          verb: string
-        }
+          authority_used: Database["public"]["Enums"]["authority_level"];
+          confidence: number | null;
+          created_at: string;
+          created_by: Json;
+          evidence_refs: string[];
+          from_id: string;
+          id: string;
+          kind: string | null;
+          rationale: string | null;
+          retired_at: string | null;
+          source: string;
+          to_id: string;
+          verb: string;
+        };
         SetofOptions: {
-          from: "*"
-          to: "edges"
-          isOneToOne: true
-          isSetofReturn: false
-        }
-      }
+          from: "*";
+          to: "edges";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       thread_create_object: {
-        Args: { p: Json; p_actor: Json }
+        Args: { p: Json; p_actor: Json };
         Returns: {
-          authority_level: Database["public"]["Enums"]["authority_level"]
-          body: Json
-          builder_id: string | null
-          citations: Json
-          co_creator_id: string | null
-          confidence_bundle: Json | null
-          consequence_class: Database["public"]["Enums"]["consequence_class"]
-          content_hash: string
-          created_at: string
-          created_by: Json
-          data_classification: Database["public"]["Enums"]["data_classification"]
-          derived_from: string[]
-          effective_from: string
-          evidence_refs: string[]
-          expiration_condition: Json
-          expires_at: string | null
-          human_ref: string
-          id: string
-          is_tombstone: boolean
-          lifecycle_state: string
-          machine_description: string
-          open_questions: string[]
-          owner_id: string
-          permission: Json
-          permitted_uses: string[]
-          provenance_chain_id: string
-          retired_at: string | null
-          retirement_path: Json
-          retirement_reason: string | null
-          review_date: string
-          risk_tier: Database["public"]["Enums"]["risk_tier"]
-          schema_version: string
-          search: unknown
-          simulated: boolean | null
-          statement: string
-          steward_id: string | null
-          superseded_by: string[]
-          supersedes: string[]
-          title: string
-          type: string
-          updated_at: string
-          updated_by: Json
-          version: number
-        }
+          authority_level: Database["public"]["Enums"]["authority_level"];
+          body: Json;
+          builder_id: string | null;
+          citations: Json;
+          co_creator_id: string | null;
+          confidence_bundle: Json | null;
+          consequence_class: Database["public"]["Enums"]["consequence_class"];
+          content_hash: string;
+          created_at: string;
+          created_by: Json;
+          data_classification: Database["public"]["Enums"]["data_classification"];
+          derived_from: string[];
+          effective_from: string;
+          evidence_refs: string[];
+          expiration_condition: Json;
+          expires_at: string | null;
+          human_ref: string;
+          id: string;
+          is_tombstone: boolean;
+          lifecycle_state: string;
+          machine_description: string;
+          open_questions: string[];
+          owner_id: string;
+          permission: Json;
+          permitted_uses: string[];
+          provenance_chain_id: string;
+          retired_at: string | null;
+          retirement_path: Json;
+          retirement_reason: string | null;
+          review_date: string;
+          risk_tier: Database["public"]["Enums"]["risk_tier"];
+          schema_version: string;
+          search: unknown;
+          simulated: boolean | null;
+          statement: string;
+          steward_id: string | null;
+          superseded_by: string[];
+          supersedes: string[];
+          title: string;
+          type: string;
+          updated_at: string;
+          updated_by: Json;
+          version: number;
+        };
         SetofOptions: {
-          from: "*"
-          to: "objects"
-          isOneToOne: true
-          isSetofReturn: false
-        }
-      }
+          from: "*";
+          to: "objects";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       thread_decide_canon_change: {
         Args: {
-          p_actor: Json
-          p_change_id: string
-          p_decision: string
-          p_rationale: string
-        }
-        Returns: Json
-      }
-      thread_detection_sweep: { Args: { p_actor: Json }; Returns: Json }
-      thread_dispatch_build: { Args: { p: Json; p_actor: Json }; Returns: Json }
+          p_actor: Json;
+          p_change_id: string;
+          p_decision: string;
+          p_rationale: string;
+        };
+        Returns: Json;
+      };
+      thread_detection_sweep: { Args: { p_actor: Json }; Returns: Json };
+      thread_dispatch_build: { Args: { p: Json; p_actor: Json }; Returns: Json };
       thread_fabric_sweep: {
-        Args: { p_actor: Json; p_now?: string }
-        Returns: Json
-      }
+        Args: { p_actor: Json; p_now?: string };
+        Returns: Json;
+      };
       thread_fabric_sweep_scoped: {
-        Args: { p_actor: Json; p_now: string; p_only: string[] }
-        Returns: Json
-      }
-      thread_framing_sweep: { Args: { p_actor: Json }; Returns: Json }
-      thread_generate_morning_brief: { Args: { p_user: string }; Returns: Json }
-      thread_generate_morning_briefs: { Args: never; Returns: Json }
+        Args: { p_actor: Json; p_now: string; p_only: string[] };
+        Returns: Json;
+      };
+      thread_framing_sweep: { Args: { p_actor: Json }; Returns: Json };
+      thread_generate_morning_brief: { Args: { p_user: string }; Returns: Json };
+      thread_generate_morning_briefs: { Args: never; Returns: Json };
       thread_generate_rendition: {
-        Args: { p: Json; p_actor: Json }
-        Returns: Json
-      }
-      thread_graph_sweep: { Args: { p_actor: Json }; Returns: Json }
-      thread_hardening_checks: { Args: { p_actor: Json }; Returns: Json }
+        Args: { p: Json; p_actor: Json };
+        Returns: Json;
+      };
+      thread_graph_sweep: { Args: { p_actor: Json }; Returns: Json };
+      thread_hardening_checks: { Args: { p_actor: Json }; Returns: Json };
       thread_human_operation: {
-        Args: { p: Json; p_actor: Json; p_operation: string }
-        Returns: Json
-      }
-      thread_intake_read_selftest: { Args: never; Returns: Json }
+        Args: { p: Json; p_actor: Json; p_operation: string };
+        Returns: Json;
+      };
+      thread_intake_read_selftest: { Args: never; Returns: Json };
       thread_issue_confirmation: {
         Args: {
-          p_actor: Json
-          p_agent: string
-          p_input_hash: string
-          p_reason: string
-          p_tool: string
-        }
-        Returns: Json
-      }
+          p_actor: Json;
+          p_agent: string;
+          p_input_hash: string;
+          p_reason: string;
+          p_tool: string;
+        };
+        Returns: Json;
+      };
       thread_kill_switch: {
-        Args: { p?: Json; p_actor: Json; p_capability: string }
-        Returns: Json
-      }
+        Args: { p?: Json; p_actor: Json; p_capability: string };
+        Returns: Json;
+      };
       thread_mcp_subscribe: {
         Args: {
-          p_agent: string
-          p_object: string
-          p_on: boolean
-          p_topic: string
-        }
-        Returns: undefined
-      }
+          p_agent: string;
+          p_object: string;
+          p_on: boolean;
+          p_topic: string;
+        };
+        Returns: undefined;
+      };
       thread_mcp_take_notifications: {
-        Args: { p_agent: string; p_limit: number }
-        Returns: Json
-      }
+        Args: { p_agent: string; p_limit: number };
+        Returns: Json;
+      };
       thread_observe_detection: {
         Args: {
-          p_actor: Json
-          p_evidence: string[]
-          p_facts: Json
-          p_rationale: string
-          p_subject: string
-        }
-        Returns: Json
-      }
-      thread_phase1_selftest: { Args: never; Returns: Json }
-      thread_phase10_graph_test: { Args: never; Returns: Json }
-      thread_phase10_risk_test: { Args: never; Returns: Json }
-      thread_phase10_selftest: { Args: never; Returns: Json }
-      thread_phase11_selftest: { Args: never; Returns: Json }
-      thread_phase12_behavioral_selftest: { Args: never; Returns: Json }
-      thread_phase12_selftest: { Args: never; Returns: Json }
-      thread_phase2_selftest: { Args: never; Returns: Json }
-      thread_phase2b_selftest: { Args: never; Returns: Json }
-      thread_phase3_selftest: { Args: never; Returns: Json }
-      thread_phase4_selftest: { Args: never; Returns: Json }
-      thread_phase5_selftest: { Args: never; Returns: Json }
-      thread_phase6_selftest: { Args: never; Returns: Json }
-      thread_phase7_selftest: { Args: never; Returns: Json }
-      thread_phase8_selftest: { Args: never; Returns: Json }
+          p_actor: Json;
+          p_evidence: string[];
+          p_facts: Json;
+          p_rationale: string;
+          p_subject: string;
+        };
+        Returns: Json;
+      };
+      thread_phase1_selftest: { Args: never; Returns: Json };
+      thread_phase10_graph_test: { Args: never; Returns: Json };
+      thread_phase10_risk_test: { Args: never; Returns: Json };
+      thread_phase10_selftest: { Args: never; Returns: Json };
+      thread_phase11_selftest: { Args: never; Returns: Json };
+      thread_phase12_behavioral_selftest: { Args: never; Returns: Json };
+      thread_phase12_selftest: { Args: never; Returns: Json };
+      thread_phase2_selftest: { Args: never; Returns: Json };
+      thread_phase2b_selftest: { Args: never; Returns: Json };
+      thread_phase3_selftest: { Args: never; Returns: Json };
+      thread_phase4_selftest: { Args: never; Returns: Json };
+      thread_phase5_selftest: { Args: never; Returns: Json };
+      thread_phase6_selftest: { Args: never; Returns: Json };
+      thread_phase7_selftest: { Args: never; Returns: Json };
+      thread_phase8_selftest: { Args: never; Returns: Json };
       thread_propose_canon_change: {
-        Args: { p: Json; p_actor: Json }
+        Args: { p: Json; p_actor: Json };
         Returns: {
-          applied_version: number | null
-          base_version: number
-          challenge_closes_at: string
-          decided_at: string | null
-          decided_by: Json | null
-          decision_object_id: string | null
-          decision_rationale: string | null
-          evidence_refs: string[]
-          id: string
-          object_id: string
-          patch: Json
-          proposed_at: string
-          proposed_by: Json
-          rationale: string
-          state: string
-        }
+          applied_version: number | null;
+          base_version: number;
+          challenge_closes_at: string;
+          decided_at: string | null;
+          decided_by: Json | null;
+          decision_object_id: string | null;
+          decision_rationale: string | null;
+          evidence_refs: string[];
+          id: string;
+          object_id: string;
+          patch: Json;
+          proposed_at: string;
+          proposed_by: Json;
+          rationale: string;
+          state: string;
+        };
         SetofOptions: {
-          from: "*"
-          to: "canon_changes"
-          isOneToOne: true
-          isSetofReturn: false
-        }
-      }
+          from: "*";
+          to: "canon_changes";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       thread_publish_capability: {
-        Args: { p_actor: Json; p_contract_id: string; p_id: string }
+        Args: { p_actor: Json; p_contract_id: string; p_id: string };
         Returns: {
-          authority_level: Database["public"]["Enums"]["authority_level"]
-          body: Json
-          builder_id: string | null
-          citations: Json
-          co_creator_id: string | null
-          confidence_bundle: Json | null
-          consequence_class: Database["public"]["Enums"]["consequence_class"]
-          content_hash: string
-          created_at: string
-          created_by: Json
-          data_classification: Database["public"]["Enums"]["data_classification"]
-          derived_from: string[]
-          effective_from: string
-          evidence_refs: string[]
-          expiration_condition: Json
-          expires_at: string | null
-          human_ref: string
-          id: string
-          is_tombstone: boolean
-          lifecycle_state: string
-          machine_description: string
-          open_questions: string[]
-          owner_id: string
-          permission: Json
-          permitted_uses: string[]
-          provenance_chain_id: string
-          retired_at: string | null
-          retirement_path: Json
-          retirement_reason: string | null
-          review_date: string
-          risk_tier: Database["public"]["Enums"]["risk_tier"]
-          schema_version: string
-          search: unknown
-          simulated: boolean | null
-          statement: string
-          steward_id: string | null
-          superseded_by: string[]
-          supersedes: string[]
-          title: string
-          type: string
-          updated_at: string
-          updated_by: Json
-          version: number
-        }
+          authority_level: Database["public"]["Enums"]["authority_level"];
+          body: Json;
+          builder_id: string | null;
+          citations: Json;
+          co_creator_id: string | null;
+          confidence_bundle: Json | null;
+          consequence_class: Database["public"]["Enums"]["consequence_class"];
+          content_hash: string;
+          created_at: string;
+          created_by: Json;
+          data_classification: Database["public"]["Enums"]["data_classification"];
+          derived_from: string[];
+          effective_from: string;
+          evidence_refs: string[];
+          expiration_condition: Json;
+          expires_at: string | null;
+          human_ref: string;
+          id: string;
+          is_tombstone: boolean;
+          lifecycle_state: string;
+          machine_description: string;
+          open_questions: string[];
+          owner_id: string;
+          permission: Json;
+          permitted_uses: string[];
+          provenance_chain_id: string;
+          retired_at: string | null;
+          retirement_path: Json;
+          retirement_reason: string | null;
+          review_date: string;
+          risk_tier: Database["public"]["Enums"]["risk_tier"];
+          schema_version: string;
+          search: unknown;
+          simulated: boolean | null;
+          statement: string;
+          steward_id: string | null;
+          superseded_by: string[];
+          supersedes: string[];
+          title: string;
+          type: string;
+          updated_at: string;
+          updated_by: Json;
+          version: number;
+        };
         SetofOptions: {
-          from: "*"
-          to: "objects"
-          isOneToOne: true
-          isSetofReturn: false
-        }
-      }
+          from: "*";
+          to: "objects";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       thread_receive_build_result: {
-        Args: { p: Json; p_actor: Json; p_platform: string }
-        Returns: Json
-      }
+        Args: { p: Json; p_actor: Json; p_platform: string };
+        Returns: Json;
+      };
       thread_record_assurance: {
-        Args: { p: Json; p_actor: Json }
-        Returns: Json
-      }
+        Args: { p: Json; p_actor: Json };
+        Returns: Json;
+      };
       thread_record_build_result: {
-        Args: { p: Json; p_actor: Json }
-        Returns: Json
-      }
+        Args: { p: Json; p_actor: Json };
+        Returns: Json;
+      };
       thread_record_capability_use: {
-        Args: { p: Json; p_actor: Json; p_id: string }
-        Returns: number
-      }
+        Args: { p: Json; p_actor: Json; p_id: string };
+        Returns: number;
+      };
       thread_record_incident: {
-        Args: { p: Json; p_actor: Json; p_capability: string }
-        Returns: Json
-      }
+        Args: { p: Json; p_actor: Json; p_capability: string };
+        Returns: Json;
+      };
       thread_record_injection: {
-        Args: { p_call: string; p_findings: Json }
-        Returns: string
-      }
+        Args: { p_call: string; p_findings: Json };
+        Returns: string;
+      };
       thread_record_iteration: {
-        Args: { p: Json; p_actor: Json }
-        Returns: Json
-      }
-      thread_record_phase1_evidence: { Args: { p_actor: Json }; Returns: Json }
-      thread_record_phase10_evidence: { Args: { p_actor: Json }; Returns: Json }
-      thread_record_phase2_evidence: { Args: { p_actor: Json }; Returns: Json }
+        Args: { p: Json; p_actor: Json };
+        Returns: Json;
+      };
+      thread_record_phase1_evidence: { Args: { p_actor: Json }; Returns: Json };
+      thread_record_phase10_evidence: { Args: { p_actor: Json }; Returns: Json };
+      thread_record_phase2_evidence: { Args: { p_actor: Json }; Returns: Json };
       thread_record_phase2b_evidence: {
-        Args: { p: Json; p_actor: Json }
-        Returns: Json
-      }
+        Args: { p: Json; p_actor: Json };
+        Returns: Json;
+      };
       thread_record_phase3_evidence: {
-        Args: { p: Json; p_actor: Json }
-        Returns: Json
-      }
+        Args: { p: Json; p_actor: Json };
+        Returns: Json;
+      };
       thread_record_phase4_evidence: {
-        Args: { p: Json; p_actor: Json }
-        Returns: Json
-      }
+        Args: { p: Json; p_actor: Json };
+        Returns: Json;
+      };
       thread_record_phase5_evidence: {
-        Args: { p: Json; p_actor: Json }
-        Returns: Json
-      }
+        Args: { p: Json; p_actor: Json };
+        Returns: Json;
+      };
       thread_record_phase6_evidence: {
-        Args: { p: Json; p_actor: Json }
-        Returns: Json
-      }
+        Args: { p: Json; p_actor: Json };
+        Returns: Json;
+      };
       thread_record_phase7_evidence: {
-        Args: { p: Json; p_actor: Json }
-        Returns: Json
-      }
+        Args: { p: Json; p_actor: Json };
+        Returns: Json;
+      };
       thread_record_phase8_evidence: {
-        Args: { p: Json; p_actor: Json }
-        Returns: Json
-      }
+        Args: { p: Json; p_actor: Json };
+        Returns: Json;
+      };
       thread_record_phase9_evidence: {
-        Args: { p: Json; p_actor: Json }
-        Returns: Json
-      }
+        Args: { p: Json; p_actor: Json };
+        Returns: Json;
+      };
       thread_record_production_outcome: {
-        Args: { p: Json; p_actor: Json; p_capability: string }
-        Returns: Json
-      }
+        Args: { p: Json; p_actor: Json; p_capability: string };
+        Returns: Json;
+      };
       thread_record_query_refusal: {
-        Args: { p_actor: Json; p_input_hash: string; p_kind: string }
-        Returns: undefined
-      }
+        Args: { p_actor: Json; p_input_hash: string; p_kind: string };
+        Returns: undefined;
+      };
       thread_record_render_benchmark: {
-        Args: { p: Json; p_actor: Json }
-        Returns: number
-      }
+        Args: { p: Json; p_actor: Json };
+        Returns: number;
+      };
       thread_record_rendition_download: {
-        Args: { p_actor: Json; p_id: string; p_purpose: string }
-        Returns: Json
-      }
+        Args: { p_actor: Json; p_id: string; p_purpose: string };
+        Returns: Json;
+      };
       thread_record_risk: {
-        Args: { p: Json; p_actor: Json; p_id: string }
+        Args: { p: Json; p_actor: Json; p_id: string };
         Returns: {
-          computed_at: string
-          computed_by: string
-          computed_tier: Database["public"]["Enums"]["risk_tier"]
-          id: string
-          inputs: Json
-          object_id: string
-          override_rationale: string | null
-          override_tier: Database["public"]["Enums"]["risk_tier"] | null
-          reasons: Json
-          treatment: string
-        }
+          computed_at: string;
+          computed_by: string;
+          computed_tier: Database["public"]["Enums"]["risk_tier"];
+          id: string;
+          inputs: Json;
+          object_id: string;
+          override_rationale: string | null;
+          override_tier: Database["public"]["Enums"]["risk_tier"] | null;
+          reasons: Json;
+          treatment: string;
+        };
         SetofOptions: {
-          from: "*"
-          to: "risk_assessments"
-          isOneToOne: true
-          isSetofReturn: false
-        }
-      }
+          from: "*";
+          to: "risk_assessments";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       thread_record_rollback: {
-        Args: { p: Json; p_actor: Json; p_capability: string }
-        Returns: Json
-      }
+        Args: { p: Json; p_actor: Json; p_capability: string };
+        Returns: Json;
+      };
       thread_record_shadow_run: {
-        Args: { p: Json; p_actor: Json; p_capability: string }
-        Returns: Json
-      }
+        Args: { p: Json; p_actor: Json; p_capability: string };
+        Returns: Json;
+      };
       thread_record_skeleton: {
-        Args: { p: Json; p_actor: Json }
+        Args: { p: Json; p_actor: Json };
         Returns: {
-          authority_level: Database["public"]["Enums"]["authority_level"]
-          body: Json
-          builder_id: string | null
-          citations: Json
-          co_creator_id: string | null
-          confidence_bundle: Json | null
-          consequence_class: Database["public"]["Enums"]["consequence_class"]
-          content_hash: string
-          created_at: string
-          created_by: Json
-          data_classification: Database["public"]["Enums"]["data_classification"]
-          derived_from: string[]
-          effective_from: string
-          evidence_refs: string[]
-          expiration_condition: Json
-          expires_at: string | null
-          human_ref: string
-          id: string
-          is_tombstone: boolean
-          lifecycle_state: string
-          machine_description: string
-          open_questions: string[]
-          owner_id: string
-          permission: Json
-          permitted_uses: string[]
-          provenance_chain_id: string
-          retired_at: string | null
-          retirement_path: Json
-          retirement_reason: string | null
-          review_date: string
-          risk_tier: Database["public"]["Enums"]["risk_tier"]
-          schema_version: string
-          search: unknown
-          simulated: boolean | null
-          statement: string
-          steward_id: string | null
-          superseded_by: string[]
-          supersedes: string[]
-          title: string
-          type: string
-          updated_at: string
-          updated_by: Json
-          version: number
-        }
+          authority_level: Database["public"]["Enums"]["authority_level"];
+          body: Json;
+          builder_id: string | null;
+          citations: Json;
+          co_creator_id: string | null;
+          confidence_bundle: Json | null;
+          consequence_class: Database["public"]["Enums"]["consequence_class"];
+          content_hash: string;
+          created_at: string;
+          created_by: Json;
+          data_classification: Database["public"]["Enums"]["data_classification"];
+          derived_from: string[];
+          effective_from: string;
+          evidence_refs: string[];
+          expiration_condition: Json;
+          expires_at: string | null;
+          human_ref: string;
+          id: string;
+          is_tombstone: boolean;
+          lifecycle_state: string;
+          machine_description: string;
+          open_questions: string[];
+          owner_id: string;
+          permission: Json;
+          permitted_uses: string[];
+          provenance_chain_id: string;
+          retired_at: string | null;
+          retirement_path: Json;
+          retirement_reason: string | null;
+          review_date: string;
+          risk_tier: Database["public"]["Enums"]["risk_tier"];
+          schema_version: string;
+          search: unknown;
+          simulated: boolean | null;
+          statement: string;
+          steward_id: string | null;
+          superseded_by: string[];
+          supersedes: string[];
+          title: string;
+          type: string;
+          updated_at: string;
+          updated_by: Json;
+          version: number;
+        };
         SetofOptions: {
-          from: "*"
-          to: "objects"
-          isOneToOne: true
-          isSetofReturn: false
-        }
-      }
+          from: "*";
+          to: "objects";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       thread_record_value_measure: {
-        Args: { p: Json; p_actor: Json; p_mission: string }
-        Returns: Json
-      }
-      thread_refresh_graph_layout: { Args: never; Returns: Json }
-      thread_register_agent: { Args: { p: Json; p_actor: Json }; Returns: Json }
-      thread_rendition_sweep: { Args: { p_now?: string }; Returns: Json }
+        Args: { p: Json; p_actor: Json; p_mission: string };
+        Returns: Json;
+      };
+      thread_refresh_graph_layout: { Args: never; Returns: Json };
+      thread_register_agent: { Args: { p: Json; p_actor: Json }; Returns: Json };
+      thread_rendition_sweep: { Args: { p_now?: string }; Returns: Json };
       thread_resolve_finding: {
         Args: {
-          p_accept_until?: string
-          p_actor: Json
-          p_finding: string
-          p_resolution: string
-        }
-        Returns: Json
-      }
-      thread_restore_rehearsal: { Args: never; Returns: Json }
+          p_accept_until?: string;
+          p_actor: Json;
+          p_finding: string;
+          p_resolution: string;
+        };
+        Returns: Json;
+      };
+      thread_restore_rehearsal: { Args: never; Returns: Json };
       thread_retire_edge: {
-        Args: { p_actor: Json; p_edge_id: string; p_reason: string }
+        Args: { p_actor: Json; p_edge_id: string; p_reason: string };
         Returns: {
-          authority_used: Database["public"]["Enums"]["authority_level"]
-          confidence: number | null
-          created_at: string
-          created_by: Json
-          evidence_refs: string[]
-          from_id: string
-          id: string
-          kind: string | null
-          rationale: string | null
-          retired_at: string | null
-          source: string
-          to_id: string
-          verb: string
-        }
+          authority_used: Database["public"]["Enums"]["authority_level"];
+          confidence: number | null;
+          created_at: string;
+          created_by: Json;
+          evidence_refs: string[];
+          from_id: string;
+          id: string;
+          kind: string | null;
+          rationale: string | null;
+          retired_at: string | null;
+          source: string;
+          to_id: string;
+          verb: string;
+        };
         SetofOptions: {
-          from: "*"
-          to: "edges"
-          isOneToOne: true
-          isSetofReturn: false
-        }
-      }
+          from: "*";
+          to: "edges";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       thread_revise_object: {
         Args: {
-          p_actor: Json
-          p_expected_version: number
-          p_id: string
-          p_patch: Json
-          p_rationale: string
-        }
+          p_actor: Json;
+          p_expected_version: number;
+          p_id: string;
+          p_patch: Json;
+          p_rationale: string;
+        };
         Returns: {
-          authority_level: Database["public"]["Enums"]["authority_level"]
-          body: Json
-          builder_id: string | null
-          citations: Json
-          co_creator_id: string | null
-          confidence_bundle: Json | null
-          consequence_class: Database["public"]["Enums"]["consequence_class"]
-          content_hash: string
-          created_at: string
-          created_by: Json
-          data_classification: Database["public"]["Enums"]["data_classification"]
-          derived_from: string[]
-          effective_from: string
-          evidence_refs: string[]
-          expiration_condition: Json
-          expires_at: string | null
-          human_ref: string
-          id: string
-          is_tombstone: boolean
-          lifecycle_state: string
-          machine_description: string
-          open_questions: string[]
-          owner_id: string
-          permission: Json
-          permitted_uses: string[]
-          provenance_chain_id: string
-          retired_at: string | null
-          retirement_path: Json
-          retirement_reason: string | null
-          review_date: string
-          risk_tier: Database["public"]["Enums"]["risk_tier"]
-          schema_version: string
-          search: unknown
-          simulated: boolean | null
-          statement: string
-          steward_id: string | null
-          superseded_by: string[]
-          supersedes: string[]
-          title: string
-          type: string
-          updated_at: string
-          updated_by: Json
-          version: number
-        }
+          authority_level: Database["public"]["Enums"]["authority_level"];
+          body: Json;
+          builder_id: string | null;
+          citations: Json;
+          co_creator_id: string | null;
+          confidence_bundle: Json | null;
+          consequence_class: Database["public"]["Enums"]["consequence_class"];
+          content_hash: string;
+          created_at: string;
+          created_by: Json;
+          data_classification: Database["public"]["Enums"]["data_classification"];
+          derived_from: string[];
+          effective_from: string;
+          evidence_refs: string[];
+          expiration_condition: Json;
+          expires_at: string | null;
+          human_ref: string;
+          id: string;
+          is_tombstone: boolean;
+          lifecycle_state: string;
+          machine_description: string;
+          open_questions: string[];
+          owner_id: string;
+          permission: Json;
+          permitted_uses: string[];
+          provenance_chain_id: string;
+          retired_at: string | null;
+          retirement_path: Json;
+          retirement_reason: string | null;
+          review_date: string;
+          risk_tier: Database["public"]["Enums"]["risk_tier"];
+          schema_version: string;
+          search: unknown;
+          simulated: boolean | null;
+          statement: string;
+          steward_id: string | null;
+          superseded_by: string[];
+          supersedes: string[];
+          title: string;
+          type: string;
+          updated_at: string;
+          updated_by: Json;
+          version: number;
+        };
         SetofOptions: {
-          from: "*"
-          to: "objects"
-          isOneToOne: true
-          isSetofReturn: false
-        }
-      }
+          from: "*";
+          to: "objects";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       thread_revoke_agent: {
-        Args: { p_actor: Json; p_agent: string; p_reason: string }
-        Returns: number
-      }
+        Args: { p_actor: Json; p_agent: string; p_reason: string };
+        Returns: number;
+      };
       thread_serve_rendition: {
-        Args: { p_actor: Json; p_id: string; p_purpose: string }
-        Returns: Json
-      }
+        Args: { p_actor: Json; p_id: string; p_purpose: string };
+        Returns: Json;
+      };
       thread_set_authority: {
         Args: {
-          p_actor: Json
-          p_cause: string
-          p_conditions?: Json
-          p_evidence: string[]
-          p_id: string
-          p_to: Database["public"]["Enums"]["authority_level"]
-          p_trigger: string
-        }
+          p_actor: Json;
+          p_cause: string;
+          p_conditions?: Json;
+          p_evidence: string[];
+          p_id: string;
+          p_to: Database["public"]["Enums"]["authority_level"];
+          p_trigger: string;
+        };
         Returns: {
-          authority_level: Database["public"]["Enums"]["authority_level"]
-          body: Json
-          builder_id: string | null
-          citations: Json
-          co_creator_id: string | null
-          confidence_bundle: Json | null
-          consequence_class: Database["public"]["Enums"]["consequence_class"]
-          content_hash: string
-          created_at: string
-          created_by: Json
-          data_classification: Database["public"]["Enums"]["data_classification"]
-          derived_from: string[]
-          effective_from: string
-          evidence_refs: string[]
-          expiration_condition: Json
-          expires_at: string | null
-          human_ref: string
-          id: string
-          is_tombstone: boolean
-          lifecycle_state: string
-          machine_description: string
-          open_questions: string[]
-          owner_id: string
-          permission: Json
-          permitted_uses: string[]
-          provenance_chain_id: string
-          retired_at: string | null
-          retirement_path: Json
-          retirement_reason: string | null
-          review_date: string
-          risk_tier: Database["public"]["Enums"]["risk_tier"]
-          schema_version: string
-          search: unknown
-          simulated: boolean | null
-          statement: string
-          steward_id: string | null
-          superseded_by: string[]
-          supersedes: string[]
-          title: string
-          type: string
-          updated_at: string
-          updated_by: Json
-          version: number
-        }
+          authority_level: Database["public"]["Enums"]["authority_level"];
+          body: Json;
+          builder_id: string | null;
+          citations: Json;
+          co_creator_id: string | null;
+          confidence_bundle: Json | null;
+          consequence_class: Database["public"]["Enums"]["consequence_class"];
+          content_hash: string;
+          created_at: string;
+          created_by: Json;
+          data_classification: Database["public"]["Enums"]["data_classification"];
+          derived_from: string[];
+          effective_from: string;
+          evidence_refs: string[];
+          expiration_condition: Json;
+          expires_at: string | null;
+          human_ref: string;
+          id: string;
+          is_tombstone: boolean;
+          lifecycle_state: string;
+          machine_description: string;
+          open_questions: string[];
+          owner_id: string;
+          permission: Json;
+          permitted_uses: string[];
+          provenance_chain_id: string;
+          retired_at: string | null;
+          retirement_path: Json;
+          retirement_reason: string | null;
+          review_date: string;
+          risk_tier: Database["public"]["Enums"]["risk_tier"];
+          schema_version: string;
+          search: unknown;
+          simulated: boolean | null;
+          statement: string;
+          steward_id: string | null;
+          superseded_by: string[];
+          supersedes: string[];
+          title: string;
+          type: string;
+          updated_at: string;
+          updated_by: Json;
+          version: number;
+        };
         SetofOptions: {
-          from: "*"
-          to: "objects"
-          isOneToOne: true
-          isSetofReturn: false
-        }
-      }
+          from: "*";
+          to: "objects";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       thread_set_cost_ceiling: {
-        Args: { p: Json; p_actor: Json }
-        Returns: undefined
-      }
+        Args: { p: Json; p_actor: Json };
+        Returns: undefined;
+      };
       thread_signal_intake: {
-        Args: { p: Json; p_actor: Json; p_operation: string }
-        Returns: Json
-      }
-      thread_signal_intake_selftest: { Args: never; Returns: Json }
+        Args: { p: Json; p_actor: Json; p_operation: string };
+        Returns: Json;
+      };
+      thread_signal_intake_selftest: { Args: never; Returns: Json };
       thread_sync_tool_contracts: {
-        Args: { p: Json; p_version: string }
-        Returns: number
-      }
+        Args: { p: Json; p_version: string };
+        Returns: number;
+      };
       thread_tombstone_object: {
         Args: {
-          p_actor: Json
-          p_expected_version: number
-          p_id: string
-          p_reason: string
-        }
+          p_actor: Json;
+          p_expected_version: number;
+          p_id: string;
+          p_reason: string;
+        };
         Returns: {
-          authority_level: Database["public"]["Enums"]["authority_level"]
-          body: Json
-          builder_id: string | null
-          citations: Json
-          co_creator_id: string | null
-          confidence_bundle: Json | null
-          consequence_class: Database["public"]["Enums"]["consequence_class"]
-          content_hash: string
-          created_at: string
-          created_by: Json
-          data_classification: Database["public"]["Enums"]["data_classification"]
-          derived_from: string[]
-          effective_from: string
-          evidence_refs: string[]
-          expiration_condition: Json
-          expires_at: string | null
-          human_ref: string
-          id: string
-          is_tombstone: boolean
-          lifecycle_state: string
-          machine_description: string
-          open_questions: string[]
-          owner_id: string
-          permission: Json
-          permitted_uses: string[]
-          provenance_chain_id: string
-          retired_at: string | null
-          retirement_path: Json
-          retirement_reason: string | null
-          review_date: string
-          risk_tier: Database["public"]["Enums"]["risk_tier"]
-          schema_version: string
-          search: unknown
-          simulated: boolean | null
-          statement: string
-          steward_id: string | null
-          superseded_by: string[]
-          supersedes: string[]
-          title: string
-          type: string
-          updated_at: string
-          updated_by: Json
-          version: number
-        }
+          authority_level: Database["public"]["Enums"]["authority_level"];
+          body: Json;
+          builder_id: string | null;
+          citations: Json;
+          co_creator_id: string | null;
+          confidence_bundle: Json | null;
+          consequence_class: Database["public"]["Enums"]["consequence_class"];
+          content_hash: string;
+          created_at: string;
+          created_by: Json;
+          data_classification: Database["public"]["Enums"]["data_classification"];
+          derived_from: string[];
+          effective_from: string;
+          evidence_refs: string[];
+          expiration_condition: Json;
+          expires_at: string | null;
+          human_ref: string;
+          id: string;
+          is_tombstone: boolean;
+          lifecycle_state: string;
+          machine_description: string;
+          open_questions: string[];
+          owner_id: string;
+          permission: Json;
+          permitted_uses: string[];
+          provenance_chain_id: string;
+          retired_at: string | null;
+          retirement_path: Json;
+          retirement_reason: string | null;
+          review_date: string;
+          risk_tier: Database["public"]["Enums"]["risk_tier"];
+          schema_version: string;
+          search: unknown;
+          simulated: boolean | null;
+          statement: string;
+          steward_id: string | null;
+          superseded_by: string[];
+          supersedes: string[];
+          title: string;
+          type: string;
+          updated_at: string;
+          updated_by: Json;
+          version: number;
+        };
         SetofOptions: {
-          from: "*"
-          to: "objects"
-          isOneToOne: true
-          isSetofReturn: false
-        }
-      }
+          from: "*";
+          to: "objects";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       thread_transition_object: {
         Args: {
-          p_actor: Json
-          p_expected_version: number
-          p_id: string
-          p_rationale: string
-          p_to_state: string
-        }
+          p_actor: Json;
+          p_expected_version: number;
+          p_id: string;
+          p_rationale: string;
+          p_to_state: string;
+        };
         Returns: {
-          authority_level: Database["public"]["Enums"]["authority_level"]
-          body: Json
-          builder_id: string | null
-          citations: Json
-          co_creator_id: string | null
-          confidence_bundle: Json | null
-          consequence_class: Database["public"]["Enums"]["consequence_class"]
-          content_hash: string
-          created_at: string
-          created_by: Json
-          data_classification: Database["public"]["Enums"]["data_classification"]
-          derived_from: string[]
-          effective_from: string
-          evidence_refs: string[]
-          expiration_condition: Json
-          expires_at: string | null
-          human_ref: string
-          id: string
-          is_tombstone: boolean
-          lifecycle_state: string
-          machine_description: string
-          open_questions: string[]
-          owner_id: string
-          permission: Json
-          permitted_uses: string[]
-          provenance_chain_id: string
-          retired_at: string | null
-          retirement_path: Json
-          retirement_reason: string | null
-          review_date: string
-          risk_tier: Database["public"]["Enums"]["risk_tier"]
-          schema_version: string
-          search: unknown
-          simulated: boolean | null
-          statement: string
-          steward_id: string | null
-          superseded_by: string[]
-          supersedes: string[]
-          title: string
-          type: string
-          updated_at: string
-          updated_by: Json
-          version: number
-        }
+          authority_level: Database["public"]["Enums"]["authority_level"];
+          body: Json;
+          builder_id: string | null;
+          citations: Json;
+          co_creator_id: string | null;
+          confidence_bundle: Json | null;
+          consequence_class: Database["public"]["Enums"]["consequence_class"];
+          content_hash: string;
+          created_at: string;
+          created_by: Json;
+          data_classification: Database["public"]["Enums"]["data_classification"];
+          derived_from: string[];
+          effective_from: string;
+          evidence_refs: string[];
+          expiration_condition: Json;
+          expires_at: string | null;
+          human_ref: string;
+          id: string;
+          is_tombstone: boolean;
+          lifecycle_state: string;
+          machine_description: string;
+          open_questions: string[];
+          owner_id: string;
+          permission: Json;
+          permitted_uses: string[];
+          provenance_chain_id: string;
+          retired_at: string | null;
+          retirement_path: Json;
+          retirement_reason: string | null;
+          review_date: string;
+          risk_tier: Database["public"]["Enums"]["risk_tier"];
+          schema_version: string;
+          search: unknown;
+          simulated: boolean | null;
+          statement: string;
+          steward_id: string | null;
+          superseded_by: string[];
+          supersedes: string[];
+          title: string;
+          type: string;
+          updated_at: string;
+          updated_by: Json;
+          version: number;
+        };
         SetofOptions: {
-          from: "*"
-          to: "objects"
-          isOneToOne: true
-          isSetofReturn: false
-        }
-      }
-      thread_verify_ledger: { Args: never; Returns: Json }
-      trace_behaviors_without_tests: { Args: never; Returns: Json }
-      trace_blast_radius: { Args: { p_behavior: string }; Returns: Json }
-      trace_canon_change_impact: { Args: { p_id: string }; Returns: Json }
-      trace_expired_exposures: { Args: never; Returns: Json }
-      trace_full_chain: { Args: { p_id: string }; Returns: Json }
+          from: "*";
+          to: "objects";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
+      thread_verify_ledger: { Args: never; Returns: Json };
+      trace_behaviors_without_tests: { Args: never; Returns: Json };
+      trace_blast_radius: { Args: { p_behavior: string }; Returns: Json };
+      trace_canon_change_impact: { Args: { p_id: string }; Returns: Json };
+      trace_expired_exposures: { Args: never; Returns: Json };
+      trace_full_chain: { Args: { p_id: string }; Returns: Json };
       trace_incident_to_decision: {
-        Args: { p_incident: string }
-        Returns: Json
-      }
-      trace_production_without_decision: { Args: never; Returns: Json }
+        Args: { p_incident: string };
+        Returns: Json;
+      };
+      trace_production_without_decision: { Args: never; Returns: Json };
       trace_production_without_value: {
-        Args: { p_period?: string }
-        Returns: Json
-      }
-      trace_retirement_impact: { Args: { p_capability: string }; Returns: Json }
-      trace_value_without_owner: { Args: never; Returns: Json }
-      uuid_v7: { Args: never; Returns: string }
-    }
+        Args: { p_period?: string };
+        Returns: Json;
+      };
+      trace_retirement_impact: { Args: { p_capability: string }; Returns: Json };
+      trace_value_without_owner: { Args: never; Returns: Json };
+      uuid_v7: { Args: never; Returns: string };
+    };
     Enums: {
-      actor_kind: "human" | "agent" | "system"
-      app_role: "steward" | "co_creator" | "builder" | "member" | "compliance"
+      actor_kind: "human" | "agent" | "system";
+      app_role: "steward" | "co_creator" | "builder" | "member" | "compliance";
       authority_level:
         | "observe"
         | "recommend"
         | "act_with_confirmation"
         | "act_bounded"
-        | "autonomous_with_exception"
+        | "autonomous_with_exception";
       consequence_class:
         | "none"
         | "reversible"
@@ -3794,13 +3788,8 @@ export type Database = {
         | "irreversible"
         | "rights_affecting"
         | "safety"
-        | "lifeline"
-      data_classification:
-        | "public"
-        | "internal"
-        | "confidential"
-        | "restricted"
-        | "prohibited"
+        | "lifeline";
+      data_classification: "public" | "internal" | "confidential" | "restricted" | "prohibited";
       intake_status:
         | "received"
         | "extracted"
@@ -3808,136 +3797,126 @@ export type Database = {
         | "rejected"
         | "duplicate"
         | "no_proposal"
-        | "abandoned"
-      risk_tier: "1" | "2" | "3" | "4"
-      signal_origin:
-        | "agent_sensor"
-        | "human_expertise"
-        | "artifact_upload"
-        | "live_capture"
-    }
+        | "abandoned";
+      risk_tier: "1" | "2" | "3" | "4";
+      signal_origin: "agent_sensor" | "human_expertise" | "artifact_upload" | "live_capture";
+    };
     CompositeTypes: {
-      [_ in never]: never
-    }
-  }
-}
+      [_ in never]: never;
+    };
+  };
+};
 
-type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">;
 
-type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">];
 
 export type Tables<
   DefaultSchemaTableNameOrOptions extends
     | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
     | { schema: keyof DatabaseWithoutInternals },
   TableName extends (DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+    schema: keyof DatabaseWithoutInternals;
   }
     ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
         DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
     : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
+  schema: keyof DatabaseWithoutInternals;
 }
   ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
       DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
-      Row: infer R
+      Row: infer R;
     }
     ? R
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
-        DefaultSchema["Views"])
-    ? (DefaultSchema["Tables"] &
-        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
-        Row: infer R
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] & DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+        Row: infer R;
       }
       ? R
       : never
-    : never
+    : never;
 
 export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
-    | { schema: keyof DatabaseWithoutInternals },
+    keyof DefaultSchema["Tables"] | { schema: keyof DatabaseWithoutInternals },
   TableName extends (DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+    schema: keyof DatabaseWithoutInternals;
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
+  schema: keyof DatabaseWithoutInternals;
 }
   ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Insert: infer I
+      Insert: infer I;
     }
     ? I
     : never
   : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
     ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
-        Insert: infer I
+        Insert: infer I;
       }
       ? I
       : never
-    : never
+    : never;
 
 export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
-    | { schema: keyof DatabaseWithoutInternals },
+    keyof DefaultSchema["Tables"] | { schema: keyof DatabaseWithoutInternals },
   TableName extends (DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+    schema: keyof DatabaseWithoutInternals;
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
+  schema: keyof DatabaseWithoutInternals;
 }
   ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Update: infer U
+      Update: infer U;
     }
     ? U
     : never
   : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
     ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
-        Update: infer U
+        Update: infer U;
       }
       ? U
       : never
-    : never
+    : never;
 
 export type Enums<
   DefaultSchemaEnumNameOrOptions extends
-    | keyof DefaultSchema["Enums"]
-    | { schema: keyof DatabaseWithoutInternals },
+    keyof DefaultSchema["Enums"] | { schema: keyof DatabaseWithoutInternals },
   EnumName extends (DefaultSchemaEnumNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+    schema: keyof DatabaseWithoutInternals;
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
     : never) = never,
 > = DefaultSchemaEnumNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
+  schema: keyof DatabaseWithoutInternals;
 }
   ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
     ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
-    : never
+    : never;
 
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
-    | keyof DefaultSchema["CompositeTypes"]
-    | { schema: keyof DatabaseWithoutInternals },
+    keyof DefaultSchema["CompositeTypes"] | { schema: keyof DatabaseWithoutInternals },
   CompositeTypeName extends (PublicCompositeTypeNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+    schema: keyof DatabaseWithoutInternals;
   }
     ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
     : never) = never,
 > = PublicCompositeTypeNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
+  schema: keyof DatabaseWithoutInternals;
 }
   ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
   : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
     ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
-    : never
+    : never;
 
 export const Constants = {
   public: {
@@ -3960,13 +3939,7 @@ export const Constants = {
         "safety",
         "lifeline",
       ],
-      data_classification: [
-        "public",
-        "internal",
-        "confidential",
-        "restricted",
-        "prohibited",
-      ],
+      data_classification: ["public", "internal", "confidential", "restricted", "prohibited"],
       intake_status: [
         "received",
         "extracted",
@@ -3977,12 +3950,7 @@ export const Constants = {
         "abandoned",
       ],
       risk_tier: ["1", "2", "3", "4"],
-      signal_origin: [
-        "agent_sensor",
-        "human_expertise",
-        "artifact_upload",
-        "live_capture",
-      ],
+      signal_origin: ["agent_sensor", "human_expertise", "artifact_upload", "live_capture"],
     },
   },
-} as const
+} as const;

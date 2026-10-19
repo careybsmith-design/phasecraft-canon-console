@@ -390,8 +390,8 @@ function IntakePanel({ onChanged }: { onChanged: () => void }) {
             >
               <p className="text-xs text-muted-foreground">
                 Capture <span className="ident">{captureId.slice(0, 8)}</span> open under your
-                recorded consent confirmation. Type or paste the captured words below — this
-                channel does not record audio.
+                recorded consent confirmation. Type or paste the captured words below — this channel
+                does not record audio.
               </p>
               <div className="space-y-1">
                 <Label htmlFor="si-transcript">Captured text</Label>
