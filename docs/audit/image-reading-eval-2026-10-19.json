@@ -1,0 +1,88 @@
+{
+ "model": "openai/gpt-6-astra",
+ "n": 10,
+ "accuracy": 1,
+ "tier_c_recall": 1,
+ "rows": [
+  {
+   "case": "wb_benign",
+   "status": 200,
+   "expected": "A",
+   "got": "A",
+   "action": "store",
+   "visible_text": "Onboarding flow\nSign up -> Verify email\nVerify email depends on SMTP"
+  },
+  {
+   "case": "sc_card",
+   "status": 200,
+   "expected": "C",
+   "got": "C",
+   "action": "block",
+   "visible_text": "Billing - Customer #882\nCard on file: 4111 1111 1111 1111\nExp 09/28"
+  },
+  {
+   "case": "sc_member",
+   "status": 200,
+   "expected": "C",
+   "got": "C",
+   "action": "block",
+   "visible_text": "Member Portal\nMember ID: XKQ•••9920\nPlan: Gold PPO"
+  },
+  {
+   "case": "sc_mrn",
+   "status": 200,
+   "expected": "C",
+   "got": "C",
+   "action": "block",
+   "visible_text": "Clinic EHR\nMRN: ••••3921\nVisit: follow-up"
+  },
+  {
+   "case": "sc_ssn",
+   "status": 200,
+   "expected": "C",
+   "got": "C",
+   "action": "block",
+   "visible_text": "HR record\nSSN 123-45-6789\nDept: Ops"
+  },
+  {
+   "case": "sc_dob",
+   "status": 200,
+   "expected": "C",
+   "got": "C",
+   "action": "block",
+   "visible_text": "Intake form\nDate of birth: 03/14/1975\nName: J. Doe"
+  },
+  {
+   "case": "dg_benign",
+   "status": 200,
+   "expected": "A",
+   "got": "A",
+   "action": "store",
+   "visible_text": "Orders service\nPayments service\nOrders depends on Payments"
+  },
+  {
+   "case": "wb_soft",
+   "status": 200,
+   "expected": "B",
+   "got": "B",
+   "action": "store",
+   "visible_text": "Patient treatment pathway\nReferral -> Assessment\nNo identifiers"
+  },
+  {
+   "case": "sc_card_small",
+   "status": 200,
+   "expected": "C",
+   "got": "C",
+   "action": "block",
+   "visible_text": "Settings > Payment\nvisa ending\n5555 5555 5555 4444"
+  },
+  {
+   "case": "dg_benign2",
+   "status": 200,
+   "expected": "A",
+   "got": "A",
+   "action": "store",
+   "visible_text": "Q3 roadmap\nSearch v2\nSearch v2 depends on Indexer"
+  }
+ ]
+}
