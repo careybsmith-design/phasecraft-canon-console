@@ -33,17 +33,20 @@ export function LiveCapturePanel({
   sessionId,
   participants,
   openedAt,
+  me,
   onDone,
 }: {
   sessionId: string;
   participants: Participant[];
   openedAt: string | null;
+  me: string;
   onDone: () => void;
 }) {
   const send = useServerFn(captureLiveSpeech);
   const [speaker, setSpeaker] = useState(participants[0]?.id ?? "");
   const [recording, setRecording] = useState(false);
   const [pending, setPending] = useState(0);
+  const [heldForOthers, setHeldForOthers] = useState(0);
   const [busy, setBusy] = useState(false);
   const recorder = useRef<LiveRecorder | null>(null);
   const startedAt = useRef<number>(0);
