@@ -754,6 +754,12 @@ function Extraction({ d, onChange }: { d: Row; onChange: () => void }) {
   );
 }
 
+const REASON_LABELS: Record<string, string> = {
+  material: "material",
+  decision: "a decision",
+  need: "a need",
+};
+
 function StatementCard({
   x,
   obj,
