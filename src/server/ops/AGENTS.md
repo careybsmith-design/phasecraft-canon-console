@@ -1,5 +1,8 @@
 # Shared operations
 
+- Session association uses session-mission.server.ts and transactional thread_link_session_to_mission; MissionContract is embedded in ValueMission co_creator/decision_authority, with current named-holder grants for delegation. Why: shared human/MCP decisions or suggestions change containment, never confirmed intent.
+- ConfirmedIntentWithoutMission is a separate advisory extension served by intent_mission_frontier; creation enforces scope. Why: sessions may precede missions without creating a blocking detector or approval queue.
+
 - Human-surface operations use `human-surfaces.ts` schemas and `thread_human_operation` for atomic ledger-first mission, cell, burst and simulation-evidence writes. Why: the human and MCP paths must enforce the same bounds and provenance.
 - Simulation Studio choices are private, expiring scenario renditions, not employee assessments or production evidence. Why: practice cannot earn authority, count as realised value or become surveillance.
 - Capability probes are ledgered as simulated with `results: not_executed`; simulation tools remain pending until an execution harness exists. Why: a planned test is not test evidence.

@@ -286,7 +286,7 @@ export const startFramingSession = createServerFn({ method: "POST" })
     z
       .object({
         purpose: z.string().trim().min(3).max(500),
-        mission_ref: z.string().trim().max(60).optional().nullable(),
+        mission_ref: uuid.optional().nullable(),
         modalities: z.array(z.enum(MODALITIES)).min(1),
         participants: z.array(ParticipantIn).min(2).max(12),
         scheduled_duration_min: z.number().int().min(1).max(600).optional().nullable(),
@@ -344,14 +344,20 @@ export const startFramingSession = createServerFn({ method: "POST" })
         ? { scheduled_duration_min: data.scheduled_duration_min }
         : {}),
     };
-    const s = await create(db, human(context.userId), {
+    const { data: started, error: startError } = await db.rpc("thread_start_scoped_session", {
+      p_actor: human(context.userId) as never,
+      ...(data.mission_ref ? { p_mission: data.mission_ref } : {}),
+      p: {
       ...payload("FramingSession", data.purpose.slice(0, 120), data.purpose, body, {
         owner: context.userId,
         rationale: "Framing session started",
       }),
       co_creator_id: co.user_id ?? undefined,
       builder_id: bu.user_id ?? undefined,
+      } as never,
     });
+    if (startError) throw threadError(startError.message);
+    const s = started as unknown as { id: string; human_ref: string; association?: { recorded_as?: string } };
     await db.from("extraction_revisions").insert({
       session_id: s.id,
       revision: 1,
@@ -2819,6 +2825,9 @@ export const getFramingView = createServerFn({ method: "GET" })
         break;
       }
       case "unresolved_frontier": {
+        const { data: advisory, error: advisoryError } = await sb.rpc("intent_mission_frontier", data.session ? { p_session: data.session } : {});
+        if (advisoryError) throw new Error(advisoryError.message);
+        for (const a of advisory ?? []) list.push({ ref: a.human_ref, title: a.title, type: a.type, state: a.lifecycle_state, why: a.why });
         const has = (id: string, verbs: string[], dir: "from" | "to") =>
           edges.some((e) => verbs.includes(e.verb) && e[dir] === id);
         for (const o of all) {

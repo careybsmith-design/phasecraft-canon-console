@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { MissionInput } from "@/domain/human-surfaces";
+import { createMissionFromNeed } from "@/lib/session-mission.functions";
 
 export type SurfaceObject = Awaited<ReturnType<typeof getHumanSurface>>["objects"][number];
 export type Rendition = Awaited<ReturnType<typeof askCompanion>>;
@@ -280,9 +281,11 @@ const MISSION_FIELDS = {
 export function MissionForm({
   objects,
   signalId,
+  needId,
 }: {
   objects: SurfaceObject[];
   signalId?: string;
+  needId?: string;
 }) {
   const [fields, setFields] = useState<Record<string, string>>({});
   const [signal, setSignal] = useState(signalId ?? "");
@@ -290,6 +293,7 @@ export function MissionForm({
   const [issue, setIssue] = useState("");
   const uid = useId();
   const create = useServerFn(createMission);
+  const fromNeed = useServerFn(createMissionFromNeed);
   const navigate = useNavigate();
   return (
     <details className="border-y py-3">
@@ -313,7 +317,7 @@ export function MissionForm({
           }
           setBusy(true);
           try {
-            const r = await create({ data: parsed.data });
+            const r = needId ? await fromNeed({ data: { need_id: needId, mission: parsed.data, rationale: "Mission established from this confirmed session need" } }) : await create({ data: parsed.data });
             toast.success(`Recorded ${r.human_ref}`);
             await navigate({ to: "/missions/$missionId", params: { missionId: r.id } });
           } catch (err) {

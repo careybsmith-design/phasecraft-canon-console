@@ -2603,6 +2603,13 @@ export type Database = {
         Args: { _action: string; _actor: Json; _object: string; _payload: Json }
         Returns: number
       }
+      _mission_link_authority: {
+        Args: {
+          p_mission: Database["public"]["Tables"]["objects"]["Row"]
+          p_user: string
+        }
+        Returns: Json
+      }
       _of_type: {
         Args: { _ids: string[]; _types: string[] }
         Returns: string[]
@@ -2692,6 +2699,36 @@ export type Database = {
         Returns: string
       }
       _selftest_refs: { Args: { _actor: Json }; Returns: Json }
+      _session_scope_edge: {
+        Args: {
+          m: Database["public"]["Tables"]["objects"]["Row"]
+          p_actor: Json
+          p_retire?: string
+          rationale: string
+          s: Database["public"]["Tables"]["objects"]["Row"]
+        }
+        Returns: {
+          authority_used: Database["public"]["Enums"]["authority_level"]
+          confidence: number | null
+          created_at: string
+          created_by: Json
+          evidence_refs: string[]
+          from_id: string
+          id: string
+          kind: string | null
+          rationale: string | null
+          retired_at: string | null
+          source: string
+          to_id: string
+          verb: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "edges"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       _sim_build_digest: {
         Args: {
           _compiled_hash: string
@@ -2887,6 +2924,19 @@ export type Database = {
         Returns: boolean
       }
       human_surface_context: { Args: { p_root?: string }; Returns: Json }
+      intent_mission_frontier: {
+        Args: { p_session?: string }
+        Returns: {
+          detector_key: string
+          human_ref: string
+          id: string
+          lifecycle_state: string
+          session_id: string
+          title: string
+          type: string
+          why: string
+        }[]
+      }
       is_prohibited_lifecycle_state: { Args: { s: string }; Returns: boolean }
       least_auth: {
         Args: {
@@ -2914,6 +2964,15 @@ export type Database = {
       phase10_measurements_extended: { Args: never; Returns: Json }
       phase10_schema_check: { Args: never; Returns: Json }
       phase12_assurance_checks: { Args: never; Returns: Json }
+      session_mission_advisory_catalogue: {
+        Args: never
+        Returns: {
+          blocking: boolean
+          key: string
+          severity: string
+        }[]
+      }
+      session_mission_scope: { Args: { p_session: string }; Returns: Json }
       show_limit: { Args: never; Returns: number }
       show_trgm: { Args: { "": string }; Returns: string[] }
       thread_a2a_message: {
@@ -3182,6 +3241,17 @@ export type Database = {
         Args: { p?: Json; p_actor: Json; p_capability: string }
         Returns: Json
       }
+      thread_link_session_to_mission: {
+        Args: {
+          p_actor: Json
+          p_mission: string
+          p_origin?: string
+          p_rationale: string
+          p_reverse?: boolean
+          p_session: string
+        }
+        Returns: Json
+      }
       thread_mcp_subscribe: {
         Args: {
           p_agent: string
@@ -3193,6 +3263,15 @@ export type Database = {
       }
       thread_mcp_take_notifications: {
         Args: { p_agent: string; p_limit: number }
+        Returns: Json
+      }
+      thread_need_to_mission: {
+        Args: {
+          p_actor: Json
+          p_mission: Json
+          p_need: string
+          p_rationale: string
+        }
         Returns: Json
       }
       thread_observe_detection: {
@@ -3571,6 +3650,7 @@ export type Database = {
         Args: { p_actor: Json; p_id: string; p_purpose: string }
         Returns: Json
       }
+      thread_session_mission_selftest: { Args: never; Returns: Json }
       thread_set_authority: {
         Args: {
           p_actor: Json
@@ -3642,6 +3722,10 @@ export type Database = {
         Returns: Json
       }
       thread_signal_intake_selftest: { Args: never; Returns: Json }
+      thread_start_scoped_session: {
+        Args: { p: Json; p_actor: Json; p_mission?: string }
+        Returns: Json
+      }
       thread_sync_tool_contracts: {
         Args: { p: Json; p_version: string }
         Returns: number

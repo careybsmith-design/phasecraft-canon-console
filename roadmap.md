@@ -1,5 +1,11 @@
 # THREAD roadmap
 
+## Session-to-mission containment — 19 October 2026
+
+- [ ] Add optional start association, retrospective association/reversal on session and mission surfaces, and shared human/MCP operation.
+- [ ] Preserve existing verb signatures and signal guards; derive authority, record decisions/suggestions, resolve containment and advisory frontier.
+- [ ] Implement promoted-signal-first need conversion and collect all ten requested exit evidence cases.
+
 ## Consolidated remediation (THREAD-Consolidated-Remediation-Prompt.md) — 19 October 2026
 
 - [x] W1.1 typecheck gate: `typecheck`/`build`/`build:dev` scripts now run `tsgo --noEmit` before Vite (deviation: prompt said `tsc`, project toolchain uses tsgo). Gate proven: deliberate `src/__gatecheck.ts` type error failed with TS2322 exit 2; clean tree exits 0; `bun run build` exit 0. No CI workflows exist — the `build` script is the only gate.

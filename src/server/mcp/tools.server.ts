@@ -69,6 +69,10 @@ async function generate(ctx: AgentCtx, kind: RenditionKind, a: Json) {
 }
 
 export const HANDLERS: Record<string, Handler> = {
+  async link_session_to_mission(ctx, a) {
+    const { linkSessionMissionCore } = await import("@/server/ops/session-mission.server");
+    return linkSessionMissionCore(ctx, a);
+  },
   async record_value_signal(ctx, a) {
     const { recordSignalCore } = await import("@/server/ops/signal-intake.server");
     return recordSignalCore(
@@ -847,7 +851,7 @@ export const HANDLERS: Record<string, Handler> = {
   },
   async render_unresolved_frontier(ctx, a) {
     await visible(ctx, S(a["mission_ref"]), "id");
-    return call(
+    const existing = await call<Json[]>(
       ctx.sb
         .from("objects")
         .select("id,human_ref,type,title,lifecycle_state")
@@ -855,6 +859,8 @@ export const HANDLERS: Record<string, Handler> = {
         .eq("is_tombstone", false)
         .limit(100),
     );
+    const advisory = await call<Json[]>(ctx.sb.rpc("intent_mission_frontier"));
+    return [...existing, ...advisory];
   },
 
   async list_notifications(ctx, a) {

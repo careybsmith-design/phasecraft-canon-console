@@ -568,6 +568,34 @@
       "when": 1792383665224,
       "tag": "0080_build_run_owner_steward_fallback",
       "breakpoints": true
+    },
+    {
+      "idx": 81,
+      "version": "7",
+      "when": 1792385391364,
+      "tag": "0081_session_mission_containment",
+      "breakpoints": true
+    },
+    {
+      "idx": 82,
+      "version": "7",
+      "when": 1792385562202,
+      "tag": "0082_session_mission_guards_and_acceptance",
+      "breakpoints": true
+    },
+    {
+      "idx": 83,
+      "version": "7",
+      "when": 1792385609731,
+      "tag": "0083_session_mission_acceptance_assertion",
+      "breakpoints": true
+    },
+    {
+      "idx": 84,
+      "version": "7",
+      "when": 1792385715372,
+      "tag": "0084_session_mission_scoped_reads",
+      "breakpoints": true
     }
   ]
 }
