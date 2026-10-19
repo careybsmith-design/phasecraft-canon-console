@@ -848,14 +848,28 @@ function StatementCard({
       </div>
       {draft && (
         <div className="mt-2 space-y-1">
-          <p className="text-xs text-muted-foreground">
-            Confirming records this statement as confirmed under your authority. If you hold no
-            decision authority in this session, the confirmation is flagged as an authority mismatch
-            and material items still need an authority holder.
-          </p>
+          {x.confirmation_authority === "held" && (
+            <p id={`auth-${x.id}`} className="text-xs text-muted-foreground">
+              This item requires decision authority ({REASON_LABELS[x.confirmation_reason] ?? "material"}),
+              which you hold.
+            </p>
+          )}
+          {x.confirmation_authority === "missing" && (
+            <p id={`auth-${x.id}`} role="note" className="text-xs text-warn">
+              This item needs decision authority because it is{" "}
+              {REASON_LABELS[x.confirmation_reason] ?? "material"}. You do not hold decision
+              authority in this session, so you cannot confirm it. You can still edit or reject it.
+            </p>
+          )}
           <div className="flex flex-wrap gap-2">
             <Button
               size="sm"
+              disabled={x.confirmation_authority === "missing"}
+              aria-describedby={
+                x.confirmation_authority === "missing" || x.confirmation_authority === "held"
+                  ? `auth-${x.id}`
+                  : undefined
+              }
               onClick={() =>
                 mode === "edit"
                   ? act(() => conf({ data: { statement_id: x.id, title, statement: stmt } }))
