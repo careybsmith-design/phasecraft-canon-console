@@ -16,8 +16,18 @@ const BASE = "https://ai.gateway.lovable.dev/v1";
 export function liveModelGateway(apiKey: string): ModelGateway {
   return {
     async complete(req: CompleteRequest): Promise<CompleteResult> {
-      const content = req.messages.flatMap(m => typeof m.content === "string" ? [m.content] : m.content.flatMap(p => p.type === "input_text" ? [p.text] : [])).join("\n");
-      if (classifyContent(content).tier !== "A") throw new ModelGatewayError(451, "TIER_ROUTE_REFUSED: deterministic scan refused external processing");
+      const content = req.messages
+        .flatMap((m) =>
+          typeof m.content === "string"
+            ? [m.content]
+            : m.content.flatMap((p) => (p.type === "input_text" ? [p.text] : [])),
+        )
+        .join("\n");
+      if (classifyContent(content).tier !== "A")
+        throw new ModelGatewayError(
+          451,
+          "TIER_ROUTE_REFUSED: deterministic scan refused external processing",
+        );
       if (req.data_classification === "restricted" || req.data_classification === "confidential") {
         throw new ModelGatewayError(
           451,
@@ -26,8 +36,17 @@ export function liveModelGateway(apiKey: string): ModelGateway {
       }
       const t0 = Date.now();
       const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-      const eligibility = await supabaseAdmin.rpc("thread_assert_model_route", { p_route: req.route, p_class: "A", p_task: req.purpose, p_model: LIVE_MODEL });
-      if (eligibility.error || eligibility.data !== true) throw new ModelGatewayError(451, "MODEL_ROUTE_NOT_CLEARED: missing attestation, evaluation, task clearance or logging evidence");
+      const eligibility = await supabaseAdmin.rpc("thread_assert_model_route", {
+        p_route: req.route,
+        p_class: "A",
+        p_task: req.purpose,
+        p_model: LIVE_MODEL,
+      });
+      if (eligibility.error || eligibility.data !== true)
+        throw new ModelGatewayError(
+          451,
+          "MODEL_ROUTE_NOT_CLEARED: missing attestation, evaluation, task clearance or logging evidence",
+        );
       const input = req.messages.map((m) => ({
         role: m.role === "system" ? "developer" : "user",
         content:

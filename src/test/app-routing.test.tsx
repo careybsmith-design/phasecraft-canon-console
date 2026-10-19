@@ -8,9 +8,24 @@ import { routeTree } from "@/routeTree.gen";
 // network the test run lacks, and jsdom never loads the stylesheets React waits on.
 describe("App routing", () => {
   it.each([
-    ["/evidence/11111111-1111-4111-8111-111111111111", "/_authenticated/evidence_/$capabilityId", "capabilityId", "11111111-1111-4111-8111-111111111111"],
-    ["/sessions/22222222-2222-4222-8222-222222222222", "/_authenticated/sessions/$sessionId", "sessionId", "22222222-2222-4222-8222-222222222222"],
-    ["/framing/22222222-2222-4222-8222-222222222222", "/_authenticated/framing/$sessionId", "sessionId", "22222222-2222-4222-8222-222222222222"],
+    [
+      "/evidence/11111111-1111-4111-8111-111111111111",
+      "/_authenticated/evidence_/$capabilityId",
+      "capabilityId",
+      "11111111-1111-4111-8111-111111111111",
+    ],
+    [
+      "/sessions/22222222-2222-4222-8222-222222222222",
+      "/_authenticated/sessions/$sessionId",
+      "sessionId",
+      "22222222-2222-4222-8222-222222222222",
+    ],
+    [
+      "/framing/22222222-2222-4222-8222-222222222222",
+      "/_authenticated/framing/$sessionId",
+      "sessionId",
+      "22222222-2222-4222-8222-222222222222",
+    ],
   ])("matches required deep link %s without an intervening page", (url, leaf, key, id) => {
     const router = createRouter({ routeTree, context: { queryClient: new QueryClient() } });
     const matches = router.matchRoutes(url);

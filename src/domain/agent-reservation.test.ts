@@ -1,7 +1,10 @@
 import { readFileSync } from "node:fs";
 import { expect, it } from "vitest";
 
-const migration = readFileSync("drizzle/migrations/0070_reaudit_agent_reservation_serialization.sql", "utf8");
+const migration = readFileSync(
+  "drizzle/migrations/0070_reaudit_agent_reservation_serialization.sql",
+  "utf8",
+);
 it("single-use confirmations and quota reservations acquire transaction locks", () => {
   expect(migration).toContain("where token_hash = p_token_hash FOR UPDATE;");
   expect(migration).toContain("where id = p_confirmation FOR UPDATE;");

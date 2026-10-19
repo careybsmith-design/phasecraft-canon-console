@@ -1,3 +1,4 @@
 # Model routing
+
 - Live completions scan text before eligibility/network access, then require indexed model_routes eligibility through thread_assert_model_route. Why: missing/expired attestations, failed evaluations, uncleared tasks/model pins and unknown logging controls fail closed.
 - Never fabricate route clearance to restore live processing. Why: regression fallback is not proof of an eligible provider.

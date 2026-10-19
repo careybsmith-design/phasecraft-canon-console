@@ -88,11 +88,7 @@
     "action_pct": null,
     "read_only_pct": null
   },
-  "schedules": [
-    "thread-rendition-sweep",
-    "thread-morning-briefs",
-    "thread-phase10-reconcile"
-  ],
+  "schedules": ["thread-rendition-sweep", "thread-morning-briefs", "thread-phase10-reconcile"],
   "nightly_verifier": "not listed",
   "proof_boundary": "No secrets, raw private agent mandates or orphan body content bundled; catalogue counts and source checks are not execution certification"
 }

@@ -5,7 +5,7 @@
  */
 
 function keyBytes(): Uint8Array {
-  const raw = process.env['APP_USER_CONNECTION_KEY_SECRET'];
+  const raw = process.env["APP_USER_CONNECTION_KEY_SECRET"];
   if (!raw) throw new Error("APP_USER_CONNECTION_KEY_SECRET is not set");
   const bin = atob(raw);
   const bytes = new Uint8Array(bin.length);

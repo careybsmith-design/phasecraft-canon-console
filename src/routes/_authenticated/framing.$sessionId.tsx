@@ -208,7 +208,10 @@ function Header({ d, onChange }: { d: Row; onChange: () => void }) {
           Content tier <strong className={tier === "A" ? "text-ok" : "text-warn"}>{tier}</strong> —{" "}
           {TIER_ROUTES[tier]}
         </span>
-        <span>Live speech capture uses the real transcription adapter; typed “speech” entries remain simulated</span>
+        <span>
+          Live speech capture uses the real transcription adapter; typed “speech” entries remain
+          simulated
+        </span>
       </div>
       <div className="flex flex-wrap gap-3 text-xs text-muted-foreground">
         {Object.entries(lat).map(([k, v]) => (

@@ -12,8 +12,19 @@ export interface ShadowEvent {
 
 export interface Telemetry {
   mode: "simulated" | "live";
-  subscribe(capabilityId: string, filters: Record<string, unknown>): Promise<{ subscription_id: string }>;
+  subscribe(
+    capabilityId: string,
+    filters: Record<string, unknown>,
+  ): Promise<{ subscription_id: string }>;
   /** Read-only shadow tap. `read_only` is literal true; a live adapter must refuse anything else. */
-  tap(opts: { read_only: true; capability_id: string; sample_size: number }): Promise<ShadowEvent[]>;
-  metrics(query: { capability_id: string; from: string; to: string }): Promise<{ events_processed: number; cost: number }>;
+  tap(opts: {
+    read_only: true;
+    capability_id: string;
+    sample_size: number;
+  }): Promise<ShadowEvent[]>;
+  metrics(query: {
+    capability_id: string;
+    from: string;
+    to: string;
+  }): Promise<{ events_processed: number; cost: number }>;
 }

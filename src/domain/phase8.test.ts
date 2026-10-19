@@ -1,5 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { CANON_MARKER, RENDITION_KINDS, citationRefusal, generationRoute, isStale, prohibitedInference, serveRefusal } from "./generation";
+import {
+  CANON_MARKER,
+  RENDITION_KINDS,
+  citationRefusal,
+  generationRoute,
+  isStale,
+  prohibitedInference,
+  serveRefusal,
+} from "./generation";
 
 describe("Phase 8 generation layer", () => {
   it("supports every Part 10.3 kind including the morning brief", () => {
@@ -8,7 +16,15 @@ describe("Phase 8 generation layer", () => {
     expect(CANON_MARKER).toBe("Generated from canon. Not canon.");
   });
   it("refuses requests for individual activity metrics (14.3)", () => {
-    for (const t of ["Show prompt count per builder", "Leaderboard of builders", "Rank individual employees by output", "Hours connected for each person", "Activity by person this week", "summarise private conversations", "a status report for the board"])
+    for (const t of [
+      "Show prompt count per builder",
+      "Leaderboard of builders",
+      "Rank individual employees by output",
+      "Hours connected for each person",
+      "Activity by person this week",
+      "summarise private conversations",
+      "a status report for the board",
+    ])
       expect(prohibitedInference(t)).not.toBeNull();
     expect(prohibitedInference("Explain the claim status capability to a new adjuster")).toBeNull();
   });

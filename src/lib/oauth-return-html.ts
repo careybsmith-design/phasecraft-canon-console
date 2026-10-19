@@ -18,11 +18,7 @@ export function oauthReturnHtml(url: URL): string {
           };
 
   const escapeHtml = (str: string) =>
-    str
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;");
+    str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
   const safeJson = JSON.stringify(result).replace(/<\//g, "<\\/");
 
   return `<!DOCTYPE html>

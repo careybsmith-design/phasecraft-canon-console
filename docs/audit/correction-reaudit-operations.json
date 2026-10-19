@@ -50,9 +50,7 @@
               "maxLength": 200
             }
           },
-          "required": [
-            "observed_condition"
-          ],
+          "required": ["observed_condition"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -91,9 +89,7 @@
               ]
             }
           },
-          "required": [
-            "id"
-          ],
+          "required": ["id"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -207,9 +203,7 @@
               "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$"
             }
           },
-          "required": [
-            "signal_id"
-          ],
+          "required": ["signal_id"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -403,14 +397,7 @@
               ]
             }
           },
-          "required": [
-            "signal",
-            "magnitude",
-            "urgency",
-            "value",
-            "confidence_bundle",
-            "unscored"
-          ],
+          "required": ["signal", "magnitude", "urgency", "value", "confidence_bundle", "unscored"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -530,9 +517,7 @@
               "maximum": 50
             }
           },
-          "required": [
-            "condition"
-          ],
+          "required": ["condition"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -602,10 +587,7 @@
               ]
             }
           },
-          "required": [
-            "missions",
-            "capabilities"
-          ],
+          "required": ["missions", "capabilities"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -789,12 +771,7 @@
             "risk_tier": {
               "default": "1",
               "type": "string",
-              "enum": [
-                "1",
-                "2",
-                "3",
-                "4"
-              ]
+              "enum": ["1", "2", "3", "4"]
             }
           },
           "required": [
@@ -914,11 +891,7 @@
               ]
             }
           },
-          "required": [
-            "id",
-            "human_ref",
-            "version"
-          ],
+          "required": ["id", "human_ref", "version"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -1042,9 +1015,7 @@
               }
             }
           },
-          "required": [
-            "mission_id"
-          ],
+          "required": ["mission_id"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -1145,11 +1116,7 @@
               ]
             }
           },
-          "required": [
-            "id",
-            "human_ref",
-            "version"
-          ],
+          "required": ["id", "human_ref", "version"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -1288,9 +1255,7 @@
               "maximum": 180
             }
           },
-          "required": [
-            "cell_id"
-          ],
+          "required": ["cell_id"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -1391,11 +1356,7 @@
               ]
             }
           },
-          "required": [
-            "id",
-            "human_ref",
-            "version"
-          ],
+          "required": ["id", "human_ref", "version"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -1534,9 +1495,7 @@
               "maxLength": 120
             }
           },
-          "required": [
-            "outcome"
-          ],
+          "required": ["outcome"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -1670,12 +1629,7 @@
                 ]
               }
             },
-            "required": [
-              "capability_id",
-              "match_score",
-              "reuse_mode",
-              "gaps"
-            ],
+            "required": ["capability_id", "match_score", "reuse_mode", "gaps"],
             "additionalProperties": {
               "anyOf": [
                 {
@@ -1795,10 +1749,7 @@
               "maxLength": 1000
             }
           },
-          "required": [
-            "capability_id",
-            "scenario"
-          ],
+          "required": ["capability_id", "scenario"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -1837,9 +1788,7 @@
               ]
             }
           },
-          "required": [
-            "id"
-          ],
+          "required": ["id"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -1965,11 +1914,7 @@
               "maxLength": 1000
             }
           },
-          "required": [
-            "capability_id",
-            "population_pct",
-            "reason"
-          ],
+          "required": ["capability_id", "population_pct", "reason"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -2008,9 +1953,7 @@
               ]
             }
           },
-          "required": [
-            "id"
-          ],
+          "required": ["id"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -2124,9 +2067,7 @@
               "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$"
             }
           },
-          "required": [
-            "capability_id"
-          ],
+          "required": ["capability_id"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -2258,12 +2199,7 @@
               ]
             }
           },
-          "required": [
-            "capability",
-            "production_outcomes",
-            "value_measures",
-            "incidents"
-          ],
+          "required": ["capability", "production_outcomes", "value_measures", "incidents"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -2387,10 +2323,7 @@
               "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$"
             }
           },
-          "required": [
-            "capability_id",
-            "contract_id"
-          ],
+          "required": ["capability_id", "contract_id"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -2429,9 +2362,7 @@
               ]
             }
           },
-          "required": [
-            "id"
-          ],
+          "required": ["id"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -2546,9 +2477,7 @@
               "maxLength": 4000
             }
           },
-          "required": [
-            "text"
-          ],
+          "required": ["text"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -2618,10 +2547,7 @@
               ]
             }
           },
-          "required": [
-            "legacy",
-            "matches"
-          ],
+          "required": ["legacy", "matches"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -3843,9 +3769,7 @@
               "maximum": 50
             }
           },
-          "required": [
-            "q"
-          ],
+          "required": ["q"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -4939,9 +4863,7 @@
               }
             }
           },
-          "required": [
-            "root"
-          ],
+          "required": ["root"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -5104,13 +5026,7 @@
               ]
             }
           },
-          "required": [
-            "root",
-            "nodes",
-            "edges",
-            "total_edges",
-            "edge_budget"
-          ],
+          "required": ["root", "nodes", "edges", "total_edges", "edge_budget"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -5229,10 +5145,7 @@
               "maxLength": 200
             }
           },
-          "required": [
-            "id",
-            "purpose"
-          ],
+          "required": ["id", "purpose"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -5271,9 +5184,7 @@
               ]
             }
           },
-          "required": [
-            "id"
-          ],
+          "required": ["id"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -5483,11 +5394,7 @@
                 ]
               }
             },
-            "required": [
-              "id",
-              "kind",
-              "state"
-            ],
+            "required": ["id", "kind", "state"],
             "additionalProperties": {
               "anyOf": [
                 {
@@ -5633,11 +5540,7 @@
               }
             }
           },
-          "required": [
-            "object_id",
-            "patch",
-            "rationale"
-          ],
+          "required": ["object_id", "patch", "rationale"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -5676,9 +5579,7 @@
               ]
             }
           },
-          "required": [
-            "id"
-          ],
+          "required": ["id"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -5807,10 +5708,7 @@
               }
             }
           },
-          "required": [
-            "change_id",
-            "argument"
-          ],
+          "required": ["change_id", "argument"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -5849,9 +5747,7 @@
               ]
             }
           },
-          "required": [
-            "id"
-          ],
+          "required": ["id"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -5965,9 +5861,7 @@
               "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$"
             }
           },
-          "required": [
-            "object_id"
-          ],
+          "required": ["object_id"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -6037,10 +5931,7 @@
               ]
             }
           },
-          "required": [
-            "versions",
-            "ledger"
-          ],
+          "required": ["versions", "ledger"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -6179,10 +6070,7 @@
               "maxLength": 200
             }
           },
-          "required": [
-            "condition",
-            "observable_result"
-          ],
+          "required": ["condition", "observable_result"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -6221,9 +6109,7 @@
               ]
             }
           },
-          "required": [
-            "id"
-          ],
+          "required": ["id"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -6347,11 +6233,7 @@
               "maxLength": 1000
             }
           },
-          "required": [
-            "id",
-            "expected_version",
-            "rationale"
-          ],
+          "required": ["id", "expected_version", "rationale"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -6390,9 +6272,7 @@
               ]
             }
           },
-          "required": [
-            "id"
-          ],
+          "required": ["id"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -6529,20 +6409,10 @@
             },
             "reversibility": {
               "type": "string",
-              "enum": [
-                "trivial",
-                "assisted",
-                "difficult",
-                "impossible"
-              ]
+              "enum": ["trivial", "assisted", "difficult", "impossible"]
             }
           },
-          "required": [
-            "decision",
-            "context",
-            "rationale",
-            "reversibility"
-          ],
+          "required": ["decision", "context", "rationale", "reversibility"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -6581,9 +6451,7 @@
               ]
             }
           },
-          "required": [
-            "id"
-          ],
+          "required": ["id"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -6708,10 +6576,7 @@
               "type": "boolean"
             }
           },
-          "required": [
-            "question",
-            "why_it_matters"
-          ],
+          "required": ["question", "why_it_matters"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -6750,9 +6615,7 @@
               ]
             }
           },
-          "required": [
-            "id"
-          ],
+          "required": ["id"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -6876,11 +6739,7 @@
               "maxLength": 500
             }
           },
-          "required": [
-            "statement",
-            "basis",
-            "verification_method"
-          ],
+          "required": ["statement", "basis", "verification_method"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -6919,9 +6778,7 @@
               ]
             }
           },
-          "required": [
-            "id"
-          ],
+          "required": ["id"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -7055,12 +6912,7 @@
               "maxLength": 1000
             }
           },
-          "required": [
-            "id",
-            "expected_version",
-            "evidence_refs",
-            "rationale"
-          ],
+          "required": ["id", "expected_version", "evidence_refs", "rationale"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -7099,9 +6951,7 @@
               ]
             }
           },
-          "required": [
-            "id"
-          ],
+          "required": ["id"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -7241,12 +7091,7 @@
               "maxLength": 1000
             }
           },
-          "required": [
-            "id",
-            "expected_version",
-            "patch",
-            "rationale"
-          ],
+          "required": ["id", "expected_version", "patch", "rationale"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -7285,9 +7130,7 @@
               ]
             }
           },
-          "required": [
-            "id"
-          ],
+          "required": ["id"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -7415,10 +7258,7 @@
               ]
             }
           },
-          "required": [
-            "capability_id",
-            "question"
-          ],
+          "required": ["capability_id", "question"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -7550,12 +7390,7 @@
               ]
             }
           },
-          "required": [
-            "question",
-            "answered",
-            "answer",
-            "citations"
-          ],
+          "required": ["question", "answered", "answer", "citations"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -7669,9 +7504,7 @@
               "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$"
             }
           },
-          "required": [
-            "capability_id"
-          ],
+          "required": ["capability_id"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -7772,11 +7605,7 @@
               ]
             }
           },
-          "required": [
-            "root",
-            "links",
-            "completeness"
-          ],
+          "required": ["root", "links", "completeness"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -7890,9 +7719,7 @@
               "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$"
             }
           },
-          "required": [
-            "behavior_id"
-          ],
+          "required": ["behavior_id"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -7993,11 +7820,7 @@
               ]
             }
           },
-          "required": [
-            "root",
-            "count",
-            "nodes"
-          ],
+          "required": ["root", "count", "nodes"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -8111,9 +7934,7 @@
               "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$"
             }
           },
-          "required": [
-            "capability_id"
-          ],
+          "required": ["capability_id"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -8276,13 +8097,7 @@
               ]
             }
           },
-          "required": [
-            "object_id",
-            "missing",
-            "present",
-            "total",
-            "score"
-          ],
+          "required": ["object_id", "missing", "present", "total", "score"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -8466,10 +8281,7 @@
               ]
             }
           },
-          "required": [
-            "count",
-            "nodes"
-          ],
+          "required": ["count", "nodes"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -8677,11 +8489,7 @@
               ]
             }
           },
-          "required": [
-            "query",
-            "count",
-            "rows"
-          ],
+          "required": ["query", "count", "rows"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -8823,17 +8631,11 @@
                   "maxLength": 120
                 }
               },
-              "required": [
-                "outcome"
-              ]
+              "required": ["outcome"]
             },
             "decision": {
               "type": "string",
-              "enum": [
-                "reuse_as_is",
-                "compose_existing",
-                "create_new"
-              ]
+              "enum": ["reuse_as_is", "compose_existing", "create_new"]
             },
             "rationale": {
               "type": "string",
@@ -8846,11 +8648,7 @@
               "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$"
             }
           },
-          "required": [
-            "intent_shape",
-            "decision",
-            "rationale"
-          ],
+          "required": ["intent_shape", "decision", "rationale"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -8920,10 +8718,7 @@
               ]
             }
           },
-          "required": [
-            "reuse_check_id",
-            "results"
-          ],
+          "required": ["reuse_check_id", "results"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -9058,13 +8853,7 @@
             },
             "target_platform": {
               "type": "string",
-              "enum": [
-                "lovable",
-                "claude_code",
-                "codex",
-                "cursor",
-                "grok"
-              ]
+              "enum": ["lovable", "claude_code", "codex", "cursor", "grok"]
             },
             "mission_ref": {
               "type": "string",
@@ -9123,9 +8912,7 @@
               ]
             }
           },
-          "required": [
-            "id"
-          ],
+          "required": ["id"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -9240,13 +9027,7 @@
             },
             "platform": {
               "type": "string",
-              "enum": [
-                "lovable",
-                "claude_code",
-                "codex",
-                "cursor",
-                "grok"
-              ]
+              "enum": ["lovable", "claude_code", "codex", "cursor", "grok"]
             },
             "cost_ceiling": {
               "type": "number",
@@ -9265,11 +9046,7 @@
               "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$"
             }
           },
-          "required": [
-            "prompt_id",
-            "platform",
-            "cost_ceiling"
-          ],
+          "required": ["prompt_id", "platform", "cost_ceiling"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -9370,11 +9147,7 @@
               ]
             }
           },
-          "required": [
-            "run_id",
-            "human_ref",
-            "status"
-          ],
+          "required": ["run_id", "human_ref", "status"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -9489,9 +9262,7 @@
               "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$"
             }
           },
-          "required": [
-            "run_id"
-          ],
+          "required": ["run_id"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -9592,11 +9363,7 @@
               ]
             }
           },
-          "required": [
-            "id",
-            "human_ref",
-            "run"
-          ],
+          "required": ["id", "human_ref", "run"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -9719,11 +9486,7 @@
               "format": "uri"
             }
           },
-          "required": [
-            "run_id",
-            "kind",
-            "uri"
-          ],
+          "required": ["run_id", "kind", "uri"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -9762,9 +9525,7 @@
               ]
             }
           },
-          "required": [
-            "id"
-          ],
+          "required": ["id"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -9886,12 +9647,7 @@
             },
             "declared_class": {
               "type": "string",
-              "enum": [
-                "cosmetic",
-                "behavioural",
-                "scope",
-                "architecture"
-              ]
+              "enum": ["cosmetic", "behavioural", "scope", "architecture"]
             },
             "trigger": {
               "type": "string",
@@ -9943,12 +9699,7 @@
               }
             }
           },
-          "required": [
-            "from_run",
-            "to_run",
-            "declared_class",
-            "diff"
-          ],
+          "required": ["from_run", "to_run", "declared_class", "diff"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -10366,11 +10117,7 @@
               ]
             }
           },
-          "required": [
-            "detected_class",
-            "governance",
-            "scope_smuggled_if_declared_cosmetic"
-          ],
+          "required": ["detected_class", "governance", "scope_smuggled_if_declared_cosmetic"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -10489,10 +10236,7 @@
               "maxLength": 120
             }
           },
-          "required": [
-            "object_id",
-            "action"
-          ],
+          "required": ["object_id", "action"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -10624,12 +10368,7 @@
               ]
             }
           },
-          "required": [
-            "outcome",
-            "risk",
-            "policy_evaluation",
-            "decision_request"
-          ],
+          "required": ["outcome", "risk", "policy_evaluation", "decision_request"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -10778,12 +10517,7 @@
             },
             "reversibility": {
               "type": "string",
-              "enum": [
-                "trivial",
-                "assisted",
-                "difficult",
-                "impossible"
-              ]
+              "enum": ["trivial", "assisted", "difficult", "impossible"]
             }
           },
           "required": [
@@ -10834,9 +10568,7 @@
               ]
             }
           },
-          "required": [
-            "id"
-          ],
+          "required": ["id"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -10965,11 +10697,7 @@
               "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$"
             }
           },
-          "required": [
-            "capability_id",
-            "population_pct",
-            "rationale"
-          ],
+          "required": ["capability_id", "population_pct", "rationale"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -11008,9 +10736,7 @@
               ]
             }
           },
-          "required": [
-            "id"
-          ],
+          "required": ["id"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -11147,10 +10873,7 @@
               "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$"
             }
           },
-          "required": [
-            "object_id",
-            "reason"
-          ],
+          "required": ["object_id", "reason"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -11189,9 +10912,7 @@
               ]
             }
           },
-          "required": [
-            "id"
-          ],
+          "required": ["id"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -11306,9 +11027,7 @@
               "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$"
             }
           },
-          "required": [
-            "object_id"
-          ],
+          "required": ["object_id"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -11378,10 +11097,7 @@
               ]
             }
           },
-          "required": [
-            "guardrails",
-            "evaluations"
-          ],
+          "required": ["guardrails", "evaluations"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -11495,9 +11211,7 @@
               "maxLength": 4000
             }
           },
-          "required": [
-            "text"
-          ],
+          "required": ["text"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -11567,10 +11281,7 @@
               ]
             }
           },
-          "required": [
-            "injection",
-            "prohibited_inference"
-          ],
+          "required": ["injection", "prohibited_inference"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -11689,10 +11400,7 @@
               "maxLength": 1000
             }
           },
-          "required": [
-            "request_id",
-            "reason"
-          ],
+          "required": ["request_id", "reason"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -11731,9 +11439,7 @@
               ]
             }
           },
-          "required": [
-            "id"
-          ],
+          "required": ["id"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -11888,19 +11594,12 @@
                     ]
                   }
                 },
-                "required": [
-                  "ref",
-                  "shadow",
-                  "actual"
-                ],
+                "required": ["ref", "shadow", "actual"],
                 "additionalProperties": false
               }
             }
           },
-          "required": [
-            "capability_id",
-            "sample_size"
-          ],
+          "required": ["capability_id", "sample_size"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -12001,11 +11700,7 @@
               ]
             }
           },
-          "required": [
-            "shadow_run_id",
-            "human_ref",
-            "simulated"
-          ],
+          "required": ["shadow_run_id", "human_ref", "simulated"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -12124,10 +11819,7 @@
               "maxLength": 80
             }
           },
-          "required": [
-            "shadow_run_id",
-            "ref"
-          ],
+          "required": ["shadow_run_id", "ref"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -12166,9 +11858,7 @@
               ]
             }
           },
-          "required": [
-            "id"
-          ],
+          "required": ["id"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -12293,10 +11983,7 @@
               "maxLength": 40
             }
           },
-          "required": [
-            "capability_id",
-            "outcome"
-          ],
+          "required": ["capability_id", "outcome"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -12366,10 +12053,7 @@
               ]
             }
           },
-          "required": [
-            "outcome_id",
-            "human_ref"
-          ],
+          "required": ["outcome_id", "human_ref"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -12499,12 +12183,7 @@
               "type": "number"
             }
           },
-          "required": [
-            "mission_id",
-            "measure",
-            "value",
-            "unit"
-          ],
+          "required": ["mission_id", "measure", "value", "unit"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -12574,10 +12253,7 @@
               ]
             }
           },
-          "required": [
-            "measure_id",
-            "human_ref"
-          ],
+          "required": ["measure_id", "human_ref"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -12692,11 +12368,7 @@
             },
             "severity": {
               "type": "string",
-              "enum": [
-                "minor",
-                "major",
-                "critical"
-              ]
+              "enum": ["minor", "major", "critical"]
             },
             "description": {
               "type": "string",
@@ -12704,11 +12376,7 @@
               "maxLength": 2000
             }
           },
-          "required": [
-            "capability_id",
-            "severity",
-            "description"
-          ],
+          "required": ["capability_id", "severity", "description"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -12809,11 +12477,7 @@
               ]
             }
           },
-          "required": [
-            "incident_id",
-            "human_ref",
-            "severity"
-          ],
+          "required": ["incident_id", "human_ref", "severity"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -12937,10 +12601,7 @@
               "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$"
             }
           },
-          "required": [
-            "capability_id",
-            "reason"
-          ],
+          "required": ["capability_id", "reason"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -13010,10 +12671,7 @@
               ]
             }
           },
-          "required": [
-            "rollback_id",
-            "human_ref"
-          ],
+          "required": ["rollback_id", "human_ref"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -13138,10 +12796,7 @@
               "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$"
             }
           },
-          "required": [
-            "capability_id",
-            "reason"
-          ],
+          "required": ["capability_id", "reason"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -13242,11 +12897,7 @@
               ]
             }
           },
-          "required": [
-            "rollback_id",
-            "human_ref",
-            "stopped_at"
-          ],
+          "required": ["rollback_id", "human_ref", "stopped_at"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -13361,9 +13012,7 @@
               "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$"
             }
           },
-          "required": [
-            "capability_id"
-          ],
+          "required": ["capability_id"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -13402,9 +13051,7 @@
               ]
             }
           },
-          "required": [
-            "id"
-          ],
+          "required": ["id"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -13525,10 +13172,7 @@
               "maxLength": 1000
             }
           },
-          "required": [
-            "capability_id",
-            "scenario"
-          ],
+          "required": ["capability_id", "scenario"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -13567,9 +13211,7 @@
               ]
             }
           },
-          "required": [
-            "id"
-          ],
+          "required": ["id"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -13685,9 +13327,7 @@
               "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$"
             }
           },
-          "required": [
-            "capability_id"
-          ],
+          "required": ["capability_id"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -13726,9 +13366,7 @@
               ]
             }
           },
-          "required": [
-            "id"
-          ],
+          "required": ["id"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -13844,9 +13482,7 @@
               "maxLength": 120
             }
           },
-          "required": [
-            "route"
-          ],
+          "required": ["route"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -13885,9 +13521,7 @@
               ]
             }
           },
-          "required": [
-            "id"
-          ],
+          "required": ["id"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -14003,9 +13637,7 @@
               "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$"
             }
           },
-          "required": [
-            "run_id"
-          ],
+          "required": ["run_id"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -14044,9 +13676,7 @@
               ]
             }
           },
-          "required": [
-            "id"
-          ],
+          "required": ["id"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -14162,9 +13792,7 @@
               "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$"
             }
           },
-          "required": [
-            "run_id"
-          ],
+          "required": ["run_id"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -14203,9 +13831,7 @@
               ]
             }
           },
-          "required": [
-            "id"
-          ],
+          "required": ["id"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -14321,9 +13947,7 @@
               "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$"
             }
           },
-          "required": [
-            "object_id"
-          ],
+          "required": ["object_id"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -14395,10 +14019,7 @@
                 ]
               }
             },
-            "required": [
-              "id",
-              "body"
-            ],
+            "required": ["id", "body"],
             "additionalProperties": {
               "anyOf": [
                 {
@@ -14513,9 +14134,7 @@
               "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$"
             }
           },
-          "required": [
-            "capability_id"
-          ],
+          "required": ["capability_id"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -14585,10 +14204,7 @@
               ]
             }
           },
-          "required": [
-            "capability",
-            "contracts"
-          ],
+          "required": ["capability", "contracts"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -14717,11 +14333,7 @@
               "maxLength": 1000
             }
           },
-          "required": [
-            "ids",
-            "title",
-            "scenario"
-          ],
+          "required": ["ids", "title", "scenario"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -14822,11 +14434,7 @@
               ]
             }
           },
-          "required": [
-            "composition_id",
-            "human_ref",
-            "effective_authority"
-          ],
+          "required": ["composition_id", "human_ref", "effective_authority"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -14956,12 +14564,7 @@
             "data_classification": {
               "default": "internal",
               "type": "string",
-              "enum": [
-                "public",
-                "internal",
-                "confidential",
-                "restricted"
-              ]
+              "enum": ["public", "internal", "confidential", "restricted"]
             },
             "reuse_check_id": {
               "type": "string",
@@ -14969,11 +14572,7 @@
               "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$"
             }
           },
-          "required": [
-            "title",
-            "statement",
-            "reuse_check_id"
-          ],
+          "required": ["title", "statement", "reuse_check_id"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -15012,9 +14611,7 @@
               ]
             }
           },
-          "required": [
-            "id"
-          ],
+          "required": ["id"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -15143,11 +14740,7 @@
               "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$"
             }
           },
-          "required": [
-            "capability_id",
-            "expected_version",
-            "reason"
-          ],
+          "required": ["capability_id", "expected_version", "reason"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -15186,9 +14779,7 @@
               ]
             }
           },
-          "required": [
-            "id"
-          ],
+          "required": ["id"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -15303,9 +14894,7 @@
               "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$"
             }
           },
-          "required": [
-            "capability_id"
-          ],
+          "required": ["capability_id"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -15406,11 +14995,7 @@
               ]
             }
           },
-          "required": [
-            "uses",
-            "consumers",
-            "note"
-          ],
+          "required": ["uses", "consumers", "note"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -15663,12 +15248,7 @@
                 ]
               }
             },
-            "required": [
-              "id",
-              "detector_key",
-              "severity",
-              "state"
-            ],
+            "required": ["id", "detector_key", "severity", "state"],
             "additionalProperties": {
               "anyOf": [
                 {
@@ -15788,10 +15368,7 @@
               "maxLength": 1000
             }
           },
-          "required": [
-            "finding_id",
-            "resolution"
-          ],
+          "required": ["finding_id", "resolution"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -15830,9 +15407,7 @@
               ]
             }
           },
-          "required": [
-            "ledger_seq"
-          ],
+          "required": ["ledger_seq"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -15946,9 +15521,7 @@
               "maxLength": 200
             }
           },
-          "required": [
-            "scope"
-          ],
+          "required": ["scope"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -16018,10 +15591,7 @@
               ]
             }
           },
-          "required": [
-            "judgment_latency",
-            "stage_times"
-          ],
+          "required": ["judgment_latency", "stage_times"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -16135,9 +15705,7 @@
               "maxLength": 200
             }
           },
-          "required": [
-            "scope"
-          ],
+          "required": ["scope"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -16240,11 +15808,7 @@
                 ]
               }
             },
-            "required": [
-              "id",
-              "ref",
-              "evidence"
-            ],
+            "required": ["id", "ref", "evidence"],
             "additionalProperties": {
               "anyOf": [
                 {
@@ -16359,9 +15923,7 @@
               "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$"
             }
           },
-          "required": [
-            "capability_id"
-          ],
+          "required": ["capability_id"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -16464,11 +16026,7 @@
                 ]
               }
             },
-            "required": [
-              "id",
-              "authority",
-              "usage"
-            ],
+            "required": ["id", "authority", "usage"],
             "additionalProperties": {
               "anyOf": [
                 {
@@ -16583,9 +16141,7 @@
               "maxLength": 200
             }
           },
-          "required": [
-            "scope"
-          ],
+          "required": ["scope"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -16655,10 +16211,7 @@
               ]
             }
           },
-          "required": [
-            "reuse",
-            "status"
-          ],
+          "required": ["reuse", "status"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -16772,9 +16325,7 @@
               "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$"
             }
           },
-          "required": [
-            "capability_id"
-          ],
+          "required": ["capability_id"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -16875,11 +16426,7 @@
               ]
             }
           },
-          "required": [
-            "capability_id",
-            "hours",
-            "status"
-          ],
+          "required": ["capability_id", "hours", "status"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -17093,12 +16640,7 @@
                   ]
                 }
               },
-              "required": [
-                "refused",
-                "rendition_id",
-                "human_ref",
-                "ledger_seq"
-              ],
+              "required": ["refused", "rendition_id", "human_ref", "ledger_seq"],
               "additionalProperties": {
                 "anyOf": [
                   {
@@ -17170,10 +16712,7 @@
                   ]
                 }
               },
-              "required": [
-                "refused",
-                "reason"
-              ],
+              "required": ["refused", "reason"],
               "additionalProperties": {
                 "anyOf": [
                   {
@@ -17245,10 +16784,7 @@
                   ]
                 }
               },
-              "required": [
-                "skipped",
-                "reason"
-              ],
+              "required": ["skipped", "reason"],
               "additionalProperties": {
                 "anyOf": [
                   {
@@ -17379,10 +16915,7 @@
               "maxLength": 1000
             }
           },
-          "required": [
-            "source_ids",
-            "purpose"
-          ],
+          "required": ["source_ids", "purpose"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -17489,12 +17022,7 @@
                   ]
                 }
               },
-              "required": [
-                "refused",
-                "rendition_id",
-                "human_ref",
-                "ledger_seq"
-              ],
+              "required": ["refused", "rendition_id", "human_ref", "ledger_seq"],
               "additionalProperties": {
                 "anyOf": [
                   {
@@ -17566,10 +17094,7 @@
                   ]
                 }
               },
-              "required": [
-                "refused",
-                "reason"
-              ],
+              "required": ["refused", "reason"],
               "additionalProperties": {
                 "anyOf": [
                   {
@@ -17641,10 +17166,7 @@
                   ]
                 }
               },
-              "required": [
-                "skipped",
-                "reason"
-              ],
+              "required": ["skipped", "reason"],
               "additionalProperties": {
                 "anyOf": [
                   {
@@ -17775,10 +17297,7 @@
               "maxLength": 1000
             }
           },
-          "required": [
-            "source_ids",
-            "purpose"
-          ],
+          "required": ["source_ids", "purpose"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -17885,12 +17404,7 @@
                   ]
                 }
               },
-              "required": [
-                "refused",
-                "rendition_id",
-                "human_ref",
-                "ledger_seq"
-              ],
+              "required": ["refused", "rendition_id", "human_ref", "ledger_seq"],
               "additionalProperties": {
                 "anyOf": [
                   {
@@ -17962,10 +17476,7 @@
                   ]
                 }
               },
-              "required": [
-                "refused",
-                "reason"
-              ],
+              "required": ["refused", "reason"],
               "additionalProperties": {
                 "anyOf": [
                   {
@@ -18037,10 +17548,7 @@
                   ]
                 }
               },
-              "required": [
-                "skipped",
-                "reason"
-              ],
+              "required": ["skipped", "reason"],
               "additionalProperties": {
                 "anyOf": [
                   {
@@ -18171,10 +17679,7 @@
               "maxLength": 1000
             }
           },
-          "required": [
-            "source_ids",
-            "purpose"
-          ],
+          "required": ["source_ids", "purpose"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -18281,12 +17786,7 @@
                   ]
                 }
               },
-              "required": [
-                "refused",
-                "rendition_id",
-                "human_ref",
-                "ledger_seq"
-              ],
+              "required": ["refused", "rendition_id", "human_ref", "ledger_seq"],
               "additionalProperties": {
                 "anyOf": [
                   {
@@ -18358,10 +17858,7 @@
                   ]
                 }
               },
-              "required": [
-                "refused",
-                "reason"
-              ],
+              "required": ["refused", "reason"],
               "additionalProperties": {
                 "anyOf": [
                   {
@@ -18433,10 +17930,7 @@
                   ]
                 }
               },
-              "required": [
-                "skipped",
-                "reason"
-              ],
+              "required": ["skipped", "reason"],
               "additionalProperties": {
                 "anyOf": [
                   {
@@ -18577,11 +18071,7 @@
               "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$"
             }
           },
-          "required": [
-            "purpose",
-            "co_creator",
-            "builder"
-          ],
+          "required": ["purpose", "co_creator", "builder"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -18620,9 +18110,7 @@
               ]
             }
           },
-          "required": [
-            "id"
-          ],
+          "required": ["id"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -18743,10 +18231,7 @@
               "maxLength": 60
             }
           },
-          "required": [
-            "session_id",
-            "kind"
-          ],
+          "required": ["session_id", "kind"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -18785,9 +18270,7 @@
               ]
             }
           },
-          "required": [
-            "id"
-          ],
+          "required": ["id"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -18903,9 +18386,7 @@
               "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$"
             }
           },
-          "required": [
-            "artifact_id"
-          ],
+          "required": ["artifact_id"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -18944,9 +18425,7 @@
               ]
             }
           },
-          "required": [
-            "id"
-          ],
+          "required": ["id"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -19067,10 +18546,7 @@
               "maxLength": 60
             }
           },
-          "required": [
-            "statement_id",
-            "classification"
-          ],
+          "required": ["statement_id", "classification"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -19109,9 +18585,7 @@
               ]
             }
           },
-          "required": [
-            "id"
-          ],
+          "required": ["id"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -19232,10 +18706,7 @@
               "maxLength": 1000
             }
           },
-          "required": [
-            "statement",
-            "observed_condition"
-          ],
+          "required": ["statement", "observed_condition"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -19274,9 +18745,7 @@
               ]
             }
           },
-          "required": [
-            "id"
-          ],
+          "required": ["id"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -19405,10 +18874,7 @@
               }
             }
           },
-          "required": [
-            "condition",
-            "observable_result"
-          ],
+          "required": ["condition", "observable_result"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -19447,9 +18913,7 @@
               ]
             }
           },
-          "required": [
-            "id"
-          ],
+          "required": ["id"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -19568,10 +19032,7 @@
               "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$"
             }
           },
-          "required": [
-            "need_id",
-            "behavior_id"
-          ],
+          "required": ["need_id", "behavior_id"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -19703,12 +19164,7 @@
               ]
             }
           },
-          "required": [
-            "id",
-            "verb",
-            "from_id",
-            "to_id"
-          ],
+          "required": ["id", "verb", "from_id", "to_id"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -19828,20 +19284,10 @@
             },
             "kind": {
               "type": "string",
-              "enum": [
-                "data",
-                "sequence",
-                "authority",
-                "capability",
-                "decision"
-              ]
+              "enum": ["data", "sequence", "authority", "capability", "decision"]
             }
           },
-          "required": [
-            "from_id",
-            "to_id",
-            "kind"
-          ],
+          "required": ["from_id", "to_id", "kind"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -19973,12 +19419,7 @@
               ]
             }
           },
-          "required": [
-            "id",
-            "verb",
-            "from_id",
-            "to_id"
-          ],
+          "required": ["id", "verb", "from_id", "to_id"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -20107,12 +19548,7 @@
               "maxLength": 1000
             }
           },
-          "required": [
-            "object_id",
-            "expected_version",
-            "to_state",
-            "rationale"
-          ],
+          "required": ["object_id", "expected_version", "to_state", "rationale"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -20151,9 +19587,7 @@
               ]
             }
           },
-          "required": [
-            "id"
-          ],
+          "required": ["id"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -20269,9 +19703,7 @@
               "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$"
             }
           },
-          "required": [
-            "edge_id"
-          ],
+          "required": ["edge_id"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -20310,9 +19742,7 @@
               ]
             }
           },
-          "required": [
-            "id"
-          ],
+          "required": ["id"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -20428,9 +19858,7 @@
               "maxLength": 1000
             }
           },
-          "required": [
-            "statement"
-          ],
+          "required": ["statement"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -20531,11 +19959,7 @@
               ]
             }
           },
-          "required": [
-            "needs",
-            "decisions",
-            "capabilities"
-          ],
+          "required": ["needs", "decisions", "capabilities"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -20745,11 +20169,7 @@
                 ]
               }
             },
-            "required": [
-              "edge",
-              "a",
-              "b"
-            ],
+            "required": ["edge", "a", "b"],
             "additionalProperties": {
               "anyOf": [
                 {
@@ -20870,9 +20290,7 @@
               "maximum": 3
             }
           },
-          "required": [
-            "root_id"
-          ],
+          "required": ["root_id"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -21004,12 +20422,7 @@
               ]
             }
           },
-          "required": [
-            "root",
-            "nodes",
-            "edges",
-            "edge_budget"
-          ],
+          "required": ["root", "nodes", "edges", "edge_budget"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -21129,9 +20542,7 @@
               "maximum": 3
             }
           },
-          "required": [
-            "root_id"
-          ],
+          "required": ["root_id"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -21263,12 +20674,7 @@
               ]
             }
           },
-          "required": [
-            "root",
-            "nodes",
-            "edges",
-            "edge_budget"
-          ],
+          "required": ["root", "nodes", "edges", "edge_budget"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -21382,9 +20788,7 @@
               "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$"
             }
           },
-          "required": [
-            "mission_ref"
-          ],
+          "required": ["mission_ref"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -21487,11 +20891,7 @@
                 ]
               }
             },
-            "required": [
-              "id",
-              "human_ref",
-              "type"
-            ],
+            "required": ["id", "human_ref", "type"],
             "additionalProperties": {
               "anyOf": [
                 {
@@ -21606,9 +21006,7 @@
               "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$"
             }
           },
-          "required": [
-            "session_id"
-          ],
+          "required": ["session_id"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -21647,9 +21045,7 @@
               ]
             }
           },
-          "required": [
-            "id"
-          ],
+          "required": ["id"],
           "additionalProperties": {
             "anyOf": [
               {
@@ -21899,12 +21295,7 @@
                 ]
               }
             },
-            "required": [
-              "id",
-              "topic",
-              "ledger_seq",
-              "body"
-            ],
+            "required": ["id", "topic", "ledger_seq", "body"],
             "additionalProperties": {
               "anyOf": [
                 {
@@ -22020,12 +21411,7 @@
             },
             "intent": {
               "type": "string",
-              "enum": [
-                "request_review",
-                "share_finding",
-                "handoff",
-                "question"
-              ]
+              "enum": ["request_review", "share_finding", "handoff", "question"]
             },
             "object_refs": {
               "default": [],
@@ -22038,10 +21424,7 @@
               }
             }
           },
-          "required": [
-            "to_agent_id",
-            "intent"
-          ],
+          "required": ["to_agent_id", "intent"],
           "additionalProperties": false
         },
         "output_schema": {
@@ -22080,9 +21463,7 @@
               ]
             }
           },
-          "required": [
-            "ledger_seq"
-          ],
+          "required": ["ledger_seq"],
           "additionalProperties": {
             "anyOf": [
               {

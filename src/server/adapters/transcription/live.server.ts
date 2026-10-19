@@ -86,8 +86,7 @@ export async function transcribeAudio(
             text?: string;
             usage?: { seconds?: number };
           };
-          if (ev.type === "transcript.text.delta" && typeof ev.delta === "string")
-            text += ev.delta;
+          if (ev.type === "transcript.text.delta" && typeof ev.delta === "string") text += ev.delta;
           else if (ev.type === "transcript.text.done") {
             if (typeof ev.text === "string") text = ev.text;
             seconds = ev.usage?.seconds ?? seconds;

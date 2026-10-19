@@ -1,12 +1,27 @@
 import { describe, expect, it } from "vitest";
 import {
-  CAUSE_CLASSES, DISCREPANCY_RATE_THRESHOLD, EXPOSURE_STEPS, KILL_SWITCH_BOUND_MS,
-  clusterCauses, decisionsDiffer, discrepancyRate, exposureStepError, incidentDemotes,
-  killSwitchWithinBound, nextExposureStep, rateBreaches, unownedClasses, type ShadowCase,
+  CAUSE_CLASSES,
+  DISCREPANCY_RATE_THRESHOLD,
+  EXPOSURE_STEPS,
+  KILL_SWITCH_BOUND_MS,
+  clusterCauses,
+  decisionsDiffer,
+  discrepancyRate,
+  exposureStepError,
+  incidentDemotes,
+  killSwitchWithinBound,
+  nextExposureStep,
+  rateBreaches,
+  unownedClasses,
+  type ShadowCase,
 } from "./shadow";
 
-const dc = (cause: ShadowCase["hypothesised_cause"], ref: string): ShadowCase =>
-  ({ case_ref: ref, shadow_decision: "approve", actual_decision: "escalate", hypothesised_cause: cause });
+const dc = (cause: ShadowCase["hypothesised_cause"], ref: string): ShadowCase => ({
+  case_ref: ref,
+  shadow_decision: "approve",
+  actual_decision: "escalate",
+  hypothesised_cause: cause,
+});
 
 describe("Phase 7 shadow comparison (Part 9)", () => {
   it("a case is a discrepancy only when shadow and actual decisions differ", () => {
@@ -24,12 +39,18 @@ describe("Phase 7 shadow comparison (Part 9)", () => {
     expect(rateBreaches(DISCREPANCY_RATE_THRESHOLD + 0.001)).toBe(true);
   });
   it("clusters discrepancies by cause, largest first", () => {
-    const clusters = clusterCauses([dc("model_error", "C1"), dc("edge_case", "C2"), dc("model_error", "C3")]);
+    const clusters = clusterCauses([
+      dc("model_error", "C1"),
+      dc("edge_case", "C2"),
+      dc("model_error", "C3"),
+    ]);
     expect(clusters[0]).toEqual({ cause: "model_error", count: 2, case_refs: ["C1", "C3"] });
     expect(clusters[1]!.cause).toBe("edge_case");
   });
   it("every cause class above threshold is surfaced for an owner and disposition", () => {
-    const clusters = clusterCauses([...Array(5)].map((_, i) => dc("policy_gap", `P${i}`)).concat([dc("unknown", "U1")]));
+    const clusters = clusterCauses(
+      [...Array(5)].map((_, i) => dc("policy_gap", `P${i}`)).concat([dc("unknown", "U1")]),
+    );
     expect(unownedClasses(clusters, 100)).toEqual(["policy_gap"]);
     expect(CAUSE_CLASSES).toContain("unknown");
   });

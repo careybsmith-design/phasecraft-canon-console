@@ -1,7 +1,7 @@
 # THREAD — Build Prompt for Lovable
 
 **The ValueOS Enterprise Operating Graph, Evidence Graph and Generation Fabric**
-Prepared for: Carey Smith, COO, MASA Global · Source: *THREAD Build Plan, ValueOS-Native Edition, Revision 1.1 (15 October 2026)* · Prompt date: 15 October 2026
+Prepared for: Carey Smith, COO, MASA Global · Source: _THREAD Build Plan, ValueOS-Native Edition, Revision 1.1 (15 October 2026)_ · Prompt date: 15 October 2026
 
 ---
 
@@ -9,20 +9,20 @@ Prepared for: Carey Smith, COO, MASA Global · Source: *THREAD Build Plan, Value
 
 This file is one build specification. It has two layers:
 
-- **Layer A: the Lovable build directives (Sections 1–19).** This layer tells you *how* to build THREAD on this platform: stack mapping, concrete Postgres DDL, server functions, the MCP endpoint, adapter contracts, and the order of capability slices. When this layer and the source differ on technology, this layer wins, and each such case is labelled **DESIGN DECISION (Lovable adaptation)**.
+- **Layer A: the Lovable build directives (Sections 1–19).** This layer tells you _how_ to build THREAD on this platform: stack mapping, concrete Postgres DDL, server functions, the MCP endpoint, adapter contracts, and the order of capability slices. When this layer and the source differ on technology, this layer wins, and each such case is labelled **DESIGN DECISION (Lovable adaptation)**.
 - **Layer B: the canonical specification (Appendix C).** This is the full source build plan, Parts 1–23, reproduced verbatim. It is normative. Every schema, rule, state, detector, query, budget and test in Layer B must be implemented exactly as written. Layer A never weakens Layer B; it only maps it onto Lovable's stack.
 
 Work through the capability slices in Section 16 in order. Each slice is finished when its **exit evidence** exists and its acceptance tests pass, not when a date passes. Before each slice, re-read Section 2 (constraints) and the Layer B parts that slice cites. Do not ask the user to confirm standard work. Ask only about the items in Appendix B (OPEN) or when a credential is needed.
 
 Markers used throughout (from the source, Part 0.3):
 
-| Marker | Meaning |
-|---|---|
-| **NON-NEGOTIABLE** | Must appear in the build, be enforced in code, and be covered by an acceptance test |
-| **PROHIBITED** | Must not exist anywhere in the system; its absence is testable |
-| **SOURCE** | Derived directly from the MASA AI Strategy, the ValueOS operating model, or Carey's direction |
-| **DESIGN DECISION** | A choice made where the sources were silent; may be challenged |
-| **OPEN** | An unresolved decision requiring Carey's confirmation |
+| Marker              | Meaning                                                                                       |
+| ------------------- | --------------------------------------------------------------------------------------------- |
+| **NON-NEGOTIABLE**  | Must appear in the build, be enforced in code, and be covered by an acceptance test           |
+| **PROHIBITED**      | Must not exist anywhere in the system; its absence is testable                                |
+| **SOURCE**          | Derived directly from the MASA AI Strategy, the ValueOS operating model, or Carey's direction |
+| **DESIGN DECISION** | A choice made where the sources were silent; may be challenged                                |
+| **OPEN**            | An unresolved decision requiring Carey's confirmation                                         |
 
 ---
 
@@ -47,31 +47,31 @@ THREAD is MASA Global's canonical, machine-readable, versioned Enterprise Operat
 7. **PROHIBITED (Part 8A.6):** any measure that counts draft objects as progress.
 8. **NON-NEGOTIABLE (Part 13.4):** the creation prompt must contain no raw captured text. Prompts are compiled only from typed, confirmed fields.
 9. **NON-NEGOTIABLE (P11, Part 7.4):** no creation may begin until the fabric has been searched and the result recorded (`ReuseCheck`). This is enforced by a database constraint and by server logic, not by convention.
-11. **PROHIBITED (L-08):** THREAD-owned build, environment, deployment, pipeline or release-execution state in any type/table/column/enum/lifecycle/surface/metric/report. BuildRun carries only source outcome `succeeded|failed|partial` and lineage; no build status board.
-12. **Hard routing gates:** expired attestations or failed evaluation suites refuse routing; Tier A/B invocation logging must be off or equivalently protected; Tier C is blocked before processing.
-10. No administrative ceremony: no approval workflows for standard work, no sign-off queues, no review boards, no stage gates with committees, no status reporting. Where a checkpoint seems needed, add an **evidence condition** instead.
+10. **PROHIBITED (L-08):** THREAD-owned build, environment, deployment, pipeline or release-execution state in any type/table/column/enum/lifecycle/surface/metric/report. BuildRun carries only source outcome `succeeded|failed|partial` and lineage; no build status board.
+11. **Hard routing gates:** expired attestations or failed evaluation suites refuse routing; Tier A/B invocation logging must be off or equivalently protected; Tier C is blocked before processing.
+12. No administrative ceremony: no approval workflows for standard work, no sign-off queues, no review boards, no stage gates with committees, no status reporting. Where a checkpoint seems needed, add an **evidence condition** instead.
 
 ### 2.2 Governing principles P1–P15 (Part 3), all NON-NEGOTIABLE
 
 Each principle below must be enforced in code and have at least one named acceptance test (Section 17 maps tests to principles).
 
-| # | Principle | Lovable enforcement point |
-|---|---|---|
-| P1 | Canon is separate from generated | `renditions` table is separate from `objects`; no FK, trigger or function writes a rendition into `objects`; a DB trigger rejects any `objects` write whose `derived_from` includes a rendition id |
-| P2 | Authority is separate from confidence | Separate columns `authority_level` and `confidence_bundle`, with separate history tables `authority_history` and `confidence_history` |
-| P3 | Intent is separate from the requested solution | `body.observed_condition` and `body.requested_solution_candidates[]` on ValueSignal; detector `RequestedSolutionWithoutCondition` |
-| P4 | Expiration everywhere | `review_date`, `expiration_condition` and a retirement path are `NOT NULL` on every live object (CHECK constraint) |
-| P5 | Machine-discoverable and agent-executable | Every type in `object_type_registry` has a `discovery_descriptor`; every operation has a `tool_contracts` row |
-| P6 | No approval queues for standard work | Enum audit test (AW-2) |
-| P7 | Human judgment at consequential boundaries | Independent authorized human judgment for Tier 4; recorded decision and armed monitoring/kill switch |
-| P8 | Permission at retrieval | Caller-scoped RLS/security-definer predicates on every graph/vector hop; post-filter-only leakage tests must fail |
-| P9 | Complete provenance | Append-only `ledger` with hash chain; a trigger rejects consequential writes that lack `provenance_chain_id` |
-| P10 | Anti-pattern detection is a product capability | `detectors` registry with an owner on every detector |
-| P11 | Reuse before creating | FK `creation_prompts.reuse_check_id NOT NULL` → `reuse_checks` |
-| P12 | Measured by value, not output | Rejected-measure schema test plus a language detector |
-| P13 | Consent and surveillance boundaries | `consent_records` gate every capture insert (RLS + trigger) |
-| P14 | Open protocols | MCP endpoint, A2A cards, provider-agnostic model router, canon export |
-| P15 | The model can challenge itself | Canon change = new version + evidence + challenge window + recorded `ConfirmedDecision` |
+| #   | Principle                                      | Lovable enforcement point                                                                                                                                                                          |
+| --- | ---------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| P1  | Canon is separate from generated               | `renditions` table is separate from `objects`; no FK, trigger or function writes a rendition into `objects`; a DB trigger rejects any `objects` write whose `derived_from` includes a rendition id |
+| P2  | Authority is separate from confidence          | Separate columns `authority_level` and `confidence_bundle`, with separate history tables `authority_history` and `confidence_history`                                                              |
+| P3  | Intent is separate from the requested solution | `body.observed_condition` and `body.requested_solution_candidates[]` on ValueSignal; detector `RequestedSolutionWithoutCondition`                                                                  |
+| P4  | Expiration everywhere                          | `review_date`, `expiration_condition` and a retirement path are `NOT NULL` on every live object (CHECK constraint)                                                                                 |
+| P5  | Machine-discoverable and agent-executable      | Every type in `object_type_registry` has a `discovery_descriptor`; every operation has a `tool_contracts` row                                                                                      |
+| P6  | No approval queues for standard work           | Enum audit test (AW-2)                                                                                                                                                                             |
+| P7  | Human judgment at consequential boundaries     | Independent authorized human judgment for Tier 4; recorded decision and armed monitoring/kill switch                                                                                               |
+| P8  | Permission at retrieval                        | Caller-scoped RLS/security-definer predicates on every graph/vector hop; post-filter-only leakage tests must fail                                                                                  |
+| P9  | Complete provenance                            | Append-only `ledger` with hash chain; a trigger rejects consequential writes that lack `provenance_chain_id`                                                                                       |
+| P10 | Anti-pattern detection is a product capability | `detectors` registry with an owner on every detector                                                                                                                                               |
+| P11 | Reuse before creating                          | FK `creation_prompts.reuse_check_id NOT NULL` → `reuse_checks`                                                                                                                                     |
+| P12 | Measured by value, not output                  | Rejected-measure schema test plus a language detector                                                                                                                                              |
+| P13 | Consent and surveillance boundaries            | `consent_records` gate every capture insert (RLS + trigger)                                                                                                                                        |
+| P14 | Open protocols                                 | MCP endpoint, A2A cards, provider-agnostic model router, canon export                                                                                                                              |
+| P15 | The model can challenge itself                 | Canon change = new version + evidence + challenge window + recorded `ConfirmedDecision`                                                                                                            |
 
 Appendix A is an index of binding constraints with explicit Appendix C references. The complete cited Appendix C text governs; extracted fragments are not substitutes. The correction packet overrides the specified source contradictions until Revision 1.2.
 
@@ -117,20 +117,20 @@ ValueSignal -> ValueMission -> ValueCell
 
 ### 3.3 Lovable stack mapping (DESIGN DECISION, Lovable adaptation)
 
-| Concern | Source recommendation (Part 16/17) | Lovable implementation |
-|---|---|---|
-| Framework | Services per Part 17.1 | TanStack Start v1 app; each source "service" becomes a server module `src/server/<service>/*.server.ts`, called through `createServerFn` wrappers in `src/server/<service>/*.functions.ts` |
-| Object store | PostgreSQL + JSONB | Lovable Cloud Postgres, table `objects` (typed envelope columns + `body jsonb`) and `object_versions` |
-| Graph | Apache AGE (alt. Neo4j) | **Platform availability must be verified before relying on the substitution.** Table `edges` plus recursive CTE functions (`graph_traverse`, `graph_paths`, `graph_closure`, `graph_cycles`, `graph_orphans`) written in SQL. Depth caps and edge budgets per Part 16.4–16.5 |
-| Semantic discovery | pgvector | pgvector, `object_embeddings` (general) and `object_embeddings_restricted` (separate table, separate RLS, never merged) |
-| Evidence/audit ledger | Append-only, hash-chained | `ledger` table; `REVOKE UPDATE, DELETE`; BEFORE trigger serializes the append with `pg_advisory_xact_lock(hashtext('thread_ledger_chain'))`; SQL `ledger_row_hash` uses pgcrypto; SQL `thread_verify_ledger` alone verifies; nightly verifier. Contention must be load-tested at 500 calls/s |
-| Artifacts and renditions | S3-compatible, versioned | Lovable Cloud storage buckets `artifacts` (immutable, private) and `renditions` (private, lifecycle by expiry) |
-| Search | Postgres FTS / OpenSearch | Postgres FTS (`tsvector` generated column) + trigram for identifiers |
-| Models | AI Factory gateway | `ModelGateway` adapter. The default implementation calls the Lovable AI Gateway; the production implementation targets the MASA Factory gateway. All calls are logged per Part 13.3 |
-| Agent surface | MCP gateway | Server route `src/routes/api/public/mcp.ts` (JSON-RPC MCP over Streamable HTTP). It verifies an agent bearer token against `agents` inside the handler |
-| Auth / identity | Factory IdP (Entra, etc.) | Lovable Cloud auth (email + Google) now; `IdentityProvider` adapter for SSO later. Roles in a separate `user_roles` table with a `has_role()` security-definer function, never on the profile |
-| Scheduled sweeps | Scheduler | `/api/public/cron/*` server routes, protected by a shared secret, triggered by pg_cron + pg_net |
-| Runtime | Cloud-agnostic | Edge (Worker) runtime: no Node-only libraries in server code; use Web Crypto for unrelated application hashes, never the database ledger chain |
+| Concern                  | Source recommendation (Part 16/17) | Lovable implementation                                                                                                                                                                                                                                                                       |
+| ------------------------ | ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Framework                | Services per Part 17.1             | TanStack Start v1 app; each source "service" becomes a server module `src/server/<service>/*.server.ts`, called through `createServerFn` wrappers in `src/server/<service>/*.functions.ts`                                                                                                   |
+| Object store             | PostgreSQL + JSONB                 | Lovable Cloud Postgres, table `objects` (typed envelope columns + `body jsonb`) and `object_versions`                                                                                                                                                                                        |
+| Graph                    | Apache AGE (alt. Neo4j)            | **Platform availability must be verified before relying on the substitution.** Table `edges` plus recursive CTE functions (`graph_traverse`, `graph_paths`, `graph_closure`, `graph_cycles`, `graph_orphans`) written in SQL. Depth caps and edge budgets per Part 16.4–16.5                 |
+| Semantic discovery       | pgvector                           | pgvector, `object_embeddings` (general) and `object_embeddings_restricted` (separate table, separate RLS, never merged)                                                                                                                                                                      |
+| Evidence/audit ledger    | Append-only, hash-chained          | `ledger` table; `REVOKE UPDATE, DELETE`; BEFORE trigger serializes the append with `pg_advisory_xact_lock(hashtext('thread_ledger_chain'))`; SQL `ledger_row_hash` uses pgcrypto; SQL `thread_verify_ledger` alone verifies; nightly verifier. Contention must be load-tested at 500 calls/s |
+| Artifacts and renditions | S3-compatible, versioned           | Lovable Cloud storage buckets `artifacts` (immutable, private) and `renditions` (private, lifecycle by expiry)                                                                                                                                                                               |
+| Search                   | Postgres FTS / OpenSearch          | Postgres FTS (`tsvector` generated column) + trigram for identifiers                                                                                                                                                                                                                         |
+| Models                   | AI Factory gateway                 | `ModelGateway` adapter. The default implementation calls the Lovable AI Gateway; the production implementation targets the MASA Factory gateway. All calls are logged per Part 13.3                                                                                                          |
+| Agent surface            | MCP gateway                        | Server route `src/routes/api/public/mcp.ts` (JSON-RPC MCP over Streamable HTTP). It verifies an agent bearer token against `agents` inside the handler                                                                                                                                       |
+| Auth / identity          | Factory IdP (Entra, etc.)          | Lovable Cloud auth (email + Google) now; `IdentityProvider` adapter for SSO later. Roles in a separate `user_roles` table with a `has_role()` security-definer function, never on the profile                                                                                                |
+| Scheduled sweeps         | Scheduler                          | `/api/public/cron/*` server routes, protected by a shared secret, triggered by pg_cron + pg_net                                                                                                                                                                                              |
+| Runtime                  | Cloud-agnostic                     | Edge (Worker) runtime: no Node-only libraries in server code; use Web Crypto for unrelated application hashes, never the database ledger chain                                                                                                                                               |
 
 ### 3.4 AI Factory boundary: real interfaces with simulated adapters (DESIGN DECISION)
 
@@ -138,16 +138,16 @@ THREAD must not rebuild the AI Factory (Part 13.1). Define each integration as a
 
 **NON-NEGOTIABLE (Lovable adaptation):** every object or evidence record produced through a simulated adapter carries `body.provenance.simulated = true` and the ledger entry `adapter_mode = 'simulated'`. Simulated evidence can never count toward authority promotion, exposure authorisation, or any value measure. A test asserts this.
 
-| Adapter | Contract (core methods) |
-|---|---|
-| `ModelGateway` | `complete({route, messages, schema?, purpose, data_classification}) → {output, model, model_version, route_id, tokens, cost, latency_ms}` ; `embed({texts, classification})` |
-| `Transcription` | `startStream(sessionId, consentIds) → streamId` ; `pushAudio(streamId, chunk)` ; `onSegment(cb: {speaker_id, t_start, t_end, text, confidence})` ; `finalize(streamId)` |
-| `BuildPlatform` (×5: lovable, claude_code, codex, cursor, grok) | `dispatch({prompt_id, compiled_prompt, repro_key, cost_ceiling}) → {external_run_id}` ; `status(id)` ; `fetchArtifacts(id) → [{kind, uri, hash}]` ; webhook `/api/public/hooks/build/:platform` verified by HMAC |
-| `CICD` | `getPipelineRun(ref)`, `getTestResults(ref)`, `getScanResults(ref)` |
-| `Telemetry` | `subscribe(capability_id, filters)` ; shadow tap `tap({read_only:true})` ; `metrics(query)` |
-| `FeatureFlags` | `setExposure(capability_id, population_pct, segments)` ; `killSwitch(capability_id) → {stopped_at}` |
-| `IdentityProvider` | `resolveActor(token) → Actor` ; `attributes(actorId)` |
-| `ContentClassifier` | `classify(text) → {tier, phi:bool, pan:bool, spans}`. Deterministic regex/Luhn scanning is the production in-boundary implementation and must never be stubbed; only model assistance may be simulated. PHI/PAN hard blocks apply before any model call |
+| Adapter                                                         | Contract (core methods)                                                                                                                                                                                                                                 |
+| --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ModelGateway`                                                  | `complete({route, messages, schema?, purpose, data_classification}) → {output, model, model_version, route_id, tokens, cost, latency_ms}` ; `embed({texts, classification})`                                                                            |
+| `Transcription`                                                 | `startStream(sessionId, consentIds) → streamId` ; `pushAudio(streamId, chunk)` ; `onSegment(cb: {speaker_id, t_start, t_end, text, confidence})` ; `finalize(streamId)`                                                                                 |
+| `BuildPlatform` (×5: lovable, claude_code, codex, cursor, grok) | `dispatch({prompt_id, compiled_prompt, repro_key, cost_ceiling}) → {external_run_id}` ; `status(id)` ; `fetchArtifacts(id) → [{kind, uri, hash}]` ; webhook `/api/public/hooks/build/:platform` verified by HMAC                                        |
+| `CICD`                                                          | `getPipelineRun(ref)`, `getTestResults(ref)`, `getScanResults(ref)`                                                                                                                                                                                     |
+| `Telemetry`                                                     | `subscribe(capability_id, filters)` ; shadow tap `tap({read_only:true})` ; `metrics(query)`                                                                                                                                                             |
+| `FeatureFlags`                                                  | `setExposure(capability_id, population_pct, segments)` ; `killSwitch(capability_id) → {stopped_at}`                                                                                                                                                     |
+| `IdentityProvider`                                              | `resolveActor(token) → Actor` ; `attributes(actorId)`                                                                                                                                                                                                   |
+| `ContentClassifier`                                             | `classify(text) → {tier, phi:bool, pan:bool, spans}`. Deterministic regex/Luhn scanning is the production in-boundary implementation and must never be stubbed; only model assistance may be simulated. PHI/PAN hard blocks apply before any model call |
 
 ---
 
@@ -239,21 +239,21 @@ Implement Layer B Part 12. That means the **twelve ValueOS tools with exactly th
 
 Implement every surface in Layer B Part 11 (11.1–11.12) and the framing session surface (8A.9), following the design language in Part 18. Routes (TanStack file routes, all under `_authenticated`):
 
-| Surface | Route |
-|---|---|
-| Value Companion (11.1) | `/companion` (a docked panel available on every route) |
-| Value Mission Runtime (11.2) | `/missions/$missionId` |
-| Operating Graph Explorer (11.3: Nebula, Focus, Path, Impact) | `/graph` |
-| Evidence Graph view (11.4) | `/evidence/$capabilityId` |
-| Human Decision Queue (11.5) | `/decisions` |
-| Live Enterprise Value Feed (11.6) | `/` (home is the Feed, so the first screen is a place to act) |
-| Capability Fabric / Marketplace (11.7) | `/fabric` |
-| Semantic capture console (11.8) | `/capture` |
-| Detector surface (11.9) | `/detectors` |
-| Simulation Studio (11.10) | `/simulate` |
-| Canon stewardship console (11.11) | `/canon` |
-| MCP gateway surface (11.12) | `/agents` |
-| Framing session (8A.9) | `/sessions/$sessionId` |
+| Surface                                                      | Route                                                         |
+| ------------------------------------------------------------ | ------------------------------------------------------------- |
+| Value Companion (11.1)                                       | `/companion` (a docked panel available on every route)        |
+| Value Mission Runtime (11.2)                                 | `/missions/$missionId`                                        |
+| Operating Graph Explorer (11.3: Nebula, Focus, Path, Impact) | `/graph`                                                      |
+| Evidence Graph view (11.4)                                   | `/evidence/$capabilityId`                                     |
+| Human Decision Queue (11.5)                                  | `/decisions`                                                  |
+| Live Enterprise Value Feed (11.6)                            | `/` (home is the Feed, so the first screen is a place to act) |
+| Capability Fabric / Marketplace (11.7)                       | `/fabric`                                                     |
+| Semantic capture console (11.8)                              | `/capture`                                                    |
+| Detector surface (11.9)                                      | `/detectors`                                                  |
+| Simulation Studio (11.10)                                    | `/simulate`                                                   |
+| Canon stewardship console (11.11)                            | `/canon`                                                      |
+| MCP gateway surface (11.12)                                  | `/agents`                                                     |
+| Framing session (8A.9)                                       | `/sessions/$sessionId`                                        |
 
 Surface rules: every screen leads with an **action**. The Mission Runtime is generated around the current decision and contains no backlog, story, sprint, task list or status report. The Feed's primary action is reuse-or-remix and it has no engagement mechanics (no likes, streaks or follower counts). Every generated panel shows the canon-vs-generated marker. Accessibility follows WCAG 2.2 AA (Part 18.3). There is no light/dark toggle unless Part 18 asks for one. Use semantic design tokens in `src/styles.css` only.
 
@@ -281,7 +281,7 @@ Implement Layer B Parts 16.3–16.5 and 19 exactly, including every performance 
 
 **NON-NEGOTIABLE (Part 20):** this is a sequence of capability slices with evidence-based exit gates, not a phased project plan. It has no dates and no milestones. A slice ends when its exit evidence exists. The slices and their exit evidence are exactly as in Layer B Part 20. Run them in this order on Lovable:
 
-1. **Phase 1, Canon and envelope.** Enable Lovable Cloud, create the core DDL (Section 18), the ledger hash chain, tombstoning, the lifecycle triggers and the type registry seed. *Exit evidence: Part 20 Phase 1, plus a test proving a provenance gap cannot be created.*
+1. **Phase 1, Canon and envelope.** Enable Lovable Cloud, create the core DDL (Section 18), the ledger hash chain, tombstoning, the lifecycle triggers and the type registry seed. _Exit evidence: Part 20 Phase 1, plus a test proving a provenance gap cannot be created._
 2. **Phase 2, Operating Graph core**, including the Explorer views.
 3. **Phase 2B, Framing session capture and extraction** (Part 8A), with recorded-fixture Transcription (speaker labels, timestamps, confidence) for regression and live transcription for the real human pilot; no synthetic substitute for exit evidence.
 4. **Phase 3, Authority, guardrails and decisions.**
@@ -311,24 +311,24 @@ Use Vitest for unit, domain and DB tests (against a test schema), and Playwright
 
 **Anti-wiki / anti-legacy acceptance suite (Part 21.4), all 16 tests, IDs AW-1 to AW-16.** Every blocking-capable test must pass; AW-5 OPEN is explicitly a non-blocking warning (L-02), never silently omitted:
 
-| ID | Test | Implementation |
-|---|---|---|
-| AW-1 | No document object type | Registry and `information_schema` scan |
-| AW-2 | No approval state | Scan of all enums, lifecycle definitions and rendered UI text for approval, sign-off, gate, pending-review or awaiting |
-| AW-3 | No backlog, story, sprint or task list | Schema + UI text scan; Playwright screenshot of Mission Runtime with OCR check |
-| AW-4 | No rejected measure | Schema + API response + UI scan for all eleven rejected measures (Part 15.3) |
-| AW-5 | Action ratio | **OPEN, see Appendix B.** Telemetry computes `% sessions with ≥1 graph-mutating action` and `% read-only sessions`. Thresholds are read from canon setting `anti_wiki.action_ratio` |
-| AW-16 | No state ownership | Live schema and rendered-surface scan; every execution status must be read-only with mirrored_from |
-| AW-6 | No awareness notifications | Every notification row has a non-null `trigger_event_id` or `decision_id` |
-| AW-7 | Reuse gate enforced | Insert a `CreationPrompt` without a `ReuseCheck` → rejected by the DB |
-| AW-8 | Citations mandatory | The generator refuses uncited guidance |
-| AW-9 | Surveillance refusal | Request an individual activity metric rendition → refused |
-| AW-10 | Canon supremacy | No code path or trigger writes from `renditions` to `objects`; static import-graph check plus DB test |
-| AW-11 | Orphan-free | Orphan-rate metric with an owner; zero orphans among non-draft objects |
-| AW-12 | Expiration everywhere | Every live object has `review_date` and `expiration_condition` |
-| AW-13 | Executability | Every core verb in Part 12 is invocable through MCP in the test harness |
-| AW-14 | Compression realised | Intent-to-first-evidence time is measured and published as a rendition |
-| AW-15 | No document prepared for handoff | `DocumentPreparedForHandoff` detector has zero unaddressed findings above threshold |
+| ID    | Test                                   | Implementation                                                                                                                                                                      |
+| ----- | -------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| AW-1  | No document object type                | Registry and `information_schema` scan                                                                                                                                              |
+| AW-2  | No approval state                      | Scan of all enums, lifecycle definitions and rendered UI text for approval, sign-off, gate, pending-review or awaiting                                                              |
+| AW-3  | No backlog, story, sprint or task list | Schema + UI text scan; Playwright screenshot of Mission Runtime with OCR check                                                                                                      |
+| AW-4  | No rejected measure                    | Schema + API response + UI scan for all eleven rejected measures (Part 15.3)                                                                                                        |
+| AW-5  | Action ratio                           | **OPEN, see Appendix B.** Telemetry computes `% sessions with ≥1 graph-mutating action` and `% read-only sessions`. Thresholds are read from canon setting `anti_wiki.action_ratio` |
+| AW-16 | No state ownership                     | Live schema and rendered-surface scan; every execution status must be read-only with mirrored_from                                                                                  |
+| AW-6  | No awareness notifications             | Every notification row has a non-null `trigger_event_id` or `decision_id`                                                                                                           |
+| AW-7  | Reuse gate enforced                    | Insert a `CreationPrompt` without a `ReuseCheck` → rejected by the DB                                                                                                               |
+| AW-8  | Citations mandatory                    | The generator refuses uncited guidance                                                                                                                                              |
+| AW-9  | Surveillance refusal                   | Request an individual activity metric rendition → refused                                                                                                                           |
+| AW-10 | Canon supremacy                        | No code path or trigger writes from `renditions` to `objects`; static import-graph check plus DB test                                                                               |
+| AW-11 | Orphan-free                            | Orphan-rate metric with an owner; zero orphans among non-draft objects                                                                                                              |
+| AW-12 | Expiration everywhere                  | Every live object has `review_date` and `expiration_condition`                                                                                                                      |
+| AW-13 | Executability                          | Every core verb in Part 12 is invocable through MCP in the test harness                                                                                                             |
+| AW-14 | Compression realised                   | Intent-to-first-evidence time is measured and published as a rendition                                                                                                              |
+| AW-15 | No document prepared for handoff       | `DocumentPreparedForHandoff` detector has zero unaddressed findings above threshold                                                                                                 |
 
 AW-5 while `status=open` computes/reports both ratios and THRESHOLD_UNSET, creates owned WARNING finding AntiWikiActionRatioThresholdUnset without expiry, and does not block release. Once set, out-of-threshold ratios block release. Every slice-end report prints ratios and OPEN until decided.
 
@@ -661,6 +661,7 @@ This is a navigational index, not a verbatim extraction. Full Appendix C section
 **DESIGN DECISIONS carried from the source (Part 24, may be challenged):** platforms own execution, THREAD owns lineage (Part 1.4 / L-08); the five-kernel decomposition; service boundaries and storage roles; graph technology; scale estimates; performance budgets; the build-phase sequence including Phase 2B; the "visualization tomorrow" reconciliation with the daily pattern (Part 8.4); the framing pipeline design (object types, six-way classification, the authority-aware rule, the relationship-source ordering, cross-session surfacing and its latency budgets, and the 16 detectors); the eight framing views; the design language (Part 18.1).
 
 **DESIGN DECISIONS added for Lovable:**
+
 1. Postgres tables plus recursive CTEs replace Apache AGE/Neo4j, with current platform availability to be verified.
 2. Services are implemented as server modules inside one TanStack Start app, not as separate deployables.
 3. Lovable AI Gateway is the default `ModelGateway` implementation, and the MASA Factory gateway is the live target.
@@ -669,16 +670,16 @@ This is a navigational index, not a verbatim extraction. Full Appendix C section
 6. The Feed is the home screen.
 
 **OPEN, for Carey Smith (do not resolve in code):**
+
 - **AW-5 action-ratio threshold (Part 21.4, test 5).** The source proposes ≥60% of sessions with at least one graph-mutating action and ≤25% read-only sessions, but this is not confirmed. Implement the detection method in full and store the thresholds in `canon_settings('anti_wiki.action_ratio')` with `status = 'open'` and **no default value**. While open, AW-5 reports both measured ratios and THRESHOLD_UNSET, with an owned non-expiring warning; it does not block release. Once set, threshold violations block release (L-02). Setting the value is a recorded `ConfirmedDecision` by Carey.
 
 ---
-
 
 ---
 
 ## Appendix C: Canonical specification, source Parts 1–23 reproduced verbatim (normative, Layer B)
 
-This text was extracted from *THREAD Build Plan Rev 1.1*, keeping the source layout. The saved correction packet is authoritative for L-02–L-20/S-01–S-07 until Revision 1.2; the historical source text below is preserved, not silently rewritten. Part 23 is the canonical glossary: use its terms exactly and do not invent vocabulary. Source Part 0 (instructions for the prompt author), Part 24 (sources) and Part 25 (generation rules) are already applied above and are left out.
+This text was extracted from _THREAD Build Plan Rev 1.1_, keeping the source layout. The saved correction packet is authoritative for L-02–L-20/S-01–S-07 until Revision 1.2; the historical source text below is preserved, not silently rewritten. Part 23 is the canonical glossary: use its terms exactly and do not invent vocabulary. Source Part 0 (instructions for the prompt author), Part 24 (sources) and Part 25 (generation rules) are already applied above and are left out.
 
 ```text
 PART 1 — Context you must hold

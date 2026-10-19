@@ -1,7 +1,10 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
-const sql = readFileSync("drizzle/migrations/0064_audit4_phase10_fail_closed_acceptance.sql", "utf8");
+const sql = readFileSync(
+  "drizzle/migrations/0064_audit4_phase10_fail_closed_acceptance.sql",
+  "utf8",
+);
 
 describe("audit round 4: Phase 10 acceptance is fail-closed", () => {
   it("NULL assertions fail in all three acceptance suites", () => {
@@ -11,7 +14,9 @@ describe("audit round 4: Phase 10 acceptance is fail-closed", () => {
   });
 
   it("recorded evidence aggregates all three suite verdicts", () => {
-    expect(sql).toContain("(ev->>'passed')::boolean AND (graph_ev->>'passed')::boolean AND (risk_ev->>'passed')::boolean");
+    expect(sql).toContain(
+      "(ev->>'passed')::boolean AND (graph_ev->>'passed')::boolean AND (risk_ev->>'passed')::boolean",
+    );
   });
 
   it("the native signal-detector check matches the fixture it created", () => {

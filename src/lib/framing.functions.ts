@@ -588,12 +588,20 @@ async function extractUnits(
   t0: number,
   opts: { reextract_of?: Map<string, Row> } = {},
 ) {
-  const discarded = units.filter(u => !validExtractionSpan(u.span));
+  const discarded = units.filter((u) => !validExtractionSpan(u.span));
   for (const unit of discarded) {
-    const { error } = await c.db.from("session_events").insert({ session_id: c.session.id, t_offset_ms: 0, kind: "extraction_discarded", ref: c.artifact.id, payload: { reason: "PROVENANCE_SPAN_MISSING", extractor_version: c.version } });
+    const { error } = await c.db
+      .from("session_events")
+      .insert({
+        session_id: c.session.id,
+        t_offset_ms: 0,
+        kind: "extraction_discarded",
+        ref: c.artifact.id,
+        payload: { reason: "PROVENANCE_SPAN_MISSING", extractor_version: c.version },
+      });
     if (error) throw threadError(error.message);
   }
-  units = units.filter(u => validExtractionSpan(u.span));
+  units = units.filter((u) => validExtractionSpan(u.span));
   const { classifyUnits, findContradictions } = await import("@/server/framing/extractor");
   const { db, session } = c;
   const ps = participants(session);
@@ -980,7 +988,13 @@ async function surface(
   for (const o of related.slice(0, 3)) {
     const k = kindFor(o);
     if (!k) continue;
-    const { data: seen } = await db.from("framing_live_findings").select("id").eq("session_id", session.id).eq("related_object_id", o.id).eq("kind", k).limit(1);
+    const { data: seen } = await db
+      .from("framing_live_findings")
+      .select("id")
+      .eq("session_id", session.id)
+      .eq("related_object_id", o.id)
+      .eq("kind", k)
+      .limit(1);
     if (seen?.length) continue;
     const when = new Date(o.created_at).toLocaleDateString("en-GB", {
       day: "numeric",
@@ -1100,209 +1114,216 @@ async function captureUtteranceImpl(
   data: UtteranceInput,
   transcription: "simulated" | "live",
 ) {
-    const t0 = Date.now();
-    const db = await admin();
-    const session = await loadSessionFor(db, uid, data.session_id);
-    if (session.lifecycle_state !== "capturing")
-      throw threadError(`CAPTURE_NOT_OPEN: ${session.human_ref} is ${session.lifecycle_state}`);
-    const speaker = participants(session).find((p) => p.id === data.speaker_id);
-    if (!speaker) throw threadError("NOT_FOUND: speaker is not a participant");
-    if (data.client_id) {
-      const { data: dup } = await db
-        .from("session_events")
-        .select("id")
-        .eq("session_id", session.id)
-        .eq("payload->>client_id", data.client_id)
-        .limit(1);
-      if (dup?.length) return { duplicate: true, blocked: false, statements: 0 };
-    }
-    // Consent and tier gate BEFORE any model call (8A.3)
-    const tier = classifyContent(data.text);
-    if (tier.tier === "C") {
-      await db.from("session_events").insert({
-        session_id: session.id,
-        t_offset_ms: data.t_offset_ms,
-        kind: "capture.blocked",
-        speaker_id: null,
-        payload: {
-          tier: "C",
-          reasons: tier.reasons,
-          client_id: data.client_id ?? null,
-          speaker: speaker.name,
-        },
-      });
-      return { duplicate: false, blocked: true, reasons: tier.reasons, statements: 0 };
-    }
-    const kind: ArtifactKind = data.mode === "speech" ? "transcript" : data.mode;
-    const simulated = data.mode === "speech" && transcription === "simulated";
-    const { data: consents } = await db
-      .from("consent_records")
+  const t0 = Date.now();
+  const db = await admin();
+  const session = await loadSessionFor(db, uid, data.session_id);
+  if (session.lifecycle_state !== "capturing")
+    throw threadError(`CAPTURE_NOT_OPEN: ${session.human_ref} is ${session.lifecycle_state}`);
+  const speaker = participants(session).find((p) => p.id === data.speaker_id);
+  if (!speaker) throw threadError("NOT_FOUND: speaker is not a participant");
+  if (data.client_id) {
+    const { data: dup } = await db
+      .from("session_events")
       .select("id")
       .eq("session_id", session.id)
-      .is("withdrawn_at", null);
-    const consentIds = (consents ?? []).map((x) => x.id);
-    const artifact = await create(
-      db,
-      extractor(uid),
-      payload(
-        "CoCreationArtifact",
-        `${kind.replace(/_/g, " ")} · ${speaker.name}`,
-        data.text.slice(0, 200),
-        {
-          session_ref: session.id,
-          kind,
-          media_ref: null,
-          content: data.text,
-          duration_or_size: data.text.length,
-          captured_at: new Date().toISOString(),
-          captured_by: uid,
-          speaker_id: speaker.id,
-          content_tier: tier.tier,
-          consent_basis: consentIds,
-          extraction_state: "pending",
-          evidence_weight: evidenceWeight(kind),
-          provenance: { simulated, adapter: simulated ? "Transcription.simulated" : transcription === "live" ? "Transcription.live" : null },
-        },
-        {
-          owner: session.owner_id,
-          tier: tier.tier,
-          adapter_mode: simulated ? "simulated" : transcription === "live" ? "live" : undefined,
-          rationale: "Captured on the session timeline",
-        },
-      ),
-    );
-    // Normalise + segment: speech through the Transcription adapter; text by statement units
-    const units: UnitIn[] = [];
-    if (simulated) {
-      const { simulatedTranscription } = await import("@/server/adapters/transcription/simulated");
-      const tr = simulatedTranscription();
-      const sid = tr.startStream(session.id, consentIds);
-      tr.pushAudio(sid, { speaker_id: speaker.id, text: data.text, t_offset_ms: data.t_offset_ms });
-      for (const sg of tr.finalize(sid)) {
-        const { data: ev } = await db
-          .from("session_events")
-          .insert({
-            session_id: session.id,
-            t_offset_ms: sg.t_start,
-            kind: "segment",
-            speaker_id: null,
-            ref: artifact.id,
-            payload: {
-              text: sg.text,
-              t_end: sg.t_end,
-              speaker: speaker.id,
-              speaker_name: speaker.name,
-              tier: tier.tier,
-              simulated: true,
-              client_id: data.client_id ?? null,
-            },
-          })
-          .select("id")
-          .single();
-        units.push({
-          text: sg.text,
-          span: { kind: "time_range", start: sg.t_start, end: sg.t_end },
-          speaker,
-          segment_event_id: ev?.id ?? null,
-        });
-      }
-    } else {
-      for (const u of segment(data.text)) {
-        const { data: ev } = await db
-          .from("session_events")
-          .insert({
-            session_id: session.id,
-            t_offset_ms: data.t_offset_ms,
-            kind: "segment",
-            speaker_id: null,
-            ref: artifact.id,
-            payload: {
-              text: u.text,
-              char_start: u.start,
-              char_end: u.end,
-              speaker: speaker.id,
-              speaker_name: speaker.name,
-              tier: tier.tier,
-              mode: data.mode,
-              client_id: data.client_id ?? null,
-            },
-          })
-          .select("id")
-          .single();
-        units.push({
-          text: u.text,
-          span: {
-            kind: data.mode === "prototype_interaction" ? "log_offset" : "char_range",
-            start: u.start,
-            end: u.end,
-          },
-          speaker,
-          segment_event_id: ev?.id ?? null,
-        });
-      }
-    }
-    const mode = await modelMode(db);
-    const revision = (session.body?.extraction_revision as number) ?? 1;
-    const version = (session.body?.extractor_version as "xv1" | "xv2") ?? "xv1";
-    const out = await extractUnits(
+      .eq("payload->>client_id", data.client_id)
+      .limit(1);
+    if (dup?.length) return { duplicate: true, blocked: false, statements: 0 };
+  }
+  // Consent and tier gate BEFORE any model call (8A.3)
+  const tier = classifyContent(data.text);
+  if (tier.tier === "C") {
+    await db.from("session_events").insert({
+      session_id: session.id,
+      t_offset_ms: data.t_offset_ms,
+      kind: "capture.blocked",
+      speaker_id: null,
+      payload: {
+        tier: "C",
+        reasons: tier.reasons,
+        client_id: data.client_id ?? null,
+        speaker: speaker.name,
+      },
+    });
+    return { duplicate: false, blocked: true, reasons: tier.reasons, statements: 0 };
+  }
+  const kind: ArtifactKind = data.mode === "speech" ? "transcript" : data.mode;
+  const simulated = data.mode === "speech" && transcription === "simulated";
+  const { data: consents } = await db
+    .from("consent_records")
+    .select("id")
+    .eq("session_id", session.id)
+    .is("withdrawn_at", null);
+  const consentIds = (consents ?? []).map((x) => x.id);
+  const artifact = await create(
+    db,
+    extractor(uid),
+    payload(
+      "CoCreationArtifact",
+      `${kind.replace(/_/g, " ")} · ${speaker.name}`,
+      data.text.slice(0, 200),
       {
-        db,
-        uid: uid,
-        session,
-        artifact,
+        session_ref: session.id,
+        kind,
+        media_ref: null,
+        content: data.text,
+        duration_or_size: data.text.length,
+        captured_at: new Date().toISOString(),
+        captured_by: uid,
+        speaker_id: speaker.id,
+        content_tier: tier.tier,
+        consent_basis: consentIds,
+        extraction_state: "pending",
+        evidence_weight: evidenceWeight(kind),
+        provenance: {
+          simulated,
+          adapter: simulated
+            ? "Transcription.simulated"
+            : transcription === "live"
+              ? "Transcription.live"
+              : null,
+        },
+      },
+      {
+        owner: session.owner_id,
         tier: tier.tier,
-        simulated,
-        revision,
-        version,
-        mode,
+        adapter_mode: simulated ? "simulated" : transcription === "live" ? "live" : undefined,
+        rationale: "Captured on the session timeline",
       },
-      units,
-      t0,
-    );
-    await reviseBody(
+    ),
+  );
+  // Normalise + segment: speech through the Transcription adapter; text by statement units
+  const units: UnitIn[] = [];
+  if (simulated) {
+    const { simulatedTranscription } = await import("@/server/adapters/transcription/simulated");
+    const tr = simulatedTranscription();
+    const sid = tr.startStream(session.id, consentIds);
+    tr.pushAudio(sid, { speaker_id: speaker.id, text: data.text, t_offset_ms: data.t_offset_ms });
+    for (const sg of tr.finalize(sid)) {
+      const { data: ev } = await db
+        .from("session_events")
+        .insert({
+          session_id: session.id,
+          t_offset_ms: sg.t_start,
+          kind: "segment",
+          speaker_id: null,
+          ref: artifact.id,
+          payload: {
+            text: sg.text,
+            t_end: sg.t_end,
+            speaker: speaker.id,
+            speaker_name: speaker.name,
+            tier: tier.tier,
+            simulated: true,
+            client_id: data.client_id ?? null,
+          },
+        })
+        .select("id")
+        .single();
+      units.push({
+        text: sg.text,
+        span: { kind: "time_range", start: sg.t_start, end: sg.t_end },
+        speaker,
+        segment_event_id: ev?.id ?? null,
+      });
+    }
+  } else {
+    for (const u of segment(data.text)) {
+      const { data: ev } = await db
+        .from("session_events")
+        .insert({
+          session_id: session.id,
+          t_offset_ms: data.t_offset_ms,
+          kind: "segment",
+          speaker_id: null,
+          ref: artifact.id,
+          payload: {
+            text: u.text,
+            char_start: u.start,
+            char_end: u.end,
+            speaker: speaker.id,
+            speaker_name: speaker.name,
+            tier: tier.tier,
+            mode: data.mode,
+            client_id: data.client_id ?? null,
+          },
+        })
+        .select("id")
+        .single();
+      units.push({
+        text: u.text,
+        span: {
+          kind: data.mode === "prototype_interaction" ? "log_offset" : "char_range",
+          start: u.start,
+          end: u.end,
+        },
+        speaker,
+        segment_event_id: ev?.id ?? null,
+      });
+    }
+  }
+  const mode = await modelMode(db);
+  const revision = (session.body?.extraction_revision as number) ?? 1;
+  const version = (session.body?.extractor_version as "xv1" | "xv2") ?? "xv1";
+  const out = await extractUnits(
+    {
       db,
-      extractor(uid),
-      artifact.id,
-      (b) => ({ ...b, extraction_state: "extracted", extraction_revision: revision }),
-      "Extracted",
-    );
-    await reviseBody(
-      db,
-      extractor(uid),
-      session.id,
-      (b) => {
-        const e = mergeEntryTest(
-          { ...EMPTY_ENTRY_TEST, ...((b.entry_test as EntryTest) ?? {}) },
-          out.entry,
-        );
-        return {
-          ...b,
-          entry_test: e,
-          content_tier: maxTier(b.content_tier as ContentTier, tier.tier),
-          objects_proposed: ((b.objects_proposed as number) ?? 0) + out.created.length,
-        };
-      },
-      "Live extraction update",
-    );
-    await db
-      .from("extraction_revisions")
-      .update({
-        model_route: out.cls.route,
-        model: out.cls.model,
-        adapter_mode: out.cls.adapter_mode === "none" ? "none" : out.cls.adapter_mode,
-      })
-      .eq("session_id", session.id)
-      .eq("revision", revision);
-    return {
-      duplicate: false,
-      blocked: false,
-      statements: out.created.length,
+      uid: uid,
+      session,
+      artifact,
       tier: tier.tier,
+      simulated,
+      revision,
+      version,
+      mode,
+    },
+    units,
+    t0,
+  );
+  await reviseBody(
+    db,
+    extractor(uid),
+    artifact.id,
+    (b) => ({ ...b, extraction_state: "extracted", extraction_revision: revision }),
+    "Extracted",
+  );
+  await reviseBody(
+    db,
+    extractor(uid),
+    session.id,
+    (b) => {
+      const e = mergeEntryTest(
+        { ...EMPTY_ENTRY_TEST, ...((b.entry_test as EntryTest) ?? {}) },
+        out.entry,
+      );
+      return {
+        ...b,
+        entry_test: e,
+        content_tier: maxTier(b.content_tier as ContentTier, tier.tier),
+        objects_proposed: ((b.objects_proposed as number) ?? 0) + out.created.length,
+      };
+    },
+    "Live extraction update",
+  );
+  await db
+    .from("extraction_revisions")
+    .update({
+      model_route: out.cls.route,
       model: out.cls.model,
-      route: out.cls.route,
-      model_error: out.cls.error ?? null,
-      latency_ms: Date.now() - t0,
-    };
+      adapter_mode: out.cls.adapter_mode === "none" ? "none" : out.cls.adapter_mode,
+    })
+    .eq("session_id", session.id)
+    .eq("revision", revision);
+  return {
+    duplicate: false,
+    blocked: false,
+    statements: out.created.length,
+    tier: tier.tier,
+    model: out.cls.model,
+    route: out.cls.route,
+    model_error: out.cls.error ?? null,
+    latency_ms: Date.now() - t0,
+  };
 }
 
 export const captureUtterance = createServerFn({ method: "POST" })
@@ -2875,7 +2896,6 @@ export const CONFIRM_FAMILIES = Object.keys(LIFECYCLE_FAMILIES);
 export const ARTIFACT_KIND_LIST = ARTIFACT_KINDS;
 export const modalityOf = artifactModality;
 
-
 // ---------------------------------------------------------------------------
 // Microsoft Teams / Outlook per-user connector ingestion (App User Connectors).
 // Server-only modules are loaded dynamically inside handlers so this module's
@@ -2917,7 +2937,6 @@ export type ConnectorId = keyof typeof CONNECTORS;
 
 const connectorInput = z.enum(["microsoft_teams", "microsoft_outlook"]);
 
-
 function clientKey(connector: ConnectorId): string {
   const key = process.env[CONNECTORS[connector].envVar];
   if (!key)
@@ -2931,8 +2950,7 @@ function returnUrlFor(connector: ConnectorId): string {
   const request = getRequest();
   if (!request) throw new Error("OAuth must start from an app request.");
   const url = new URL(request.url);
-  const sandboxHost =
-    url.hostname === "localhost" ? request.headers.get("x-forwarded-host") : null;
+  const sandboxHost = url.hostname === "localhost" ? request.headers.get("x-forwarded-host") : null;
   return new URL(
     `/api/oauth/${connector}/return`,
     sandboxHost ? `https://${sandboxHost}` : url.origin,
@@ -3090,11 +3108,7 @@ export const listTeamsChannels = createServerFn({ method: "GET" })
     const teams = (teamsR.json.value as Array<{ id: string; displayName: string }>) ?? [];
     const out: Array<{ teamId: string; teamName: string; channelId: string; name: string }> = [];
     for (const t of teams.slice(0, 20)) {
-      const ch = await callGraph(
-        context.userId,
-        "microsoft_teams",
-        `/teams/${t.id}/channels`,
-      );
+      const ch = await callGraph(context.userId, "microsoft_teams", `/teams/${t.id}/channels`);
       if (!ch.ok) continue;
       for (const c of (ch.json.value as Array<{ id: string; displayName: string }>) ?? [])
         out.push({ teamId: t.id, teamName: t.displayName, channelId: c.id, name: c.displayName });
@@ -3209,9 +3223,7 @@ export const listOutlookMessages = createServerFn({ method: "GET" })
     const messages = ((r.json.value as Array<any>) ?? []).map((m) => ({
       id: m.id as string,
       subject: (m.subject as string) ?? "(no subject)",
-      from:
-        ((m.from as any)?.emailAddress as any)
-          ?.address as string ?? "unknown",
+      from: (((m.from as any)?.emailAddress as any)?.address as string) ?? "unknown",
       received: m.receivedDateTime as string,
       hasAttachments: !!m.hasAttachments,
       conversationId: m.conversationId as string,

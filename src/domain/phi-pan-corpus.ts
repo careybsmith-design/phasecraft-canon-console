@@ -4,7 +4,11 @@
  * label: "C" = must hard-block (PHI identifier or PAN); "notC" = must not block.
  * Labelled by the build agent; a human relabel is an open item (same as the Phase 2B quality set).
  */
-export interface CorpusItem { text: string; label: "C" | "notC"; kind: string }
+export interface CorpusItem {
+  text: string;
+  label: "C" | "notC";
+  kind: string;
+}
 
 export const PHI_PAN_CORPUS: CorpusItem[] = [
   // PAN (Luhn-valid test numbers)
@@ -38,17 +42,37 @@ export const PHI_PAN_CORPUS: CorpusItem[] = [
   { text: "Patient born on 12/01/1990 was readmitted.", label: "C", kind: "dob" },
   { text: "dob: 3/7/58", label: "C", kind: "dob" },
   // Not C: health-related without identifiers (Tier B) and ordinary business text (Tier A)
-  { text: "Patients with a chronic condition need faster prior authorisation.", label: "notC", kind: "tier_b" },
-  { text: "The diagnosis code mapping is wrong for ICD-10 chapter 5.", label: "notC", kind: "tier_b" },
+  {
+    text: "Patients with a chronic condition need faster prior authorisation.",
+    label: "notC",
+    kind: "tier_b",
+  },
+  {
+    text: "The diagnosis code mapping is wrong for ICD-10 chapter 5.",
+    label: "notC",
+    kind: "tier_b",
+  },
   { text: "Claim amount thresholds differ by plan.", label: "notC", kind: "tier_b" },
   { text: "Treatment plans should be visible to the care manager.", label: "notC", kind: "tier_b" },
   { text: "Prescription refills take three days on average.", label: "notC", kind: "tier_b" },
   { text: "We need claims under 500 dollars paid automatically.", label: "notC", kind: "tier_a" },
   { text: "The phone line opens at 8am.", label: "notC", kind: "tier_a" },
-  { text: "Order 1234 5678 9012 3456 shipped yesterday.", label: "notC", kind: "near_miss_luhn_invalid" },
-  { text: "Reference 4111 1111 1111 1112 is a ticket number.", label: "notC", kind: "near_miss_luhn_invalid" },
+  {
+    text: "Order 1234 5678 9012 3456 shipped yesterday.",
+    label: "notC",
+    kind: "near_miss_luhn_invalid",
+  },
+  {
+    text: "Reference 4111 1111 1111 1112 is a ticket number.",
+    label: "notC",
+    kind: "near_miss_luhn_invalid",
+  },
   { text: "Call 555-123-4567 for the broker desk.", label: "notC", kind: "near_miss_phone" },
-  { text: "The 2026-10-15 decision changed the routing rule.", label: "notC", kind: "near_miss_date" },
+  {
+    text: "The 2026-10-15 decision changed the routing rule.",
+    label: "notC",
+    kind: "near_miss_date",
+  },
   { text: "Version 12-34-56 of the form is retired.", label: "notC", kind: "near_miss_short" },
   { text: "Member services resolved 4,210 calls this week.", label: "notC", kind: "tier_a" },
   { text: "Policy wording must be plain language.", label: "notC", kind: "tier_a" },
@@ -58,15 +82,31 @@ export const PHI_PAN_CORPUS: CorpusItem[] = [
 ];
 
 export function measureRecall(classify: (t: string) => { tier: string }) {
-  let tp = 0, fn = 0, fp = 0, tn = 0;
+  let tp = 0,
+    fn = 0,
+    fp = 0,
+    tn = 0;
   const misses: string[] = [];
   for (const c of PHI_PAN_CORPUS) {
     const blocked = classify(c.text).tier === "C";
-    if (c.label === "C") { if (blocked) tp++; else { fn++; misses.push(c.text); } }
-    else if (blocked) { fp++; misses.push(c.text); } else tn++;
+    if (c.label === "C") {
+      if (blocked) tp++;
+      else {
+        fn++;
+        misses.push(c.text);
+      }
+    } else if (blocked) {
+      fp++;
+      misses.push(c.text);
+    } else tn++;
   }
   return {
-    items: PHI_PAN_CORPUS.length, positives: tp + fn, tp, fn, fp, tn,
+    items: PHI_PAN_CORPUS.length,
+    positives: tp + fn,
+    tp,
+    fn,
+    fp,
+    tn,
     recall: tp + fn ? tp / (tp + fn) : null,
     precision: tp + fp ? tp / (tp + fp) : null,
     misses,

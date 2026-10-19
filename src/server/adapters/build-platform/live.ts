@@ -13,22 +13,46 @@ export function liveConfig(platform: Platform): { url: string; token: string } |
   return url && token ? { url: url.replace(/\/+$/, ""), token } : null;
 }
 
-export function liveBuildPlatform(platform: Platform, cfg: { url: string; token: string }): BuildPlatform {
+export function liveBuildPlatform(
+  platform: Platform,
+  cfg: { url: string; token: string },
+): BuildPlatform {
   const call = async (path: string, init?: RequestInit) => {
-    const res = await fetch(`${cfg.url}${path}`, { ...init, signal: AbortSignal.timeout(30000), headers: { "Content-Type": "application/json", Authorization: `Bearer ${cfg.token}` } });
+    const res = await fetch(`${cfg.url}${path}`, {
+      ...init,
+      signal: AbortSignal.timeout(30000),
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${cfg.token}` },
+    });
     if (!res.ok) throw new Error(`PLATFORM_UNAVAILABLE: ${platform} returned ${res.status}`);
     return res.json();
   };
   return {
     mode: "live",
     async dispatch(req) {
-      const j = await call("/runs", { method: "POST", body: JSON.stringify({ run_id: req.run_id, prompt_id: req.prompt_id, prompt: req.compiled_prompt, compiled_hash: req.compiled_hash, repro_key: req.repro_key, cost_ceiling: req.cost_ceiling }) });
-      if (typeof j.id !== "string" || !j.id.trim()) throw new Error("PLATFORM_RESULT_INVALID: missing external run identity");
+      const j = await call("/runs", {
+        method: "POST",
+        body: JSON.stringify({
+          run_id: req.run_id,
+          prompt_id: req.prompt_id,
+          prompt: req.compiled_prompt,
+          compiled_hash: req.compiled_hash,
+          repro_key: req.repro_key,
+          cost_ceiling: req.cost_ceiling,
+        }),
+      });
+      if (typeof j.id !== "string" || !j.id.trim())
+        throw new Error("PLATFORM_RESULT_INVALID: missing external run identity");
       return { external_run_id: j.id };
     },
     async status(id): Promise<BuildStatus> {
       const j = await call(`/runs/${encodeURIComponent(id)}`);
-      return { state: j.state, cost: j.cost ?? null, duration_ms: j.duration_ms ?? null, failure_reason: j.failure_reason, secrets_scan: j.secrets_scan ?? "not_run" };
+      return {
+        state: j.state,
+        cost: j.cost ?? null,
+        duration_ms: j.duration_ms ?? null,
+        failure_reason: j.failure_reason,
+        secrets_scan: j.secrets_scan ?? "not_run",
+      };
     },
     async fetchArtifacts(id): Promise<Artifact[]> {
       const j = await call(`/runs/${encodeURIComponent(id)}/artifacts`);

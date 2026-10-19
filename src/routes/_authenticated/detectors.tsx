@@ -1,45 +1,402 @@
-import { createFileRoute, Link } from '@tanstack/react-router';
-import { queryOptions, useSuspenseQuery, useQueryClient } from '@tanstack/react-query';
-import { useServerFn } from '@tanstack/react-start';
-import { useState } from 'react';
-import { RefreshCw, ScanLine, ClipboardCheck } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { DETECTION_RULES } from '@/domain/detection';
-import { listDetection, observeDetection, recordDetectionEvidence, resolveDetection, sweepDetection } from '@/lib/detection.functions';
-const detectionQuery = queryOptions({ queryKey: ['detection'], queryFn: () => listDetection() });
-export const Route = createFileRoute('/_authenticated/detectors')({
-  loader: ({ context }) => context.queryClient.ensureQueryData(detectionQuery), component: DetectionPage,
-  head: () => ({ meta: [{ title: 'Detection — THREAD' }, { name: 'description', content: 'Owned anti-pattern findings, evidence conditions, remediation and expiring accepted risks in THREAD.' }, { property: 'og:title', content: 'Detection — THREAD' }, { property: 'og:description', content: 'Live findings and evidence-based resolutions for ValueOS, THREAD and framing detectors.' }, { property: 'og:type', content: 'website' }, { name: 'twitter:card', content: 'summary' }] }),
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { queryOptions, useSuspenseQuery, useQueryClient } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
+import { useState } from "react";
+import { RefreshCw, ScanLine, ClipboardCheck } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { DETECTION_RULES } from "@/domain/detection";
+import {
+  listDetection,
+  observeDetection,
+  recordDetectionEvidence,
+  resolveDetection,
+  sweepDetection,
+} from "@/lib/detection.functions";
+const detectionQuery = queryOptions({ queryKey: ["detection"], queryFn: () => listDetection() });
+export const Route = createFileRoute("/_authenticated/detectors")({
+  loader: ({ context }) => context.queryClient.ensureQueryData(detectionQuery),
+  component: DetectionPage,
+  head: () => ({
+    meta: [
+      { title: "Detection — THREAD" },
+      {
+        name: "description",
+        content:
+          "Owned anti-pattern findings, evidence conditions, remediation and expiring accepted risks in THREAD.",
+      },
+      { property: "og:title", content: "Detection — THREAD" },
+      {
+        property: "og:description",
+        content:
+          "Live findings and evidence-based resolutions for ValueOS, THREAD and framing detectors.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+    ],
+  }),
 });
 type Json = Record<string, unknown>;
-const obj = (v: unknown): Json => v && typeof v === 'object' && !Array.isArray(v) ? v as Json : {};
+const obj = (v: unknown): Json =>
+  v && typeof v === "object" && !Array.isArray(v) ? (v as Json) : {};
 function DetectionPage() {
-  const { data: s } = useSuspenseQuery(detectionQuery); const qc = useQueryClient();
-  const sweep = useServerFn(sweepDetection); const observe = useServerFn(observeDetection); const resolve = useServerFn(resolveDetection); const record = useServerFn(recordDetectionEvidence);
-  const [busy, setBusy] = useState(false); const [message, setMessage] = useState(''); const [view, setView] = useState('findings');
-  const [filter, setFilter] = useState(''); const [state, setState] = useState('open'); const [subject, setSubject] = useState(''); const [fact, setFact] = useState<string>(DETECTION_RULES[0]?.[1] ?? ''); const [rationale, setRationale] = useState('');
-  const [selected, setSelected] = useState<string | null>(null); const [resolution, setResolution] = useState(''); const [mode, setMode] = useState('resolve'); const [until, setUntil] = useState('');
-  const run = async (fn: () => Promise<unknown>) => { setBusy(true); setMessage(''); try { const r = obj(await fn()); setMessage(`Recorded${r['ledger_seq'] ? ` · ledger #${r['ledger_seq']}` : ''}.`); await qc.invalidateQueries({ queryKey: ['detection'] }); } catch(e) { setMessage(e instanceof Error ? e.message : 'Could not record the change.'); } finally { setBusy(false); } };
-  const findings = s.findings.filter(f => (!state || f.state === state) && (!filter || f.detector_key.toLowerCase().includes(filter.toLowerCase())));
-  const ev = obj(s.evidence?.payload); const checks = Array.isArray(ev['checks']) ? ev['checks'] as Json[] : [];
-  return <main className="mx-auto max-w-6xl space-y-6 p-4 sm:p-6">
-    <header className="flex flex-wrap items-start justify-between gap-4"><div><p className="ident text-muted-foreground">THREAD / ASSURANCE</p><h1 className="mt-2 text-2xl font-semibold">Detection</h1></div><div className="flex flex-wrap gap-2"><Button variant="outline" size="icon" title="Refresh findings" aria-label="Refresh findings" disabled={busy} onClick={() => qc.invalidateQueries({ queryKey: ['detection'] })}><RefreshCw /></Button>{s.is_steward && <><Button variant="outline" disabled={busy} onClick={() => run(() => sweep())}><ScanLine />Run sweep</Button><Button disabled={busy} onClick={() => run(() => record())}><ClipboardCheck />Measure and record</Button></>}</div></header>
-    {message && <p role="status" className="border-l-2 border-primary pl-3 break-words">{message}</p>}
-    <section className="grid grid-cols-3 gap-3 border-y py-4" aria-label="Finding summary">{['open', 'accepted_risk', 'resolved'].map(st => <div key={st}><p className="text-xs text-muted-foreground">{st.replaceAll('_', ' ')}</p><Button variant="link" className="h-auto p-0 text-2xl font-semibold" onClick={() => {setView('findings');setState(st);}}>{s.findings.filter(f => f.state === st).length}</Button></div>)}</section>
-    <nav className="flex flex-wrap gap-1 border-b pb-2" aria-label="Detection views">{['findings', 'registry', 'observation', 'evidence'].map(v => <Button key={v} variant={view === v ? 'secondary' : 'ghost'} onClick={() => setView(v)}>{v[0]?.toUpperCase()}{v.slice(1)}</Button>)}<Button asChild variant="link"><Link to="/measurement">Measurement →</Link></Button></nav>
-    {view === 'findings' && <section className="space-y-4"><div className="flex flex-wrap gap-3"><label className="text-sm">Detector<input className="ml-2 max-w-full rounded border bg-background p-2" value={filter} onChange={e => setFilter(e.target.value)} /></label><label className="text-sm">State<select className="ml-2 rounded border bg-background p-2" value={state} onChange={e => setState(e.target.value)}><option value="">All</option><option value="open">Open</option><option value="accepted_risk">Accepted risk</option><option value="resolved">Resolved</option></select></label></div>
-      {!findings.length && <p className="py-8 text-muted-foreground">No findings in this view.</p>}
-      {findings.map(f => { const evidence = obj(f.evidence); const remediation = DETECTION_RULES.find(([key]) => key === f.detector_key)?.[2]; return <article key={f.id} className="space-y-2 border-b py-4"><div className="flex flex-wrap items-start justify-between gap-2"><div className="min-w-0"><h2 className="break-words text-base font-medium">{f.detector_key.replace(/([a-z])([A-Z])/g,'$1 $2')}</h2><p className="text-xs text-muted-foreground">{f.severity} · {f.state.replaceAll('_',' ')} · first seen {new Date(f.created_at).toLocaleString()}</p></div>{f.state !== 'resolved' && (s.is_steward || f.owner_id === s.user_id) && <Button variant="outline" size="sm" onClick={() => { setSelected(f.id); setResolution(''); setMode('resolve'); }}>Resolve</Button>}</div>
-        <p className="text-sm break-words">{String(evidence['explanation'] ?? 'Inspect the recorded evidence condition.')}</p><p className="text-xs text-muted-foreground">Owner <span className="ident break-all">{f.owner_id}</span></p>
-        {f.object_id && <p className="ident break-all">{String(evidence['ref'] ?? f.object_id)}</p>}
-        {remediation && <p className="text-sm text-muted-foreground">{remediation}</p>}
-        {f.accepted_until && <p className="text-sm text-warn break-words">Accepted by {f.accepted_by} until {new Date(f.accepted_until).toLocaleString()}</p>}
-        {Object.keys(obj(f.resolution)).length > 0 && <p className="text-sm">Resolution: {String(obj(f.resolution)['explanation'] ?? obj(f.resolution)['kind'] ?? 'Recorded')}</p>}
-        <details><summary className="cursor-pointer text-xs text-primary">Evidence record</summary><pre className="mt-2 max-h-72 overflow-auto whitespace-pre-wrap break-all text-xs">{JSON.stringify(f.evidence,null,2)}</pre></details>
-        {selected === f.id && <form className="space-y-3 border-l-2 pl-4" onSubmit={e => { e.preventDefault(); void run(async () => { const r = await resolve({ data: { finding_id: f.id, resolution, accept_until: mode === 'accept' ? new Date(until).toISOString() : null } }); setSelected(null); return r; }); }}><label className="block">Disposition<select className="ml-2 rounded border bg-background p-2" value={mode} onChange={e => setMode(e.target.value)}><option value="resolve">Resolved</option><option value="accept">Accept risk until…</option></select></label><label className="block">Resolution<textarea required minLength={3} className="mt-1 w-full rounded border bg-background p-2" value={resolution} onChange={e => setResolution(e.target.value)} /></label>{mode === 'accept' && <label className="block">Expires<input type="datetime-local" required className="ml-2 rounded border bg-background p-2" value={until} onChange={e => setUntil(e.target.value)} /></label>}<Button type="submit" disabled={busy}>Record resolution</Button><Button variant="ghost" type="button" onClick={() => setSelected(null)}>Cancel</Button></form>}
-      </article>; })}</section>}
-    {view === 'registry' && <section className="space-y-1">{s.rules.map(r => <details key={r.key} className="border-b py-3"><summary className="cursor-pointer break-all">{r.key} <span className="text-xs text-muted-foreground">· {r.family}</span></summary><dl className="mt-3 grid gap-2 text-sm"><div>Owner <span className="ident break-all">{r.owner_id}</span></div><div>Query: {String(obj(r.params)['query'] ?? 'Existing graph sweep')}</div><div>Threshold: {JSON.stringify(obj(r.params)['threshold'] ?? r.params)}</div><div>Schedule: {r.schedule ?? 'Event driven'}</div><div>{DETECTION_RULES.find(([key]) => key === r.key)?.[2]}</div></dl></details>)}</section>}
-    {view === 'observation' && <form className="max-w-2xl space-y-4" onSubmit={e => { e.preventDefault(); void run(() => observe({ data: { subject_id: subject || null, fact, rationale, evidence_refs: subject ? [subject] : [] } })); }}><h2 className="text-lg font-medium">Record an evidence observation</h2><label className="block">Subject<select className="mt-1 w-full rounded border bg-background p-2" value={subject} onChange={e => setSubject(e.target.value)}><option value="">Operating context</option>{s.objects.map(o => <option key={o.id} value={o.id}>{o.human_ref} · {o.title}</option>)}</select></label><label className="block">Detected condition<select className="mt-1 w-full rounded border bg-background p-2" value={fact} onChange={e => setFact(e.target.value)}>{DETECTION_RULES.map(([key,f]) => <option key={key} value={f}>{key}</option>)}</select></label><label className="block">Evidence and rationale<textarea required minLength={3} className="mt-1 w-full rounded border bg-background p-2" rows={4} value={rationale} onChange={e => setRationale(e.target.value)} /></label><Button type="submit" disabled={busy}>Record observation</Button></form>}
-    {view === 'evidence' && <section className="space-y-3"><h2 className="text-lg font-medium">Phase 10 checks</h2>{s.evidence ? <><p className="ident break-words">Ledger #{s.evidence.seq} · {String(ev['fixture_mode'] ?? '')}</p>{checks.map((c,i) => <div key={i} className="flex flex-wrap justify-between gap-2 border-b py-2"><span className="break-all">{String(c['name'])}</span><span className={c['pass'] ? 'text-ok' : 'text-destructive'}>{c['pass'] ? 'Passed' : 'Not met'}</span></div>)}</> : <p className="text-muted-foreground">No recorded Phase 10 checks yet.</p>}</section>}
-  </main>;
+  const { data: s } = useSuspenseQuery(detectionQuery);
+  const qc = useQueryClient();
+  const sweep = useServerFn(sweepDetection);
+  const observe = useServerFn(observeDetection);
+  const resolve = useServerFn(resolveDetection);
+  const record = useServerFn(recordDetectionEvidence);
+  const [busy, setBusy] = useState(false);
+  const [message, setMessage] = useState("");
+  const [view, setView] = useState("findings");
+  const [filter, setFilter] = useState("");
+  const [state, setState] = useState("open");
+  const [subject, setSubject] = useState("");
+  const [fact, setFact] = useState<string>(DETECTION_RULES[0]?.[1] ?? "");
+  const [rationale, setRationale] = useState("");
+  const [selected, setSelected] = useState<string | null>(null);
+  const [resolution, setResolution] = useState("");
+  const [mode, setMode] = useState("resolve");
+  const [until, setUntil] = useState("");
+  const run = async (fn: () => Promise<unknown>) => {
+    setBusy(true);
+    setMessage("");
+    try {
+      const r = obj(await fn());
+      setMessage(`Recorded${r["ledger_seq"] ? ` · ledger #${r["ledger_seq"]}` : ""}.`);
+      await qc.invalidateQueries({ queryKey: ["detection"] });
+    } catch (e) {
+      setMessage(e instanceof Error ? e.message : "Could not record the change.");
+    } finally {
+      setBusy(false);
+    }
+  };
+  const findings = s.findings.filter(
+    (f) =>
+      (!state || f.state === state) &&
+      (!filter || f.detector_key.toLowerCase().includes(filter.toLowerCase())),
+  );
+  const ev = obj(s.evidence?.payload);
+  const checks = Array.isArray(ev["checks"]) ? (ev["checks"] as Json[]) : [];
+  return (
+    <main className="mx-auto max-w-6xl space-y-6 p-4 sm:p-6">
+      <header className="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <p className="ident text-muted-foreground">THREAD / ASSURANCE</p>
+          <h1 className="mt-2 text-2xl font-semibold">Detection</h1>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <Button
+            variant="outline"
+            size="icon"
+            title="Refresh findings"
+            aria-label="Refresh findings"
+            disabled={busy}
+            onClick={() => qc.invalidateQueries({ queryKey: ["detection"] })}
+          >
+            <RefreshCw />
+          </Button>
+          {s.is_steward && (
+            <>
+              <Button variant="outline" disabled={busy} onClick={() => run(() => sweep())}>
+                <ScanLine />
+                Run sweep
+              </Button>
+              <Button disabled={busy} onClick={() => run(() => record())}>
+                <ClipboardCheck />
+                Measure and record
+              </Button>
+            </>
+          )}
+        </div>
+      </header>
+      {message && (
+        <p role="status" className="border-l-2 border-primary pl-3 break-words">
+          {message}
+        </p>
+      )}
+      <section className="grid grid-cols-3 gap-3 border-y py-4" aria-label="Finding summary">
+        {["open", "accepted_risk", "resolved"].map((st) => (
+          <div key={st}>
+            <p className="text-xs text-muted-foreground">{st.replaceAll("_", " ")}</p>
+            <Button
+              variant="link"
+              className="h-auto p-0 text-2xl font-semibold"
+              onClick={() => {
+                setView("findings");
+                setState(st);
+              }}
+            >
+              {s.findings.filter((f) => f.state === st).length}
+            </Button>
+          </div>
+        ))}
+      </section>
+      <nav className="flex flex-wrap gap-1 border-b pb-2" aria-label="Detection views">
+        {["findings", "registry", "observation", "evidence"].map((v) => (
+          <Button key={v} variant={view === v ? "secondary" : "ghost"} onClick={() => setView(v)}>
+            {v[0]?.toUpperCase()}
+            {v.slice(1)}
+          </Button>
+        ))}
+        <Button asChild variant="link">
+          <Link to="/measurement">Measurement →</Link>
+        </Button>
+      </nav>
+      {view === "findings" && (
+        <section className="space-y-4">
+          <div className="flex flex-wrap gap-3">
+            <label className="text-sm">
+              Detector
+              <input
+                className="ml-2 max-w-full rounded border bg-background p-2"
+                value={filter}
+                onChange={(e) => setFilter(e.target.value)}
+              />
+            </label>
+            <label className="text-sm">
+              State
+              <select
+                className="ml-2 rounded border bg-background p-2"
+                value={state}
+                onChange={(e) => setState(e.target.value)}
+              >
+                <option value="">All</option>
+                <option value="open">Open</option>
+                <option value="accepted_risk">Accepted risk</option>
+                <option value="resolved">Resolved</option>
+              </select>
+            </label>
+          </div>
+          {!findings.length && (
+            <p className="py-8 text-muted-foreground">No findings in this view.</p>
+          )}
+          {findings.map((f) => {
+            const evidence = obj(f.evidence);
+            const remediation = DETECTION_RULES.find(([key]) => key === f.detector_key)?.[2];
+            return (
+              <article key={f.id} className="space-y-2 border-b py-4">
+                <div className="flex flex-wrap items-start justify-between gap-2">
+                  <div className="min-w-0">
+                    <h2 className="break-words text-base font-medium">
+                      {f.detector_key.replace(/([a-z])([A-Z])/g, "$1 $2")}
+                    </h2>
+                    <p className="text-xs text-muted-foreground">
+                      {f.severity} · {f.state.replaceAll("_", " ")} · first seen{" "}
+                      {new Date(f.created_at).toLocaleString()}
+                    </p>
+                  </div>
+                  {f.state !== "resolved" && (s.is_steward || f.owner_id === s.user_id) && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        setSelected(f.id);
+                        setResolution("");
+                        setMode("resolve");
+                      }}
+                    >
+                      Resolve
+                    </Button>
+                  )}
+                </div>
+                <p className="text-sm break-words">
+                  {String(evidence["explanation"] ?? "Inspect the recorded evidence condition.")}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  Owner <span className="ident break-all">{f.owner_id}</span>
+                </p>
+                {f.object_id && (
+                  <p className="ident break-all">{String(evidence["ref"] ?? f.object_id)}</p>
+                )}
+                {remediation && <p className="text-sm text-muted-foreground">{remediation}</p>}
+                {f.accepted_until && (
+                  <p className="text-sm text-warn break-words">
+                    Accepted by {f.accepted_by} until {new Date(f.accepted_until).toLocaleString()}
+                  </p>
+                )}
+                {Object.keys(obj(f.resolution)).length > 0 && (
+                  <p className="text-sm">
+                    Resolution:{" "}
+                    {String(
+                      obj(f.resolution)["explanation"] ?? obj(f.resolution)["kind"] ?? "Recorded",
+                    )}
+                  </p>
+                )}
+                <details>
+                  <summary className="cursor-pointer text-xs text-primary">Evidence record</summary>
+                  <pre className="mt-2 max-h-72 overflow-auto whitespace-pre-wrap break-all text-xs">
+                    {JSON.stringify(f.evidence, null, 2)}
+                  </pre>
+                </details>
+                {selected === f.id && (
+                  <form
+                    className="space-y-3 border-l-2 pl-4"
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      void run(async () => {
+                        const r = await resolve({
+                          data: {
+                            finding_id: f.id,
+                            resolution,
+                            accept_until: mode === "accept" ? new Date(until).toISOString() : null,
+                          },
+                        });
+                        setSelected(null);
+                        return r;
+                      });
+                    }}
+                  >
+                    <label className="block">
+                      Disposition
+                      <select
+                        className="ml-2 rounded border bg-background p-2"
+                        value={mode}
+                        onChange={(e) => setMode(e.target.value)}
+                      >
+                        <option value="resolve">Resolved</option>
+                        <option value="accept">Accept risk until…</option>
+                      </select>
+                    </label>
+                    <label className="block">
+                      Resolution
+                      <textarea
+                        required
+                        minLength={3}
+                        className="mt-1 w-full rounded border bg-background p-2"
+                        value={resolution}
+                        onChange={(e) => setResolution(e.target.value)}
+                      />
+                    </label>
+                    {mode === "accept" && (
+                      <label className="block">
+                        Expires
+                        <input
+                          type="datetime-local"
+                          required
+                          className="ml-2 rounded border bg-background p-2"
+                          value={until}
+                          onChange={(e) => setUntil(e.target.value)}
+                        />
+                      </label>
+                    )}
+                    <Button type="submit" disabled={busy}>
+                      Record resolution
+                    </Button>
+                    <Button variant="ghost" type="button" onClick={() => setSelected(null)}>
+                      Cancel
+                    </Button>
+                  </form>
+                )}
+              </article>
+            );
+          })}
+        </section>
+      )}
+      {view === "registry" && (
+        <section className="space-y-1">
+          {s.rules.map((r) => (
+            <details key={r.key} className="border-b py-3">
+              <summary className="cursor-pointer break-all">
+                {r.key} <span className="text-xs text-muted-foreground">· {r.family}</span>
+              </summary>
+              <dl className="mt-3 grid gap-2 text-sm">
+                <div>
+                  Owner <span className="ident break-all">{r.owner_id}</span>
+                </div>
+                <div>Query: {String(obj(r.params)["query"] ?? "Existing graph sweep")}</div>
+                <div>Threshold: {JSON.stringify(obj(r.params)["threshold"] ?? r.params)}</div>
+                <div>Schedule: {r.schedule ?? "Event driven"}</div>
+                <div>{DETECTION_RULES.find(([key]) => key === r.key)?.[2]}</div>
+              </dl>
+            </details>
+          ))}
+        </section>
+      )}
+      {view === "observation" && (
+        <form
+          className="max-w-2xl space-y-4"
+          onSubmit={(e) => {
+            e.preventDefault();
+            void run(() =>
+              observe({
+                data: {
+                  subject_id: subject || null,
+                  fact,
+                  rationale,
+                  evidence_refs: subject ? [subject] : [],
+                },
+              }),
+            );
+          }}
+        >
+          <h2 className="text-lg font-medium">Record an evidence observation</h2>
+          <label className="block">
+            Subject
+            <select
+              className="mt-1 w-full rounded border bg-background p-2"
+              value={subject}
+              onChange={(e) => setSubject(e.target.value)}
+            >
+              <option value="">Operating context</option>
+              {s.objects.map((o) => (
+                <option key={o.id} value={o.id}>
+                  {o.human_ref} · {o.title}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="block">
+            Detected condition
+            <select
+              className="mt-1 w-full rounded border bg-background p-2"
+              value={fact}
+              onChange={(e) => setFact(e.target.value)}
+            >
+              {DETECTION_RULES.map(([key, f]) => (
+                <option key={key} value={f}>
+                  {key}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="block">
+            Evidence and rationale
+            <textarea
+              required
+              minLength={3}
+              className="mt-1 w-full rounded border bg-background p-2"
+              rows={4}
+              value={rationale}
+              onChange={(e) => setRationale(e.target.value)}
+            />
+          </label>
+          <Button type="submit" disabled={busy}>
+            Record observation
+          </Button>
+        </form>
+      )}
+      {view === "evidence" && (
+        <section className="space-y-3">
+          <h2 className="text-lg font-medium">Phase 10 checks</h2>
+          {s.evidence ? (
+            <>
+              <p className="ident break-words">
+                Ledger #{s.evidence.seq} · {String(ev["fixture_mode"] ?? "")}
+              </p>
+              {checks.map((c, i) => (
+                <div key={i} className="flex flex-wrap justify-between gap-2 border-b py-2">
+                  <span className="break-all">{String(c["name"])}</span>
+                  <span className={c["pass"] ? "text-ok" : "text-destructive"}>
+                    {c["pass"] ? "Passed" : "Not met"}
+                  </span>
+                </div>
+              ))}
+            </>
+          ) : (
+            <p className="text-muted-foreground">No recorded Phase 10 checks yet.</p>
+          )}
+        </section>
+      )}
+    </main>
+  );
 }
