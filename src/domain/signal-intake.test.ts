@@ -51,13 +51,15 @@ describe("SI-2 the four channels share one object and one audit event", () => {
       "live_capture",
     ]);
   });
-  it("intake statuses cover received, extracted, confirmed, rejected and duplicate", () => {
+  it("intake statuses cover every terminal outcome of an attempt", () => {
     expect(INTAKE_STATUSES).toEqual([
       "received",
       "extracted",
       "confirmed",
       "rejected",
       "duplicate",
+      "no_proposal",
+      "abandoned",
     ]);
   });
   it("the registry requires intake provenance on every ValueSignal", () => {
@@ -166,9 +168,16 @@ describe("intake edges and tools (B.3, B.8, AW-13 extension)", () => {
   });
   it("capture requires consent and links are rationale-bound", () => {
     expect(
-      CaptureStartInput.parse({ modalities: ["audio", "text"], purpose: "Claims framing" })
-        .modalities,
+      CaptureStartInput.parse({
+        modalities: ["audio", "text"],
+        purpose: "Claims framing",
+        consent_confirmed: true,
+      }).modalities,
     ).toHaveLength(2);
+    // W3.2: a capture cannot open without a positive consent confirmation.
+    expect(
+      CaptureStartInput.safeParse({ modalities: ["text"], purpose: "Claims framing" }).success,
+    ).toBe(false);
     expect(CaptureCompleteInput.safeParse({ capture_id: uid(1), transcript: "" }).success).toBe(
       false,
     );
