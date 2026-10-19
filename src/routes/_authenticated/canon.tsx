@@ -857,7 +857,7 @@ function Detail({
             (l: {
               seq: number;
               action: string;
-              object_version: number;
+              object_version: number | null;
               hash: string;
               prev_hash: string;
             }) => (
