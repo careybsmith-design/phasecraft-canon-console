@@ -38,10 +38,7 @@ const input = {
   t_offset_ms: 0,
 };
 
-type Handler = (args: {
-  data: typeof input;
-  context: { userId: string };
-}) => Promise<unknown>;
+type Handler = (args: { data: typeof input; context: { userId: string } }) => Promise<unknown>;
 
 function mockDb(opts: {
   state?: string;

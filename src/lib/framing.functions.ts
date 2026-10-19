@@ -3391,13 +3391,14 @@ export const ingestOutlookMessage = createServerFn({ method: "POST" })
                 captured_by: context.userId,
                 speaker_id: data.speaker_id,
                 content_tier: tier.tier,
-                consent_basis: (
-                  await db
-                    .from("consent_records")
-                    .select("id")
-                    .eq("session_id", data.session_id)
-                    .is("withdrawn_at", null)
-                ).data?.map((x: { id: string }) => x.id) ?? [],
+                consent_basis:
+                  (
+                    await db
+                      .from("consent_records")
+                      .select("id")
+                      .eq("session_id", data.session_id)
+                      .is("withdrawn_at", null)
+                  ).data?.map((x: { id: string }) => x.id) ?? [],
                 extraction_state: "pending",
                 evidence_weight: "corroborating",
                 provenance: {

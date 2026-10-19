@@ -818,8 +818,8 @@ function StatementCard({
         <div className="mt-2 space-y-1">
           <p className="text-xs text-muted-foreground">
             Confirming records this statement as confirmed under your authority. If you hold no
-            decision authority in this session, the confirmation is flagged as an authority
-            mismatch and material items still need an authority holder.
+            decision authority in this session, the confirmation is flagged as an authority mismatch
+            and material items still need an authority holder.
           </p>
           <div className="flex flex-wrap gap-2">
             <Button
@@ -832,20 +832,20 @@ function StatementCard({
             >
               Confirm
             </Button>
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={() => setMode(mode === "edit" ? null : "edit")}
-          >
-            Edit
-          </Button>
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={() => setMode(mode === "reject" ? null : "reject")}
-          >
-            Reject
-          </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => setMode(mode === "edit" ? null : "edit")}
+            >
+              Edit
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => setMode(mode === "reject" ? null : "reject")}
+            >
+              Reject
+            </Button>
             {x.body.material && (
               <Button
                 size="sm"
