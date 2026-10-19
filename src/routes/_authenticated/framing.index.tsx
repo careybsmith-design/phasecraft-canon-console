@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { getSessionMissionOptions } from "@/lib/session-mission.functions";
 
 export const Route = createFileRoute("/_authenticated/framing/")({
   head: () => ({
@@ -113,6 +114,12 @@ export function FramingHome() {
 
 function StartForm() {
   const start = useServerFn(startFramingSession);
+  const readMissions = useServerFn(getSessionMissionOptions);
+  const missions = useQuery({
+    queryKey: ["session-mission-start"],
+    queryFn: () => readMissions({ data: {} }),
+  });
+  const [mission, setMission] = useState("");
   const navigate = useNavigate();
   const qc = useQueryClient();
   const [purpose, setPurpose] = useState("");
@@ -144,6 +151,7 @@ function StartForm() {
       const r = await start({
         data: {
           purpose,
+          mission_ref: mission || null,
           modalities: mods as never,
           participants: ps.map((p) => ({
             ...p,
@@ -177,6 +185,27 @@ function StartForm() {
           onChange={(e) => setPurpose(e.target.value)}
           placeholder="Members should see their coverage without calling us"
         />
+      </div>
+      <div className="space-y-1">
+        <Label htmlFor="start-mission">Mission (optional)</Label>
+        <select
+          id="start-mission"
+          value={mission}
+          onChange={(e) => setMission(e.target.value)}
+          className="h-9 w-full rounded-md border bg-background px-2 text-sm"
+        >
+          <option value="">No mission yet</option>
+          {missions.data?.missions.map((m) => (
+            <option key={m.id} value={m.id}>
+              {m.human_ref} · {m.title}
+            </option>
+          ))}
+        </select>
+        {missions.error && (
+          <p role="alert" className="text-sm text-destructive">
+            {errText(missions.error)}
+          </p>
+        )}
       </div>
       <fieldset className="space-y-1">
         <legend className="text-sm">What will be captured</legend>

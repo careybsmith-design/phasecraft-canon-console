@@ -18,6 +18,7 @@ import {
 } from "./signal-intake";
 import { outputSchema } from "./mcp-output";
 import { ObjectLookupInput, GraphSearchInput } from "./object-read";
+import { LinkSessionMissionInput } from "./session-mission";
 
 const id = z.uuid();
 const txt = (n: number) => z.string().trim().min(1).max(n);
@@ -962,6 +963,18 @@ export const TOOLS: ToolDef[] = [
   ),
 
   // Part 8A.11 framing tools
+  D(
+    "link_session_to_mission",
+    "K2",
+    "Associate session intent with a mission; mission authority records a decision, others a suggestion",
+    LinkSessionMissionInput,
+    {
+      side_effects: "creates_objects",
+      authority: "recommend",
+      output: "decision or suggestion and edge",
+      compensating: "reverse the association with a recorded decision; confirmations stay intact",
+    },
+  ),
   D(
     "start_framing_session",
     "K2",

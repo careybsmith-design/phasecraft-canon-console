@@ -33,6 +33,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { LiveCapturePanel } from "@/components/LiveCapturePanel";
 import { ConnectorsPanel } from "@/components/ConnectorsPanel";
+import { SessionMissionPanel } from "@/components/SessionMissionPanel";
+import { MissionForm, useSurface } from "@/components/human-surfaces";
 import { errText } from "./framing.index";
 
 export const Route = createFileRoute("/_authenticated/framing/$sessionId")({
@@ -135,6 +137,8 @@ export function SessionSurface({ sessionId }: { sessionId: string }) {
   return (
     <main className="space-y-3 p-4">
       <Header d={d} onChange={refresh} />
+      <SessionMissionPanel sessionId={sessionId} />
+      <NeedMissionPanel objects={d.objects} />
       {s.lifecycle_state === "planned" && <ConsentPanel d={d} onChange={refresh} />}
       <div className="grid gap-3 xl:grid-cols-[minmax(0,0.9fr)_minmax(0,1.2fr)_minmax(0,0.9fr)]">
         <section className="space-y-3" aria-label="Capture and transcript">
@@ -169,6 +173,34 @@ export function SessionSurface({ sessionId }: { sessionId: string }) {
         </section>
       </div>
     </main>
+  );
+}
+
+function NeedMissionPanel({ objects }: { objects: Row[] }) {
+  const q = useSurface();
+  const needs = objects.filter(
+    (o) => o.type === "NeedStatement" && o.lifecycle_state === "confirmed",
+  );
+  const [need, setNeed] = useState("");
+  if (!needs.length) return null;
+  return (
+    <section className="space-y-3 border-y py-3">
+      <h2 className="label-caps">Establish a mission from confirmed intent</h2>
+      <select
+        aria-label="Originating confirmed need"
+        value={need}
+        onChange={(e) => setNeed(e.target.value)}
+        className="h-9 w-full rounded-md border bg-background px-2 text-sm"
+      >
+        <option value="">Select confirmed need</option>
+        {needs.map((n) => (
+          <option key={n.id} value={n.id}>
+            {n.human_ref} · {n.title}
+          </option>
+        ))}
+      </select>
+      {need && <MissionForm key={need} needId={need} objects={q.data?.objects ?? []} />}
+    </section>
   );
 }
 

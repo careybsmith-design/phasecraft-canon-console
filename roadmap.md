@@ -1,5 +1,12 @@
 # THREAD roadmap
 
+## Session-to-mission containment — 19 October 2026
+
+- [x] Add optional start association, retrospective association/reversal on session and mission surfaces, and shared human/MCP operation (0081–0085).
+- [x] Preserve existing verb signatures and signal guards; derive authority, record decisions/suggestions, resolve containment and advisory frontier. Ten rollback-only SQL cases passed; 1,771 tests passed, lint zero errors, preview build OK. Evidence: docs/THREAD-session-mission-evidence-2026-10-19.md.
+- [x] Implement explicit promoted-signal-first confirmed-need conversion and permission-scoped related signal lookup; no confirmed object rewrite.
+- [ ] Finish populated live acceptance (both surfaces, reversal, all eight views, external MCP, successful bottom-up conversion). Needs a real mission, a second real human account and mission bounds; rollback fixtures are not a real pilot.
+
 ## Consolidated remediation (THREAD-Consolidated-Remediation-Prompt.md) — 19 October 2026
 
 - [x] W1.1 typecheck gate: `typecheck`/`build`/`build:dev` scripts now run `tsgo --noEmit` before Vite (deviation: prompt said `tsc`, project toolchain uses tsgo). Gate proven: deliberate `src/__gatecheck.ts` type error failed with TS2322 exit 2; clean tree exits 0; `bun run build` exit 0. No CI workflows exist — the `build` script is the only gate.
@@ -70,6 +77,8 @@
 - [ ] Phase 12 — Hardening controls and assurance surface added; live exit evidence and signed-in validation remain open
 
 ## Open items — keep until addressed at the end (never delete without resolving)
+
+- [ ] Session-to-mission live acceptance: real two-human mission association from both surfaces/reversal, successful signal-first need conversion, populated eight-view scope and external MCP. Blockers: no active mission/second genuine human/bounds supplied; automatic mission creation on status changes intentionally not added. Evidence and precise partial disposition: docs/THREAD-session-mission-evidence-2026-10-19.md.
 
 Complete audit additions (19 October; evidence/details N01–N13 and work packages 1–46 in docs/THREAD-complete-audit-2026-10-19.md)
 

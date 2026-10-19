@@ -155,6 +155,8 @@ export const FRAMING_DETECTORS = [
 ] as const;
 export const DETECTION_RULES = [...VALUEOS_DETECTORS, ...THREAD_DETECTORS, ...FRAMING_DETECTORS];
 export const ACTION_RATIO_WARNING = "AntiWikiActionRatioThresholdUnset";
+// Optional intent-to-mission association is advisory, not another blocking detector.
+export const SESSION_MISSION_ADVISORIES = ["ConfirmedIntentWithoutMission"] as const;
 export const DETECTOR_MANIFEST = [...DETECTION_RULES.map(([key]) => key), ACTION_RATIO_WARNING];
 export function evaluateFacts(facts: Record<string, unknown>) {
   return DETECTION_RULES.filter(([, fact]) => facts[fact] === true).map(([key]) => key);

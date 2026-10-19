@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { MissionInput } from "@/domain/human-surfaces";
+import { createMissionFromNeed, getNeedPromotedSignals } from "@/lib/session-mission.functions";
 
 export type SurfaceObject = Awaited<ReturnType<typeof getHumanSurface>>["objects"][number];
 export type Rendition = Awaited<ReturnType<typeof askCompanion>>;
@@ -280,9 +281,11 @@ const MISSION_FIELDS = {
 export function MissionForm({
   objects,
   signalId,
+  needId,
 }: {
   objects: SurfaceObject[];
   signalId?: string;
+  needId?: string;
 }) {
   const [fields, setFields] = useState<Record<string, string>>({});
   const [signal, setSignal] = useState(signalId ?? "");
@@ -290,6 +293,13 @@ export function MissionForm({
   const [issue, setIssue] = useState("");
   const uid = useId();
   const create = useServerFn(createMission);
+  const fromNeed = useServerFn(createMissionFromNeed);
+  const findSignals = useServerFn(getNeedPromotedSignals);
+  const matching = useQuery({
+    queryKey: ["need-promoted-signals", needId],
+    enabled: Boolean(needId),
+    queryFn: () => (needId ? findSignals({ data: { need_id: needId } }) : Promise.resolve([])),
+  });
   const navigate = useNavigate();
   return (
     <details className="border-y py-3">
@@ -313,7 +323,15 @@ export function MissionForm({
           }
           setBusy(true);
           try {
-            const r = await create({ data: parsed.data });
+            const r = needId
+              ? await fromNeed({
+                  data: {
+                    need_id: needId,
+                    mission: parsed.data,
+                    rationale: "Mission established from this confirmed session need",
+                  },
+                })
+              : await create({ data: parsed.data });
             toast.success(`Recorded ${r.human_ref}`);
             await navigate({ to: "/missions/$missionId", params: { missionId: r.id } });
           } catch (err) {
@@ -325,6 +343,18 @@ export function MissionForm({
       >
         <div className="sm:col-span-2 space-y-2">
           <Label htmlFor={`${uid}-signal`}>Source Value Signal</Label>
+          {needId && (
+            <p className="text-xs text-muted-foreground">
+              {matching.data?.length
+                ? `${matching.data.length} related promoted signal(s) found`
+                : "Intent awaiting a signal — record and promote the condition first."}
+            </p>
+          )}
+          {matching.error && (
+            <p role="alert" className="text-sm text-destructive">
+              {errorText(matching.error)}
+            </p>
+          )}
           {(() => {
             const promoted = objects.filter(
               (o) => o.type === "ValueSignal" && o.lifecycle_state === "promoted",
@@ -339,11 +369,17 @@ export function MissionForm({
                   className="h-9 w-full rounded-md border bg-background px-2 text-sm"
                 >
                   <option value="">Select signal</option>
-                  {promoted.map((o) => (
-                    <option key={o.id} value={o.id}>
-                      {o.human_ref} · {o.title}
-                    </option>
-                  ))}
+                  {[...promoted]
+                    .sort(
+                      (a, b) =>
+                        Number(matching.data?.some((s) => s.id === b.id)) -
+                        Number(matching.data?.some((s) => s.id === a.id)),
+                    )
+                    .map((o) => (
+                      <option key={o.id} value={o.id}>
+                        {o.human_ref} · {o.title}
+                      </option>
+                    ))}
                 </select>
                 {promoted.length === 0 && (
                   <p className="text-xs text-muted-foreground">

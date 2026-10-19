@@ -61,6 +61,7 @@ const arrayFields: Record<string, string[]> = {
   list_notifications: ["id", "topic", "ledger_seq", "body"],
 };
 const fields: Record<string, string[]> = {
+  link_session_to_mission: ["recorded_as", "edge", "decision_id"],
   score_value_signal: ["signal", "magnitude", "urgency", "value", "confidence_bundle", "unscored"],
   find_related_missions: ["missions", "capabilities"],
   create_value_mission: ["id", "human_ref", "version"],

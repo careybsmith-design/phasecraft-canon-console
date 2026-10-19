@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { SessionMissionPanel } from "@/components/SessionMissionPanel";
 export const Route = createFileRoute("/_authenticated/missions/$missionId")({
   head: () => ({
     meta: [
@@ -123,6 +124,7 @@ function MissionRuntime() {
         </div>
         <ExportEvidence name={mission.human_ref} value={q.data} />
       </header>
+      <SessionMissionPanel missionId={missionId} />
       <section className="space-y-2 border-y py-4">
         <h2 className="label-caps">Originating signal</h2>
         {(() => {

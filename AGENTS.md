@@ -22,7 +22,7 @@
 - The first account to sign up becomes `steward`; everyone else is `member` until the IdentityProvider adapter exists.
 - Restore rehearsal is a snapshot-replay check (`thread_restore_rehearsal`) recorded as simulated; a platform backup restore stays `pending_live_adapter`.
 - `/` redirects to the protected `/feed` surface and sign-in opens it. Why: no duplicate root route.
-- Relationship verbs are data in `src/domain/relationships.ts`; the DB seed (`scripts/gen-phase2-seed.ts`) must mirror it. Edges are written only via `thread_create_edge` / `thread_retire_edge`; `edges_guard` requires a same-transaction ledger entry and allows only retirement. Why: P9 applies to relationships too.
+- Relationship verbs and seed mirror relationships.ts. Edges use ledger-first create/retire operations; mission-authorized session scope uses its narrow writer (see src/server/ops/AGENTS.md). Why: P9 also applies to containment.
 - DESIGN DECISION: each verb has an `impact` direction (forward/reverse/both/none) for blast radius; Part 4.2 does not state propagation. `derives_from` is registered because Part 4.5 rule 6 names it.
 - Graph reads are SQL functions (`graph_*`) run as the caller so permissions apply. Nebula positions are precomputed server-side in `graph_layouts` and refreshed after each write. Why: Part 16.5, the browser never solves a large layout.
 - Active Canon-family objects change only via `thread_propose_canon_change` -> challenge window (min 24 h, default 72 h) -> steward `thread_decide_canon_change` (records a ConfirmedDecision); the `canon_change_path` trigger blocks anything else. Drafts are edited directly. Why: P15.

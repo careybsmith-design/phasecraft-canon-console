@@ -1,0 +1,127 @@
+[
+  {
+    "file": "src/domain/session-mission.ts",
+    "lines": "4,11",
+    "total_lines": 40
+  },
+  {
+    "file": "src/domain/session-mission.test.ts",
+    "lines": "3,9,13,16",
+    "total_lines": 35
+  },
+  {
+    "file": "src/domain/relationships.ts",
+    "lines": "98,184,188",
+    "total_lines": 224
+  },
+  {
+    "file": "src/domain/detection.ts",
+    "lines": "159",
+    "total_lines": 224
+  },
+  {
+    "file": "src/domain/mcp-tools.ts",
+    "lines": "21,967,970",
+    "total_lines": 1197
+  },
+  {
+    "file": "src/domain/mcp-output.ts",
+    "lines": "64",
+    "total_lines": 137
+  },
+  {
+    "file": "src/server/ops/session-mission.server.ts",
+    "lines": "1,18,19,34",
+    "total_lines": 70
+  },
+  {
+    "file": "src/server/ops/session-mission.server.test.ts",
+    "lines": "2,30,37,47,49",
+    "total_lines": 57
+  },
+  {
+    "file": "src/server/ops/AGENTS.md",
+    "lines": "3",
+    "total_lines": 17
+  },
+  {
+    "file": "src/server/mcp/tools.server.ts",
+    "lines": "72,73,74",
+    "total_lines": 885
+  },
+  {
+    "file": "src/lib/session-mission.functions.ts",
+    "lines": "4,7,11,17,27,31,59,67,86,88,90,100,102,104,106,121",
+    "total_lines": 132
+  },
+  {
+    "file": "src/lib/framing.functions.ts",
+    "lines": "347,451,457,2950,2953",
+    "total_lines": 3459
+  },
+  {
+    "file": "src/components/SessionMissionPanel.tsx",
+    "lines": "7,9,10,16,23,25,28,52",
+    "total_lines": 166
+  },
+  {
+    "file": "src/components/human-surfaces.tsx",
+    "lines": "20,284,288,296,297,299,300,301,326,327,329,346,348,349,375,376",
+    "total_lines": 647
+  },
+  {
+    "file": "src/routes/_authenticated/framing.index.tsx",
+    "lines": "22,117,119,154,190",
+    "total_lines": 515
+  },
+  {
+    "file": "src/routes/_authenticated/framing.$sessionId.tsx",
+    "lines": "36,140,141,179,202",
+    "total_lines": 1228
+  },
+  {
+    "file": "src/routes/_authenticated/missions.$missionId.tsx",
+    "lines": "15,127",
+    "total_lines": 370
+  },
+  {
+    "file": "AGENTS.md",
+    "lines": "1-40 (new migration/generated schema or changed signature sections)",
+    "total_lines": 40
+  },
+  {
+    "file": "docs/audit/registry-manifest.json",
+    "lines": "1-3261 (new migration/generated schema or changed signature sections)",
+    "total_lines": 3261
+  },
+  {
+    "file": "src/integrations/supabase/types.ts",
+    "lines": "2952,2975,2983,3252,3661,3733",
+    "total_lines": 4086
+  },
+  {
+    "file": "drizzle/migrations/0081_session_mission_containment.sql",
+    "lines": "19,37,38,50,77,91,94,105,107,108,112,113,115,117,121,122,123,125,131,134,135,142,143,165,175,183,184,185",
+    "total_lines": 189
+  },
+  {
+    "file": "drizzle/migrations/0082_session_mission_guards_and_acceptance.sql",
+    "lines": "17,21,23,27,28,40,42,47,57,61,62,64,81,83,84",
+    "total_lines": 84
+  },
+  {
+    "file": "drizzle/migrations/0083_session_mission_acceptance_assertion.sql",
+    "lines": "1",
+    "total_lines": 1
+  },
+  {
+    "file": "drizzle/migrations/0084_session_mission_scoped_reads.sql",
+    "lines": "4,8,13",
+    "total_lines": 13
+  },
+  {
+    "file": "drizzle/migrations/0085_session_mission_signal_lookup.sql",
+    "lines": "1,4,5,9,13",
+    "total_lines": 13
+  }
+]

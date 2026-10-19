@@ -1,0 +1,1 @@
+DO $$ DECLARE r jsonb; BEGIN r:=public.thread_session_mission_selftest(); IF r->>'all_ok' IS DISTINCT FROM 'true' OR r->>'fixtures_rolled_back' IS DISTINCT FROM 'true' THEN RAISE EXCEPTION 'SESSION_MISSION_ACCEPTANCE_FAILED: %',r; END IF; RAISE NOTICE 'SESSION_MISSION_ACCEPTANCE: %',r; END $$;
