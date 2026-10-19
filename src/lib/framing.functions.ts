@@ -448,7 +448,9 @@ export const getFramingSession = createServerFn({ method: "GET" })
       lat[st] = { p95: p95(xs), n: xs.length, budget: LATENCY_BUDGETS[st] };
     }
     const entry: EntryTest = { ...EMPTY_ENTRY_TEST, ...(s.body?.entry_test ?? {}) };
-    const { data: missionScope, error: scopeError } = await sb.rpc("session_mission_scope", { p_session: data.id });
+    const { data: missionScope, error: scopeError } = await sb.rpc("session_mission_scope", {
+      p_session: data.id,
+    });
     if (scopeError) throw new Error(scopeError.message);
     return {
       session: s,
@@ -2944,7 +2946,9 @@ export const getFramingView = createServerFn({ method: "GET" })
         state: n.state,
         why: n.draft ? "draft" : n.state,
       }));
-    const { data: missionScope, error: scopeError } = data.session ? await sb.rpc("session_mission_scope", { p_session: data.session }) : { data: null, error: null };
+    const { data: missionScope, error: scopeError } = data.session
+      ? await sb.rpc("session_mission_scope", { p_session: data.session })
+      : { data: null, error: null };
     if (scopeError) throw new Error(scopeError.message);
     return { nodes, edges: keep, list, total_edges: keep.length, mission_scope: missionScope };
   });
