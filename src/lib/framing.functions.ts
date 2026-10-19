@@ -1185,6 +1185,7 @@ async function captureUtteranceImpl(
         captured_by: uid,
         speaker_id: speaker.id,
         content_tier: tier.tier,
+        tier_basis: "content_extracted",
         consent_basis: consentIds,
         extraction_state: "pending",
         evidence_weight: evidenceWeight(kind),
