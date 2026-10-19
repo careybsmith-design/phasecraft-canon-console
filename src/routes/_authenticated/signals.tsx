@@ -53,7 +53,7 @@ function DraftList({
   drafts: DraftSignal[];
   origin: SignalOrigin;
   sourceRef?: string;
-  onConfirmed: () => void;
+  onConfirmed: (result: Awaited<ReturnType<typeof confirmDraftSignal>>, condition: string) => void;
 }) {
   const confirm = useServerFn(confirmDraftSignal);
   const [busy, setBusy] = useState("");
@@ -87,12 +87,12 @@ function DraftList({
                   },
                 });
                 if (r.status === "duplicate") {
-                  const ex = r.existing_signal!;
+                  const ex = r.existing_signal;
                   toast.info(
-                    `Already recorded as ${ex.human_ref} — the existing signal is surfaced instead.`,
+                    `Already recorded as ${ex?.human_ref ?? "an existing signal"} — the existing signal is surfaced instead.`,
                   );
                 } else toast.success("Signal recorded in detected state");
-                onConfirmed();
+                onConfirmed(r, d.observed_condition);
               } catch (e) {
                 toast.error(errorText(e));
               } finally {
@@ -100,7 +100,7 @@ function DraftList({
               }
             }}
           >
-            {busy === d.observed_condition ? "Confirming…" : "Confirm this condition"}
+            {busy === d.observed_condition ? "Saving…" : "Confirm and save signal"}
           </Button>
         </li>
       ))}
@@ -122,6 +122,14 @@ function IntakePanel({ onChanged }: { onChanged: () => void }) {
   const [consentConfirmed, setConsentConfirmed] = useState(false);
   const [drafts, setDrafts] = useState<DraftSignal[]>([]);
   const [draftOrigin, setDraftOrigin] = useState<SignalOrigin>("artifact_upload");
+  const [draftSource, setDraftSource] = useState<string | undefined>();
+  const [receipt, setReceipt] = useState<{
+    id: string;
+    human_ref: string;
+    lifecycle_state: string;
+  } | null>(null);
+  const [outcome, setOutcome] = useState("");
+  const [issue, setIssue] = useState("");
   const [busy, setBusy] = useState(false);
   const record = useServerFn(recordValueSignal);
   const extract = useServerFn(extractSignalFromArtifact);
@@ -129,8 +137,16 @@ function IntakePanel({ onChanged }: { onChanged: () => void }) {
   const completeCapture = useServerFn(completeSignalCapture);
   const abandonCapture = useServerFn(abandonSignalCapture);
 
+  function saved(result: Awaited<ReturnType<typeof recordValueSignal>>) {
+    const signal = result.signal ?? result.existing_signal;
+    if (signal) setReceipt(signal);
+    setOutcome("");
+    onChanged();
+  }
+
   async function submitDirect() {
     setBusy(true);
+    setIssue("");
     try {
       const r = await record({
         data: {
@@ -142,17 +158,18 @@ function IntakePanel({ onChanged }: { onChanged: () => void }) {
         },
       });
       if (r.status === "duplicate") {
-        const ex = r.existing_signal!;
+        const ex = r.existing_signal;
         toast.info(
-          `Already recorded as ${ex.human_ref} — the existing signal is surfaced instead.`,
+          `Already recorded as ${ex?.human_ref ?? "an existing signal"} — the existing signal is surfaced instead.`,
         );
       } else toast.success("Signal recorded in detected state");
       setCondition("");
       setPopulation("");
       setUrgency("");
       setValue("");
-      onChanged();
+      saved(r);
     } catch (e) {
+      setIssue(errorText(e));
       toast.error(errorText(e));
     } finally {
       setBusy(false);
@@ -161,11 +178,16 @@ function IntakePanel({ onChanged }: { onChanged: () => void }) {
   async function submitArtifact() {
     setBusy(true);
     setDrafts([]);
+    setIssue("");
+    setOutcome("");
     try {
       const r = await extract({ data: { artifact_text: artifact, kind } });
       setDrafts(r.proposals);
       setDraftOrigin("artifact_upload");
+      setDraftSource(r.source_ref ?? undefined);
+      if (!r.proposals.length) setOutcome("No candidate conditions found. No signal was saved.");
     } catch (e) {
+      setIssue(errorText(e));
       toast.error(errorText(e));
     } finally {
       setBusy(false);
@@ -173,6 +195,7 @@ function IntakePanel({ onChanged }: { onChanged: () => void }) {
   }
   async function openCapture() {
     setBusy(true);
+    setIssue("");
     try {
       const r = await startCapture({
         data: { modalities: ["text"], purpose, consent_confirmed: true },
@@ -180,6 +203,7 @@ function IntakePanel({ onChanged }: { onChanged: () => void }) {
       setCaptureId(r.capture_id ?? "");
       toast.success("Capture open — your consent confirmation is recorded with it.");
     } catch (e) {
+      setIssue(errorText(e));
       toast.error(errorText(e));
     } finally {
       setBusy(false);
@@ -188,14 +212,19 @@ function IntakePanel({ onChanged }: { onChanged: () => void }) {
   async function finishCapture() {
     setBusy(true);
     setDrafts([]);
+    setIssue("");
+    setOutcome("");
     try {
       const r = await completeCapture({ data: { capture_id: captureId, transcript } });
       setDrafts(r.draft_signal);
       setDraftOrigin("live_capture");
+      setDraftSource(r.capture_id);
+      if (!r.draft_signal.length) setOutcome("No candidate conditions found. No signal was saved.");
       setCaptureId("");
       setTranscript("");
       setConsentConfirmed(false);
     } catch (e) {
+      setIssue(errorText(e));
       toast.error(errorText(e));
     } finally {
       setBusy(false);
@@ -265,6 +294,11 @@ function IntakePanel({ onChanged }: { onChanged: () => void }) {
               placeholder="What condition did you observe, and for whom?"
             />
           </div>
+          <Button type="submit" disabled={busy || !condition.trim()} className="justify-self-start">
+            {busy ? "Saving…" : "Save signal"}
+          </Button>
+          <details>
+            <summary className="cursor-pointer text-sm text-muted-foreground">Additional signal details (optional)</summary>
           <div className="grid gap-3 sm:grid-cols-3">
             <div className="space-y-1">
               <Label htmlFor="si-population">Affected population</Label>
@@ -300,9 +334,7 @@ function IntakePanel({ onChanged }: { onChanged: () => void }) {
               />
             </div>
           </div>
-          <Button type="submit" disabled={busy || !condition.trim()} className="justify-self-start">
-            {busy ? "Recording…" : "Record signal"}
-          </Button>
+          </details>
         </form>
       )}
       {channel === "artifact_upload" && (
@@ -410,7 +442,7 @@ function IntakePanel({ onChanged }: { onChanged: () => void }) {
                   disabled={busy || !transcript.trim()}
                   className="justify-self-start"
                 >
-                  {busy ? "Analysing…" : "Complete capture"}
+                  {busy ? "Analysing…" : "Complete capture and review signals"}
                 </Button>
                 <Button
                   type="button"
@@ -426,7 +458,32 @@ function IntakePanel({ onChanged }: { onChanged: () => void }) {
         </div>
       )}
       {drafts.length > 0 && (
-        <DraftList drafts={drafts} origin={draftOrigin} onConfirmed={onChanged} />
+        <DraftList
+          drafts={drafts}
+          origin={draftOrigin}
+          sourceRef={draftSource}
+          onConfirmed={(result, confirmed) => {
+            saved(result);
+            setDrafts((current) => current.filter((draft) => draft.observed_condition !== confirmed));
+          }}
+        />
+      )}
+      {issue && <p role="alert" className="text-sm text-destructive">{issue}</p>}
+      {outcome && <p role="status" className="text-sm text-muted-foreground">{outcome}</p>}
+      {receipt && (
+        <div role="status" className="space-y-2 border-t pt-3 text-sm">
+          <p>
+            Saved <Link to="/signals/$signalId" params={{ signalId: receipt.id }} className="ident underline">{receipt.human_ref}</Link>
+            {" · "}{receipt.lifecycle_state}
+          </p>
+          {receipt.lifecycle_state !== "promoted" && (
+            <PromoteControl signalId={receipt.id} state={receipt.lifecycle_state} onChanged={() => {
+              setReceipt((current) => current ? { ...current, lifecycle_state: "promoted" } : null);
+              onChanged();
+            }} />
+          )}
+          {receipt.lifecycle_state === "promoted" && <Button variant="outline" size="sm" asChild><Link to="/missions">Return to Value Missions</Link></Button>}
+        </div>
       )}
     </section>
   );

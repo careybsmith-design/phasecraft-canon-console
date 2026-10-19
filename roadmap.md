@@ -1,5 +1,9 @@
 # THREAD roadmap
 
+## Signal recording validation — 19 October 2026
+
+- [ ] Validate direct and typed signal saving, durable intake provenance and promoted-only mission selection; make recording controls and saved outcomes visible without changing promotion authority.
+
 ## Session-to-mission containment — 19 October 2026
 
 - [x] Add optional start association, retrospective association/reversal on session and mission surfaces, and shared human/MCP operation (0081–0085).
