@@ -42,7 +42,7 @@ describe("signal intake field gating (W3.4)", () => {
     ).rejects.toThrow(/INTAKE_BLOCKED_PAN/);
     // Only the blocked-attempt event was written; no 'record' ever reached persistence.
     expect(ops(rpc)).toEqual(["record_event"]);
-    expect(rpc.mock.calls[0][1]).toMatchObject({ p_operation: "record_event" });
+    expect(rpc.mock.calls[0]![1]).toMatchObject({ p_operation: "record_event" });
   });
 
   it("a health identifier in affected_population is quarantined and never persisted", async () => {
