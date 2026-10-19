@@ -21,7 +21,7 @@ describe("MCP receipt enforcement", () => {
     const result = await handleRpc("test-hash", { jsonrpc: "2.0", id: 1, method: "tools/call", params: {
       name: "confirm_object", arguments: { object_id: id, expected_version: 1, to_state: "confirmed", rationale: "Confirm the drafted material" },
     } });
-    expect(result).toMatchObject({ result: { isError: true, code: "HUMAN_ONLY" } });
+    expect(result).toMatchObject({ result: { isError: true, structuredContent: { code: "HUMAN_ONLY" } } });
     expect(fake.handler).not.toHaveBeenCalled();
   });
   it.each(["resources/read", "prompts/list", "prompts/get"])("%s does not turn failed permitted retrieval into success", async method => {
