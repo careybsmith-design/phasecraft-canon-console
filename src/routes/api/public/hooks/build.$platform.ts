@@ -11,7 +11,8 @@ const Result = z
   .object({
     run_id: z.string().uuid(),
     external_run_id: z.string().trim().min(1).max(200),
-    status: z.enum(["succeeded", "failed"]),
+    // L-08: the platform reports its final outcome; THREAD never stores live execution status
+    outcome: z.enum(["succeeded", "failed", "partial"]),
     cost: z.number().finite().nonnegative().optional(),
     duration_ms: z.number().int().nonnegative().optional(),
     secrets_scan: z.string().max(200).optional(),
@@ -92,7 +93,8 @@ export const Route = createFileRoute("/api/public/hooks/build/$platform")({
           p: {
             run_id: j.run_id,
             external_run_id: j.external_run_id,
-            status: j.status,
+            outcome: j.outcome,
+            mirrored_from: `platform_webhook:${platform}`,
             cost_actual: j.cost,
             duration_ms: j.duration_ms,
             secrets_scan: j.secrets_scan,

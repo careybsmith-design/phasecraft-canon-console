@@ -365,7 +365,10 @@ function Runs({ d }: { d: Data }) {
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <span>
                   <span className="ident">{r.human_ref}</span>{" "}
-                  {PLATFORM_REGISTRY[b.platform as Platform]?.label} · {b.status}
+                  {PLATFORM_REGISTRY[b.platform as Platform]?.label} ·{" "}
+                  {b.outcome
+                    ? `source outcome: ${b.outcome} (mirrored from ${b.mirrored_from ?? "platform"})`
+                    : "outcome pending — reported by the platform"}
                   {b.adapter_mode === "simulated" && (
                     <span className="ml-1 rounded bg-muted px-1 text-xs">simulated</span>
                   )}
@@ -374,7 +377,7 @@ function Runs({ d }: { d: Data }) {
                   <Button size="sm" variant="outline" onClick={() => replay(r.id)}>
                     Replay
                   </Button>
-                  {b.status === "succeeded" && (
+                  {b.outcome === "succeeded" && (
                     <Button size="sm" variant="outline" onClick={() => skeleton(r.id)}>
                       Record skeleton
                     </Button>

@@ -294,9 +294,9 @@ export const REGISTRY: RegistryEntry[] = [
     "BuildRun",
     "Creation",
     "BR",
-    "creation_run",
+    "evidence_record",
     "prompt_ref, platform, model_route_ref, model_version_pin, guardrail_set_version, template_version, dispatched_at, completed_at, duration, cost, outcome, failure_reason, reproducibility_key, agent_actor, authority_used, log_ref",
-    "A dispatched build with a reproducibility key",
+    "Source outcome and lineage of a platform build; execution state belongs to the platform (L-08)",
   ),
   e(
     "BuildArtifact",
