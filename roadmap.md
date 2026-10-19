@@ -200,6 +200,8 @@ Whole-build audit — permanent open items
 - [~] Outlook email + attachment ingestion built (per-user OAuth, message -> brought-in document artifact, attachments to storage with tier gate); BLOCKED: connector client not linked
 
 ## Signal Intake correction round (L-22 / S-09) — 19 October 2026
+- [ ] Follow-up material confirmation: verify existing MCP, participant/authority refusals and pre-action surface evidence; do not add a parallel path.
+- [ ] Follow-up intake access: apply a new classification-aware read policy and test real member restricted/internal and steward visibility with rollback-only fixtures.
 - [x] SI-1 automated database regression: migration 0074 creates service-role-only thread_signal_intake_selftest and executes a fail-closed deployment assertion. Ledger-valid ValueMission insert against a detected signal must raise P0001 / MISSION_SIGNAL_NOT_PROMOTED; success or unrelated exceptions fail. Fixtures and side effects roll back. Migration applied successfully on 19 October 2026.
 - [x] B.1 intake storage: signal_origin/intake_status enums, append-only signal_intake_events (RLS, no update/delete), ValueSignal registry fields origin_channel/source_ref/intake_event_id. Deviation from the round's literal check constraint documented in docs/THREAD-signal-intake.md (rejected events carry no signal).
 - [x] B.2/B.3 four intake channels + promotion + linking as thread_signal_intake (service-role, ledgered) with the PHI/PAN gate before any analysis; six MCP tools registered live (record_value_signal, extract_signal_from_artifact, start_signal_capture, complete_signal_capture, promote_signal, link_signal_to_mission).
