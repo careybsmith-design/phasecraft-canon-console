@@ -30,6 +30,7 @@ import { Route as AuthenticatedGraphRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedMeasurementRouteImport } from './routes/_authenticated/measurement'
 import { Route as AuthenticatedMissionsRouteImport } from './routes/_authenticated/missions'
 import { Route as AuthenticatedShadowRouteImport } from './routes/_authenticated/shadow'
+import { Route as AuthenticatedSignalsRouteImport } from './routes/_authenticated/signals'
 import { Route as AuthenticatedSimulateRouteImport } from './routes/_authenticated/simulate'
 import { Route as AuthenticatedEvidenceCapabilityIdRouteImport } from './routes/_authenticated/evidence_.$capabilityId'
 import { Route as AuthenticatedFramingIndexRouteImport } from './routes/_authenticated/framing.index'
@@ -149,6 +150,11 @@ const AuthenticatedShadowRoute = AuthenticatedShadowRouteImport.update({
   path: '/shadow',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedSignalsRoute = AuthenticatedSignalsRouteImport.update({
+  id: '/signals',
+  path: '/signals',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedSimulateRoute = AuthenticatedSimulateRouteImport.update({
   id: '/simulate',
   path: '/simulate',
@@ -247,6 +253,7 @@ export interface FileRoutesByFullPath {
   '/measurement': typeof AuthenticatedMeasurementRoute
   '/missions': typeof AuthenticatedMissionsRouteWithChildren
   '/shadow': typeof AuthenticatedShadowRoute
+  '/signals': typeof AuthenticatedSignalsRoute
   '/simulate': typeof AuthenticatedSimulateRoute
   '/evidence/$capabilityId': typeof AuthenticatedEvidenceCapabilityIdRoute
   '/framing/$sessionId': typeof AuthenticatedFramingSessionIdRoute
@@ -281,6 +288,7 @@ export interface FileRoutesByTo {
   '/graph': typeof AuthenticatedGraphRoute
   '/measurement': typeof AuthenticatedMeasurementRoute
   '/shadow': typeof AuthenticatedShadowRoute
+  '/signals': typeof AuthenticatedSignalsRoute
   '/simulate': typeof AuthenticatedSimulateRoute
   '/evidence/$capabilityId': typeof AuthenticatedEvidenceCapabilityIdRoute
   '/framing/$sessionId': typeof AuthenticatedFramingSessionIdRoute
@@ -318,6 +326,7 @@ export interface FileRoutesById {
   '/_authenticated/measurement': typeof AuthenticatedMeasurementRoute
   '/_authenticated/missions': typeof AuthenticatedMissionsRouteWithChildren
   '/_authenticated/shadow': typeof AuthenticatedShadowRoute
+  '/_authenticated/signals': typeof AuthenticatedSignalsRoute
   '/_authenticated/simulate': typeof AuthenticatedSimulateRoute
   '/_authenticated/evidence_/$capabilityId': typeof AuthenticatedEvidenceCapabilityIdRoute
   '/_authenticated/framing/$sessionId': typeof AuthenticatedFramingSessionIdRoute
@@ -355,6 +364,7 @@ export interface FileRouteTypes {
     | '/measurement'
     | '/missions'
     | '/shadow'
+    | '/signals'
     | '/simulate'
     | '/evidence/$capabilityId'
     | '/framing/$sessionId'
@@ -389,6 +399,7 @@ export interface FileRouteTypes {
     | '/graph'
     | '/measurement'
     | '/shadow'
+    | '/signals'
     | '/simulate'
     | '/evidence/$capabilityId'
     | '/framing/$sessionId'
@@ -425,6 +436,7 @@ export interface FileRouteTypes {
     | '/_authenticated/measurement'
     | '/_authenticated/missions'
     | '/_authenticated/shadow'
+    | '/_authenticated/signals'
     | '/_authenticated/simulate'
     | '/_authenticated/evidence_/$capabilityId'
     | '/_authenticated/framing/$sessionId'
@@ -600,6 +612,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedShadowRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/signals': {
+      id: '/_authenticated/signals'
+      path: '/signals'
+      fullPath: '/signals'
+      preLoaderRoute: typeof AuthenticatedSignalsRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/simulate': {
       id: '/_authenticated/simulate'
       path: '/simulate'
@@ -728,6 +747,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedMeasurementRoute: typeof AuthenticatedMeasurementRoute
   AuthenticatedMissionsRoute: typeof AuthenticatedMissionsRouteWithChildren
   AuthenticatedShadowRoute: typeof AuthenticatedShadowRoute
+  AuthenticatedSignalsRoute: typeof AuthenticatedSignalsRoute
   AuthenticatedSimulateRoute: typeof AuthenticatedSimulateRoute
   AuthenticatedEvidenceCapabilityIdRoute: typeof AuthenticatedEvidenceCapabilityIdRoute
   AuthenticatedFramingSessionIdRoute: typeof AuthenticatedFramingSessionIdRoute
@@ -755,6 +775,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedMeasurementRoute: AuthenticatedMeasurementRoute,
   AuthenticatedMissionsRoute: AuthenticatedMissionsRouteWithChildren,
   AuthenticatedShadowRoute: AuthenticatedShadowRoute,
+  AuthenticatedSignalsRoute: AuthenticatedSignalsRoute,
   AuthenticatedSimulateRoute: AuthenticatedSimulateRoute,
   AuthenticatedEvidenceCapabilityIdRoute:
     AuthenticatedEvidenceCapabilityIdRoute,
