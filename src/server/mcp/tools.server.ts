@@ -81,9 +81,12 @@ export const HANDLERS: Record<string, Handler> = {
     const { extractSignalCore } = await import("@/server/ops/signal-intake.server");
     return extractSignalCore(ctx, a as never);
   },
-  async start_signal_capture(_ctx, a) {
+  async start_signal_capture(ctx, a) {
     const { startCaptureCore } = await import("@/server/ops/signal-intake.server");
-    return startCaptureCore(a as { modalities: string[]; purpose: string });
+    return startCaptureCore(
+      ctx,
+      a as { modalities: string[]; purpose: string; consent_confirmed: true },
+    );
   },
   async complete_signal_capture(ctx, a) {
     const { completeCaptureCore } = await import("@/server/ops/signal-intake.server");

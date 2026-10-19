@@ -5,6 +5,7 @@ import {
   ExtractSignalInput,
   CaptureStartInput,
   CaptureCompleteInput,
+  CaptureAbandonInput,
   ConfirmDraftInput,
   PromoteSignalInput,
   LinkSignalInput,
@@ -52,9 +53,33 @@ export const extractSignalFromArtifact = createServerFn({ method: "POST" })
 export const startSignalCapture = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => CaptureStartInput.parse(d))
-  .handler(async ({ data }) => {
-    const { startCaptureCore } = await core();
-    return startCaptureCore(data);
+  .handler(async ({ data, context }) => {
+    const { startCaptureCore, supabaseAdmin } = await core();
+    return startCaptureCore(
+      {
+        sb: context.supabase,
+        db: supabaseAdmin,
+        actor: actor(context.userId),
+        userId: context.userId,
+      },
+      data,
+    );
+  });
+
+export const abandonSignalCapture = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => CaptureAbandonInput.parse(d))
+  .handler(async ({ data, context }) => {
+    const { abandonCaptureCore, supabaseAdmin } = await core();
+    return abandonCaptureCore(
+      {
+        sb: context.supabase,
+        db: supabaseAdmin,
+        actor: actor(context.userId),
+        userId: context.userId,
+      },
+      data,
+    );
   });
 
 export const completeSignalCapture = createServerFn({ method: "POST" })

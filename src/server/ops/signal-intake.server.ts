@@ -30,6 +30,7 @@ export interface IntakeResult {
   lifecycle_state?: string;
   linked?: boolean;
   mission_id?: string;
+  capture_id?: string;
 }
 
 async function intakeRpc(ctx: OpCtx, operation: string, p: Json): Promise<IntakeResult> {
@@ -163,7 +164,7 @@ export async function startCaptureCore(
     consent_confirmed: input.consent_confirmed,
   });
   return {
-    capture_id: r.signal_id ?? r.decision_id ?? (r as unknown as { capture_id: string }).capture_id,
+    capture_id: r.capture_id,
     consent_required: true as const,
     modalities: input.modalities,
     purpose: input.purpose,
