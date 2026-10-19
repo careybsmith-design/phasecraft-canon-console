@@ -7,6 +7,8 @@
 
 export interface CaptureChunk {
   id: string;
+  /** The signed-in account that captured this chunk; only that account may upload it. */
+  accountId: string;
   sessionId: string;
   speakerId: string;
   tOffsetMs: number;
