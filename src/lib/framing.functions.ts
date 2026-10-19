@@ -1449,14 +1449,64 @@ export const captureImage = createServerFn({ method: "POST" })
     if (!speaker) throw threadError("NOT_FOUND: participant");
     const mime = data.data_url.slice(5, data.data_url.indexOf(";"));
     const bytes = Uint8Array.from(atob(data.data_url.split(",")[1]!), (ch) => ch.charCodeAt(0));
-    const path = `${session.id}/${crypto.randomUUID()}.${mime.split("/")[1]}`;
-    const up = await db.storage.from("artifacts").upload(path, bytes, { contentType: mime });
-    if (up.error) throw new Error(up.error.message);
+    // N03: inspect BEFORE storing. The approved image-reading route reads every visible
+    // character; the deterministic gate classifies that text. No route -> quarantine.
+    const { describeDrawing } = await import("@/server/framing/extractor");
+    const { inspectImageText } = await import("@/domain/inspection");
+    const mode = await modelMode(db);
+    let desc: Awaited<ReturnType<typeof describeDrawing>> = null;
+    let readFailure: string | null = null;
+    try {
+      desc = await describeDrawing(data.data_url, mode);
+    } catch (e) {
+      readFailure = (e as Error).message;
+    }
+    const readText = desc
+      ? [desc.visible_text, desc.description, ...desc.statements.map((s) => s.text)].join("\n")
+      : null;
+    const inspection = inspectImageText(data.name, readText);
+    if (inspection.action === "block") {
+      return { statements: 0, blocked: true, tier_basis: inspection.tier_basis };
+    }
     const { data: consents } = await db
       .from("consent_records")
       .select("id")
       .eq("session_id", session.id)
       .is("withdrawn_at", null);
+    if (inspection.action === "quarantine") {
+      const reason = readFailure ? `${inspection.reason} (${readFailure})` : inspection.reason;
+      await create(
+        db,
+        extractor(context.userId),
+        payload(
+          "CoCreationArtifact",
+          `${data.kind.replace("_", " ")} · quarantined`,
+          `Image quarantined uninspected`,
+          {
+            session_ref: session.id,
+            kind: data.kind,
+            media_ref: null,
+            duration_or_size: bytes.length,
+            captured_at: new Date().toISOString(),
+            captured_by: context.userId,
+            speaker_id: speaker.id,
+            content_tier: inspection.tier,
+            tier_basis: inspection.tier_basis,
+            consent_basis: (consents ?? []).map((x) => x.id),
+            extraction_state: "quarantined",
+            quarantine_reason: reason,
+            evidence_weight: evidenceWeight(data.kind),
+            provenance: { simulated: false },
+          },
+          { owner: session.owner_id, rationale: "Image not stored: content could not be inspected" },
+        ),
+      );
+      return { statements: 0, quarantined: true, reason, tier_basis: inspection.tier_basis };
+    }
+    const tier = { tier: inspection.tier };
+    const path = `${session.id}/${crypto.randomUUID()}.${mime.split("/")[1]}`;
+    const up = await db.storage.from("artifacts").upload(path, bytes, { contentType: mime });
+    if (up.error) throw new Error(up.error.message);
     const artifact = await create(
       db,
       extractor(context.userId),
@@ -1472,7 +1522,8 @@ export const captureImage = createServerFn({ method: "POST" })
           captured_at: new Date().toISOString(),
           captured_by: context.userId,
           speaker_id: speaker.id,
-          content_tier: "A",
+          content_tier: inspection.tier,
+          tier_basis: inspection.tier_basis,
           consent_basis: (consents ?? []).map((x) => x.id),
           extraction_state: "pending",
           evidence_weight: evidenceWeight(data.kind),
@@ -1481,44 +1532,7 @@ export const captureImage = createServerFn({ method: "POST" })
         { owner: session.owner_id, rationale: "Drawing captured on the session timeline" },
       ),
     );
-    const { describeDrawing } = await import("@/server/framing/extractor");
-    const mode = await modelMode(db);
-    let desc: Awaited<ReturnType<typeof describeDrawing>> = null;
-    try {
-      desc = await describeDrawing(data.data_url, mode);
-    } catch (e) {
-      await reviseBody(
-        db,
-        extractor(context.userId),
-        artifact.id,
-        (b) => ({ ...b, extraction_state: "failed", failure: (e as Error).message }),
-        "Drawing description failed",
-      );
-      throw threadError(`MODEL_UNAVAILABLE: ${(e as Error).message}`);
-    }
-    if (!desc) {
-      await reviseBody(
-        db,
-        extractor(context.userId),
-        artifact.id,
-        (b) => ({ ...b, extraction_state: "failed", failure: "model route not live" }),
-        "No live model route",
-      );
-      return { statements: 0 };
-    }
-    const tier = classifyContent(
-      desc.description + " " + desc.statements.map((s) => s.text).join(" "),
-    );
-    if (tier.tier === "C") {
-      await reviseBody(
-        db,
-        extractor(context.userId),
-        artifact.id,
-        (b) => ({ ...b, extraction_state: "failed", failure: "Tier C content in the drawing" }),
-        "Tier C",
-      );
-      return { statements: 0, blocked: true };
-    }
+    if (!desc) return { statements: 0 };
     const units: UnitIn[] = [];
     for (const s of desc.statements) {
       const { data: ev } = await db
