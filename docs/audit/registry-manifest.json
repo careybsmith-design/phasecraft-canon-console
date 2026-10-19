@@ -1,2807 +1,3253 @@
 {
-  "types": [
-    {
-      "type": "Concept",
-      "family": "Canon",
-      "ref_prefix": "CN",
-      "lifecycle_family": "canon",
-      "key_fields": [
-        "definition",
-        "formal_definition",
-        "distinguishing_notes",
-        "replaces",
-        "operational_implications"
-      ],
-      "purpose": "A defined term of the operating model"
-    },
-    {
-      "type": "Principle",
-      "family": "Canon",
-      "ref_prefix": "PR",
-      "lifecycle_family": "canon",
-      "key_fields": ["directive", "derivation", "violation_examples"],
-      "purpose": "A governing principle"
-    },
-    {
-      "type": "Rule",
-      "family": "Canon",
-      "ref_prefix": "RU",
-      "lifecycle_family": "canon",
-      "key_fields": [
-        "trigger",
-        "rule_statement",
-        "conditions",
-        "exceptions",
-        "machine_evaluable",
-        "evaluator_ref"
-      ],
-      "purpose": "A machine-evaluable rule"
-    },
-    {
-      "type": "Protocol",
-      "family": "Canon",
-      "ref_prefix": "PT",
-      "lifecycle_family": "canon",
-      "key_fields": ["preconditions", "steps", "decision_points", "outputs"],
-      "purpose": "How a recurring operating move happens"
-    },
-    {
-      "type": "Guardrail",
-      "family": "Canon",
-      "ref_prefix": "GR",
-      "lifecycle_family": "canon",
-      "key_fields": [
-        "boundary_statement",
-        "enforcement_mode",
-        "evaluator_ref",
-        "severity",
-        "risk_tiers",
-        "violation_response"
-      ],
-      "purpose": "A deterministic or advisory boundary"
-    },
-    {
-      "type": "Pattern",
-      "family": "Canon",
-      "ref_prefix": "PA",
-      "lifecycle_family": "canon",
-      "key_fields": [
-        "context",
-        "problem",
-        "approach",
-        "canonical_example",
-        "conformance_check_ref"
-      ],
-      "purpose": "A reusable approach"
-    },
-    {
-      "type": "AntiPattern",
-      "family": "Canon",
-      "ref_prefix": "AP",
-      "lifecycle_family": "canon",
-      "key_fields": ["signature", "why_harmful", "detector_ref", "remediation"],
-      "purpose": "A named failure mode with a detector"
-    },
-    {
-      "type": "Metric",
-      "family": "Canon",
-      "ref_prefix": "ME",
-      "lifecycle_family": "canon",
-      "key_fields": [
-        "definition",
-        "formula",
-        "unit",
-        "data_sources",
-        "direction",
-        "target_shape",
-        "rejected"
-      ],
-      "purpose": "A value measure definition"
-    },
-    {
-      "type": "Authority",
-      "family": "Canon",
-      "ref_prefix": "AU",
-      "lifecycle_family": "canon",
-      "key_fields": [
-        "authority_level",
-        "scope",
-        "conditions",
-        "granted_to",
-        "granting_evidence",
-        "demotion_triggers"
-      ],
-      "purpose": "A scoped authority grant rule"
-    },
-    {
-      "type": "ValueSignal",
-      "family": "ValueFlow",
-      "ref_prefix": "VS",
-      "lifecycle_family": "value_signal",
-      "key_fields": [
-        "observed_condition",
-        "affected_population",
-        "process_or_journey",
-        "evidence",
-        "frequency",
-        "duration",
-        "magnitude",
-        "baseline_performance",
-        "potential_value",
-        "urgency",
-        "confidence",
-        "possible_causes",
-        "consequences_of_inaction",
-        "related_signals",
-        "candidate_capabilities",
-        "recommended_co_creator",
-        "recommended_builder",
-        "recommended_next_probe",
-        "requested_solution_candidates",
-        "origin_channel",
-        "source_ref",
-        "intake_event_id"
-      ],
-      "purpose": "An observed condition worth acting on"
-    },
-    {
-      "type": "ValueMission",
-      "family": "ValueFlow",
-      "ref_prefix": "VM",
-      "lifecycle_family": "value_mission",
-      "key_fields": [
-        "signal_ref",
-        "measurable_condition",
-        "baseline",
-        "target",
-        "affected_population",
-        "operating_boundaries",
-        "proof_required",
-        "value_hypothesis",
-        "co_creator",
-        "builder",
-        "strategic_relevance",
-        "opportunity_cost",
-        "decision_authority",
-        "capital_boundary",
-        "available_data_tools_capabilities",
-        "risk_classification",
-        "policy_constraints",
-        "maximum_production_exposure",
-        "required_evidence_for_authority",
-        "human_intervention_conditions",
-        "reversibility_requirements",
-        "rollback_requirements",
-        "maximum_time",
-        "maximum_investment",
-        "decision_date",
-        "stop_conditions",
-        "completion_criteria",
-        "status"
-      ],
-      "purpose": "A bounded mission to change a measurable condition"
-    },
-    {
-      "type": "ValueCell",
-      "family": "ValueFlow",
-      "ref_prefix": "VC",
-      "lifecycle_family": "canon",
-      "key_fields": [
-        "mission_ref",
-        "co_creator",
-        "builder",
-        "agents",
-        "authority_boundaries",
-        "active_bursts",
-        "formed_at",
-        "dissolution_condition",
-        "contribution_log"
-      ],
-      "purpose": "The co-creator, builder and agents operating a mission"
-    },
-    {
-      "type": "ValueBurst",
-      "family": "ValueFlow",
-      "ref_prefix": "VB",
-      "lifecycle_family": "canon",
-      "key_fields": [
-        "cell_ref",
-        "start",
-        "end",
-        "intent_compression",
-        "experience_generation",
-        "live_interaction_evidence",
-        "autonomous_challenge_results",
-        "refinement",
-        "controlled_exposure_ref",
-        "decision_ref",
-        "material_change_of"
-      ],
-      "purpose": "A time-boxed burst that changes capability, evidence or direction"
-    },
-    {
-      "type": "OpportunityStreamItem",
-      "family": "ValueFlow",
-      "ref_prefix": "OS",
-      "lifecycle_family": "opportunity_stream",
-      "key_fields": [
-        "expiration_condition",
-        "value_estimate",
-        "urgency",
-        "required_context",
-        "candidate_builders",
-        "readiness_evidence"
-      ],
-      "purpose": "An item in the opportunity stream"
-    },
-    {
-      "type": "IntentModel",
-      "family": "Intent",
-      "ref_prefix": "IM",
-      "lifecycle_family": "canon",
-      "key_fields": [
-        "mission_ref",
-        "desired_outcome",
-        "affected_people_and_situations",
-        "observable_behaviour",
-        "business_rules",
-        "exceptions",
-        "constraints",
-        "non_negotiable_consequences",
-        "decisions",
-        "rationale",
-        "representative_examples",
-        "evidence",
-        "confidence",
-        "assumptions",
-        "open_questions",
-        "acceptance_history",
-        "change_history"
-      ],
-      "purpose": "The living intent model of a mission"
-    },
-    {
-      "type": "BehaviorStatement",
-      "family": "Intent",
-      "ref_prefix": "BS",
-      "lifecycle_family": "behavior_statement",
-      "key_fields": [
-        "condition",
-        "observable_result",
-        "operating_constraints",
-        "source_decision_ref",
-        "confirmation",
-        "generates",
-        "verification_status"
-      ],
-      "purpose": "The traceable unit of intent (UI alias: requirement)"
-    },
-    {
-      "type": "ExecutableOutcomeContract",
-      "family": "Intent",
-      "ref_prefix": "EO",
-      "lifecycle_family": "canon",
-      "key_fields": [
-        "desired_outcome",
-        "baseline",
-        "target",
-        "target_users_and_situations",
-        "affected_parties",
-        "observable_behaviours",
-        "rules_and_exceptions",
-        "non_negotiables",
-        "acceptance_evidence",
-        "risk_classification",
-        "authority_level",
-        "success_value_adoption_health_measures",
-        "production_exposure_conditions",
-        "reversibility_conditions",
-        "expiration_and_retirement_criteria"
-      ],
-      "purpose": "Governs an intent model"
-    },
-    {
-      "type": "Constraint",
-      "family": "Intent",
-      "ref_prefix": "CT",
-      "lifecycle_family": "canon",
-      "key_fields": ["kind", "source", "binding_scope"],
-      "purpose": "A binding constraint"
-    },
-    {
-      "type": "NonNegotiableConsequence",
-      "family": "Intent",
-      "ref_prefix": "NN",
-      "lifecycle_family": "canon",
-      "key_fields": ["statement", "why_non_negotiable", "violation_severity", "detector_ref"],
-      "purpose": "A consequence that must never happen"
-    },
-    {
-      "type": "ConfirmedDecision",
-      "family": "Intent",
-      "ref_prefix": "CD",
-      "lifecycle_family": "evidence_record",
-      "key_fields": [
-        "decision",
-        "decided_by",
-        "authority_used",
-        "context",
-        "alternatives",
-        "rationale",
-        "reversibility",
-        "consequences",
-        "effective_from"
-      ],
-      "purpose": "A decision recorded under stated authority"
-    },
-    {
-      "type": "OpenQuestion",
-      "family": "Intent",
-      "ref_prefix": "OQ",
-      "lifecycle_family": "canon",
-      "key_fields": ["question", "why_it_matters", "blocking", "owner", "needed_by"],
-      "purpose": "An unresolved question"
-    },
-    {
-      "type": "Assumption",
-      "family": "Intent",
-      "ref_prefix": "AS",
-      "lifecycle_family": "canon",
-      "key_fields": ["statement", "basis", "confidence", "verification_method", "status"],
-      "purpose": "A held assumption awaiting verification"
-    },
-    {
-      "type": "ComposableCapability",
-      "family": "Capability",
-      "ref_prefix": "CC",
-      "lifecycle_family": "composable_capability",
-      "key_fields": [
-        "plain_language_purpose",
-        "business_outcome",
-        "intended_consumers",
-        "input_schema",
-        "output_schema",
-        "preconditions",
-        "dependencies",
-        "business_rules",
-        "exceptions",
-        "data_classifications",
-        "permitted_uses",
-        "authority_level",
-        "risk_tier",
-        "policy_constraints",
-        "security_privacy_accessibility_constraints",
-        "confidence_requirements",
-        "explainability_audit_behaviour",
-        "failure_modes",
-        "recovery_behaviour",
-        "human_intervention_conditions",
-        "test_simulation_evaluation_refs",
-        "service_levels",
-        "cost_resource_telemetry_ref",
-        "version",
-        "compatibility",
-        "owner_and_stewardship",
-        "review_date",
-        "minimum_use_threshold",
-        "operating_cost_ceiling",
-        "retirement_condition",
-        "is_machine_discoverable"
-      ],
-      "purpose": "A reusable, machine-discoverable capability"
-    },
-    {
-      "type": "WorkingCapability",
-      "family": "Capability",
-      "ref_prefix": "WC",
-      "lifecycle_family": "composable_capability",
-      "key_fields": ["mission_ref", "capability_refs"],
-      "purpose": "A capability working inside a mission (Part 4.2 verbs)"
-    },
-    {
-      "type": "CapabilityContract",
-      "family": "Capability",
-      "ref_prefix": "CK",
-      "lifecycle_family": "canon",
-      "key_fields": [
-        "promised_outcome",
-        "refusal_conditions",
-        "explanation_obligations",
-        "evidence_obligations",
-        "authority",
-        "cost_model",
-        "lifecycle"
-      ],
-      "purpose": "The formal intent-and-outcome contract"
-    },
-    {
-      "type": "CapabilityDependency",
-      "family": "Capability",
-      "ref_prefix": "DP",
-      "lifecycle_family": "canon",
-      "key_fields": ["from", "to", "kind", "criticality"],
-      "purpose": "A typed capability dependency"
-    },
-    {
-      "type": "DataProduct",
-      "family": "Capability",
-      "ref_prefix": "DA",
-      "lifecycle_family": "canon",
-      "key_fields": [
-        "name",
-        "steward",
-        "schema",
-        "quality_measures",
-        "classifications",
-        "permitted_uses",
-        "lineage_refs"
-      ],
-      "purpose": "A governed data product"
-    },
-    {
-      "type": "CreationPrompt",
-      "family": "Creation",
-      "ref_prefix": "CP",
-      "lifecycle_family": "creation_run",
-      "key_fields": [
-        "source_behavior_statements",
-        "intent_model_ref",
-        "outcome_contract_ref",
-        "design_context_refs",
-        "guardrail_set_ref",
-        "prompt_template_ref",
-        "target_platform",
-        "expected_risk_tier",
-        "estimated_cost",
-        "authority_required",
-        "compiled_at",
-        "compiled_by",
-        "diffusion_ref"
-      ],
-      "purpose": "A prompt compiled only from typed confirmed fields"
-    },
-    {
-      "type": "PromptTemplate",
-      "family": "Creation",
-      "ref_prefix": "TP",
-      "lifecycle_family": "canon",
-      "key_fields": [
-        "platform",
-        "stack",
-        "version",
-        "owner",
-        "guardrail_set",
-        "evaluation_status",
-        "supersedes",
-        "change_requires_eval"
-      ],
-      "purpose": "A versioned, eval-gated template"
-    },
-    {
-      "type": "BuildPlatform",
-      "family": "Creation",
-      "ref_prefix": "BP",
-      "lifecycle_family": "canon",
-      "key_fields": [
-        "name",
-        "hosting",
-        "permitted_data_classifications",
-        "capabilities",
-        "integration_surface",
-        "auth_model",
-        "attestation_ref"
-      ],
-      "purpose": "A build platform"
-    },
-    {
-      "type": "BuildRun",
-      "family": "Creation",
-      "ref_prefix": "BR",
-      "lifecycle_family": "creation_run",
-      "key_fields": [
-        "prompt_ref",
-        "platform",
-        "model_route_ref",
-        "model_version_pin",
-        "guardrail_set_version",
-        "template_version",
-        "dispatched_at",
-        "completed_at",
-        "duration",
-        "cost",
-        "outcome",
-        "failure_reason",
-        "reproducibility_key",
-        "agent_actor",
-        "authority_used",
-        "log_ref"
-      ],
-      "purpose": "A dispatched build with a reproducibility key"
-    },
-    {
-      "type": "BuildArtifact",
-      "family": "Creation",
-      "ref_prefix": "BA",
-      "lifecycle_family": "evidence_record",
-      "key_fields": [
-        "run_ref",
-        "repository",
-        "commit_or_version",
-        "image_or_bundle",
-        "digest",
-        "files_changed",
-        "diff_ref",
-        "secrets_scan_result",
-        "dependency_manifest"
-      ],
-      "purpose": "An artifact produced by a run"
-    },
-    {
-      "type": "WorkingSkeleton",
-      "family": "Creation",
-      "ref_prefix": "WS",
-      "lifecycle_family": "canon",
-      "key_fields": [
-        "mission_ref",
-        "one_real_user_process",
-        "minimal_interface",
-        "minimal_data_model",
-        "one_integration_path",
-        "access_control_basis",
-        "observable_output",
-        "automated_safe_deployment_ref",
-        "rollback_ref"
-      ],
-      "purpose": "The first thin end-to-end slice"
-    },
-    {
-      "type": "Iteration",
-      "family": "Creation",
-      "ref_prefix": "IT",
-      "lifecycle_family": "evidence_record",
-      "key_fields": ["from_run", "to_run", "trigger", "change_class"],
-      "purpose": "A classified change between runs"
-    },
-    {
-      "type": "TestSuite",
-      "family": "Evidence",
-      "ref_prefix": "TS",
-      "lifecycle_family": "evidence_record",
-      "key_fields": ["generated_from", "provenance", "independence_class"],
-      "purpose": "A test suite with independence class"
-    },
-    {
-      "type": "TestRun",
-      "family": "Evidence",
-      "ref_prefix": "TR",
-      "lifecycle_family": "evidence_record",
-      "key_fields": [
-        "suite_ref",
-        "target_version",
-        "environment",
-        "executed_at",
-        "results",
-        "pass_fail",
-        "evidence_artifacts"
-      ],
-      "purpose": "A test execution"
-    },
-    {
-      "type": "SimulationRun",
-      "family": "Evidence",
-      "ref_prefix": "SR",
-      "lifecycle_family": "evidence_record",
-      "key_fields": [
-        "scenario_spec",
-        "synthetic_population",
-        "conditions_covered",
-        "results",
-        "findings"
-      ],
-      "purpose": "A simulation"
-    },
-    {
-      "type": "AdversarialRun",
-      "family": "Evidence",
-      "ref_prefix": "AR",
-      "lifecycle_family": "evidence_record",
-      "key_fields": ["attempts", "classes", "findings", "severity", "remediated"],
-      "purpose": "An adversarial challenge"
-    },
-    {
-      "type": "ModelEvaluation",
-      "family": "Evidence",
-      "ref_prefix": "MV",
-      "lifecycle_family": "evidence_record",
-      "key_fields": ["model_route", "suite", "metrics", "pass_fail"],
-      "purpose": "A model evaluation"
-    },
-    {
-      "type": "ShadowRun",
-      "family": "Evidence",
-      "ref_prefix": "SH",
-      "lifecycle_family": "evidence_record",
-      "key_fields": [
-        "capability_ref",
-        "event_source",
-        "sample_size",
-        "period",
-        "shadow_outputs",
-        "actual_outcomes",
-        "comparison_result",
-        "discrepancy_rate",
-        "confidence_evidence",
-        "risk_evidence",
-        "bias_evidence",
-        "conditions_requiring_human_judgment"
-      ],
-      "purpose": "A shadow comparison"
-    },
-    {
-      "type": "Discrepancy",
-      "family": "Evidence",
-      "ref_prefix": "DS",
-      "lifecycle_family": "evidence_record",
-      "key_fields": [
-        "shadow_run_ref",
-        "case_ref",
-        "shadow_decision",
-        "actual_decision",
-        "delta",
-        "hypothesised_cause",
-        "disposition"
-      ],
-      "purpose": "A shadow discrepancy"
-    },
-    {
-      "type": "ExposureAuthorization",
-      "family": "Evidence",
-      "ref_prefix": "EA",
-      "lifecycle_family": "evidence_record",
-      "key_fields": [
-        "capability_ref",
-        "authority_level_granted",
-        "exposure_population",
-        "conditions",
-        "rollback_armed",
-        "kill_switch_ref",
-        "authorised_by",
-        "evidence_bundle_ref",
-        "effective_from",
-        "effective_to",
-        "authority_can_be_withdrawn"
-      ],
-      "purpose": "Authority to expose a capability"
-    },
-    {
-      "type": "ExposurePopulation",
-      "family": "Evidence",
-      "ref_prefix": "XP",
-      "lifecycle_family": "evidence_record",
-      "key_fields": ["percent", "cohort_definition", "event_set"],
-      "purpose": "A defined exposure population (Part 4.2 verbs)"
-    },
-    {
-      "type": "ProductionOutcome",
-      "family": "Evidence",
-      "ref_prefix": "PO",
-      "lifecycle_family": "evidence_record",
-      "key_fields": [
-        "capability_ref",
-        "version",
-        "period",
-        "events_processed",
-        "outcomes",
-        "behaviour_observed",
-        "failures",
-        "incidents",
-        "cost",
-        "risk_indicators",
-        "unintended_consequences"
-      ],
-      "purpose": "Observed production behaviour"
-    },
-    {
-      "type": "ValueMeasure",
-      "family": "Evidence",
-      "ref_prefix": "VA",
-      "lifecycle_family": "evidence_record",
-      "key_fields": [
-        "mission_ref",
-        "measure_ref",
-        "value",
-        "unit",
-        "baseline",
-        "delta",
-        "confidence",
-        "source_evidence",
-        "realised_at"
-      ],
-      "purpose": "A realised value measurement"
-    },
-    {
-      "type": "Incident",
-      "family": "Evidence",
-      "ref_prefix": "IN",
-      "lifecycle_family": "evidence_record",
-      "key_fields": [
-        "capability_ref",
-        "severity",
-        "description",
-        "detection",
-        "response",
-        "rollback_ref",
-        "root_cause",
-        "learning_ref"
-      ],
-      "purpose": "A production incident"
-    },
-    {
-      "type": "Rollback",
-      "family": "Evidence",
-      "ref_prefix": "RB",
-      "lifecycle_family": "evidence_record",
-      "key_fields": [
-        "capability_ref",
-        "from_version",
-        "to_version",
-        "executed_at",
-        "executed_by",
-        "outcome",
-        "duration"
-      ],
-      "purpose": "An executed rollback"
-    },
-    {
-      "type": "ControlCheck",
-      "family": "Assurance",
-      "ref_prefix": "CH",
-      "lifecycle_family": "evidence_record",
-      "key_fields": ["control_ref", "subject_ref", "result", "evidence", "evaluator"],
-      "purpose": "A control check"
-    },
-    {
-      "type": "PolicyEvaluation",
-      "family": "Assurance",
-      "ref_prefix": "PE",
-      "lifecycle_family": "evidence_record",
-      "key_fields": [
-        "policy_ref",
-        "subject_ref",
-        "inputs",
-        "decision",
-        "conditions",
-        "decided_by",
-        "deterministic"
-      ],
-      "purpose": "A deterministic policy evaluation"
-    },
-    {
-      "type": "AccessibilityEvaluation",
-      "family": "Assurance",
-      "ref_prefix": "AE",
-      "lifecycle_family": "evidence_record",
-      "key_fields": ["standard", "subject_ref", "checks", "findings", "result"],
-      "purpose": "A WCAG evaluation"
-    },
-    {
-      "type": "SecurityScan",
-      "family": "Assurance",
-      "ref_prefix": "SS",
-      "lifecycle_family": "evidence_record",
-      "key_fields": ["kind", "subject_ref", "findings", "severity_summary"],
-      "purpose": "A security scan"
-    },
-    {
-      "type": "DataUsePermission",
-      "family": "Assurance",
-      "ref_prefix": "DU",
-      "lifecycle_family": "canon",
-      "key_fields": [
-        "data_product_ref",
-        "purpose",
-        "permitted",
-        "basis",
-        "restrictions",
-        "expires_at"
-      ],
-      "purpose": "A data-use permission"
-    },
-    {
-      "type": "ConsentRecord",
-      "family": "Assurance",
-      "ref_prefix": "CR",
-      "lifecycle_family": "evidence_record",
-      "key_fields": [
-        "participant",
-        "session_ref",
-        "scope",
-        "granted_at",
-        "withdrawn_at",
-        "evidence"
-      ],
-      "purpose": "Recorded consent for capture"
-    },
-    {
-      "type": "AuthorityGrant",
-      "family": "Assurance",
-      "ref_prefix": "AG",
-      "lifecycle_family": "evidence_record",
-      "key_fields": ["subject_ref", "authority_level", "scope", "evidence_refs", "granted_by"],
-      "purpose": "An authority grant (Part 4.2 verbs)"
-    },
-    {
-      "type": "Builder",
-      "family": "People",
-      "ref_prefix": "BU",
-      "lifecycle_family": "canon",
-      "key_fields": ["identity", "layers", "capability_profile_ref", "active_cells"],
-      "purpose": "A builder"
-    },
-    {
-      "type": "BusinessCoCreator",
-      "family": "People",
-      "ref_prefix": "BC",
-      "lifecycle_family": "canon",
-      "key_fields": ["identity", "business_domain", "decision_authority", "active_missions"],
-      "purpose": "A business co-creator"
-    },
-    {
-      "type": "CapabilityProfile",
-      "family": "People",
-      "ref_prefix": "CF",
-      "lifecycle_family": "canon",
-      "key_fields": [
-        "domains_understood",
-        "outcomes_delivered",
-        "swarms_orchestrated",
-        "reusable_capabilities_contributed",
-        "risks_safely_managed",
-        "systems_simplified_or_retired",
-        "value_realised",
-        "other_builders_accelerated",
-        "consequence_types_navigated",
-        "quality_maintained_as_autonomy_increased",
-        "derived_from_evidence"
-      ],
-      "purpose": "An evidence-derived capability profile, never self-described"
-    },
-    {
-      "type": "HumanDecisionRequest",
-      "family": "People",
-      "ref_prefix": "HD",
-      "lifecycle_family": "evidence_record",
-      "key_fields": [
-        "exact_decision_required",
-        "reason_ai_cannot_safely_decide",
-        "current_evidence_and_confidence",
-        "ai_recommendation",
-        "viable_alternatives",
-        "affected_parties",
-        "deadline",
-        "cost_of_waiting",
-        "reversibility",
-        "current_authority_boundary",
-        "proposed_next_machine_action"
-      ],
-      "purpose": "The only human wait state (Part 6.5)"
-    },
-    {
-      "type": "Decision",
-      "family": "People",
-      "ref_prefix": "DE",
-      "lifecycle_family": "evidence_record",
-      "key_fields": [
-        "request_ref",
-        "decision",
-        "decided_by",
-        "authority_used",
-        "rationale",
-        "effective_from",
-        "reversal_of"
-      ],
-      "purpose": "A decision answering a decision request"
-    },
-    {
-      "type": "GlossaryTerm",
-      "family": "Context",
-      "ref_prefix": "GT",
-      "lifecycle_family": "canon",
-      "key_fields": ["term", "definition"],
-      "purpose": "A canonical glossary term"
-    },
-    {
-      "type": "DomainModel",
-      "family": "Context",
-      "ref_prefix": "DM",
-      "lifecycle_family": "canon",
-      "key_fields": ["domain", "entities"],
-      "purpose": "A domain model"
-    },
-    {
-      "type": "ReferencePattern",
-      "family": "Context",
-      "ref_prefix": "RP",
-      "lifecycle_family": "canon",
-      "key_fields": ["pattern", "example"],
-      "purpose": "A reference pattern"
-    },
-    {
-      "type": "DesignSystemToken",
-      "family": "Context",
-      "ref_prefix": "DT",
-      "lifecycle_family": "canon",
-      "key_fields": ["token", "value"],
-      "purpose": "A design system token"
-    },
-    {
-      "type": "EntityExample",
-      "family": "Context",
-      "ref_prefix": "EX",
-      "lifecycle_family": "canon",
-      "key_fields": ["entity", "example"],
-      "purpose": "A representative entity example"
-    },
-    {
-      "type": "Lesson",
-      "family": "Learning",
-      "ref_prefix": "LE",
-      "lifecycle_family": "canon",
-      "key_fields": [
-        "context",
-        "what_happened",
-        "what_was_learned",
-        "generalisable",
-        "contributed_to_canon"
-      ],
-      "purpose": "A lesson"
-    },
-    {
-      "type": "FailurePattern",
-      "family": "Learning",
-      "ref_prefix": "FP",
-      "lifecycle_family": "canon",
-      "key_fields": ["signature", "conditions", "detection_ref", "prevention"],
-      "purpose": "A failure pattern"
-    },
-    {
-      "type": "ReusablePrimitive",
-      "family": "Learning",
-      "ref_prefix": "RX",
-      "lifecycle_family": "canon",
-      "key_fields": ["kind", "source_mission", "publication_state"],
-      "purpose": "A reusable primitive"
-    },
-    {
-      "type": "MarketplaceAsset",
-      "family": "Learning",
-      "ref_prefix": "MA",
-      "lifecycle_family": "canon",
-      "key_fields": ["primitive_ref", "category", "usage_stats_ref", "owner"],
-      "purpose": "A marketplace asset"
-    },
-    {
-      "type": "ModelRoute",
-      "family": "ModelRoute",
-      "ref_prefix": "MR",
-      "lifecycle_family": "canon",
-      "key_fields": [
-        "provider",
-        "endpoint",
-        "region",
-        "cleared_content_tiers",
-        "attestation_ref",
-        "attestation_expiry",
-        "model_version_pin",
-        "cost_profile",
-        "eval_status",
-        "permitted_task_classes"
-      ],
-      "purpose": "A model route"
-    },
-    {
-      "type": "ProviderAttestation",
-      "family": "ModelRoute",
-      "ref_prefix": "PV",
-      "lifecycle_family": "canon",
-      "key_fields": ["type", "scope", "valid_from", "valid_to", "owner"],
-      "purpose": "A provider attestation"
-    },
-    {
-      "type": "EvaluationSuite",
-      "family": "ModelRoute",
-      "ref_prefix": "ES",
-      "lifecycle_family": "canon",
-      "key_fields": ["name", "version", "golden_set_ref", "metrics", "pass_thresholds", "last_run"],
-      "purpose": "An evaluation suite"
-    },
-    {
-      "type": "Detector",
-      "family": "Detection",
-      "ref_prefix": "DR",
-      "lifecycle_family": "canon",
-      "key_fields": [
-        "name",
-        "failure_mode_ref",
-        "detection_method",
-        "inputs",
-        "threshold",
-        "severity",
-        "owner_role",
-        "remediation_hint"
-      ],
-      "purpose": "A detector with an owner"
-    },
-    {
-      "type": "DetectorFinding",
-      "family": "Detection",
-      "ref_prefix": "DF",
-      "lifecycle_family": "detector_finding",
-      "key_fields": [
-        "detector_ref",
-        "subject_refs",
-        "evidence",
-        "severity",
-        "first_seen",
-        "assigned_to",
-        "resolution"
-      ],
-      "purpose": "A finding with an owner"
-    },
-    {
-      "type": "Rendition",
-      "family": "Generation",
-      "ref_prefix": "RN",
-      "lifecycle_family": "rendition",
-      "key_fields": [
-        "source_object_ref",
-        "kind",
-        "generator",
-        "generated_at",
-        "expires_when",
-        "permission_context"
-      ],
-      "purpose": "Generated from canon. Not canon."
-    },
-    {
-      "type": "FramingSession",
-      "family": "Framing",
-      "ref_prefix": "FS",
-      "lifecycle_family": "framing_session",
-      "key_fields": [
-        "mission_ref",
-        "co_creator",
-        "builder",
-        "participants",
-        "purpose",
-        "opened_at",
-        "closed_at",
-        "consent_ref",
-        "content_tier",
-        "artifacts",
-        "extraction_revision",
-        "entry_test_result"
-      ],
-      "purpose": "A consented co-creation session"
-    },
-    {
-      "type": "CoCreationArtifact",
-      "family": "Framing",
-      "ref_prefix": "CA",
-      "lifecycle_family": "evidence_record",
-      "key_fields": ["session_ref", "kind", "content_tier", "consent_basis", "storage_ref"],
-      "purpose": "Captured material. Evidence, not canon"
-    },
-    {
-      "type": "ExtractedStatement",
-      "family": "Framing",
-      "ref_prefix": "XS",
-      "lifecycle_family": "framing_extract",
-      "key_fields": [
-        "session_ref",
-        "classification",
-        "provenance_spans",
-        "extractor_version",
-        "model_version",
-        "confidence"
-      ],
-      "purpose": "A classified segment with provenance spans"
-    },
-    {
-      "type": "NeedStatement",
-      "family": "Framing",
-      "ref_prefix": "NS",
-      "lifecycle_family": "framing_extract",
-      "key_fields": ["need", "affected_people", "provenance_spans"],
-      "purpose": "A business need (the COO's named unit)"
-    },
-    {
-      "type": "DependencyProposal",
-      "family": "Framing",
-      "ref_prefix": "DX",
-      "lifecycle_family": "framing_extract",
-      "key_fields": ["from_ref", "to_ref", "verb", "source", "confidence", "provenance_spans"],
-      "purpose": "A proposed relationship awaiting confirmation"
-    },
-    {
-      "type": "EvidenceRequirement",
-      "family": "Framing",
-      "ref_prefix": "ER",
-      "lifecycle_family": "framing_extract",
-      "key_fields": ["decision_ref", "evidence_needed", "provenance_spans"],
-      "purpose": "Evidence required for the next decision"
-    },
-    {
-      "type": "Persona",
-      "family": "Framing",
-      "ref_prefix": "PS",
-      "lifecycle_family": "framing_extract",
-      "key_fields": ["description", "provenance_spans"],
-      "purpose": "An affected person type"
-    },
-    {
-      "type": "Situation",
-      "family": "Framing",
-      "ref_prefix": "SI",
-      "lifecycle_family": "framing_extract",
-      "key_fields": ["description", "provenance_spans"],
-      "purpose": "An affected situation"
-    }
-  ],
-  "verbs": [
-    {
-      "verb": "signals",
-      "signatures": [
-        {
-          "from": ["ValueSignal"],
-          "to": ["ValueMission"]
-        }
-      ],
-      "directed": true,
-      "impact": "forward"
-    },
-    {
-      "verb": "promoted_from",
-      "signatures": [
-        {
-          "from": ["ValueMission"],
-          "to": ["ValueSignal"]
-        }
-      ],
-      "directed": true,
-      "impact": "reverse"
-    },
-    {
-      "verb": "originated_from",
-      "signatures": [
-        {
-          "from": ["ValueSignal"],
-          "to": ["Evidence"]
-        }
-      ],
-      "directed": true,
-      "impact": "none"
-    },
-    {
-      "verb": "duplicates",
-      "signatures": [
-        {
-          "from": ["ValueSignal"],
-          "to": ["ValueSignal"]
-        }
-      ],
-      "directed": true,
-      "impact": "none"
-    },
-    {
-      "verb": "scoped_to",
-      "signatures": [
-        {
-          "from": ["ValueMission"],
-          "to": ["ValueCell"]
-        }
-      ],
-      "directed": true,
-      "impact": "reverse"
-    },
-    {
-      "verb": "operated_by",
-      "signatures": [
-        {
-          "from": ["ValueCell"],
-          "to": ["Actor"]
-        }
-      ],
-      "directed": true,
-      "impact": "reverse"
-    },
-    {
-      "verb": "bursts",
-      "signatures": [
-        {
-          "from": ["ValueCell"],
-          "to": ["ValueBurst"]
-        }
-      ],
-      "directed": true,
-      "impact": "forward"
-    },
-    {
-      "verb": "produced",
-      "signatures": [
-        {
-          "from": ["ValueBurst"],
-          "to": ["WorkingCapability", "Evidence", "Decision", "DisprovedAssumption"]
-        }
-      ],
-      "directed": true,
-      "impact": "forward"
-    },
-    {
-      "verb": "expresses",
-      "signatures": [
-        {
-          "from": ["IntentModel"],
-          "to": ["ValueMission"]
-        }
-      ],
-      "directed": true,
-      "impact": "forward"
-    },
-    {
-      "verb": "contains",
-      "signatures": [
-        {
-          "from": ["IntentModel"],
-          "to": ["BehaviorStatement"]
-        }
-      ],
-      "directed": true,
-      "impact": "forward"
-    },
-    {
-      "verb": "governed_by_contract",
-      "signatures": [
-        {
-          "from": ["ExecutableOutcomeContract"],
-          "to": ["IntentModel"]
-        }
-      ],
-      "directed": true,
-      "impact": "forward"
-    },
-    {
-      "verb": "confirmed_by",
-      "signatures": [
-        {
-          "from": ["BehaviorStatement"],
-          "to": ["Decision"]
-        }
-      ],
-      "directed": true,
-      "impact": "reverse"
-    },
-    {
-      "verb": "constrains",
-      "signatures": [
-        {
-          "from": ["Constraint"],
-          "to": ["BehaviorStatement"]
-        }
-      ],
-      "directed": true,
-      "impact": "forward"
-    },
-    {
-      "verb": "non_negotiable",
-      "signatures": [
-        {
-          "from": ["NonNegotiableConsequence"],
-          "to": ["BehaviorStatement"]
-        }
-      ],
-      "directed": true,
-      "impact": "forward"
-    },
-    {
-      "verb": "raises",
-      "signatures": [
-        {
-          "from": ["OpenQuestion"],
-          "to": ["BehaviorStatement"]
-        }
-      ],
-      "directed": true,
-      "impact": "forward"
-    },
-    {
-      "verb": "assumes",
-      "signatures": [
-        {
-          "from": ["Assumption"],
-          "to": ["BehaviorStatement"]
-        }
-      ],
-      "directed": true,
-      "impact": "forward"
-    },
-    {
-      "verb": "disproven_by",
-      "signatures": [
-        {
-          "from": ["Assumption"],
-          "to": ["Evidence"]
-        }
-      ],
-      "directed": true,
-      "impact": "reverse"
-    },
-    {
-      "verb": "composes",
-      "signatures": [
-        {
-          "from": ["WorkingCapability"],
-          "to": ["ComposableCapability"]
-        }
-      ],
-      "directed": true,
-      "impact": "reverse"
-    },
-    {
-      "verb": "implements",
-      "signatures": [
-        {
-          "from": ["ComposableCapability"],
-          "to": ["CapabilityContract"]
-        }
-      ],
-      "directed": true,
-      "impact": "reverse"
-    },
-    {
-      "verb": "depends_on",
-      "signatures": [
-        {
-          "from": ["ComposableCapability"],
-          "to": ["ComposableCapability"]
-        },
-        {
-          "from": ["NeedStatement"],
-          "to": ["NeedStatement"]
-        },
-        {
-          "from": ["BehaviorStatement"],
-          "to": ["BehaviorStatement"]
-        }
-      ],
-      "directed": true,
-      "impact": "reverse",
-      "acyclic": true
-    },
-    {
-      "verb": "evidenced_by",
-      "signatures": [
-        {
-          "from": ["ComposableCapability"],
-          "to": ["Evidence"]
-        }
-      ],
-      "directed": true,
-      "impact": "reverse"
-    },
-    {
-      "verb": "stewarded_by",
-      "signatures": [
-        {
-          "from": ["ComposableCapability"],
-          "to": ["Actor"]
-        }
-      ],
-      "directed": true,
-      "impact": "none"
-    },
-    {
-      "verb": "superseded_by",
-      "signatures": [
-        {
-          "from": ["ComposableCapability"],
-          "to": ["ComposableCapability"]
-        }
-      ],
-      "directed": true,
-      "impact": "forward"
-    },
-    {
-      "verb": "compiled_into",
-      "signatures": [
-        {
-          "from": ["BehaviorStatement"],
-          "to": ["CreationPrompt"]
-        }
-      ],
-      "directed": true,
-      "impact": "forward"
-    },
-    {
-      "verb": "used_template",
-      "signatures": [
-        {
-          "from": ["CreationPrompt"],
-          "to": ["PromptTemplate"]
-        }
-      ],
-      "directed": true,
-      "impact": "reverse"
-    },
-    {
-      "verb": "governed_by",
-      "signatures": [
-        {
-          "from": ["CreationPrompt"],
-          "to": ["Guardrail"]
-        }
-      ],
-      "directed": true,
-      "impact": "reverse"
-    },
-    {
-      "verb": "dispatched_to",
-      "signatures": [
-        {
-          "from": ["CreationPrompt"],
-          "to": ["BuildPlatform"]
-        }
-      ],
-      "directed": true,
-      "impact": "reverse"
-    },
-    {
-      "verb": "executed_as",
-      "signatures": [
-        {
-          "from": ["CreationPrompt"],
-          "to": ["BuildRun"]
-        }
-      ],
-      "directed": true,
-      "impact": "forward"
-    },
-    {
-      "verb": "produced_artifact",
-      "signatures": [
-        {
-          "from": ["BuildRun"],
-          "to": ["BuildArtifact"]
-        }
-      ],
-      "directed": true,
-      "impact": "forward"
-    },
-    {
-      "verb": "skeleton_of",
-      "signatures": [
-        {
-          "from": ["WorkingSkeleton"],
-          "to": ["ValueMission"]
-        }
-      ],
-      "directed": true,
-      "impact": "reverse"
-    },
-    {
-      "verb": "iterated_as",
-      "signatures": [
-        {
-          "from": ["BuildRun"],
-          "to": ["BuildRun"]
-        }
-      ],
-      "directed": true,
-      "impact": "forward"
-    },
-    {
-      "verb": "verified_by",
-      "signatures": [
-        {
-          "from": ["BehaviorStatement", "ComposableCapability"],
-          "to": ["TestRun"]
-        }
-      ],
-      "directed": true,
-      "impact": "forward"
-    },
-    {
-      "verb": "simulated_by",
-      "signatures": [
-        {
-          "from": ["WorkingCapability", "ComposableCapability"],
-          "to": ["SimulationRun"]
-        }
-      ],
-      "directed": true,
-      "impact": "forward"
-    },
-    {
-      "verb": "challenged_by",
-      "signatures": [
-        {
-          "from": ["WorkingCapability", "ComposableCapability"],
-          "to": ["AdversarialRun"]
-        }
-      ],
-      "directed": true,
-      "impact": "forward"
-    },
-    {
-      "verb": "evaluated_by",
-      "signatures": [
-        {
-          "from": ["ModelRoute", "Agent"],
-          "to": ["ModelEvaluation"]
-        }
-      ],
-      "directed": true,
-      "impact": "forward"
-    },
-    {
-      "verb": "shadowed_by",
-      "signatures": [
-        {
-          "from": ["WorkingCapability", "ComposableCapability"],
-          "to": ["ShadowRun"]
-        }
-      ],
-      "directed": true,
-      "impact": "forward"
-    },
-    {
-      "verb": "discrepancy_in",
-      "signatures": [
-        {
-          "from": ["ShadowRun"],
-          "to": ["Discrepancy"]
-        }
-      ],
-      "directed": true,
-      "impact": "reverse"
-    },
-    {
-      "verb": "authorised_by",
-      "signatures": [
-        {
-          "from": ["ExposureAuthorization"],
-          "to": ["WorkingCapability", "ComposableCapability"]
-        }
-      ],
-      "directed": true,
-      "impact": "forward"
-    },
-    {
-      "verb": "exposed_to",
-      "signatures": [
-        {
-          "from": ["ExposureAuthorization"],
-          "to": ["ExposurePopulation"]
-        }
-      ],
-      "directed": true,
-      "impact": "forward"
-    },
-    {
-      "verb": "observed_as",
-      "signatures": [
-        {
-          "from": ["WorkingCapability", "ComposableCapability"],
-          "to": ["ProductionOutcome"]
-        }
-      ],
-      "directed": true,
-      "impact": "forward"
-    },
-    {
-      "verb": "values",
-      "signatures": [
-        {
-          "from": ["ProductionOutcome"],
-          "to": ["ValueMeasure"]
-        }
-      ],
-      "directed": true,
-      "impact": "forward"
-    },
-    {
-      "verb": "caused",
-      "signatures": [
-        {
-          "from": ["ProductionOutcome"],
-          "to": ["Incident"]
-        }
-      ],
-      "directed": true,
-      "impact": "forward"
-    },
-    {
-      "verb": "decided_from",
-      "signatures": [
-        {
-          "from": ["ConfirmedDecision"],
-          "to": ["ValueSignal", "FramingSession"]
-        }
-      ],
-      "directed": true,
-      "impact": "reverse"
-    },
-    {
-      "verb": "built",
-      "signatures": [
-        {
-          "from": ["BuildRun"],
-          "to": ["ComposableCapability", "WorkingCapability"]
-        }
-      ],
-      "directed": true,
-      "impact": "forward"
-    },
-    {
-      "verb": "renews",
-      "signatures": [
-        {
-          "from": ["ConfirmedDecision"],
-          "to": ["ExposureAuthorization"]
-        }
-      ],
-      "directed": true,
-      "impact": "none"
-    },
-    {
-      "verb": "authority_granted_by",
-      "signatures": [
-        {
-          "from": ["*"],
-          "to": ["AuthorityGrant"]
-        }
-      ],
-      "directed": true,
-      "impact": "reverse"
-    },
-    {
-      "verb": "policy_evaluated_by",
-      "signatures": [
-        {
-          "from": ["*"],
-          "to": ["PolicyEvaluation"]
-        }
-      ],
-      "directed": true,
-      "impact": "none"
-    },
-    {
-      "verb": "control_checked_by",
-      "signatures": [
-        {
-          "from": ["*"],
-          "to": ["ControlCheck"]
-        }
-      ],
-      "directed": true,
-      "impact": "none"
-    },
-    {
-      "verb": "consent_basis",
-      "signatures": [
-        {
-          "from": ["CaptureSession"],
-          "to": ["ConsentRecord"]
-        }
-      ],
-      "directed": true,
-      "impact": "reverse"
-    },
-    {
-      "verb": "permission_basis",
-      "signatures": [
-        {
-          "from": ["*"],
-          "to": ["DataUsePermission"]
-        }
-      ],
-      "directed": true,
-      "impact": "reverse"
-    },
-    {
-      "verb": "lessons",
-      "signatures": [
-        {
-          "from": ["ValueMission"],
-          "to": ["Lesson"]
-        }
-      ],
-      "directed": true,
-      "impact": "forward"
-    },
-    {
-      "verb": "contributes",
-      "signatures": [
-        {
-          "from": ["Lesson"],
-          "to": ["ReusablePrimitive"]
-        }
-      ],
-      "directed": true,
-      "impact": "forward"
-    },
-    {
-      "verb": "published_as",
-      "signatures": [
-        {
-          "from": ["ReusablePrimitive"],
-          "to": ["MarketplaceAsset"]
-        }
-      ],
-      "directed": true,
-      "impact": "forward"
-    },
-    {
-      "verb": "accelerated_by",
-      "signatures": [
-        {
-          "from": ["ValueCell"],
-          "to": ["ValueCell"]
-        }
-      ],
-      "directed": true,
-      "impact": "none"
-    },
-    {
-      "verb": "cites",
-      "signatures": [
-        {
-          "from": ["*"],
-          "to": ["*"]
-        }
-      ],
-      "directed": true,
-      "impact": "reverse"
-    },
-    {
-      "verb": "rendered_as",
-      "signatures": [
-        {
-          "from": ["*"],
-          "to": ["Rendition"]
-        }
-      ],
-      "directed": true,
-      "impact": "forward"
-    },
-    {
-      "verb": "flags",
-      "signatures": [
-        {
-          "from": ["DetectorFinding"],
-          "to": ["*"]
-        }
-      ],
-      "directed": true,
-      "impact": "none"
-    },
-    {
-      "verb": "reveals",
-      "signatures": [
-        {
-          "from": ["DetectorFinding"],
-          "to": ["AntiPattern"]
-        }
-      ],
-      "directed": true,
-      "impact": "none"
-    },
-    {
-      "verb": "derives_from",
-      "signatures": [
-        {
-          "from": ["*"],
-          "to": ["*"]
-        }
-      ],
-      "directed": true,
-      "impact": "reverse",
-      "acyclic": true
-    },
-    {
-      "verb": "articulated_in",
-      "signatures": [
-        {
-          "from": ["NeedStatement"],
-          "to": ["FramingSession"]
-        }
-      ],
-      "directed": true,
-      "impact": "none"
-    },
-    {
-      "verb": "extracted_from",
-      "signatures": [
-        {
-          "from": ["*"],
-          "to": ["CoCreationArtifact"]
-        }
-      ],
-      "directed": true,
-      "impact": "reverse"
-    },
-    {
-      "verb": "expressed_as",
-      "signatures": [
-        {
-          "from": ["NeedStatement"],
-          "to": ["BehaviorStatement"]
-        }
-      ],
-      "directed": true,
-      "impact": "forward"
-    },
-    {
-      "verb": "addresses",
-      "signatures": [
-        {
-          "from": ["BehaviorStatement"],
-          "to": ["NeedStatement"]
-        }
-      ],
-      "directed": true,
-      "impact": "reverse"
-    },
-    {
-      "verb": "blocks",
-      "signatures": [
-        {
-          "from": ["*"],
-          "to": ["*"]
-        }
-      ],
-      "directed": true,
-      "impact": "forward"
-    },
-    {
-      "verb": "relates_to",
-      "signatures": [
-        {
-          "from": ["*"],
-          "to": ["*"]
-        }
-      ],
-      "directed": true,
-      "impact": "both"
-    },
-    {
-      "verb": "contradicts",
-      "signatures": [
-        {
-          "from": ["*"],
-          "to": ["*"]
-        }
-      ],
-      "directed": false,
-      "impact": "both"
-    },
-    {
-      "verb": "supersedes_understanding_of",
-      "signatures": [
-        {
-          "from": ["NeedStatement"],
-          "to": ["NeedStatement"]
-        }
-      ],
-      "directed": true,
-      "impact": "forward"
-    },
-    {
-      "verb": "clarifies",
-      "signatures": [
-        {
-          "from": ["ExtractedStatement"],
-          "to": ["*"]
-        }
-      ],
-      "directed": true,
-      "impact": "forward"
-    },
-    {
-      "verb": "supersedes_statement",
-      "signatures": [
-        {
-          "from": ["ExtractedStatement"],
-          "to": ["ExtractedStatement"]
-        }
-      ],
-      "directed": true,
-      "impact": "forward"
-    },
-    {
-      "verb": "raises_question",
-      "signatures": [
-        {
-          "from": ["*"],
-          "to": ["OpenQuestion"]
-        }
-      ],
-      "directed": true,
-      "impact": "forward"
-    },
-    {
-      "verb": "resolves_question",
-      "signatures": [
-        {
-          "from": ["ConfirmedDecision"],
-          "to": ["OpenQuestion"]
-        }
-      ],
-      "directed": true,
-      "impact": "forward"
-    },
-    {
-      "verb": "needs_capability",
-      "signatures": [
-        {
-          "from": ["NeedStatement"],
-          "to": ["ComposableCapability"]
-        }
-      ],
-      "directed": true,
-      "impact": "reverse"
-    },
-    {
-      "verb": "references_capability",
-      "signatures": [
-        {
-          "from": ["*"],
-          "to": ["ComposableCapability"]
-        }
-      ],
-      "directed": true,
-      "impact": "reverse"
-    },
-    {
-      "verb": "mentioned_by",
-      "signatures": [
-        {
-          "from": ["*"],
-          "to": ["Actor"]
-        }
-      ],
-      "directed": true,
-      "impact": "none"
-    },
-    {
-      "verb": "affected_by_change",
-      "signatures": [
-        {
-          "from": ["*"],
-          "to": ["*"]
-        }
-      ],
-      "directed": true,
-      "impact": "none",
-      "computed": true
-    }
-  ],
-  "type_groups": {
-    "Actor": ["Builder", "BusinessCoCreator"],
-    "Decision": ["ConfirmedDecision", "Decision"],
-    "DisprovedAssumption": ["Assumption"],
-    "CaptureSession": ["FramingSession"],
-    "Evidence": [
-      "TestSuite",
-      "TestRun",
-      "SimulationRun",
-      "AdversarialRun",
-      "ModelEvaluation",
-      "ShadowRun",
-      "Discrepancy",
-      "ExposureAuthorization",
-      "ExposurePopulation",
-      "ProductionOutcome",
-      "ValueMeasure",
-      "Incident",
-      "Rollback"
-    ],
-    "Agent": ["ModelRoute"]
+ "types": [
+  {
+   "type": "Concept",
+   "family": "Canon",
+   "ref_prefix": "CN",
+   "lifecycle_family": "canon",
+   "key_fields": [
+    "definition",
+    "formal_definition",
+    "distinguishing_notes",
+    "replaces",
+    "operational_implications"
+   ],
+   "purpose": "A defined term of the operating model"
   },
-  "transitions": [
-    {
-      "family": "canon",
-      "from": "draft",
-      "to": "active"
-    },
-    {
-      "family": "canon",
-      "from": "draft",
-      "to": "challenged"
-    },
-    {
-      "family": "canon",
-      "from": "draft",
-      "to": "superseded"
-    },
-    {
-      "family": "canon",
-      "from": "draft",
-      "to": "retired"
-    },
-    {
-      "family": "canon",
-      "from": "active",
-      "to": "challenged"
-    },
-    {
-      "family": "canon",
-      "from": "active",
-      "to": "superseded"
-    },
-    {
-      "family": "canon",
-      "from": "active",
-      "to": "retired"
-    },
-    {
-      "family": "canon",
-      "from": "challenged",
-      "to": "superseded"
-    },
-    {
-      "family": "canon",
-      "from": "challenged",
-      "to": "retired"
-    },
-    {
-      "family": "canon",
-      "from": "superseded",
-      "to": "retired"
-    },
-    {
-      "family": "value_signal",
-      "from": "detected",
-      "to": "enriched"
-    },
-    {
-      "family": "value_signal",
-      "from": "detected",
-      "to": "monitoring"
-    },
-    {
-      "family": "value_signal",
-      "from": "detected",
-      "to": "merged"
-    },
-    {
-      "family": "value_signal",
-      "from": "detected",
-      "to": "promoted"
-    },
-    {
-      "family": "value_signal",
-      "from": "detected",
-      "to": "rejected"
-    },
-    {
-      "family": "value_signal",
-      "from": "detected",
-      "to": "expired"
-    },
-    {
-      "family": "value_signal",
-      "from": "enriched",
-      "to": "monitoring"
-    },
-    {
-      "family": "value_signal",
-      "from": "enriched",
-      "to": "merged"
-    },
-    {
-      "family": "value_signal",
-      "from": "enriched",
-      "to": "promoted"
-    },
-    {
-      "family": "value_signal",
-      "from": "enriched",
-      "to": "rejected"
-    },
-    {
-      "family": "value_signal",
-      "from": "enriched",
-      "to": "expired"
-    },
-    {
-      "family": "value_signal",
-      "from": "monitoring",
-      "to": "merged"
-    },
-    {
-      "family": "value_signal",
-      "from": "monitoring",
-      "to": "promoted"
-    },
-    {
-      "family": "value_signal",
-      "from": "monitoring",
-      "to": "rejected"
-    },
-    {
-      "family": "value_signal",
-      "from": "monitoring",
-      "to": "expired"
-    },
-    {
-      "family": "value_signal",
-      "from": "merged",
-      "to": "promoted"
-    },
-    {
-      "family": "value_signal",
-      "from": "merged",
-      "to": "rejected"
-    },
-    {
-      "family": "value_signal",
-      "from": "merged",
-      "to": "expired"
-    },
-    {
-      "family": "value_mission",
-      "from": "accepted",
-      "to": "activated"
-    },
-    {
-      "family": "value_mission",
-      "from": "accepted",
-      "to": "probing"
-    },
-    {
-      "family": "value_mission",
-      "from": "accepted",
-      "to": "advancing"
-    },
-    {
-      "family": "value_mission",
-      "from": "accepted",
-      "to": "exposed"
-    },
-    {
-      "family": "value_mission",
-      "from": "accepted",
-      "to": "proven"
-    },
-    {
-      "family": "value_mission",
-      "from": "accepted",
-      "to": "embedded"
-    },
-    {
-      "family": "value_mission",
-      "from": "accepted",
-      "to": "closed"
-    },
-    {
-      "family": "value_mission",
-      "from": "accepted",
-      "to": "redirected"
-    },
-    {
-      "family": "value_mission",
-      "from": "activated",
-      "to": "probing"
-    },
-    {
-      "family": "value_mission",
-      "from": "activated",
-      "to": "advancing"
-    },
-    {
-      "family": "value_mission",
-      "from": "activated",
-      "to": "exposed"
-    },
-    {
-      "family": "value_mission",
-      "from": "activated",
-      "to": "proven"
-    },
-    {
-      "family": "value_mission",
-      "from": "activated",
-      "to": "embedded"
-    },
-    {
-      "family": "value_mission",
-      "from": "activated",
-      "to": "closed"
-    },
-    {
-      "family": "value_mission",
-      "from": "activated",
-      "to": "redirected"
-    },
-    {
-      "family": "value_mission",
-      "from": "probing",
-      "to": "advancing"
-    },
-    {
-      "family": "value_mission",
-      "from": "probing",
-      "to": "exposed"
-    },
-    {
-      "family": "value_mission",
-      "from": "probing",
-      "to": "proven"
-    },
-    {
-      "family": "value_mission",
-      "from": "probing",
-      "to": "embedded"
-    },
-    {
-      "family": "value_mission",
-      "from": "probing",
-      "to": "closed"
-    },
-    {
-      "family": "value_mission",
-      "from": "probing",
-      "to": "redirected"
-    },
-    {
-      "family": "value_mission",
-      "from": "advancing",
-      "to": "exposed"
-    },
-    {
-      "family": "value_mission",
-      "from": "advancing",
-      "to": "proven"
-    },
-    {
-      "family": "value_mission",
-      "from": "advancing",
-      "to": "embedded"
-    },
-    {
-      "family": "value_mission",
-      "from": "advancing",
-      "to": "closed"
-    },
-    {
-      "family": "value_mission",
-      "from": "advancing",
-      "to": "redirected"
-    },
-    {
-      "family": "value_mission",
-      "from": "exposed",
-      "to": "proven"
-    },
-    {
-      "family": "value_mission",
-      "from": "exposed",
-      "to": "embedded"
-    },
-    {
-      "family": "value_mission",
-      "from": "exposed",
-      "to": "closed"
-    },
-    {
-      "family": "value_mission",
-      "from": "exposed",
-      "to": "redirected"
-    },
-    {
-      "family": "value_mission",
-      "from": "proven",
-      "to": "embedded"
-    },
-    {
-      "family": "value_mission",
-      "from": "proven",
-      "to": "closed"
-    },
-    {
-      "family": "value_mission",
-      "from": "proven",
-      "to": "redirected"
-    },
-    {
-      "family": "value_mission",
-      "from": "embedded",
-      "to": "closed"
-    },
-    {
-      "family": "value_mission",
-      "from": "embedded",
-      "to": "redirected"
-    },
-    {
-      "family": "behavior_statement",
-      "from": "proposed",
-      "to": "confirmed"
-    },
-    {
-      "family": "behavior_statement",
-      "from": "proposed",
-      "to": "generating"
-    },
-    {
-      "family": "behavior_statement",
-      "from": "proposed",
-      "to": "verified_in_simulation"
-    },
-    {
-      "family": "behavior_statement",
-      "from": "proposed",
-      "to": "verified_in_shadow"
-    },
-    {
-      "family": "behavior_statement",
-      "from": "proposed",
-      "to": "verified_in_production"
-    },
-    {
-      "family": "behavior_statement",
-      "from": "proposed",
-      "to": "superseded"
-    },
-    {
-      "family": "behavior_statement",
-      "from": "confirmed",
-      "to": "generating"
-    },
-    {
-      "family": "behavior_statement",
-      "from": "confirmed",
-      "to": "verified_in_simulation"
-    },
-    {
-      "family": "behavior_statement",
-      "from": "confirmed",
-      "to": "verified_in_shadow"
-    },
-    {
-      "family": "behavior_statement",
-      "from": "confirmed",
-      "to": "verified_in_production"
-    },
-    {
-      "family": "behavior_statement",
-      "from": "confirmed",
-      "to": "superseded"
-    },
-    {
-      "family": "behavior_statement",
-      "from": "generating",
-      "to": "verified_in_simulation"
-    },
-    {
-      "family": "behavior_statement",
-      "from": "generating",
-      "to": "verified_in_shadow"
-    },
-    {
-      "family": "behavior_statement",
-      "from": "generating",
-      "to": "verified_in_production"
-    },
-    {
-      "family": "behavior_statement",
-      "from": "generating",
-      "to": "superseded"
-    },
-    {
-      "family": "behavior_statement",
-      "from": "verified_in_simulation",
-      "to": "verified_in_shadow"
-    },
-    {
-      "family": "behavior_statement",
-      "from": "verified_in_simulation",
-      "to": "verified_in_production"
-    },
-    {
-      "family": "behavior_statement",
-      "from": "verified_in_simulation",
-      "to": "superseded"
-    },
-    {
-      "family": "behavior_statement",
-      "from": "verified_in_shadow",
-      "to": "verified_in_production"
-    },
-    {
-      "family": "behavior_statement",
-      "from": "verified_in_shadow",
-      "to": "superseded"
-    },
-    {
-      "family": "behavior_statement",
-      "from": "verified_in_production",
-      "to": "superseded"
-    },
-    {
-      "family": "composable_capability",
-      "from": "proposed",
-      "to": "skeleton"
-    },
-    {
-      "family": "composable_capability",
-      "from": "proposed",
-      "to": "shadow"
-    },
-    {
-      "family": "composable_capability",
-      "from": "proposed",
-      "to": "limited_exposure"
-    },
-    {
-      "family": "composable_capability",
-      "from": "proposed",
-      "to": "producing_value"
-    },
-    {
-      "family": "composable_capability",
-      "from": "proposed",
-      "to": "underperforming"
-    },
-    {
-      "family": "composable_capability",
-      "from": "proposed",
-      "to": "retired"
-    },
-    {
-      "family": "composable_capability",
-      "from": "skeleton",
-      "to": "shadow"
-    },
-    {
-      "family": "composable_capability",
-      "from": "skeleton",
-      "to": "limited_exposure"
-    },
-    {
-      "family": "composable_capability",
-      "from": "skeleton",
-      "to": "producing_value"
-    },
-    {
-      "family": "composable_capability",
-      "from": "skeleton",
-      "to": "underperforming"
-    },
-    {
-      "family": "composable_capability",
-      "from": "skeleton",
-      "to": "retired"
-    },
-    {
-      "family": "composable_capability",
-      "from": "shadow",
-      "to": "limited_exposure"
-    },
-    {
-      "family": "composable_capability",
-      "from": "shadow",
-      "to": "producing_value"
-    },
-    {
-      "family": "composable_capability",
-      "from": "shadow",
-      "to": "underperforming"
-    },
-    {
-      "family": "composable_capability",
-      "from": "shadow",
-      "to": "retired"
-    },
-    {
-      "family": "composable_capability",
-      "from": "limited_exposure",
-      "to": "producing_value"
-    },
-    {
-      "family": "composable_capability",
-      "from": "limited_exposure",
-      "to": "underperforming"
-    },
-    {
-      "family": "composable_capability",
-      "from": "limited_exposure",
-      "to": "retired"
-    },
-    {
-      "family": "composable_capability",
-      "from": "producing_value",
-      "to": "underperforming"
-    },
-    {
-      "family": "composable_capability",
-      "from": "producing_value",
-      "to": "retired"
-    },
-    {
-      "family": "composable_capability",
-      "from": "underperforming",
-      "to": "retired"
-    },
-    {
-      "family": "creation_run",
-      "from": "compiled",
-      "to": "dispatched"
-    },
-    {
-      "family": "creation_run",
-      "from": "compiled",
-      "to": "running"
-    },
-    {
-      "family": "creation_run",
-      "from": "compiled",
-      "to": "succeeded"
-    },
-    {
-      "family": "creation_run",
-      "from": "compiled",
-      "to": "failed"
-    },
-    {
-      "family": "creation_run",
-      "from": "compiled",
-      "to": "superseded"
-    },
-    {
-      "family": "creation_run",
-      "from": "dispatched",
-      "to": "running"
-    },
-    {
-      "family": "creation_run",
-      "from": "dispatched",
-      "to": "succeeded"
-    },
-    {
-      "family": "creation_run",
-      "from": "dispatched",
-      "to": "failed"
-    },
-    {
-      "family": "creation_run",
-      "from": "dispatched",
-      "to": "superseded"
-    },
-    {
-      "family": "creation_run",
-      "from": "running",
-      "to": "succeeded"
-    },
-    {
-      "family": "creation_run",
-      "from": "running",
-      "to": "failed"
-    },
-    {
-      "family": "creation_run",
-      "from": "running",
-      "to": "superseded"
-    },
-    {
-      "family": "creation_run",
-      "from": "succeeded",
-      "to": "superseded"
-    },
-    {
-      "family": "creation_run",
-      "from": "failed",
-      "to": "superseded"
-    },
-    {
-      "family": "rendition",
-      "from": "live",
-      "to": "stale"
-    },
-    {
-      "family": "rendition",
-      "from": "live",
-      "to": "deleted"
-    },
-    {
-      "family": "rendition",
-      "from": "stale",
-      "to": "deleted"
-    },
-    {
-      "family": "detector_finding",
-      "from": "new",
-      "to": "acknowledged"
-    },
-    {
-      "family": "detector_finding",
-      "from": "new",
-      "to": "remediated"
-    },
-    {
-      "family": "detector_finding",
-      "from": "new",
-      "to": "accepted_risk"
-    },
-    {
-      "family": "detector_finding",
-      "from": "new",
-      "to": "false_positive"
-    },
-    {
-      "family": "detector_finding",
-      "from": "acknowledged",
-      "to": "remediated"
-    },
-    {
-      "family": "detector_finding",
-      "from": "acknowledged",
-      "to": "accepted_risk"
-    },
-    {
-      "family": "detector_finding",
-      "from": "acknowledged",
-      "to": "false_positive"
-    },
-    {
-      "family": "opportunity_stream",
-      "from": "now",
-      "to": "next"
-    },
-    {
-      "family": "opportunity_stream",
-      "from": "now",
-      "to": "observing"
-    },
-    {
-      "family": "opportunity_stream",
-      "from": "now",
-      "to": "expired"
-    },
-    {
-      "family": "opportunity_stream",
-      "from": "next",
-      "to": "observing"
-    },
-    {
-      "family": "opportunity_stream",
-      "from": "next",
-      "to": "expired"
-    },
-    {
-      "family": "opportunity_stream",
-      "from": "observing",
-      "to": "expired"
-    },
-    {
-      "family": "framing_extract",
-      "from": "draft",
-      "to": "confirmed"
-    },
-    {
-      "family": "framing_extract",
-      "from": "draft",
-      "to": "rejected"
-    },
-    {
-      "family": "framing_extract",
-      "from": "draft",
-      "to": "superseded"
-    },
-    {
-      "family": "framing_extract",
-      "from": "confirmed",
-      "to": "superseded"
-    },
-    {
-      "family": "framing_extract",
-      "from": "rejected",
-      "to": "superseded"
-    },
-    {
-      "family": "framing_session",
-      "from": "planned",
-      "to": "capturing"
-    },
-    {
-      "family": "framing_session",
-      "from": "planned",
-      "to": "closed"
-    },
-    {
-      "family": "framing_session",
-      "from": "planned",
-      "to": "retired"
-    },
-    {
-      "family": "framing_session",
-      "from": "capturing",
-      "to": "closed"
-    },
-    {
-      "family": "framing_session",
-      "from": "capturing",
-      "to": "retired"
-    },
-    {
-      "family": "framing_session",
-      "from": "closed",
-      "to": "retired"
-    },
-    {
-      "family": "evidence_record",
-      "from": "recorded",
-      "to": "superseded"
-    },
-    {
-      "family": "evidence_record",
-      "from": "recorded",
-      "to": "retired"
-    },
-    {
-      "family": "evidence_record",
-      "from": "superseded",
-      "to": "retired"
+  {
+   "type": "Principle",
+   "family": "Canon",
+   "ref_prefix": "PR",
+   "lifecycle_family": "canon",
+   "key_fields": [
+    "directive",
+    "derivation",
+    "violation_examples"
+   ],
+   "purpose": "A governing principle"
+  },
+  {
+   "type": "Rule",
+   "family": "Canon",
+   "ref_prefix": "RU",
+   "lifecycle_family": "canon",
+   "key_fields": [
+    "trigger",
+    "rule_statement",
+    "conditions",
+    "exceptions",
+    "machine_evaluable",
+    "evaluator_ref"
+   ],
+   "purpose": "A machine-evaluable rule"
+  },
+  {
+   "type": "Protocol",
+   "family": "Canon",
+   "ref_prefix": "PT",
+   "lifecycle_family": "canon",
+   "key_fields": [
+    "preconditions",
+    "steps",
+    "decision_points",
+    "outputs"
+   ],
+   "purpose": "How a recurring operating move happens"
+  },
+  {
+   "type": "Guardrail",
+   "family": "Canon",
+   "ref_prefix": "GR",
+   "lifecycle_family": "canon",
+   "key_fields": [
+    "boundary_statement",
+    "enforcement_mode",
+    "evaluator_ref",
+    "severity",
+    "risk_tiers",
+    "violation_response"
+   ],
+   "purpose": "A deterministic or advisory boundary"
+  },
+  {
+   "type": "Pattern",
+   "family": "Canon",
+   "ref_prefix": "PA",
+   "lifecycle_family": "canon",
+   "key_fields": [
+    "context",
+    "problem",
+    "approach",
+    "canonical_example",
+    "conformance_check_ref"
+   ],
+   "purpose": "A reusable approach"
+  },
+  {
+   "type": "AntiPattern",
+   "family": "Canon",
+   "ref_prefix": "AP",
+   "lifecycle_family": "canon",
+   "key_fields": [
+    "signature",
+    "why_harmful",
+    "detector_ref",
+    "remediation"
+   ],
+   "purpose": "A named failure mode with a detector"
+  },
+  {
+   "type": "Metric",
+   "family": "Canon",
+   "ref_prefix": "ME",
+   "lifecycle_family": "canon",
+   "key_fields": [
+    "definition",
+    "formula",
+    "unit",
+    "data_sources",
+    "direction",
+    "target_shape",
+    "rejected"
+   ],
+   "purpose": "A value measure definition"
+  },
+  {
+   "type": "Authority",
+   "family": "Canon",
+   "ref_prefix": "AU",
+   "lifecycle_family": "canon",
+   "key_fields": [
+    "authority_level",
+    "scope",
+    "conditions",
+    "granted_to",
+    "granting_evidence",
+    "demotion_triggers"
+   ],
+   "purpose": "A scoped authority grant rule"
+  },
+  {
+   "type": "ValueSignal",
+   "family": "ValueFlow",
+   "ref_prefix": "VS",
+   "lifecycle_family": "value_signal",
+   "key_fields": [
+    "observed_condition",
+    "affected_population",
+    "process_or_journey",
+    "evidence",
+    "frequency",
+    "duration",
+    "magnitude",
+    "baseline_performance",
+    "potential_value",
+    "urgency",
+    "confidence",
+    "possible_causes",
+    "consequences_of_inaction",
+    "related_signals",
+    "candidate_capabilities",
+    "recommended_co_creator",
+    "recommended_builder",
+    "recommended_next_probe",
+    "requested_solution_candidates",
+    "origin_channel",
+    "source_ref",
+    "intake_event_id"
+   ],
+   "purpose": "An observed condition worth acting on"
+  },
+  {
+   "type": "ValueMission",
+   "family": "ValueFlow",
+   "ref_prefix": "VM",
+   "lifecycle_family": "value_mission",
+   "key_fields": [
+    "signal_ref",
+    "measurable_condition",
+    "baseline",
+    "target",
+    "affected_population",
+    "operating_boundaries",
+    "proof_required",
+    "value_hypothesis",
+    "co_creator",
+    "builder",
+    "strategic_relevance",
+    "opportunity_cost",
+    "decision_authority",
+    "capital_boundary",
+    "available_data_tools_capabilities",
+    "risk_classification",
+    "policy_constraints",
+    "maximum_production_exposure",
+    "required_evidence_for_authority",
+    "human_intervention_conditions",
+    "reversibility_requirements",
+    "rollback_requirements",
+    "maximum_time",
+    "maximum_investment",
+    "decision_date",
+    "stop_conditions",
+    "completion_criteria",
+    "status"
+   ],
+   "purpose": "A bounded mission to change a measurable condition"
+  },
+  {
+   "type": "ValueCell",
+   "family": "ValueFlow",
+   "ref_prefix": "VC",
+   "lifecycle_family": "canon",
+   "key_fields": [
+    "mission_ref",
+    "co_creator",
+    "builder",
+    "agents",
+    "authority_boundaries",
+    "active_bursts",
+    "formed_at",
+    "dissolution_condition",
+    "contribution_log"
+   ],
+   "purpose": "The co-creator, builder and agents operating a mission"
+  },
+  {
+   "type": "ValueBurst",
+   "family": "ValueFlow",
+   "ref_prefix": "VB",
+   "lifecycle_family": "canon",
+   "key_fields": [
+    "cell_ref",
+    "start",
+    "end",
+    "intent_compression",
+    "experience_generation",
+    "live_interaction_evidence",
+    "autonomous_challenge_results",
+    "refinement",
+    "controlled_exposure_ref",
+    "decision_ref",
+    "material_change_of"
+   ],
+   "purpose": "A time-boxed burst that changes capability, evidence or direction"
+  },
+  {
+   "type": "OpportunityStreamItem",
+   "family": "ValueFlow",
+   "ref_prefix": "OS",
+   "lifecycle_family": "opportunity_stream",
+   "key_fields": [
+    "expiration_condition",
+    "value_estimate",
+    "urgency",
+    "required_context",
+    "candidate_builders",
+    "readiness_evidence"
+   ],
+   "purpose": "An item in the opportunity stream"
+  },
+  {
+   "type": "IntentModel",
+   "family": "Intent",
+   "ref_prefix": "IM",
+   "lifecycle_family": "canon",
+   "key_fields": [
+    "mission_ref",
+    "desired_outcome",
+    "affected_people_and_situations",
+    "observable_behaviour",
+    "business_rules",
+    "exceptions",
+    "constraints",
+    "non_negotiable_consequences",
+    "decisions",
+    "rationale",
+    "representative_examples",
+    "evidence",
+    "confidence",
+    "assumptions",
+    "open_questions",
+    "acceptance_history",
+    "change_history"
+   ],
+   "purpose": "The living intent model of a mission"
+  },
+  {
+   "type": "BehaviorStatement",
+   "family": "Intent",
+   "ref_prefix": "BS",
+   "lifecycle_family": "behavior_statement",
+   "key_fields": [
+    "condition",
+    "observable_result",
+    "operating_constraints",
+    "source_decision_ref",
+    "confirmation",
+    "generates",
+    "verification_status"
+   ],
+   "purpose": "The traceable unit of intent (UI alias: requirement)"
+  },
+  {
+   "type": "ExecutableOutcomeContract",
+   "family": "Intent",
+   "ref_prefix": "EO",
+   "lifecycle_family": "canon",
+   "key_fields": [
+    "desired_outcome",
+    "baseline",
+    "target",
+    "target_users_and_situations",
+    "affected_parties",
+    "observable_behaviours",
+    "rules_and_exceptions",
+    "non_negotiables",
+    "acceptance_evidence",
+    "risk_classification",
+    "authority_level",
+    "success_value_adoption_health_measures",
+    "production_exposure_conditions",
+    "reversibility_conditions",
+    "expiration_and_retirement_criteria"
+   ],
+   "purpose": "Governs an intent model"
+  },
+  {
+   "type": "Constraint",
+   "family": "Intent",
+   "ref_prefix": "CT",
+   "lifecycle_family": "canon",
+   "key_fields": [
+    "kind",
+    "source",
+    "binding_scope"
+   ],
+   "purpose": "A binding constraint"
+  },
+  {
+   "type": "NonNegotiableConsequence",
+   "family": "Intent",
+   "ref_prefix": "NN",
+   "lifecycle_family": "canon",
+   "key_fields": [
+    "statement",
+    "why_non_negotiable",
+    "violation_severity",
+    "detector_ref"
+   ],
+   "purpose": "A consequence that must never happen"
+  },
+  {
+   "type": "ConfirmedDecision",
+   "family": "Intent",
+   "ref_prefix": "CD",
+   "lifecycle_family": "evidence_record",
+   "key_fields": [
+    "decision",
+    "decided_by",
+    "authority_used",
+    "context",
+    "alternatives",
+    "rationale",
+    "reversibility",
+    "consequences",
+    "effective_from"
+   ],
+   "purpose": "A decision recorded under stated authority"
+  },
+  {
+   "type": "OpenQuestion",
+   "family": "Intent",
+   "ref_prefix": "OQ",
+   "lifecycle_family": "canon",
+   "key_fields": [
+    "question",
+    "why_it_matters",
+    "blocking",
+    "owner",
+    "needed_by"
+   ],
+   "purpose": "An unresolved question"
+  },
+  {
+   "type": "Assumption",
+   "family": "Intent",
+   "ref_prefix": "AS",
+   "lifecycle_family": "canon",
+   "key_fields": [
+    "statement",
+    "basis",
+    "confidence",
+    "verification_method",
+    "status"
+   ],
+   "purpose": "A held assumption awaiting verification"
+  },
+  {
+   "type": "ComposableCapability",
+   "family": "Capability",
+   "ref_prefix": "CC",
+   "lifecycle_family": "composable_capability",
+   "key_fields": [
+    "plain_language_purpose",
+    "business_outcome",
+    "intended_consumers",
+    "input_schema",
+    "output_schema",
+    "preconditions",
+    "dependencies",
+    "business_rules",
+    "exceptions",
+    "data_classifications",
+    "permitted_uses",
+    "authority_level",
+    "risk_tier",
+    "policy_constraints",
+    "security_privacy_accessibility_constraints",
+    "confidence_requirements",
+    "explainability_audit_behaviour",
+    "failure_modes",
+    "recovery_behaviour",
+    "human_intervention_conditions",
+    "test_simulation_evaluation_refs",
+    "service_levels",
+    "cost_resource_telemetry_ref",
+    "version",
+    "compatibility",
+    "owner_and_stewardship",
+    "review_date",
+    "minimum_use_threshold",
+    "operating_cost_ceiling",
+    "retirement_condition",
+    "is_machine_discoverable"
+   ],
+   "purpose": "A reusable, machine-discoverable capability"
+  },
+  {
+   "type": "WorkingCapability",
+   "family": "Capability",
+   "ref_prefix": "WC",
+   "lifecycle_family": "composable_capability",
+   "key_fields": [
+    "mission_ref",
+    "capability_refs"
+   ],
+   "purpose": "A capability working inside a mission (Part 4.2 verbs)"
+  },
+  {
+   "type": "CapabilityContract",
+   "family": "Capability",
+   "ref_prefix": "CK",
+   "lifecycle_family": "canon",
+   "key_fields": [
+    "promised_outcome",
+    "refusal_conditions",
+    "explanation_obligations",
+    "evidence_obligations",
+    "authority",
+    "cost_model",
+    "lifecycle"
+   ],
+   "purpose": "The formal intent-and-outcome contract"
+  },
+  {
+   "type": "CapabilityDependency",
+   "family": "Capability",
+   "ref_prefix": "DP",
+   "lifecycle_family": "canon",
+   "key_fields": [
+    "from",
+    "to",
+    "kind",
+    "criticality"
+   ],
+   "purpose": "A typed capability dependency"
+  },
+  {
+   "type": "DataProduct",
+   "family": "Capability",
+   "ref_prefix": "DA",
+   "lifecycle_family": "canon",
+   "key_fields": [
+    "name",
+    "steward",
+    "schema",
+    "quality_measures",
+    "classifications",
+    "permitted_uses",
+    "lineage_refs"
+   ],
+   "purpose": "A governed data product"
+  },
+  {
+   "type": "CreationPrompt",
+   "family": "Creation",
+   "ref_prefix": "CP",
+   "lifecycle_family": "creation_run",
+   "key_fields": [
+    "source_behavior_statements",
+    "intent_model_ref",
+    "outcome_contract_ref",
+    "design_context_refs",
+    "guardrail_set_ref",
+    "prompt_template_ref",
+    "target_platform",
+    "expected_risk_tier",
+    "estimated_cost",
+    "authority_required",
+    "compiled_at",
+    "compiled_by",
+    "diffusion_ref"
+   ],
+   "purpose": "A prompt compiled only from typed confirmed fields"
+  },
+  {
+   "type": "PromptTemplate",
+   "family": "Creation",
+   "ref_prefix": "TP",
+   "lifecycle_family": "canon",
+   "key_fields": [
+    "platform",
+    "stack",
+    "version",
+    "owner",
+    "guardrail_set",
+    "evaluation_status",
+    "supersedes",
+    "change_requires_eval"
+   ],
+   "purpose": "A versioned, eval-gated template"
+  },
+  {
+   "type": "BuildPlatform",
+   "family": "Creation",
+   "ref_prefix": "BP",
+   "lifecycle_family": "canon",
+   "key_fields": [
+    "name",
+    "hosting",
+    "permitted_data_classifications",
+    "capabilities",
+    "integration_surface",
+    "auth_model",
+    "attestation_ref"
+   ],
+   "purpose": "A build platform"
+  },
+  {
+   "type": "BuildRun",
+   "family": "Creation",
+   "ref_prefix": "BR",
+   "lifecycle_family": "evidence_record",
+   "key_fields": [
+    "prompt_ref",
+    "platform",
+    "model_route_ref",
+    "model_version_pin",
+    "guardrail_set_version",
+    "template_version",
+    "dispatched_at",
+    "completed_at",
+    "duration",
+    "cost",
+    "outcome",
+    "failure_reason",
+    "reproducibility_key",
+    "agent_actor",
+    "authority_used",
+    "log_ref"
+   ],
+   "purpose": "Source outcome and lineage of a platform build; execution state belongs to the platform (L-08)"
+  },
+  {
+   "type": "BuildArtifact",
+   "family": "Creation",
+   "ref_prefix": "BA",
+   "lifecycle_family": "evidence_record",
+   "key_fields": [
+    "run_ref",
+    "repository",
+    "commit_or_version",
+    "image_or_bundle",
+    "digest",
+    "files_changed",
+    "diff_ref",
+    "secrets_scan_result",
+    "dependency_manifest"
+   ],
+   "purpose": "An artifact produced by a run"
+  },
+  {
+   "type": "WorkingSkeleton",
+   "family": "Creation",
+   "ref_prefix": "WS",
+   "lifecycle_family": "canon",
+   "key_fields": [
+    "mission_ref",
+    "one_real_user_process",
+    "minimal_interface",
+    "minimal_data_model",
+    "one_integration_path",
+    "access_control_basis",
+    "observable_output",
+    "automated_safe_deployment_ref",
+    "rollback_ref"
+   ],
+   "purpose": "The first thin end-to-end slice"
+  },
+  {
+   "type": "Iteration",
+   "family": "Creation",
+   "ref_prefix": "IT",
+   "lifecycle_family": "evidence_record",
+   "key_fields": [
+    "from_run",
+    "to_run",
+    "trigger",
+    "change_class"
+   ],
+   "purpose": "A classified change between runs"
+  },
+  {
+   "type": "TestSuite",
+   "family": "Evidence",
+   "ref_prefix": "TS",
+   "lifecycle_family": "evidence_record",
+   "key_fields": [
+    "generated_from",
+    "provenance",
+    "independence_class"
+   ],
+   "purpose": "A test suite with independence class"
+  },
+  {
+   "type": "TestRun",
+   "family": "Evidence",
+   "ref_prefix": "TR",
+   "lifecycle_family": "evidence_record",
+   "key_fields": [
+    "suite_ref",
+    "target_version",
+    "environment",
+    "executed_at",
+    "results",
+    "pass_fail",
+    "evidence_artifacts"
+   ],
+   "purpose": "A test execution"
+  },
+  {
+   "type": "SimulationRun",
+   "family": "Evidence",
+   "ref_prefix": "SR",
+   "lifecycle_family": "evidence_record",
+   "key_fields": [
+    "scenario_spec",
+    "synthetic_population",
+    "conditions_covered",
+    "results",
+    "findings"
+   ],
+   "purpose": "A simulation"
+  },
+  {
+   "type": "AdversarialRun",
+   "family": "Evidence",
+   "ref_prefix": "AR",
+   "lifecycle_family": "evidence_record",
+   "key_fields": [
+    "attempts",
+    "classes",
+    "findings",
+    "severity",
+    "remediated"
+   ],
+   "purpose": "An adversarial challenge"
+  },
+  {
+   "type": "ModelEvaluation",
+   "family": "Evidence",
+   "ref_prefix": "MV",
+   "lifecycle_family": "evidence_record",
+   "key_fields": [
+    "model_route",
+    "suite",
+    "metrics",
+    "pass_fail"
+   ],
+   "purpose": "A model evaluation"
+  },
+  {
+   "type": "ShadowRun",
+   "family": "Evidence",
+   "ref_prefix": "SH",
+   "lifecycle_family": "evidence_record",
+   "key_fields": [
+    "capability_ref",
+    "event_source",
+    "sample_size",
+    "period",
+    "shadow_outputs",
+    "actual_outcomes",
+    "comparison_result",
+    "discrepancy_rate",
+    "confidence_evidence",
+    "risk_evidence",
+    "bias_evidence",
+    "conditions_requiring_human_judgment"
+   ],
+   "purpose": "A shadow comparison"
+  },
+  {
+   "type": "Discrepancy",
+   "family": "Evidence",
+   "ref_prefix": "DS",
+   "lifecycle_family": "evidence_record",
+   "key_fields": [
+    "shadow_run_ref",
+    "case_ref",
+    "shadow_decision",
+    "actual_decision",
+    "delta",
+    "hypothesised_cause",
+    "disposition"
+   ],
+   "purpose": "A shadow discrepancy"
+  },
+  {
+   "type": "ExposureAuthorization",
+   "family": "Evidence",
+   "ref_prefix": "EA",
+   "lifecycle_family": "evidence_record",
+   "key_fields": [
+    "capability_ref",
+    "authority_level_granted",
+    "exposure_population",
+    "conditions",
+    "rollback_armed",
+    "kill_switch_ref",
+    "authorised_by",
+    "evidence_bundle_ref",
+    "effective_from",
+    "effective_to",
+    "authority_can_be_withdrawn"
+   ],
+   "purpose": "Authority to expose a capability"
+  },
+  {
+   "type": "ExposurePopulation",
+   "family": "Evidence",
+   "ref_prefix": "XP",
+   "lifecycle_family": "evidence_record",
+   "key_fields": [
+    "percent",
+    "cohort_definition",
+    "event_set"
+   ],
+   "purpose": "A defined exposure population (Part 4.2 verbs)"
+  },
+  {
+   "type": "ProductionOutcome",
+   "family": "Evidence",
+   "ref_prefix": "PO",
+   "lifecycle_family": "evidence_record",
+   "key_fields": [
+    "capability_ref",
+    "version",
+    "period",
+    "events_processed",
+    "outcomes",
+    "behaviour_observed",
+    "failures",
+    "incidents",
+    "cost",
+    "risk_indicators",
+    "unintended_consequences"
+   ],
+   "purpose": "Observed production behaviour"
+  },
+  {
+   "type": "ValueMeasure",
+   "family": "Evidence",
+   "ref_prefix": "VA",
+   "lifecycle_family": "evidence_record",
+   "key_fields": [
+    "mission_ref",
+    "measure_ref",
+    "value",
+    "unit",
+    "baseline",
+    "delta",
+    "confidence",
+    "source_evidence",
+    "realised_at"
+   ],
+   "purpose": "A realised value measurement"
+  },
+  {
+   "type": "Incident",
+   "family": "Evidence",
+   "ref_prefix": "IN",
+   "lifecycle_family": "evidence_record",
+   "key_fields": [
+    "capability_ref",
+    "severity",
+    "description",
+    "detection",
+    "response",
+    "rollback_ref",
+    "root_cause",
+    "learning_ref"
+   ],
+   "purpose": "A production incident"
+  },
+  {
+   "type": "Rollback",
+   "family": "Evidence",
+   "ref_prefix": "RB",
+   "lifecycle_family": "evidence_record",
+   "key_fields": [
+    "capability_ref",
+    "from_version",
+    "to_version",
+    "executed_at",
+    "executed_by",
+    "outcome",
+    "duration"
+   ],
+   "purpose": "An executed rollback"
+  },
+  {
+   "type": "ControlCheck",
+   "family": "Assurance",
+   "ref_prefix": "CH",
+   "lifecycle_family": "evidence_record",
+   "key_fields": [
+    "control_ref",
+    "subject_ref",
+    "result",
+    "evidence",
+    "evaluator"
+   ],
+   "purpose": "A control check"
+  },
+  {
+   "type": "PolicyEvaluation",
+   "family": "Assurance",
+   "ref_prefix": "PE",
+   "lifecycle_family": "evidence_record",
+   "key_fields": [
+    "policy_ref",
+    "subject_ref",
+    "inputs",
+    "decision",
+    "conditions",
+    "decided_by",
+    "deterministic"
+   ],
+   "purpose": "A deterministic policy evaluation"
+  },
+  {
+   "type": "AccessibilityEvaluation",
+   "family": "Assurance",
+   "ref_prefix": "AE",
+   "lifecycle_family": "evidence_record",
+   "key_fields": [
+    "standard",
+    "subject_ref",
+    "checks",
+    "findings",
+    "result"
+   ],
+   "purpose": "A WCAG evaluation"
+  },
+  {
+   "type": "SecurityScan",
+   "family": "Assurance",
+   "ref_prefix": "SS",
+   "lifecycle_family": "evidence_record",
+   "key_fields": [
+    "kind",
+    "subject_ref",
+    "findings",
+    "severity_summary"
+   ],
+   "purpose": "A security scan"
+  },
+  {
+   "type": "DataUsePermission",
+   "family": "Assurance",
+   "ref_prefix": "DU",
+   "lifecycle_family": "canon",
+   "key_fields": [
+    "data_product_ref",
+    "purpose",
+    "permitted",
+    "basis",
+    "restrictions",
+    "expires_at"
+   ],
+   "purpose": "A data-use permission"
+  },
+  {
+   "type": "ConsentRecord",
+   "family": "Assurance",
+   "ref_prefix": "CR",
+   "lifecycle_family": "evidence_record",
+   "key_fields": [
+    "participant",
+    "session_ref",
+    "scope",
+    "granted_at",
+    "withdrawn_at",
+    "evidence"
+   ],
+   "purpose": "Recorded consent for capture"
+  },
+  {
+   "type": "AuthorityGrant",
+   "family": "Assurance",
+   "ref_prefix": "AG",
+   "lifecycle_family": "evidence_record",
+   "key_fields": [
+    "subject_ref",
+    "authority_level",
+    "scope",
+    "evidence_refs",
+    "granted_by"
+   ],
+   "purpose": "An authority grant (Part 4.2 verbs)"
+  },
+  {
+   "type": "Builder",
+   "family": "People",
+   "ref_prefix": "BU",
+   "lifecycle_family": "canon",
+   "key_fields": [
+    "identity",
+    "layers",
+    "capability_profile_ref",
+    "active_cells"
+   ],
+   "purpose": "A builder"
+  },
+  {
+   "type": "BusinessCoCreator",
+   "family": "People",
+   "ref_prefix": "BC",
+   "lifecycle_family": "canon",
+   "key_fields": [
+    "identity",
+    "business_domain",
+    "decision_authority",
+    "active_missions"
+   ],
+   "purpose": "A business co-creator"
+  },
+  {
+   "type": "CapabilityProfile",
+   "family": "People",
+   "ref_prefix": "CF",
+   "lifecycle_family": "canon",
+   "key_fields": [
+    "domains_understood",
+    "outcomes_delivered",
+    "swarms_orchestrated",
+    "reusable_capabilities_contributed",
+    "risks_safely_managed",
+    "systems_simplified_or_retired",
+    "value_realised",
+    "other_builders_accelerated",
+    "consequence_types_navigated",
+    "quality_maintained_as_autonomy_increased",
+    "derived_from_evidence"
+   ],
+   "purpose": "An evidence-derived capability profile, never self-described"
+  },
+  {
+   "type": "HumanDecisionRequest",
+   "family": "People",
+   "ref_prefix": "HD",
+   "lifecycle_family": "evidence_record",
+   "key_fields": [
+    "exact_decision_required",
+    "reason_ai_cannot_safely_decide",
+    "current_evidence_and_confidence",
+    "ai_recommendation",
+    "viable_alternatives",
+    "affected_parties",
+    "deadline",
+    "cost_of_waiting",
+    "reversibility",
+    "current_authority_boundary",
+    "proposed_next_machine_action"
+   ],
+   "purpose": "The only human wait state (Part 6.5)"
+  },
+  {
+   "type": "Decision",
+   "family": "People",
+   "ref_prefix": "DE",
+   "lifecycle_family": "evidence_record",
+   "key_fields": [
+    "request_ref",
+    "decision",
+    "decided_by",
+    "authority_used",
+    "rationale",
+    "effective_from",
+    "reversal_of"
+   ],
+   "purpose": "A decision answering a decision request"
+  },
+  {
+   "type": "GlossaryTerm",
+   "family": "Context",
+   "ref_prefix": "GT",
+   "lifecycle_family": "canon",
+   "key_fields": [
+    "term",
+    "definition"
+   ],
+   "purpose": "A canonical glossary term"
+  },
+  {
+   "type": "DomainModel",
+   "family": "Context",
+   "ref_prefix": "DM",
+   "lifecycle_family": "canon",
+   "key_fields": [
+    "domain",
+    "entities"
+   ],
+   "purpose": "A domain model"
+  },
+  {
+   "type": "ReferencePattern",
+   "family": "Context",
+   "ref_prefix": "RP",
+   "lifecycle_family": "canon",
+   "key_fields": [
+    "pattern",
+    "example"
+   ],
+   "purpose": "A reference pattern"
+  },
+  {
+   "type": "DesignSystemToken",
+   "family": "Context",
+   "ref_prefix": "DT",
+   "lifecycle_family": "canon",
+   "key_fields": [
+    "token",
+    "value"
+   ],
+   "purpose": "A design system token"
+  },
+  {
+   "type": "EntityExample",
+   "family": "Context",
+   "ref_prefix": "EX",
+   "lifecycle_family": "canon",
+   "key_fields": [
+    "entity",
+    "example"
+   ],
+   "purpose": "A representative entity example"
+  },
+  {
+   "type": "Lesson",
+   "family": "Learning",
+   "ref_prefix": "LE",
+   "lifecycle_family": "canon",
+   "key_fields": [
+    "context",
+    "what_happened",
+    "what_was_learned",
+    "generalisable",
+    "contributed_to_canon"
+   ],
+   "purpose": "A lesson"
+  },
+  {
+   "type": "FailurePattern",
+   "family": "Learning",
+   "ref_prefix": "FP",
+   "lifecycle_family": "canon",
+   "key_fields": [
+    "signature",
+    "conditions",
+    "detection_ref",
+    "prevention"
+   ],
+   "purpose": "A failure pattern"
+  },
+  {
+   "type": "ReusablePrimitive",
+   "family": "Learning",
+   "ref_prefix": "RX",
+   "lifecycle_family": "canon",
+   "key_fields": [
+    "kind",
+    "source_mission",
+    "publication_state"
+   ],
+   "purpose": "A reusable primitive"
+  },
+  {
+   "type": "MarketplaceAsset",
+   "family": "Learning",
+   "ref_prefix": "MA",
+   "lifecycle_family": "canon",
+   "key_fields": [
+    "primitive_ref",
+    "category",
+    "usage_stats_ref",
+    "owner"
+   ],
+   "purpose": "A marketplace asset"
+  },
+  {
+   "type": "ModelRoute",
+   "family": "ModelRoute",
+   "ref_prefix": "MR",
+   "lifecycle_family": "canon",
+   "key_fields": [
+    "provider",
+    "endpoint",
+    "region",
+    "cleared_content_tiers",
+    "attestation_ref",
+    "attestation_expiry",
+    "model_version_pin",
+    "cost_profile",
+    "eval_status",
+    "permitted_task_classes"
+   ],
+   "purpose": "A model route"
+  },
+  {
+   "type": "ProviderAttestation",
+   "family": "ModelRoute",
+   "ref_prefix": "PV",
+   "lifecycle_family": "canon",
+   "key_fields": [
+    "type",
+    "scope",
+    "valid_from",
+    "valid_to",
+    "owner"
+   ],
+   "purpose": "A provider attestation"
+  },
+  {
+   "type": "EvaluationSuite",
+   "family": "ModelRoute",
+   "ref_prefix": "ES",
+   "lifecycle_family": "canon",
+   "key_fields": [
+    "name",
+    "version",
+    "golden_set_ref",
+    "metrics",
+    "pass_thresholds",
+    "last_run"
+   ],
+   "purpose": "An evaluation suite"
+  },
+  {
+   "type": "Detector",
+   "family": "Detection",
+   "ref_prefix": "DR",
+   "lifecycle_family": "canon",
+   "key_fields": [
+    "name",
+    "failure_mode_ref",
+    "detection_method",
+    "inputs",
+    "threshold",
+    "severity",
+    "owner_role",
+    "remediation_hint"
+   ],
+   "purpose": "A detector with an owner"
+  },
+  {
+   "type": "DetectorFinding",
+   "family": "Detection",
+   "ref_prefix": "DF",
+   "lifecycle_family": "detector_finding",
+   "key_fields": [
+    "detector_ref",
+    "subject_refs",
+    "evidence",
+    "severity",
+    "first_seen",
+    "assigned_to",
+    "resolution"
+   ],
+   "purpose": "A finding with an owner"
+  },
+  {
+   "type": "Rendition",
+   "family": "Generation",
+   "ref_prefix": "RN",
+   "lifecycle_family": "rendition",
+   "key_fields": [
+    "source_object_ref",
+    "kind",
+    "generator",
+    "generated_at",
+    "expires_when",
+    "permission_context"
+   ],
+   "purpose": "Generated from canon. Not canon."
+  },
+  {
+   "type": "FramingSession",
+   "family": "Framing",
+   "ref_prefix": "FS",
+   "lifecycle_family": "framing_session",
+   "key_fields": [
+    "mission_ref",
+    "co_creator",
+    "builder",
+    "participants",
+    "purpose",
+    "opened_at",
+    "closed_at",
+    "consent_ref",
+    "content_tier",
+    "artifacts",
+    "extraction_revision",
+    "entry_test_result"
+   ],
+   "purpose": "A consented co-creation session"
+  },
+  {
+   "type": "CoCreationArtifact",
+   "family": "Framing",
+   "ref_prefix": "CA",
+   "lifecycle_family": "evidence_record",
+   "key_fields": [
+    "session_ref",
+    "kind",
+    "content_tier",
+    "consent_basis",
+    "storage_ref"
+   ],
+   "purpose": "Captured material. Evidence, not canon"
+  },
+  {
+   "type": "ExtractedStatement",
+   "family": "Framing",
+   "ref_prefix": "XS",
+   "lifecycle_family": "framing_extract",
+   "key_fields": [
+    "session_ref",
+    "classification",
+    "provenance_spans",
+    "extractor_version",
+    "model_version",
+    "confidence"
+   ],
+   "purpose": "A classified segment with provenance spans"
+  },
+  {
+   "type": "NeedStatement",
+   "family": "Framing",
+   "ref_prefix": "NS",
+   "lifecycle_family": "framing_extract",
+   "key_fields": [
+    "need",
+    "affected_people",
+    "provenance_spans"
+   ],
+   "purpose": "A business need (the COO's named unit)"
+  },
+  {
+   "type": "DependencyProposal",
+   "family": "Framing",
+   "ref_prefix": "DX",
+   "lifecycle_family": "framing_extract",
+   "key_fields": [
+    "from_ref",
+    "to_ref",
+    "verb",
+    "source",
+    "confidence",
+    "provenance_spans"
+   ],
+   "purpose": "A proposed relationship awaiting confirmation"
+  },
+  {
+   "type": "EvidenceRequirement",
+   "family": "Framing",
+   "ref_prefix": "ER",
+   "lifecycle_family": "framing_extract",
+   "key_fields": [
+    "decision_ref",
+    "evidence_needed",
+    "provenance_spans"
+   ],
+   "purpose": "Evidence required for the next decision"
+  },
+  {
+   "type": "Persona",
+   "family": "Framing",
+   "ref_prefix": "PS",
+   "lifecycle_family": "framing_extract",
+   "key_fields": [
+    "description",
+    "provenance_spans"
+   ],
+   "purpose": "An affected person type"
+  },
+  {
+   "type": "Situation",
+   "family": "Framing",
+   "ref_prefix": "SI",
+   "lifecycle_family": "framing_extract",
+   "key_fields": [
+    "description",
+    "provenance_spans"
+   ],
+   "purpose": "An affected situation"
+  }
+ ],
+ "verbs": [
+  {
+   "verb": "signals",
+   "signatures": [
+    {
+     "from": [
+      "ValueSignal"
+     ],
+     "to": [
+      "ValueMission"
+     ]
     }
+   ],
+   "directed": true,
+   "impact": "forward"
+  },
+  {
+   "verb": "promoted_from",
+   "signatures": [
+    {
+     "from": [
+      "ValueMission"
+     ],
+     "to": [
+      "ValueSignal"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "reverse"
+  },
+  {
+   "verb": "originated_from",
+   "signatures": [
+    {
+     "from": [
+      "ValueSignal"
+     ],
+     "to": [
+      "Evidence"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "none"
+  },
+  {
+   "verb": "duplicates",
+   "signatures": [
+    {
+     "from": [
+      "ValueSignal"
+     ],
+     "to": [
+      "ValueSignal"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "none"
+  },
+  {
+   "verb": "scoped_to",
+   "signatures": [
+    {
+     "from": [
+      "ValueMission"
+     ],
+     "to": [
+      "ValueCell"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "reverse"
+  },
+  {
+   "verb": "operated_by",
+   "signatures": [
+    {
+     "from": [
+      "ValueCell"
+     ],
+     "to": [
+      "Actor"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "reverse"
+  },
+  {
+   "verb": "bursts",
+   "signatures": [
+    {
+     "from": [
+      "ValueCell"
+     ],
+     "to": [
+      "ValueBurst"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "forward"
+  },
+  {
+   "verb": "produced",
+   "signatures": [
+    {
+     "from": [
+      "ValueBurst"
+     ],
+     "to": [
+      "WorkingCapability",
+      "Evidence",
+      "Decision",
+      "DisprovedAssumption"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "forward"
+  },
+  {
+   "verb": "expresses",
+   "signatures": [
+    {
+     "from": [
+      "IntentModel"
+     ],
+     "to": [
+      "ValueMission"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "forward"
+  },
+  {
+   "verb": "contains",
+   "signatures": [
+    {
+     "from": [
+      "IntentModel"
+     ],
+     "to": [
+      "BehaviorStatement"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "forward"
+  },
+  {
+   "verb": "governed_by_contract",
+   "signatures": [
+    {
+     "from": [
+      "ExecutableOutcomeContract"
+     ],
+     "to": [
+      "IntentModel"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "forward"
+  },
+  {
+   "verb": "confirmed_by",
+   "signatures": [
+    {
+     "from": [
+      "BehaviorStatement"
+     ],
+     "to": [
+      "Decision"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "reverse"
+  },
+  {
+   "verb": "constrains",
+   "signatures": [
+    {
+     "from": [
+      "Constraint"
+     ],
+     "to": [
+      "BehaviorStatement"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "forward"
+  },
+  {
+   "verb": "non_negotiable",
+   "signatures": [
+    {
+     "from": [
+      "NonNegotiableConsequence"
+     ],
+     "to": [
+      "BehaviorStatement"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "forward"
+  },
+  {
+   "verb": "raises",
+   "signatures": [
+    {
+     "from": [
+      "OpenQuestion"
+     ],
+     "to": [
+      "BehaviorStatement"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "forward"
+  },
+  {
+   "verb": "assumes",
+   "signatures": [
+    {
+     "from": [
+      "Assumption"
+     ],
+     "to": [
+      "BehaviorStatement"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "forward"
+  },
+  {
+   "verb": "disproven_by",
+   "signatures": [
+    {
+     "from": [
+      "Assumption"
+     ],
+     "to": [
+      "Evidence"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "reverse"
+  },
+  {
+   "verb": "composes",
+   "signatures": [
+    {
+     "from": [
+      "WorkingCapability"
+     ],
+     "to": [
+      "ComposableCapability"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "reverse"
+  },
+  {
+   "verb": "implements",
+   "signatures": [
+    {
+     "from": [
+      "ComposableCapability"
+     ],
+     "to": [
+      "CapabilityContract"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "reverse"
+  },
+  {
+   "verb": "depends_on",
+   "signatures": [
+    {
+     "from": [
+      "ComposableCapability"
+     ],
+     "to": [
+      "ComposableCapability"
+     ]
+    },
+    {
+     "from": [
+      "NeedStatement"
+     ],
+     "to": [
+      "NeedStatement"
+     ]
+    },
+    {
+     "from": [
+      "BehaviorStatement"
+     ],
+     "to": [
+      "BehaviorStatement"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "reverse",
+   "acyclic": true
+  },
+  {
+   "verb": "evidenced_by",
+   "signatures": [
+    {
+     "from": [
+      "ComposableCapability"
+     ],
+     "to": [
+      "Evidence"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "reverse"
+  },
+  {
+   "verb": "stewarded_by",
+   "signatures": [
+    {
+     "from": [
+      "ComposableCapability"
+     ],
+     "to": [
+      "Actor"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "none"
+  },
+  {
+   "verb": "superseded_by",
+   "signatures": [
+    {
+     "from": [
+      "ComposableCapability"
+     ],
+     "to": [
+      "ComposableCapability"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "forward"
+  },
+  {
+   "verb": "compiled_into",
+   "signatures": [
+    {
+     "from": [
+      "BehaviorStatement"
+     ],
+     "to": [
+      "CreationPrompt"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "forward"
+  },
+  {
+   "verb": "used_template",
+   "signatures": [
+    {
+     "from": [
+      "CreationPrompt"
+     ],
+     "to": [
+      "PromptTemplate"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "reverse"
+  },
+  {
+   "verb": "governed_by",
+   "signatures": [
+    {
+     "from": [
+      "CreationPrompt"
+     ],
+     "to": [
+      "Guardrail"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "reverse"
+  },
+  {
+   "verb": "dispatched_to",
+   "signatures": [
+    {
+     "from": [
+      "CreationPrompt"
+     ],
+     "to": [
+      "BuildPlatform"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "reverse"
+  },
+  {
+   "verb": "executed_as",
+   "signatures": [
+    {
+     "from": [
+      "CreationPrompt"
+     ],
+     "to": [
+      "BuildRun"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "forward"
+  },
+  {
+   "verb": "produced_artifact",
+   "signatures": [
+    {
+     "from": [
+      "BuildRun"
+     ],
+     "to": [
+      "BuildArtifact"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "forward"
+  },
+  {
+   "verb": "skeleton_of",
+   "signatures": [
+    {
+     "from": [
+      "WorkingSkeleton"
+     ],
+     "to": [
+      "ValueMission"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "reverse"
+  },
+  {
+   "verb": "iterated_as",
+   "signatures": [
+    {
+     "from": [
+      "BuildRun"
+     ],
+     "to": [
+      "BuildRun"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "forward"
+  },
+  {
+   "verb": "verified_by",
+   "signatures": [
+    {
+     "from": [
+      "BehaviorStatement",
+      "ComposableCapability"
+     ],
+     "to": [
+      "TestRun"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "forward"
+  },
+  {
+   "verb": "simulated_by",
+   "signatures": [
+    {
+     "from": [
+      "WorkingCapability",
+      "ComposableCapability"
+     ],
+     "to": [
+      "SimulationRun"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "forward"
+  },
+  {
+   "verb": "challenged_by",
+   "signatures": [
+    {
+     "from": [
+      "WorkingCapability",
+      "ComposableCapability"
+     ],
+     "to": [
+      "AdversarialRun"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "forward"
+  },
+  {
+   "verb": "evaluated_by",
+   "signatures": [
+    {
+     "from": [
+      "ModelRoute",
+      "Agent"
+     ],
+     "to": [
+      "ModelEvaluation"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "forward"
+  },
+  {
+   "verb": "shadowed_by",
+   "signatures": [
+    {
+     "from": [
+      "WorkingCapability",
+      "ComposableCapability"
+     ],
+     "to": [
+      "ShadowRun"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "forward"
+  },
+  {
+   "verb": "discrepancy_in",
+   "signatures": [
+    {
+     "from": [
+      "ShadowRun"
+     ],
+     "to": [
+      "Discrepancy"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "reverse"
+  },
+  {
+   "verb": "authorised_by",
+   "signatures": [
+    {
+     "from": [
+      "ExposureAuthorization"
+     ],
+     "to": [
+      "WorkingCapability",
+      "ComposableCapability"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "forward"
+  },
+  {
+   "verb": "exposed_to",
+   "signatures": [
+    {
+     "from": [
+      "ExposureAuthorization"
+     ],
+     "to": [
+      "ExposurePopulation"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "forward"
+  },
+  {
+   "verb": "observed_as",
+   "signatures": [
+    {
+     "from": [
+      "WorkingCapability",
+      "ComposableCapability"
+     ],
+     "to": [
+      "ProductionOutcome"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "forward"
+  },
+  {
+   "verb": "values",
+   "signatures": [
+    {
+     "from": [
+      "ProductionOutcome"
+     ],
+     "to": [
+      "ValueMeasure"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "forward"
+  },
+  {
+   "verb": "caused",
+   "signatures": [
+    {
+     "from": [
+      "ProductionOutcome"
+     ],
+     "to": [
+      "Incident"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "forward"
+  },
+  {
+   "verb": "decided_from",
+   "signatures": [
+    {
+     "from": [
+      "ConfirmedDecision"
+     ],
+     "to": [
+      "ValueSignal",
+      "FramingSession"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "reverse"
+  },
+  {
+   "verb": "built",
+   "signatures": [
+    {
+     "from": [
+      "BuildRun"
+     ],
+     "to": [
+      "ComposableCapability",
+      "WorkingCapability"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "forward"
+  },
+  {
+   "verb": "renews",
+   "signatures": [
+    {
+     "from": [
+      "ConfirmedDecision"
+     ],
+     "to": [
+      "ExposureAuthorization"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "none"
+  },
+  {
+   "verb": "authority_granted_by",
+   "signatures": [
+    {
+     "from": [
+      "*"
+     ],
+     "to": [
+      "AuthorityGrant"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "reverse"
+  },
+  {
+   "verb": "policy_evaluated_by",
+   "signatures": [
+    {
+     "from": [
+      "*"
+     ],
+     "to": [
+      "PolicyEvaluation"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "none"
+  },
+  {
+   "verb": "control_checked_by",
+   "signatures": [
+    {
+     "from": [
+      "*"
+     ],
+     "to": [
+      "ControlCheck"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "none"
+  },
+  {
+   "verb": "consent_basis",
+   "signatures": [
+    {
+     "from": [
+      "CaptureSession"
+     ],
+     "to": [
+      "ConsentRecord"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "reverse"
+  },
+  {
+   "verb": "permission_basis",
+   "signatures": [
+    {
+     "from": [
+      "*"
+     ],
+     "to": [
+      "DataUsePermission"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "reverse"
+  },
+  {
+   "verb": "lessons",
+   "signatures": [
+    {
+     "from": [
+      "ValueMission"
+     ],
+     "to": [
+      "Lesson"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "forward"
+  },
+  {
+   "verb": "contributes",
+   "signatures": [
+    {
+     "from": [
+      "Lesson"
+     ],
+     "to": [
+      "ReusablePrimitive"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "forward"
+  },
+  {
+   "verb": "published_as",
+   "signatures": [
+    {
+     "from": [
+      "ReusablePrimitive"
+     ],
+     "to": [
+      "MarketplaceAsset"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "forward"
+  },
+  {
+   "verb": "accelerated_by",
+   "signatures": [
+    {
+     "from": [
+      "ValueCell"
+     ],
+     "to": [
+      "ValueCell"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "none"
+  },
+  {
+   "verb": "cites",
+   "signatures": [
+    {
+     "from": [
+      "*"
+     ],
+     "to": [
+      "*"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "reverse"
+  },
+  {
+   "verb": "rendered_as",
+   "signatures": [
+    {
+     "from": [
+      "*"
+     ],
+     "to": [
+      "Rendition"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "forward"
+  },
+  {
+   "verb": "flags",
+   "signatures": [
+    {
+     "from": [
+      "DetectorFinding"
+     ],
+     "to": [
+      "*"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "none"
+  },
+  {
+   "verb": "reveals",
+   "signatures": [
+    {
+     "from": [
+      "DetectorFinding"
+     ],
+     "to": [
+      "AntiPattern"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "none"
+  },
+  {
+   "verb": "derives_from",
+   "signatures": [
+    {
+     "from": [
+      "*"
+     ],
+     "to": [
+      "*"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "reverse",
+   "acyclic": true
+  },
+  {
+   "verb": "articulated_in",
+   "signatures": [
+    {
+     "from": [
+      "NeedStatement"
+     ],
+     "to": [
+      "FramingSession"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "none"
+  },
+  {
+   "verb": "extracted_from",
+   "signatures": [
+    {
+     "from": [
+      "*"
+     ],
+     "to": [
+      "CoCreationArtifact"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "reverse"
+  },
+  {
+   "verb": "expressed_as",
+   "signatures": [
+    {
+     "from": [
+      "NeedStatement"
+     ],
+     "to": [
+      "BehaviorStatement"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "forward"
+  },
+  {
+   "verb": "addresses",
+   "signatures": [
+    {
+     "from": [
+      "BehaviorStatement"
+     ],
+     "to": [
+      "NeedStatement"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "reverse"
+  },
+  {
+   "verb": "blocks",
+   "signatures": [
+    {
+     "from": [
+      "*"
+     ],
+     "to": [
+      "*"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "forward"
+  },
+  {
+   "verb": "relates_to",
+   "signatures": [
+    {
+     "from": [
+      "*"
+     ],
+     "to": [
+      "*"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "both"
+  },
+  {
+   "verb": "contradicts",
+   "signatures": [
+    {
+     "from": [
+      "*"
+     ],
+     "to": [
+      "*"
+     ]
+    }
+   ],
+   "directed": false,
+   "impact": "both"
+  },
+  {
+   "verb": "supersedes_understanding_of",
+   "signatures": [
+    {
+     "from": [
+      "NeedStatement"
+     ],
+     "to": [
+      "NeedStatement"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "forward"
+  },
+  {
+   "verb": "clarifies",
+   "signatures": [
+    {
+     "from": [
+      "ExtractedStatement"
+     ],
+     "to": [
+      "*"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "forward"
+  },
+  {
+   "verb": "supersedes_statement",
+   "signatures": [
+    {
+     "from": [
+      "ExtractedStatement"
+     ],
+     "to": [
+      "ExtractedStatement"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "forward"
+  },
+  {
+   "verb": "raises_question",
+   "signatures": [
+    {
+     "from": [
+      "*"
+     ],
+     "to": [
+      "OpenQuestion"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "forward"
+  },
+  {
+   "verb": "resolves_question",
+   "signatures": [
+    {
+     "from": [
+      "ConfirmedDecision"
+     ],
+     "to": [
+      "OpenQuestion"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "forward"
+  },
+  {
+   "verb": "needs_capability",
+   "signatures": [
+    {
+     "from": [
+      "NeedStatement"
+     ],
+     "to": [
+      "ComposableCapability"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "reverse"
+  },
+  {
+   "verb": "references_capability",
+   "signatures": [
+    {
+     "from": [
+      "*"
+     ],
+     "to": [
+      "ComposableCapability"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "reverse"
+  },
+  {
+   "verb": "mentioned_by",
+   "signatures": [
+    {
+     "from": [
+      "*"
+     ],
+     "to": [
+      "Actor"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "none"
+  },
+  {
+   "verb": "affected_by_change",
+   "signatures": [
+    {
+     "from": [
+      "*"
+     ],
+     "to": [
+      "*"
+     ]
+    }
+   ],
+   "directed": true,
+   "impact": "none",
+   "computed": true
+  }
+ ],
+ "type_groups": {
+  "Actor": [
+   "Builder",
+   "BusinessCoCreator"
   ],
-  "detectors": [
-    "RequestedSolutionWithoutCondition",
-    "MissionWithoutEmpoweredCoCreator",
-    "DocumentPreparedForHandoff",
-    "AwarenessOnlyRecurringMeeting",
-    "StandardWorkAwaitingApproval",
-    "CapabilityCreatedWithoutRegistrySearch",
-    "BatchThatCouldBeIncremental",
-    "HumanMonitoringMachinesCouldPerform",
-    "AutonomousActionWithoutEvidence",
-    "CapabilityWithoutOwnerTelemetryOrExpiration",
-    "LocalScopeOverEnterpriseValue",
-    "BuilderPerformingAgentWork",
-    "UncitableGeneratedAnswer",
-    "HighImpactToolCallWithoutPolicy",
-    "ValueFeedDriftingTowardEngagement",
-    "CanonFragmentation",
-    "ScopeChangeClassifiedAsCosmetic",
-    "RejectedMeasureInUse",
-    "WikiDrift",
-    "AuthorityInflation",
-    "RawSpeechTreatedAsAuthority",
-    "UnextractedDecision",
-    "BehaviorWithoutNeed",
-    "NeedWithoutBehavior",
-    "NeedWithoutMeasure",
-    "UnextractedSession",
-    "SessionWithoutConsent",
-    "ContradictionUnresolved",
-    "AssumptionUnverified",
-    "ProvenanceSpanMissing",
-    "DraftObjectUsedAsBasis",
-    "DraftCountedAsProgress",
-    "SessionProducingMinutes",
-    "DependencyCycle",
-    "InferredEdgeAutoConfirmed",
-    "FramingSessionAsMeeting",
-    "AntiWikiActionRatioThresholdUnset"
+  "Decision": [
+   "ConfirmedDecision",
+   "Decision"
   ],
-  "origins": [
-    "stated",
-    "drawn",
-    "decomposed",
-    "capability_reference",
-    "resolved",
-    "co_occurrence",
-    "inferred",
-    "contradiction"
+  "DisprovedAssumption": [
+   "Assumption"
+  ],
+  "CaptureSession": [
+   "FramingSession"
+  ],
+  "Evidence": [
+   "TestSuite",
+   "TestRun",
+   "SimulationRun",
+   "AdversarialRun",
+   "ModelEvaluation",
+   "ShadowRun",
+   "Discrepancy",
+   "ExposureAuthorization",
+   "ExposurePopulation",
+   "ProductionOutcome",
+   "ValueMeasure",
+   "Incident",
+   "Rollback"
+  ],
+  "Agent": [
+   "ModelRoute"
   ]
+ },
+ "transitions": [
+  {
+   "family": "canon",
+   "from": "draft",
+   "to": "active"
+  },
+  {
+   "family": "canon",
+   "from": "draft",
+   "to": "challenged"
+  },
+  {
+   "family": "canon",
+   "from": "draft",
+   "to": "superseded"
+  },
+  {
+   "family": "canon",
+   "from": "draft",
+   "to": "retired"
+  },
+  {
+   "family": "canon",
+   "from": "active",
+   "to": "challenged"
+  },
+  {
+   "family": "canon",
+   "from": "active",
+   "to": "superseded"
+  },
+  {
+   "family": "canon",
+   "from": "active",
+   "to": "retired"
+  },
+  {
+   "family": "canon",
+   "from": "challenged",
+   "to": "superseded"
+  },
+  {
+   "family": "canon",
+   "from": "challenged",
+   "to": "retired"
+  },
+  {
+   "family": "canon",
+   "from": "superseded",
+   "to": "retired"
+  },
+  {
+   "family": "value_signal",
+   "from": "detected",
+   "to": "enriched"
+  },
+  {
+   "family": "value_signal",
+   "from": "detected",
+   "to": "monitoring"
+  },
+  {
+   "family": "value_signal",
+   "from": "detected",
+   "to": "merged"
+  },
+  {
+   "family": "value_signal",
+   "from": "detected",
+   "to": "promoted"
+  },
+  {
+   "family": "value_signal",
+   "from": "detected",
+   "to": "rejected"
+  },
+  {
+   "family": "value_signal",
+   "from": "detected",
+   "to": "expired"
+  },
+  {
+   "family": "value_signal",
+   "from": "enriched",
+   "to": "monitoring"
+  },
+  {
+   "family": "value_signal",
+   "from": "enriched",
+   "to": "merged"
+  },
+  {
+   "family": "value_signal",
+   "from": "enriched",
+   "to": "promoted"
+  },
+  {
+   "family": "value_signal",
+   "from": "enriched",
+   "to": "rejected"
+  },
+  {
+   "family": "value_signal",
+   "from": "enriched",
+   "to": "expired"
+  },
+  {
+   "family": "value_signal",
+   "from": "monitoring",
+   "to": "merged"
+  },
+  {
+   "family": "value_signal",
+   "from": "monitoring",
+   "to": "promoted"
+  },
+  {
+   "family": "value_signal",
+   "from": "monitoring",
+   "to": "rejected"
+  },
+  {
+   "family": "value_signal",
+   "from": "monitoring",
+   "to": "expired"
+  },
+  {
+   "family": "value_signal",
+   "from": "merged",
+   "to": "promoted"
+  },
+  {
+   "family": "value_signal",
+   "from": "merged",
+   "to": "rejected"
+  },
+  {
+   "family": "value_signal",
+   "from": "merged",
+   "to": "expired"
+  },
+  {
+   "family": "value_mission",
+   "from": "accepted",
+   "to": "activated"
+  },
+  {
+   "family": "value_mission",
+   "from": "accepted",
+   "to": "probing"
+  },
+  {
+   "family": "value_mission",
+   "from": "accepted",
+   "to": "advancing"
+  },
+  {
+   "family": "value_mission",
+   "from": "accepted",
+   "to": "exposed"
+  },
+  {
+   "family": "value_mission",
+   "from": "accepted",
+   "to": "proven"
+  },
+  {
+   "family": "value_mission",
+   "from": "accepted",
+   "to": "embedded"
+  },
+  {
+   "family": "value_mission",
+   "from": "accepted",
+   "to": "closed"
+  },
+  {
+   "family": "value_mission",
+   "from": "accepted",
+   "to": "redirected"
+  },
+  {
+   "family": "value_mission",
+   "from": "activated",
+   "to": "probing"
+  },
+  {
+   "family": "value_mission",
+   "from": "activated",
+   "to": "advancing"
+  },
+  {
+   "family": "value_mission",
+   "from": "activated",
+   "to": "exposed"
+  },
+  {
+   "family": "value_mission",
+   "from": "activated",
+   "to": "proven"
+  },
+  {
+   "family": "value_mission",
+   "from": "activated",
+   "to": "embedded"
+  },
+  {
+   "family": "value_mission",
+   "from": "activated",
+   "to": "closed"
+  },
+  {
+   "family": "value_mission",
+   "from": "activated",
+   "to": "redirected"
+  },
+  {
+   "family": "value_mission",
+   "from": "probing",
+   "to": "advancing"
+  },
+  {
+   "family": "value_mission",
+   "from": "probing",
+   "to": "exposed"
+  },
+  {
+   "family": "value_mission",
+   "from": "probing",
+   "to": "proven"
+  },
+  {
+   "family": "value_mission",
+   "from": "probing",
+   "to": "embedded"
+  },
+  {
+   "family": "value_mission",
+   "from": "probing",
+   "to": "closed"
+  },
+  {
+   "family": "value_mission",
+   "from": "probing",
+   "to": "redirected"
+  },
+  {
+   "family": "value_mission",
+   "from": "advancing",
+   "to": "exposed"
+  },
+  {
+   "family": "value_mission",
+   "from": "advancing",
+   "to": "proven"
+  },
+  {
+   "family": "value_mission",
+   "from": "advancing",
+   "to": "embedded"
+  },
+  {
+   "family": "value_mission",
+   "from": "advancing",
+   "to": "closed"
+  },
+  {
+   "family": "value_mission",
+   "from": "advancing",
+   "to": "redirected"
+  },
+  {
+   "family": "value_mission",
+   "from": "exposed",
+   "to": "proven"
+  },
+  {
+   "family": "value_mission",
+   "from": "exposed",
+   "to": "embedded"
+  },
+  {
+   "family": "value_mission",
+   "from": "exposed",
+   "to": "closed"
+  },
+  {
+   "family": "value_mission",
+   "from": "exposed",
+   "to": "redirected"
+  },
+  {
+   "family": "value_mission",
+   "from": "proven",
+   "to": "embedded"
+  },
+  {
+   "family": "value_mission",
+   "from": "proven",
+   "to": "closed"
+  },
+  {
+   "family": "value_mission",
+   "from": "proven",
+   "to": "redirected"
+  },
+  {
+   "family": "value_mission",
+   "from": "embedded",
+   "to": "closed"
+  },
+  {
+   "family": "value_mission",
+   "from": "embedded",
+   "to": "redirected"
+  },
+  {
+   "family": "behavior_statement",
+   "from": "proposed",
+   "to": "confirmed"
+  },
+  {
+   "family": "behavior_statement",
+   "from": "proposed",
+   "to": "generating"
+  },
+  {
+   "family": "behavior_statement",
+   "from": "proposed",
+   "to": "verified_in_simulation"
+  },
+  {
+   "family": "behavior_statement",
+   "from": "proposed",
+   "to": "verified_in_shadow"
+  },
+  {
+   "family": "behavior_statement",
+   "from": "proposed",
+   "to": "verified_in_production"
+  },
+  {
+   "family": "behavior_statement",
+   "from": "proposed",
+   "to": "superseded"
+  },
+  {
+   "family": "behavior_statement",
+   "from": "confirmed",
+   "to": "generating"
+  },
+  {
+   "family": "behavior_statement",
+   "from": "confirmed",
+   "to": "verified_in_simulation"
+  },
+  {
+   "family": "behavior_statement",
+   "from": "confirmed",
+   "to": "verified_in_shadow"
+  },
+  {
+   "family": "behavior_statement",
+   "from": "confirmed",
+   "to": "verified_in_production"
+  },
+  {
+   "family": "behavior_statement",
+   "from": "confirmed",
+   "to": "superseded"
+  },
+  {
+   "family": "behavior_statement",
+   "from": "generating",
+   "to": "verified_in_simulation"
+  },
+  {
+   "family": "behavior_statement",
+   "from": "generating",
+   "to": "verified_in_shadow"
+  },
+  {
+   "family": "behavior_statement",
+   "from": "generating",
+   "to": "verified_in_production"
+  },
+  {
+   "family": "behavior_statement",
+   "from": "generating",
+   "to": "superseded"
+  },
+  {
+   "family": "behavior_statement",
+   "from": "verified_in_simulation",
+   "to": "verified_in_shadow"
+  },
+  {
+   "family": "behavior_statement",
+   "from": "verified_in_simulation",
+   "to": "verified_in_production"
+  },
+  {
+   "family": "behavior_statement",
+   "from": "verified_in_simulation",
+   "to": "superseded"
+  },
+  {
+   "family": "behavior_statement",
+   "from": "verified_in_shadow",
+   "to": "verified_in_production"
+  },
+  {
+   "family": "behavior_statement",
+   "from": "verified_in_shadow",
+   "to": "superseded"
+  },
+  {
+   "family": "behavior_statement",
+   "from": "verified_in_production",
+   "to": "superseded"
+  },
+  {
+   "family": "composable_capability",
+   "from": "proposed",
+   "to": "skeleton"
+  },
+  {
+   "family": "composable_capability",
+   "from": "proposed",
+   "to": "shadow"
+  },
+  {
+   "family": "composable_capability",
+   "from": "proposed",
+   "to": "limited_exposure"
+  },
+  {
+   "family": "composable_capability",
+   "from": "proposed",
+   "to": "producing_value"
+  },
+  {
+   "family": "composable_capability",
+   "from": "proposed",
+   "to": "underperforming"
+  },
+  {
+   "family": "composable_capability",
+   "from": "proposed",
+   "to": "retired"
+  },
+  {
+   "family": "composable_capability",
+   "from": "skeleton",
+   "to": "shadow"
+  },
+  {
+   "family": "composable_capability",
+   "from": "skeleton",
+   "to": "limited_exposure"
+  },
+  {
+   "family": "composable_capability",
+   "from": "skeleton",
+   "to": "producing_value"
+  },
+  {
+   "family": "composable_capability",
+   "from": "skeleton",
+   "to": "underperforming"
+  },
+  {
+   "family": "composable_capability",
+   "from": "skeleton",
+   "to": "retired"
+  },
+  {
+   "family": "composable_capability",
+   "from": "shadow",
+   "to": "limited_exposure"
+  },
+  {
+   "family": "composable_capability",
+   "from": "shadow",
+   "to": "producing_value"
+  },
+  {
+   "family": "composable_capability",
+   "from": "shadow",
+   "to": "underperforming"
+  },
+  {
+   "family": "composable_capability",
+   "from": "shadow",
+   "to": "retired"
+  },
+  {
+   "family": "composable_capability",
+   "from": "limited_exposure",
+   "to": "producing_value"
+  },
+  {
+   "family": "composable_capability",
+   "from": "limited_exposure",
+   "to": "underperforming"
+  },
+  {
+   "family": "composable_capability",
+   "from": "limited_exposure",
+   "to": "retired"
+  },
+  {
+   "family": "composable_capability",
+   "from": "producing_value",
+   "to": "underperforming"
+  },
+  {
+   "family": "composable_capability",
+   "from": "producing_value",
+   "to": "retired"
+  },
+  {
+   "family": "composable_capability",
+   "from": "underperforming",
+   "to": "retired"
+  },
+  {
+   "family": "creation_run",
+   "from": "compiled",
+   "to": "dispatched"
+  },
+  {
+   "family": "creation_run",
+   "from": "compiled",
+   "to": "superseded"
+  },
+  {
+   "family": "creation_run",
+   "from": "dispatched",
+   "to": "superseded"
+  },
+  {
+   "family": "rendition",
+   "from": "live",
+   "to": "stale"
+  },
+  {
+   "family": "rendition",
+   "from": "live",
+   "to": "deleted"
+  },
+  {
+   "family": "rendition",
+   "from": "stale",
+   "to": "deleted"
+  },
+  {
+   "family": "detector_finding",
+   "from": "new",
+   "to": "acknowledged"
+  },
+  {
+   "family": "detector_finding",
+   "from": "new",
+   "to": "remediated"
+  },
+  {
+   "family": "detector_finding",
+   "from": "new",
+   "to": "accepted_risk"
+  },
+  {
+   "family": "detector_finding",
+   "from": "new",
+   "to": "false_positive"
+  },
+  {
+   "family": "detector_finding",
+   "from": "acknowledged",
+   "to": "remediated"
+  },
+  {
+   "family": "detector_finding",
+   "from": "acknowledged",
+   "to": "accepted_risk"
+  },
+  {
+   "family": "detector_finding",
+   "from": "acknowledged",
+   "to": "false_positive"
+  },
+  {
+   "family": "opportunity_stream",
+   "from": "now",
+   "to": "next"
+  },
+  {
+   "family": "opportunity_stream",
+   "from": "now",
+   "to": "observing"
+  },
+  {
+   "family": "opportunity_stream",
+   "from": "now",
+   "to": "expired"
+  },
+  {
+   "family": "opportunity_stream",
+   "from": "next",
+   "to": "observing"
+  },
+  {
+   "family": "opportunity_stream",
+   "from": "next",
+   "to": "expired"
+  },
+  {
+   "family": "opportunity_stream",
+   "from": "observing",
+   "to": "expired"
+  },
+  {
+   "family": "framing_extract",
+   "from": "draft",
+   "to": "confirmed"
+  },
+  {
+   "family": "framing_extract",
+   "from": "draft",
+   "to": "rejected"
+  },
+  {
+   "family": "framing_extract",
+   "from": "draft",
+   "to": "superseded"
+  },
+  {
+   "family": "framing_extract",
+   "from": "confirmed",
+   "to": "superseded"
+  },
+  {
+   "family": "framing_extract",
+   "from": "rejected",
+   "to": "superseded"
+  },
+  {
+   "family": "framing_session",
+   "from": "planned",
+   "to": "capturing"
+  },
+  {
+   "family": "framing_session",
+   "from": "planned",
+   "to": "closed"
+  },
+  {
+   "family": "framing_session",
+   "from": "planned",
+   "to": "retired"
+  },
+  {
+   "family": "framing_session",
+   "from": "capturing",
+   "to": "closed"
+  },
+  {
+   "family": "framing_session",
+   "from": "capturing",
+   "to": "retired"
+  },
+  {
+   "family": "framing_session",
+   "from": "closed",
+   "to": "retired"
+  },
+  {
+   "family": "evidence_record",
+   "from": "recorded",
+   "to": "superseded"
+  },
+  {
+   "family": "evidence_record",
+   "from": "recorded",
+   "to": "retired"
+  },
+  {
+   "family": "evidence_record",
+   "from": "superseded",
+   "to": "retired"
+  }
+ ],
+ "detectors": [
+  "RequestedSolutionWithoutCondition",
+  "MissionWithoutEmpoweredCoCreator",
+  "DocumentPreparedForHandoff",
+  "AwarenessOnlyRecurringMeeting",
+  "StandardWorkAwaitingApproval",
+  "CapabilityCreatedWithoutRegistrySearch",
+  "BatchThatCouldBeIncremental",
+  "HumanMonitoringMachinesCouldPerform",
+  "AutonomousActionWithoutEvidence",
+  "CapabilityWithoutOwnerTelemetryOrExpiration",
+  "LocalScopeOverEnterpriseValue",
+  "BuilderPerformingAgentWork",
+  "UncitableGeneratedAnswer",
+  "HighImpactToolCallWithoutPolicy",
+  "ValueFeedDriftingTowardEngagement",
+  "CanonFragmentation",
+  "ScopeChangeClassifiedAsCosmetic",
+  "RejectedMeasureInUse",
+  "WikiDrift",
+  "AuthorityInflation",
+  "RawSpeechTreatedAsAuthority",
+  "UnextractedDecision",
+  "BehaviorWithoutNeed",
+  "NeedWithoutBehavior",
+  "NeedWithoutMeasure",
+  "UnextractedSession",
+  "SessionWithoutConsent",
+  "ContradictionUnresolved",
+  "AssumptionUnverified",
+  "ProvenanceSpanMissing",
+  "DraftObjectUsedAsBasis",
+  "DraftCountedAsProgress",
+  "SessionProducingMinutes",
+  "DependencyCycle",
+  "InferredEdgeAutoConfirmed",
+  "FramingSessionAsMeeting",
+  "AntiWikiActionRatioThresholdUnset"
+ ],
+ "origins": [
+  "stated",
+  "drawn",
+  "decomposed",
+  "capability_reference",
+  "resolved",
+  "co_occurrence",
+  "inferred",
+  "contradiction"
+ ]
 }
