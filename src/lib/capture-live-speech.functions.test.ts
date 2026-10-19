@@ -66,17 +66,17 @@ function mockDb(opts: {
     },
   };
   fake.from.mockImplementation((table: string) => {
-    const chain: Record<string, unknown> = {};
-    const self = () => chain;
-    chain.select = self;
-    chain.eq = self;
-    chain.is = self;
-    chain.limit = async () => ({ data: [], error: null });
-    chain.contains = async () => ({ data: opts.consents ?? [], error: null });
-    chain.maybeSingle = async () => ({
-      data: table === "objects" ? session : null,
-      error: null,
-    });
+    const chain = {
+      select: () => chain,
+      eq: () => chain,
+      is: () => chain,
+      limit: async () => ({ data: [], error: null }),
+      contains: async () => ({ data: opts.consents ?? [], error: null }),
+      maybeSingle: async () => ({
+        data: table === "objects" ? session : null,
+        error: null,
+      }),
+    };
     return chain;
   });
 }
