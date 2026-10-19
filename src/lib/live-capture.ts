@@ -162,6 +162,7 @@ export async function startLiveCapture(opts: {
     if (wav.byteLength < 2048) return; // silence-only window
     const chunk: CaptureChunk = {
       id: `${opts.sessionId}-${Date.now()}-${seq++}`,
+      accountId: opts.accountId,
       sessionId: opts.sessionId,
       speakerId: opts.speakerId,
       tOffsetMs: windowStart,
