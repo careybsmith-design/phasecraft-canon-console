@@ -77,3 +77,133 @@ describe("live capture outbox account scoping", () => {
     void vi.fn(); // keep vi import used for future async stubs
   });
 });
+
+/**
+ * W3.1: the zero-loss claim. Samples are cleared only after a durable IndexedDB
+ * write; a persistence failure retains them for the next window; short but
+ * audible speech is kept; only truly silent windows are dropped.
+ */
+import { startLiveCapture } from "./live-capture";
+
+let lastNode: {
+  onaudioprocess: ((e: { inputBuffer: { getChannelData(): Float32Array } }) => void) | null;
+  connect(): void;
+  disconnect(): void;
+};
+
+class FakeAudioContext {
+  sampleRate = 8000;
+  destination = {};
+  createMediaStreamSource() {
+    return { connect() {}, disconnect() {} };
+  }
+  createScriptProcessor() {
+    lastNode = { onaudioprocess: null, connect() {}, disconnect() {} };
+    return lastNode;
+  }
+  resume() {
+    return Promise.resolve();
+  }
+  close() {
+    return Promise.resolve();
+  }
+}
+
+function fakeMedia() {
+  vi.stubGlobal("navigator", {
+    mediaDevices: {
+      getUserMedia: async () => ({ getTracks: () => [{ stop() {} }] }),
+    },
+  });
+  vi.stubGlobal("AudioContext", FakeAudioContext);
+}
+
+function pushSamples(samples: number[]) {
+  lastNode.onaudioprocess?.({
+    inputBuffer: { getChannelData: () => new Float32Array(samples) },
+  });
+}
+
+const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+describe("live capture zero-loss (W3.1)", () => {
+  beforeEach(async () => {
+    indexedDB.deleteDatabase("thread-live-capture");
+    await wait(0);
+    fakeMedia();
+  });
+
+  it("a failed IndexedDB write retains the audio and the next window retries it", async () => {
+    const realOpen = indexedDB.open.bind(indexedDB);
+    let failNext = true;
+    indexedDB.open = ((...args: Parameters<typeof indexedDB.open>) => {
+      if (failNext) {
+        failNext = false;
+        const req = {} as IDBOpenDBRequest;
+        setTimeout(() => {
+          (req as { error: DOMException }).error = new DOMException("quota", "QuotaExceededError");
+          req.onerror?.({} as Event);
+        }, 0);
+        return req;
+      }
+      return realOpen(...args);
+    }) as typeof indexedDB.open;
+
+    const uploaded: CaptureChunk[] = [];
+    const errors: string[] = [];
+    const rec = await startLiveCapture({
+      accountId: A,
+      sessionId: "s1",
+      speakerId: "p1",
+      chunkMs: 30,
+      onChunk: async (c) => {
+        uploaded.push(c);
+      },
+      onError: (m) => errors.push(m),
+    });
+    pushSamples([0.5, -0.5, 0.25]);
+    await wait(70); // first flush fails on the durable write
+    expect(errors.some((m) => m.includes("audio retained"))).toBe(true);
+    expect(uploaded).toHaveLength(0);
+    indexedDB.open = realOpen;
+    await wait(80); // next window retries the retained samples
+    await rec.stop();
+    expect(uploaded.length).toBeGreaterThanOrEqual(1);
+    expect(await outboxCount(A)).toBe(0);
+  });
+
+  it("a short audible window under 2048 bytes is kept, not discarded", async () => {
+    const uploaded: CaptureChunk[] = [];
+    const rec = await startLiveCapture({
+      accountId: A,
+      sessionId: "s1",
+      speakerId: "p1",
+      chunkMs: 30,
+      onChunk: async (c) => {
+        uploaded.push(c);
+      },
+    });
+    pushSamples([0.2]); // 46-byte WAV — short but audible
+    await wait(70);
+    await rec.stop();
+    expect(uploaded.length).toBeGreaterThanOrEqual(1);
+  });
+
+  it("a truly silent window carries no speech and is dropped", async () => {
+    const uploaded: CaptureChunk[] = [];
+    const rec = await startLiveCapture({
+      accountId: A,
+      sessionId: "s1",
+      speakerId: "p1",
+      chunkMs: 30,
+      onChunk: async (c) => {
+        uploaded.push(c);
+      },
+    });
+    pushSamples([0, 0, 0, 0]);
+    await wait(70);
+    await rec.stop();
+    expect(uploaded).toHaveLength(0);
+    expect(await outboxCount(A)).toBe(0);
+  });
+});
