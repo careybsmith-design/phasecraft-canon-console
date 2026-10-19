@@ -4,12 +4,10 @@ import type { OpCtx } from "./context";
 const session_id = "11111111-1111-4111-8111-111111111111";
 const mission_id = "22222222-2222-4222-8222-222222222222";
 function fixture(data: unknown, error: { message: string } | null = null) {
-  const rpc = vi
-    .fn()
-    .mockResolvedValue({
-      data: { recorded_as: "suggestion", edge: null, decision_id: null },
-      error: null,
-    });
+  const rpc = vi.fn().mockResolvedValue({
+    data: { recorded_as: "suggestion", edge: null, decision_id: null },
+    error: null,
+  });
   const chain = {
     select: vi.fn(),
     in: vi.fn(),
