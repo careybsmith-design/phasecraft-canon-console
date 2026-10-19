@@ -17,6 +17,8 @@ import {
   applyPostRules,
   artifactModality,
   confirmedState,
+  confirmationAuthority,
+  confirmationReason,
   entryTestComplete,
   entryTestSentence,
   evidenceWeight,
@@ -457,7 +459,17 @@ export const getFramingSession = createServerFn({ method: "GET" })
       mission_scope: missionScope,
       events: events.data ?? [],
       consents: consents.data ?? [],
-      objects: objs.data ?? [],
+      objects: (objs.data ?? []).map((o) =>
+        o.type === "ExtractedStatement"
+          ? {
+              ...o,
+              ...confirmationAuthority(
+                (o.body ?? {}) as Record<string, unknown>,
+                !!authorityParticipant(s, context.userId),
+              ),
+            }
+          : o,
+      ),
       artifacts: artifacts.data ?? [],
       findings: findings.data ?? [],
       revisions: revisions.data ?? [],
@@ -1185,6 +1197,7 @@ async function captureUtteranceImpl(
         captured_by: uid,
         speaker_id: speaker.id,
         content_tier: tier.tier,
+        tier_basis: "content_extracted",
         consent_basis: consentIds,
         extraction_state: "pending",
         evidence_weight: evidenceWeight(kind),
@@ -1449,14 +1462,67 @@ export const captureImage = createServerFn({ method: "POST" })
     if (!speaker) throw threadError("NOT_FOUND: participant");
     const mime = data.data_url.slice(5, data.data_url.indexOf(";"));
     const bytes = Uint8Array.from(atob(data.data_url.split(",")[1]!), (ch) => ch.charCodeAt(0));
-    const path = `${session.id}/${crypto.randomUUID()}.${mime.split("/")[1]}`;
-    const up = await db.storage.from("artifacts").upload(path, bytes, { contentType: mime });
-    if (up.error) throw new Error(up.error.message);
+    // N03: inspect BEFORE storing. The approved image-reading route reads every visible
+    // character; the deterministic gate classifies that text. No route -> quarantine.
+    const { describeDrawing } = await import("@/server/framing/extractor");
+    const { inspectImageText } = await import("@/domain/inspection");
+    const mode = await modelMode(db);
+    let desc: Awaited<ReturnType<typeof describeDrawing>> = null;
+    let readFailure: string | null = null;
+    try {
+      desc = await describeDrawing(data.data_url, mode);
+    } catch (e) {
+      readFailure = (e as Error).message;
+    }
+    const readText = desc
+      ? [desc.visible_text, desc.description, ...desc.statements.map((s) => s.text)].join("\n")
+      : null;
+    const inspection = inspectImageText(data.name, readText);
+    if (inspection.action === "block") {
+      return { statements: 0, blocked: true, tier_basis: inspection.tier_basis };
+    }
     const { data: consents } = await db
       .from("consent_records")
       .select("id")
       .eq("session_id", session.id)
       .is("withdrawn_at", null);
+    if (inspection.action === "quarantine") {
+      const reason = readFailure ? `${inspection.reason} (${readFailure})` : inspection.reason;
+      await create(
+        db,
+        extractor(context.userId),
+        payload(
+          "CoCreationArtifact",
+          `${data.kind.replace("_", " ")} · quarantined`,
+          `Image quarantined uninspected`,
+          {
+            session_ref: session.id,
+            kind: data.kind,
+            media_ref: null,
+            duration_or_size: bytes.length,
+            captured_at: new Date().toISOString(),
+            captured_by: context.userId,
+            speaker_id: speaker.id,
+            content_tier: inspection.tier,
+            tier_basis: inspection.tier_basis,
+            consent_basis: (consents ?? []).map((x) => x.id),
+            extraction_state: "quarantined",
+            quarantine_reason: reason,
+            evidence_weight: evidenceWeight(data.kind),
+            provenance: { simulated: false },
+          },
+          {
+            owner: session.owner_id,
+            rationale: "Image not stored: content could not be inspected",
+          },
+        ),
+      );
+      return { statements: 0, quarantined: true, reason, tier_basis: inspection.tier_basis };
+    }
+    const tier = { tier: inspection.tier };
+    const path = `${session.id}/${crypto.randomUUID()}.${mime.split("/")[1]}`;
+    const up = await db.storage.from("artifacts").upload(path, bytes, { contentType: mime });
+    if (up.error) throw new Error(up.error.message);
     const artifact = await create(
       db,
       extractor(context.userId),
@@ -1472,7 +1538,8 @@ export const captureImage = createServerFn({ method: "POST" })
           captured_at: new Date().toISOString(),
           captured_by: context.userId,
           speaker_id: speaker.id,
-          content_tier: "A",
+          content_tier: inspection.tier,
+          tier_basis: inspection.tier_basis,
           consent_basis: (consents ?? []).map((x) => x.id),
           extraction_state: "pending",
           evidence_weight: evidenceWeight(data.kind),
@@ -1481,44 +1548,7 @@ export const captureImage = createServerFn({ method: "POST" })
         { owner: session.owner_id, rationale: "Drawing captured on the session timeline" },
       ),
     );
-    const { describeDrawing } = await import("@/server/framing/extractor");
-    const mode = await modelMode(db);
-    let desc: Awaited<ReturnType<typeof describeDrawing>> = null;
-    try {
-      desc = await describeDrawing(data.data_url, mode);
-    } catch (e) {
-      await reviseBody(
-        db,
-        extractor(context.userId),
-        artifact.id,
-        (b) => ({ ...b, extraction_state: "failed", failure: (e as Error).message }),
-        "Drawing description failed",
-      );
-      throw threadError(`MODEL_UNAVAILABLE: ${(e as Error).message}`);
-    }
-    if (!desc) {
-      await reviseBody(
-        db,
-        extractor(context.userId),
-        artifact.id,
-        (b) => ({ ...b, extraction_state: "failed", failure: "model route not live" }),
-        "No live model route",
-      );
-      return { statements: 0 };
-    }
-    const tier = classifyContent(
-      desc.description + " " + desc.statements.map((s) => s.text).join(" "),
-    );
-    if (tier.tier === "C") {
-      await reviseBody(
-        db,
-        extractor(context.userId),
-        artifact.id,
-        (b) => ({ ...b, extraction_state: "failed", failure: "Tier C content in the drawing" }),
-        "Tier C",
-      );
-      return { statements: 0, blocked: true };
-    }
+    if (!desc) return { statements: 0 };
     const units: UnitIn[] = [];
     for (const s of desc.statements) {
       const { data: ev } = await db
@@ -1763,10 +1793,7 @@ export const confirmObject = createServerFn({ method: "POST" })
       throw threadError(`ALREADY_${xs.lifecycle_state.toUpperCase()}: ${xs.human_ref}`);
     const ap = authorityParticipant(session, context.userId);
     const me = participants(session).find((p) => p.user_id === context.userId);
-    const needsAuthority =
-      xs.body.material ||
-      xs.body.classification === "decision" ||
-      xs.body.proposed_object_type === "NeedStatement";
+    const needsAuthority = confirmationReason(xs.body) !== null;
     if (needsAuthority && !ap)
       throw threadError(
         "AUTHORITY_REQUIRED_TO_CONFIRM: material items and needs are confirmed only by the participant holding decision authority (8A.10)",
@@ -3357,7 +3384,13 @@ export const ingestOutlookMessage = createServerFn({ method: "POST" })
       "live",
     );
 
-    const attachments: Array<{ name: string; stored: boolean; reason?: string }> = [];
+    const attachments: Array<{
+      name: string;
+      stored: boolean;
+      quarantined?: boolean;
+      reason?: string;
+      tier_basis?: string;
+    }> = [];
     if (data.include_attachments && m.hasAttachments && !out.duplicate && !out.blocked) {
       const ar = await callGraph(
         context.userId,
@@ -3389,15 +3422,75 @@ export const ingestOutlookMessage = createServerFn({ method: "POST" })
             attachments.push({ name, stored: false, reason: dl.reason });
             continue;
           }
-          // Tier gate on the actual bytes before storing (8A.3): text-like files
-          // are decoded and classified by content; binary files are classified by
-          // name/type plus a best-effort scan of any readable text in the bytes.
+          // N03: inspect before storing. Supported text is decoded strictly and the
+          // extracted text classified; every other format is quarantined, not stored.
+          const { inspectBytes } = await import("@/domain/inspection");
           const bytes = dl.bytes;
-          const decoded = new TextDecoder("utf-8", { fatal: false }).decode(bytes);
-          const readable = decoded.replace(/[^\x20-\x7E\n\r\t]/g, " ").slice(0, 200_000);
-          const tier = classifyContent(`${name} ${contentType}\n${readable}`);
-          if (tier.tier === "C") {
-            attachments.push({ name, stored: false, reason: "content tier C hard-block" });
+          const inspection = inspectBytes(name, contentType, bytes);
+          if (inspection.action === "block") {
+            attachments.push({
+              name,
+              stored: false,
+              reason: "content tier C hard-block",
+              tier_basis: inspection.tier_basis,
+            });
+            continue;
+          }
+          const consentIds =
+            (
+              await db
+                .from("consent_records")
+                .select("id")
+                .eq("session_id", data.session_id)
+                .is("withdrawn_at", null)
+            ).data?.map((x: { id: string }) => x.id) ?? [];
+          const provenance = {
+            simulated: false,
+            adapter: "Outlook.connector",
+            source: "microsoft_outlook",
+            message_id: m.id,
+            conversation_id: m.conversationId ?? null,
+            from: sender,
+            received: m.receivedDateTime ?? null,
+            attachment_name: name,
+          };
+          if (inspection.action === "quarantine") {
+            await create(db, extractor(context.userId), {
+              ...payload(
+                "CoCreationArtifact",
+                `Email attachment · quarantined`,
+                `Attachment from Outlook message quarantined uninspected`,
+                {
+                  session_ref: data.session_id,
+                  kind: "brought_in_document",
+                  media_ref: null,
+                  content: null,
+                  duration_or_size: size,
+                  captured_at: new Date().toISOString(),
+                  captured_by: context.userId,
+                  speaker_id: data.speaker_id,
+                  content_tier: inspection.tier,
+                  tier_basis: inspection.tier_basis,
+                  consent_basis: consentIds,
+                  extraction_state: "quarantined",
+                  quarantine_reason: inspection.reason,
+                  evidence_weight: "corroborating",
+                  provenance,
+                },
+                {
+                  owner: session.owner_id,
+                  tier: inspection.tier,
+                  rationale: "Attachment not stored: content could not be inspected",
+                },
+              ),
+            });
+            attachments.push({
+              name,
+              stored: false,
+              quarantined: true,
+              reason: inspection.reason,
+              tier_basis: inspection.tier_basis,
+            });
             continue;
           }
           const path = `outlook/${data.session_id}/${m.id}/${a.id}`;
@@ -3422,36 +3515,21 @@ export const ingestOutlookMessage = createServerFn({ method: "POST" })
                 captured_at: new Date().toISOString(),
                 captured_by: context.userId,
                 speaker_id: data.speaker_id,
-                content_tier: tier.tier,
-                consent_basis:
-                  (
-                    await db
-                      .from("consent_records")
-                      .select("id")
-                      .eq("session_id", data.session_id)
-                      .is("withdrawn_at", null)
-                  ).data?.map((x: { id: string }) => x.id) ?? [],
+                content_tier: inspection.tier,
+                tier_basis: inspection.tier_basis,
+                consent_basis: consentIds,
                 extraction_state: "pending",
                 evidence_weight: "corroborating",
-                provenance: {
-                  simulated: false,
-                  adapter: "Outlook.connector",
-                  source: "microsoft_outlook",
-                  message_id: m.id,
-                  conversation_id: m.conversationId ?? null,
-                  from: sender,
-                  received: m.receivedDateTime ?? null,
-                  attachment_name: name,
-                },
+                provenance,
               },
               {
                 owner: session.owner_id,
-                tier: tier.tier,
+                tier: inspection.tier,
                 rationale: "Ingested from Outlook with provenance",
               },
             ),
           });
-          attachments.push({ name, stored: true });
+          attachments.push({ name, stored: true, tier_basis: inspection.tier_basis });
         }
       }
     }

@@ -112,8 +112,50 @@ export interface ModelUnit {
 export interface PostRuled extends ModelUnit {
   initial_classification: StatementClass;
   material: boolean;
+  /** Conflict the extractor detected at extraction time. */
   authority_mismatch: string | null;
   materiality_question: string | null;
+}
+
+/**
+ * Whether THIS viewer, now, may confirm a draft (W2.5). Computed on the server from the same
+ * predicate the confirmation handler enforces; the client renders it and never re-derives it.
+ * Distinct from authority_mismatch (an extraction-time conflict).
+ */
+export type ConfirmationAuthority = "not_required" | "held" | "missing";
+export type ConfirmationReason = "material" | "decision" | "need";
+
+export interface StatementAuthorityView {
+  authority_mismatch: string | null;
+  confirmation_authority: ConfirmationAuthority;
+  confirmation_reason: ConfirmationReason | null;
+}
+
+/** The single confirmation-authority predicate (8A.10). */
+export function confirmationReason(body: {
+  material?: unknown;
+  classification?: unknown;
+  proposed_object_type?: unknown;
+}): ConfirmationReason | null {
+  if (body.material) return "material";
+  if (body.classification === "decision") return "decision";
+  if (body.proposed_object_type === "NeedStatement") return "need";
+  return null;
+}
+
+export function confirmationAuthority(
+  body: Parameters<typeof confirmationReason>[0],
+  viewerHoldsAuthority: boolean,
+): {
+  confirmation_authority: ConfirmationAuthority;
+  confirmation_reason: ConfirmationReason | null;
+} {
+  const reason = confirmationReason(body);
+  if (!reason) return { confirmation_authority: "not_required", confirmation_reason: null };
+  return {
+    confirmation_authority: viewerHoldsAuthority ? "held" : "missing",
+    confirmation_reason: reason,
+  };
 }
 
 /** Name of the decision-authority holder for the mismatch note. */

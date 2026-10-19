@@ -270,3 +270,12 @@ Whole-build audit — permanent open items
 - [x] Live exit evidence (19 October, signed-in preview): human channel recorded VS-2026-0007 in detected; a repeat of the same condition collapsed to status=duplicate surfacing the existing signal; artifact channel produced draft proposals and a human confirmation created a signal with origin artifact_upload; live dictation produced drafts; a card-number input was hard-blocked before analysis with the blocked attempt recorded; steward promotion of VS-2026-0007 succeeded and recorded a ConfirmedDecision; the mission form offered the promoted signal only; the Feed shows "Record a signal"; /signals/$signalId renders origin and provenance. Append-only guard proven live (UPDATE on intake events refused: APPEND_ONLY). Out-of-band mission insert refused by provenance enforcement; the mission_signal_gate trigger covers the in-band path (domain test SI-1 + trigger live).
 - [ ] Mission created from a promoted signal end-to-end: still blocked by the Phase 11 two-distinct-humans rule (only one human account exists; the second account is the Claims intake agent).
 - [ ] Material confirmation follow-up discrepancies (verify-only prompt): MCP returns HUMAN_ONLY rather than participant-specific confirmation refusal; framing draft controls do not always show decision-authority requirement before action. Deliberately not rebuilt in this round; evidence recorded, implementation change requires a separate request.
+
+## Closing Round 2 (P9) — 2026-10-19
+- [x] A: build gate reproducible — `@typescript/native-preview` pinned 7.0.0-dev.20260320.1 in devDependencies; typecheck/build/verify exit 0; bad-type proof TS2322.
+- [x] B: inspect-or-quarantine (`src/domain/inspection.ts`) on image capture and Outlook attachments; `tier_basis` recorded; steward-approved image route `intent.vlm.v1` cleared (0086) after 10/10 golden-set eval.
+- [x] C: server-computed `confirmation_authority`; Confirm disabled when missing; server throw unchanged.
+- [ ] B/C live end-to-end run on a real session (needs a second authority/non-authority participant) — open.
+- [ ] D: re-verify D1–D9 and frontier advisory — not re-run this round (prior 0082/0083 evidence stands); two-person run blocked on a second real human.
+- [ ] E: W2.4/W3.1/W3.3/W3.4/W3.5 evidence — not produced this round; status stays unverified.
+- [ ] PDF/DOCX/XLSX text extraction — quarantined until a real extractor is approved.
