@@ -1,5 +1,11 @@
 # THREAD roadmap
 
+## Complete code and plan-conformance audit — 19 October 2026
+- [x] Audited original phases, authoritative corrections, approved redesign/capture plans and later intake/confirmation changes; current report: docs/THREAD-complete-audit-2026-10-19.md. No application behavior or data repaired; release FAIL / INCOMPLETE.
+- [x] Fresh complete suite 1,767/1,767 tests across 36 files; 19 signed-in page reads without page errors/overflow; ledger 3,211 hashes valid; deployed SI-1 exact P0001/MISSION_SIGNAL_NOT_PROMOTED negative self-test and authenticated-role intake counts 0/1/2/0 passed with zero persisted fixtures.
+- [x] Current inventory: 56 RLS-enabled tables/384 functions/55 policies; 101 tools (81 live-labelled/10 pending/10 human-only); 43 detectors; 95 non-draft/96 all-live orphans; zero model routes/usage sessions/missions; one actual human identity, not three humans. Static lint fails; dependency scanner has three high advisory rows. No fresh production compiler result obtained; no full exit acceptance claimed.
+- [ ] Close all consolidated remaining-action packages 1–46 in the dated report; retain every earlier unresolved item below. Missing evidence/actions are not made complete by this audit.
+
 ## Visual-only redesign — approved and applied
 - [x] Desktop/mobile design concepts and plan approved; implemented neutral charcoal/amber system, desktop rail, narrow horizontal navigation, consistent controls, hierarchy and unframed sections. Real content/actions/data semantics preserved.
 - [x] Applied shared visual direction to all existing surfaces, with Feed hierarchy, Generation/Agent table containment, page headings, Companion/dialog and sign-in polish. No server/domain/database/business-rule changes.
@@ -50,6 +56,19 @@
 - [ ] Phase 12 — Hardening controls and assurance surface added; live exit evidence and signed-in validation remain open
 
 ## Open items — keep until addressed at the end (never delete without resolving)
+
+Complete audit additions (19 October; evidence/details N01–N13 and work packages 1–46 in docs/THREAD-complete-audit-2026-10-19.md)
+- [ ] P0: validate session/caller/capturing state/speaker and applicable audio consent BEFORE live transcription gateway calls; no-call negative handler tests (N01).
+- [ ] P0: caller-visible-only duplicate lookup/responses and classification-safe duplicate event references; deployed intake lookup currently omits permission predicate (N02).
+- [ ] P0: inspect attachment contents, quarantine unsupported bytes, preserve applicable consent/private storage/extraction provenance before normal ingestion (N03).
+- [ ] P0/P1: account-scoped audio outbox/retries/logout recovery; serialize durable capture, handle quota/abort/storage failures, retain short speech tails, drain stop/unmount, correct session/sample timing and trusted/shared-mic attribution (N04–N06). Existing zero-loss checkmark is implementation, not accepted guarantee.
+- [ ] P1: Signals live dictation currently accepts typed transcripts; add actual microphone integration, persisted owner/consent/state/one-time capture attempts, complete every-attempt ledgering and PHI/PAN gating across all persisted metadata (N07–N09).
+- [ ] P1: trusted signal promotion/suggestion authority and committed suggestion receipts; never swallow revision failures then report recorded success (N10).
+- [ ] P1: Teams/Outlook continuation, stable source/sender provenance, explicit truncation/block counts, complete threads/mission linkage and independent attachment retry/extraction (N11–N12); user-deferred connector linking remains separate.
+- [ ] P1: verify gateway OAuth caller/session/code binding or implement verified one-time local binding; replay/cross-account-code tests (N13; missing proof, not demonstrated exploit).
+- [ ] Resolve three high dependency advisory rows (source-map-js/js-yaml), static lint debt (7,139 errors/14 warnings, predominantly formatting), deprecated validators, service-only invoker self-test search-path hardening and fresh hosted-runtime/compiler validation. Do not edit generated integrations or widen grants.
+- [ ] Audit reconciliation: latest report/evidence on existing audit surface, stale signed-out blockers/pending-tool counts/speech labels/deep-link absence claims, overstated zero-loss/intake completion; historical records preserved. Signed-in page access now verified, but real mission/assurance submissions and full WCAG remain unverified.
+- [ ] Verify current GitHub remote/branch commit and separate Cloud-record/storage backup; source checkout and prior sync statements do not prove either.
 
 Correction-aware recheck additions (18 October)
 - [ ] Agent peak concurrency/same-token execution receipts, per-tool rate limits and actual reserved/external cost reconciliation; reservation locks applied in 0070 but no load receipt.
