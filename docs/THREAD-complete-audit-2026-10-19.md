@@ -18,13 +18,14 @@ Governing sources:
 
 **Inventory:** 230 files under `src`, 36 test files, 76 SQL migrations, 38 route files; current tool catalogue **101 tools: 81 labelled live, 10 pending, 10 human-only**. A live-labelled handler is not an executed, semantically conformant operation receipt.
 
-This is a whole-project code/requirements audit with selective executable validation. It is **not** a claim that every statement, route, permission combination, tool or production integration has been exercised. No fresh isolated migration replay, destructive mutation, external penetration test, load rehearsal or Microsoft account ingestion was performed. Those are explicit remaining actions below. No fresh production compiler/typecheck result was obtained: the available build-telemetry file is absent; the live development pages ran successfully. Prior “build OK” statements remain historical.
+This is a whole-project code/requirements audit with selective executable validation. It is **not** a claim that every statement, route, permission combination, tool or production integration has been exercised. No fresh isolated migration replay, destructive mutation, external penetration test, load rehearsal or Microsoft account ingestion was performed. Those are explicit remaining actions below. Final preview compiler telemetry reports **build OK at 03:02:14 UTC** after the audit documentation was added. No separate production deployment/typecheck/runtime acceptance was performed; successful preview compilation is not that evidence.
 
 ## 2. Fresh verification results
 
 | Check | Result | Limit |
 |---|---|---|
 | Complete current test suite | **1,767/1,767 passed, 36/36 files**, 16.55 s | Includes mocks, pure rules and source-string assertions; not full live acceptance |
+| Final preview compiler | **build OK, 03:02:14 UTC** | No new deployment or separate production runtime acceptance |
 | Signed-in main pages | **19/19** remained on requested paths; zero page errors/error boundaries/document overflow at 1280×1800 | Page reads only, not every control submission or accessibility audit |
 | Live ledger verification | **3,211 entries checked; ok=true; first_bad_seq=null** | No concurrent load or deliberate tamper induction |
 | SI-1 deployed self-test | **PASS**: ledger-valid mission against detected signal raised **P0001 / MISSION_SIGNAL_NOT_PROMOTED** | One negative rule, not complete positive mission workflow |

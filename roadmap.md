@@ -3,7 +3,7 @@
 ## Complete code and plan-conformance audit — 19 October 2026
 - [x] Audited original phases, authoritative corrections, approved redesign/capture plans and later intake/confirmation changes; current report: docs/THREAD-complete-audit-2026-10-19.md. No application behavior or data repaired; release FAIL / INCOMPLETE.
 - [x] Fresh complete suite 1,767/1,767 tests across 36 files; 19 signed-in page reads without page errors/overflow; ledger 3,211 hashes valid; deployed SI-1 exact P0001/MISSION_SIGNAL_NOT_PROMOTED negative self-test and authenticated-role intake counts 0/1/2/0 passed with zero persisted fixtures.
-- [x] Current inventory: 56 RLS-enabled tables/384 functions/55 policies; 101 tools (81 live-labelled/10 pending/10 human-only); 43 detectors; 95 non-draft/96 all-live orphans; zero model routes/usage sessions/missions; one actual human identity, not three humans. Static lint fails; dependency scanner has three high advisory rows. No fresh production compiler result obtained; no full exit acceptance claimed.
+- [x] Current inventory: 56 RLS-enabled tables/384 functions/55 policies; 101 tools (81 live-labelled/10 pending/10 human-only); 43 detectors; 95 non-draft/96 all-live orphans; zero model routes/usage sessions/missions; one actual human identity, not three humans. Static lint fails; dependency scanner has three high advisory rows. Final preview build OK at 03:02:14 UTC; no production deployment/full exit acceptance claimed.
 - [ ] Close all consolidated remaining-action packages 1–46 in the dated report; retain every earlier unresolved item below. Missing evidence/actions are not made complete by this audit.
 
 ## Visual-only redesign — approved and applied
