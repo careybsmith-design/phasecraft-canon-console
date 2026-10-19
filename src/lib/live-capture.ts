@@ -129,6 +129,7 @@ export interface LiveRecorder {
  * which must upload it and only resolve when the server has acknowledged it.
  */
 export async function startLiveCapture(opts: {
+  accountId: string;
   sessionId: string;
   speakerId: string;
   chunkMs?: number;
