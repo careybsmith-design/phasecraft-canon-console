@@ -146,7 +146,7 @@ export async function startLiveCapture(opts: {
   await audioContext.resume();
   const source = audioContext.createMediaStreamSource(stream);
   const node = audioContext.createScriptProcessor(4096, 1, 1);
-  let current: Float32Array[] = [];
+  const current: Float32Array[] = [];
   let windowStart = 0;
   let stopped = false;
   let seq = 0;
