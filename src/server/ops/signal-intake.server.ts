@@ -10,10 +10,27 @@ import { classifyContent } from "@/domain/content-tier";
 import { draftSignalsFromText, type ConfirmDraftInput, type ExtractSignalInput, type RecordSignalInput } from "@/domain/signal-intake";
 import type { z } from "zod/v4";
 
-async function intakeRpc(ctx: OpCtx, operation: string, p: Json) {
+export interface IntakeResult {
+  intake_event_id?: string;
+  status?: string;
+  signal?: { id: string; human_ref: string; version: number; lifecycle_state: string };
+  existing_signal?: { id: string; human_ref: string; title: string; lifecycle_state: string };
+  promoted?: boolean;
+  recorded_as?: string;
+  note?: string;
+  decision_id?: string;
+  decision_ref?: string;
+  signal_id?: string;
+  human_ref?: string;
+  lifecycle_state?: string;
+  linked?: boolean;
+  mission_id?: string;
+}
+
+async function intakeRpc(ctx: OpCtx, operation: string, p: Json): Promise<IntakeResult> {
   const { data, error } = await ctx.db.rpc("thread_signal_intake", { p_actor: ctx.actor, p_operation: operation, p: p as never });
   if (error) throw opErr(error.message);
-  return data as unknown as Record<string, unknown>;
+  return data as unknown as IntakeResult;
 }
 
 /** Record a blocked or quarantined attempt so the front door's audit trail is complete. */
