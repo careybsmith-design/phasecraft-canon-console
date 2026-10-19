@@ -200,6 +200,7 @@ Whole-build audit — permanent open items
 - [~] Outlook email + attachment ingestion built (per-user OAuth, message -> brought-in document artifact, attachments to storage with tier gate); BLOCKED: connector client not linked
 
 ## Signal Intake correction round (L-22 / S-09) — 19 October 2026
+- [ ] SI-1 automated database regression: add and execute a rollback-only SQL self-test asserting MISSION_SIGNAL_NOT_PROMOTED on a ValueMission insert against a non-promoted signal.
 - [x] B.1 intake storage: signal_origin/intake_status enums, append-only signal_intake_events (RLS, no update/delete), ValueSignal registry fields origin_channel/source_ref/intake_event_id. Deviation from the round's literal check constraint documented in docs/THREAD-signal-intake.md (rejected events carry no signal).
 - [x] B.2/B.3 four intake channels + promotion + linking as thread_signal_intake (service-role, ledgered) with the PHI/PAN gate before any analysis; six MCP tools registered live (record_value_signal, extract_signal_from_artifact, start_signal_capture, complete_signal_capture, promote_signal, link_signal_to_mission).
 - [x] B.4/B.5/B.6/B.12 surfaces: /signals intake+register, /signals/$signalId detail, Feed "Record a signal" secondary action, mission runtime originating-signal link, mission form filtered to promoted signals with "Record a new signal", Companion button retargeted.
