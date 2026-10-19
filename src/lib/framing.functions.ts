@@ -1351,6 +1351,38 @@ export const captureLiveSpeech = createServerFn({ method: "POST" })
       .parse(d),
   )
   .handler(async ({ data, context }) => {
+    // Authorize BEFORE any audio leaves for transcription: session access, open
+    // capture state, speaker identity and consent are all verified first (8A.3).
+    const db = await admin();
+    const session = await loadSessionFor(db, context.userId, data.session_id);
+    if (session.lifecycle_state !== "capturing")
+      throw threadError(`CAPTURE_NOT_OPEN: ${session.human_ref} is ${session.lifecycle_state}`);
+    const speaker = participants(session).find((p) => p.id === data.speaker_id);
+    if (!speaker) throw threadError("NOT_FOUND: speaker is not a participant");
+    if (speaker.user_id && speaker.user_id !== context.userId)
+      throw threadError(
+        "SPEAKER_IDENTITY: this participant has their own account; their speech is captured from their signed-in device",
+      );
+    const { data: speakerConsents } = await db
+      .from("consent_records")
+      .select("id")
+      .eq("session_id", session.id)
+      .eq("participant_id", speaker.id)
+      .is("withdrawn_at", null)
+      .contains("modalities", ["audio"]);
+    if (!speakerConsents?.length)
+      throw threadError(
+        "CONSENT_REQUIRED: no active audio consent for this speaker; record consent before capturing",
+      );
+    if (data.client_id) {
+      const { data: dup } = await db
+        .from("session_events")
+        .select("id")
+        .eq("session_id", session.id)
+        .eq("payload->>client_id", data.client_id)
+        .limit(1);
+      if (dup?.length) return { duplicate: true, blocked: false, statements: 0 };
+    }
     const { transcribeAudio } = await import("@/server/adapters/transcription/live.server");
     const bin = atob(data.audio_wav_base64);
     const wav = new Uint8Array(bin.length);
@@ -3325,14 +3357,18 @@ export const ingestOutlookMessage = createServerFn({ method: "POST" })
             attachments.push({ name, stored: false, reason: dl.reason });
             continue;
           }
-          // Tier gate on what we know about the file before storing (8A.3)
-          const tier = classifyContent(`${name} ${contentType}`);
+          // Tier gate on the actual bytes before storing (8A.3): text-like files
+          // are decoded and classified by content; binary files are classified by
+          // name/type plus a best-effort scan of any readable text in the bytes.
+          const bytes = dl.bytes;
+          const decoded = new TextDecoder("utf-8", { fatal: false }).decode(bytes);
+          const readable = decoded.replace(/[^\x20-\x7E\n\r\t]/g, " ").slice(0, 200_000);
+          const tier = classifyContent(`${name} ${contentType}\n${readable}`);
           if (tier.tier === "C") {
             attachments.push({ name, stored: false, reason: "content tier C hard-block" });
             continue;
           }
           const path = `outlook/${data.session_id}/${m.id}/${a.id}`;
-          const bytes = dl.bytes;
           const up = await db.storage
             .from("artifacts")
             .upload(path, bytes, { contentType, upsert: true });
@@ -3355,7 +3391,14 @@ export const ingestOutlookMessage = createServerFn({ method: "POST" })
                 captured_by: context.userId,
                 speaker_id: data.speaker_id,
                 content_tier: tier.tier,
-                consent_basis: [],
+                consent_basis:
+                  (
+                    await db
+                      .from("consent_records")
+                      .select("id")
+                      .eq("session_id", data.session_id)
+                      .is("withdrawn_at", null)
+                  ).data?.map((x: { id: string }) => x.id) ?? [],
                 extraction_state: "pending",
                 evidence_weight: "corroborating",
                 provenance: {

@@ -7,6 +7,8 @@
 
 export interface CaptureChunk {
   id: string;
+  /** The signed-in account that captured this chunk; only that account may upload it. */
+  accountId: string;
   sessionId: string;
   speakerId: string;
   tOffsetMs: number;
@@ -48,18 +50,25 @@ async function outboxDelete(id: string): Promise<void> {
   db.close();
 }
 
-export async function outboxCount(): Promise<number> {
-  const db = await openDb();
-  const n = await new Promise<number>((resolve, reject) => {
-    const req = db.transaction(STORE).objectStore(STORE).count();
-    req.onsuccess = () => resolve(req.result);
-    req.onerror = () => reject(req.error);
-  });
-  db.close();
-  return n;
+/**
+ * Count buffered chunks. With `accountId`, counts only that account's chunks —
+ * a different signed-in account never sees or sends another account's audio.
+ */
+export async function outboxCount(accountId?: string): Promise<number> {
+  if (accountId === undefined) {
+    const db = await openDb();
+    const n = await new Promise<number>((resolve, reject) => {
+      const req = db.transaction(STORE).objectStore(STORE).count();
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => reject(req.error);
+    });
+    db.close();
+    return n;
+  }
+  return (await outboxAll(accountId)).length;
 }
 
-export async function outboxAll(): Promise<CaptureChunk[]> {
+export async function outboxAll(accountId?: string): Promise<CaptureChunk[]> {
   const db = await openDb();
   const all = await new Promise<CaptureChunk[]>((resolve, reject) => {
     const req = db.transaction(STORE).objectStore(STORE).getAll();
@@ -67,7 +76,8 @@ export async function outboxAll(): Promise<CaptureChunk[]> {
     req.onerror = () => reject(req.error);
   });
   db.close();
-  return all;
+  if (accountId === undefined) return all;
+  return all.filter((c) => c.accountId === accountId);
 }
 
 export function encodeWav(chunks: readonly Float32Array[], sampleRate: number): ArrayBuffer {
@@ -119,6 +129,7 @@ export interface LiveRecorder {
  * which must upload it and only resolve when the server has acknowledged it.
  */
 export async function startLiveCapture(opts: {
+  accountId: string;
   sessionId: string;
   speakerId: string;
   chunkMs?: number;
@@ -151,6 +162,7 @@ export async function startLiveCapture(opts: {
     if (wav.byteLength < 2048) return; // silence-only window
     const chunk: CaptureChunk = {
       id: `${opts.sessionId}-${Date.now()}-${seq++}`,
+      accountId: opts.accountId,
       sessionId: opts.sessionId,
       speakerId: opts.speakerId,
       tOffsetMs: windowStart,
@@ -187,11 +199,16 @@ export async function startLiveCapture(opts: {
   };
 }
 
-/** Retry every buffered chunk oldest-first; resolves when the outbox is empty. */
+/**
+ * Retry the caller's own buffered chunks oldest-first; resolves when that
+ * account's outbox is empty. Chunks captured under a different sign-in stay
+ * untouched on the device — they are never uploaded under the wrong identity.
+ */
 export async function flushOutbox(
   onChunk: (chunk: CaptureChunk) => Promise<void>,
+  accountId: string,
 ): Promise<number> {
-  const all = (await outboxAll()).sort((a, b) => a.id.localeCompare(b.id));
+  const all = (await outboxAll(accountId)).sort((a, b) => a.id.localeCompare(b.id));
   let sent = 0;
   for (const chunk of all) {
     await onChunk(chunk);
