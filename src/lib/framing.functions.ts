@@ -3316,7 +3316,7 @@ export const ingestOutlookMessage = createServerFn({ method: "POST" })
           const dl = await callGraphBlob(
             context.userId,
             "microsoft_outlook",
-            `/me/messages/${encodeURIComponent(data.message_id)}/attachments/${encodeURIComponent(a.id as string)}/$value`,
+            `/me/messages/${encodeURIComponent(data.message_id)}/attachments/${encodeURIComponent(a.id)}/$value`,
           );
           if (!dl.ok) {
             attachments.push({ name, stored: false, reason: dl.reason });
