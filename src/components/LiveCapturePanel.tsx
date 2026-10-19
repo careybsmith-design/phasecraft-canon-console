@@ -70,7 +70,11 @@ export function LiveCapturePanel({
     [send, onDone],
   );
 
-  const refreshPending = useCallback(async () => setPending(await outboxCount()), []);
+  const refreshPending = useCallback(async () => {
+    const [mine, total] = await Promise.all([outboxCount(me), outboxCount()]);
+    setPending(mine);
+    setHeldForOthers(total - mine);
+  }, [me]);
   useEffect(() => {
     void refreshPending();
     const t = setInterval(() => void refreshPending(), 5000);
@@ -80,7 +84,7 @@ export function LiveCapturePanel({
   const retryOutbox = async () => {
     setBusy(true);
     try {
-      const n = await flushOutbox(upload);
+      const n = await flushOutbox(upload, me);
       if (n) toast.success(`Delivered ${n} buffered chunk(s)`);
       await refreshPending();
       onDone();
@@ -99,6 +103,7 @@ export function LiveCapturePanel({
     try {
       startedAt.current = Date.now();
       recorder.current = await startLiveCapture({
+        accountId: me,
         sessionId,
         speakerId: speaker,
         onChunk: async (chunk) => {
@@ -158,6 +163,12 @@ export function LiveCapturePanel({
           </Button>
         )}
       </div>
+      {heldForOthers > 0 && (
+        <p className="text-xs text-muted-foreground">
+          {heldForOthers} buffered chunk(s) on this device belong to a different sign-in and stay
+          untouched until that account returns.
+        </p>
+      )}
       {recording && (
         <p role="status" className="text-xs text-ok">
           Recording — speech appears in the transcript a few seconds after it is spoken.
