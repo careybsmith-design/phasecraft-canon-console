@@ -2949,6 +2949,14 @@ export type Database = {
         Args: { l: Database["public"]["Tables"]["ledger"]["Row"] }
         Returns: string
       }
+      need_promoted_signals: {
+        Args: { p_need: string }
+        Returns: {
+          human_ref: string
+          id: string
+          title: string
+        }[]
+      }
       next_human_ref: { Args: { _type: string }; Returns: string }
       object_content_hash: {
         Args: { o: Database["public"]["Tables"]["objects"]["Row"] }
