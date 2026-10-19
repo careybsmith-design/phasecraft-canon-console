@@ -239,12 +239,15 @@ function Prompts({ d }: { d: Data }) {
           estimated_cost: 0,
         },
       });
-      for (const r of out)
-        r.ok
-          ? toast.success(`${PLATFORM_REGISTRY[r.platform].label}: dispatched`)
-          : toast.error(
-              `${PLATFORM_REGISTRY[r.platform].label}: ${errText(new Error(r.error ?? ""))}`,
-            );
+      for (const r of out) {
+        if (r.ok) {
+          toast.success(`${PLATFORM_REGISTRY[r.platform].label}: dispatched`);
+        } else {
+          toast.error(
+            `${PLATFORM_REGISTRY[r.platform].label}: ${errText(new Error(r.error ?? ""))}`,
+          );
+        }
+      }
       qc.invalidateQueries({ queryKey: ["creation"] });
     } catch (e) {
       toast.error(errText(e));
