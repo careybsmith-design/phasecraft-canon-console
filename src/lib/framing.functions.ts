@@ -457,7 +457,17 @@ export const getFramingSession = createServerFn({ method: "GET" })
       mission_scope: missionScope,
       events: events.data ?? [],
       consents: consents.data ?? [],
-      objects: objs.data ?? [],
+      objects: (objs.data ?? []).map((o) =>
+        o.type === "ExtractedStatement"
+          ? {
+              ...o,
+              ...confirmationAuthority(
+                (o.body ?? {}) as Record<string, unknown>,
+                !!authorityParticipant(s, context.userId),
+              ),
+            }
+          : o,
+      ),
       artifacts: artifacts.data ?? [],
       findings: findings.data ?? [],
       revisions: revisions.data ?? [],
@@ -1778,10 +1788,8 @@ export const confirmObject = createServerFn({ method: "POST" })
       throw threadError(`ALREADY_${xs.lifecycle_state.toUpperCase()}: ${xs.human_ref}`);
     const ap = authorityParticipant(session, context.userId);
     const me = participants(session).find((p) => p.user_id === context.userId);
-    const needsAuthority =
-      xs.body.material ||
-      xs.body.classification === "decision" ||
-      xs.body.proposed_object_type === "NeedStatement";
+    const { confirmationReason } = await import("@/domain/framing");
+    const needsAuthority = confirmationReason(xs.body) !== null;
     if (needsAuthority && !ap)
       throw threadError(
         "AUTHORITY_REQUIRED_TO_CONFIRM: material items and needs are confirmed only by the participant holding decision authority (8A.10)",
