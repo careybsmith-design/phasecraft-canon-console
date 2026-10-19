@@ -146,7 +146,10 @@ export function confirmationReason(body: {
 export function confirmationAuthority(
   body: Parameters<typeof confirmationReason>[0],
   viewerHoldsAuthority: boolean,
-): { confirmation_authority: ConfirmationAuthority; confirmation_reason: ConfirmationReason | null } {
+): {
+  confirmation_authority: ConfirmationAuthority;
+  confirmation_reason: ConfirmationReason | null;
+} {
   const reason = confirmationReason(body);
   if (!reason) return { confirmation_authority: "not_required", confirmation_reason: null };
   return {

@@ -1511,7 +1511,10 @@ export const captureImage = createServerFn({ method: "POST" })
             evidence_weight: evidenceWeight(data.kind),
             provenance: { simulated: false },
           },
-          { owner: session.owner_id, rationale: "Image not stored: content could not be inspected" },
+          {
+            owner: session.owner_id,
+            rationale: "Image not stored: content could not be inspected",
+          },
         ),
       );
       return { statements: 0, quarantined: true, reason, tier_basis: inspection.tier_basis };

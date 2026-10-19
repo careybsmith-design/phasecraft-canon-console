@@ -23,7 +23,13 @@ const IMAGE_MIME = /^image\/(png|jpeg|webp)$/i;
 
 /** The supported set, stated explicitly. Anything else is quarantined. */
 export const SUPPORTED_FORMATS = {
-  text: ["text/plain", "text/markdown", "text/csv", "text/tab-separated-values", "application/json"],
+  text: [
+    "text/plain",
+    "text/markdown",
+    "text/csv",
+    "text/tab-separated-values",
+    "application/json",
+  ],
   image: ["image/png", "image/jpeg", "image/webp"],
 } as const;
 
@@ -45,7 +51,8 @@ function fromTier(t: TierResult, basis: TierBasis, text: string): InspectionOutc
 /** Quarantine record decision: the name itself is still screened (a Tier C name is blocked). */
 export function quarantine(name: string, reason: string): InspectionOutcome {
   const t = classifyContent(name);
-  if (t.tier === "C") return { action: "block", tier: "C", tier_basis: "filename_only", reasons: t.reasons };
+  if (t.tier === "C")
+    return { action: "block", tier: "C", tier_basis: "filename_only", reasons: t.reasons };
   return { action: "quarantine", tier: t.tier, tier_basis: "filename_only", reason };
 }
 
@@ -68,7 +75,11 @@ export function inspectImageText(name: string, readText: string | null): Inspect
 }
 
 /** Dispatcher for byte payloads with no image route (attachments). */
-export function inspectBytes(name: string, contentType: string, bytes: Uint8Array): InspectionOutcome {
+export function inspectBytes(
+  name: string,
+  contentType: string,
+  bytes: Uint8Array,
+): InspectionOutcome {
   const plan = formatPlan(name, contentType);
   if (plan === "text") return inspectText(name, bytes);
   if (plan === "image")

@@ -22,7 +22,11 @@ for (const c of cases) {
   const b64 = readFileSync(`${dir}/img/${c.name}.png`).toString("base64");
   const res = await fetch("https://ai.gateway.lovable.dev/v1/responses", {
     method: "POST",
-    headers: { "Content-Type": "application/json", "Lovable-API-Key": key, "X-Lovable-AIG-SDK": "fetch" },
+    headers: {
+      "Content-Type": "application/json",
+      "Lovable-API-Key": key,
+      "X-Lovable-AIG-SDK": "fetch",
+    },
     body: JSON.stringify({
       model: LIVE_MODEL,
       stream: true,
@@ -52,7 +56,11 @@ for (const c of cases) {
         /* skip */
       }
     }
-  const o = JSON.parse(text) as { visible_text: string; description: string; statements: { text: string }[] };
+  const o = JSON.parse(text) as {
+    visible_text: string;
+    description: string;
+    statements: { text: string }[];
+  };
   const read = [o.visible_text, o.description, ...o.statements.map((s) => s.text)].join("\n");
   const r = inspectImageText(c.name, read);
   const got = r.tier;
@@ -61,6 +69,25 @@ for (const c of cases) {
     cTotal++;
     if (r.action === "block") cCaught++;
   }
-  rows.push({ case: c.name, status: res.status, expected: c.expected, got, action: r.action, visible_text: o.visible_text.replace(/\d(?=\d{4})/g, "•") });
+  rows.push({
+    case: c.name,
+    status: res.status,
+    expected: c.expected,
+    got,
+    action: r.action,
+    visible_text: o.visible_text.replace(/\d(?=\d{4})/g, "•"),
+  });
 }
-console.log(JSON.stringify({ model: LIVE_MODEL, n: cases.length, accuracy: correct / cases.length, tier_c_recall: cTotal ? cCaught / cTotal : null, rows }, null, 1));
+console.log(
+  JSON.stringify(
+    {
+      model: LIVE_MODEL,
+      n: cases.length,
+      accuracy: correct / cases.length,
+      tier_c_recall: cTotal ? cCaught / cTotal : null,
+      rows,
+    },
+    null,
+    1,
+  ),
+);

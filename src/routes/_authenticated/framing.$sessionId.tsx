@@ -856,8 +856,8 @@ function StatementCard({
         <div className="mt-2 space-y-1">
           {x.confirmation_authority === "held" && (
             <p id={`auth-${x.id}`} className="text-xs text-muted-foreground">
-              This item requires decision authority ({REASON_LABELS[x.confirmation_reason] ?? "material"}),
-              which you hold.
+              This item requires decision authority (
+              {REASON_LABELS[x.confirmation_reason] ?? "material"}), which you hold.
             </p>
           )}
           {x.confirmation_authority === "missing" && (
