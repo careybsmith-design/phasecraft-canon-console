@@ -271,7 +271,10 @@ export async function findContradictions(
   }
 }
 
-const VLM_SCHEMA = {
+export const VLM_INSTRUCTIONS =
+  "Describe this whiteboard, diagram or screenshot from a business framing session. Return a short structured description (boxes, labels, swimlanes, arrows) and a list of statement units it depicts, one per box or arrow, each with its bounding region as fractions 0..1 of the image (x, y, w, h). Write arrows as 'A depends on B' sentences. Do not invent content that is not drawn. In visible_text, transcribe verbatim every character of text visible anywhere in the image (labels, numbers, identifiers, form fields, small print), unredacted and unsummarised, in reading order; it is used for content screening before storage.";
+
+export const VLM_SCHEMA = {
   type: "object",
   additionalProperties: false,
   required: ["visible_text", "description", "statements"],
@@ -323,8 +326,7 @@ export async function describeDrawing(
     messages: [
       {
         role: "system",
-        content:
-          "Describe this whiteboard, diagram or screenshot from a business framing session. Return a short structured description (boxes, labels, swimlanes, arrows) and a list of statement units it depicts, one per box or arrow, each with its bounding region as fractions 0..1 of the image (x, y, w, h). Write arrows as 'A depends on B' sentences. Do not invent content that is not drawn. In visible_text, transcribe verbatim every character of text visible anywhere in the image (labels, numbers, identifiers, form fields, small print), unredacted and unsummarised, in reading order; it is used for content screening before storage.",
+        content: VLM_INSTRUCTIONS,
       },
       {
         role: "user",
