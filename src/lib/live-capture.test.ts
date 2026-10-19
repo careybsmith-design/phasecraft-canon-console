@@ -135,10 +135,9 @@ describe("live capture zero-loss (W3.1)", () => {
 
   it("a failed IndexedDB write retains the audio and the next window retries it", async () => {
     const realOpen = indexedDB.open.bind(indexedDB);
-    let failNext = true;
+    let failing = true;
     indexedDB.open = ((...args: Parameters<typeof indexedDB.open>) => {
-      if (failNext) {
-        failNext = false;
+      if (failing) {
         const req = {} as IDBOpenDBRequest;
         setTimeout(() => {
           (req as { error: DOMException }).error = new DOMException("quota", "QuotaExceededError");
