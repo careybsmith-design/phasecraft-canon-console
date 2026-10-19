@@ -3029,7 +3029,7 @@ async function callGraph(
   uid: string,
   connector: ConnectorId,
   path: string,
-): Promise<{ ok: true; json: Record<string, unknown> } | { ok: false; reason: string }> {
+): Promise<{ ok: true; json: { value?: unknown[] } } | { ok: false; reason: string }> {
   const { getConnectionKeyForUser } = await connStore();
   const { callAsAppUser, appUserReconnectRequired } = await auc();
   const key = await getConnectionKeyForUser(uid, connector);
@@ -3047,7 +3047,7 @@ async function callGraph(
     console.error(`Graph call failed [${res.status}] ${path}: ${body}`);
     throw threadError(`PROVIDER_ERROR: ${CONNECTORS[connector].label} returned ${res.status}`);
   }
-  return { ok: true, json: (await res.json()) as Record<string, unknown> };
+  return { ok: true, json: (await res.json()) as { value?: unknown[] } };
 }
 
 /** Binary download through the connector gateway (e.g. attachment $value). */
@@ -3087,13 +3087,18 @@ export const listTeamsChats = createServerFn({ method: "GET" })
       "/me/chats?$top=50&$expand=members",
     );
     if (!r.ok) return r;
-    const chats = ((r.json.value as Array<Record<string, unknown>>) ?? []).map((c) => ({
-      id: c.id as string,
-      topic: (c.topic as string | null) ?? null,
-      chatType: c.chatType as string,
-      members: ((c.members as Array<Record<string, unknown>>) ?? [])
-        .map((m) => m.displayName as string)
-        .filter(Boolean),
+    const chats = (
+      (r.json.value as Array<{
+        id: string;
+        topic: string | null;
+        chatType: string;
+        members?: Array<{ displayName?: string }>;
+      }>) ?? []
+    ).map((c) => ({
+      id: c.id,
+      topic: c.topic ?? null,
+      chatType: c.chatType,
+      members: (c.members ?? []).map((m) => m.displayName).filter((n): n is string => !!n),
     }));
     return { ok: true as const, chats };
   });
@@ -3218,17 +3223,22 @@ export const listOutlookMessages = createServerFn({ method: "GET" })
       : `/me/messages?$top=25&$orderby=receivedDateTime desc&$select=id,subject,from,receivedDateTime,hasAttachments,conversationId`;
     const r = await callGraph(context.userId, "microsoft_outlook", path);
     if (!r.ok) return r;
-    const messages = ((r.json.value as Array<Record<string, unknown>>) ?? []).map((m) => ({
-      id: m.id as string,
-      subject: (m.subject as string) ?? "(no subject)",
-      from:
-        ((
-          (m.from as Record<string, unknown> | undefined)?.emailAddress as
-            Record<string, unknown> | undefined
-        )?.address as string) ?? "unknown",
-      received: m.receivedDateTime as string,
+    const messages = (
+      (r.json.value as Array<{
+        id: string;
+        subject?: string;
+        from?: { emailAddress?: { address?: string } };
+        receivedDateTime: string;
+        hasAttachments?: boolean;
+        conversationId: string;
+      }>) ?? []
+    ).map((m) => ({
+      id: m.id,
+      subject: m.subject ?? "(no subject)",
+      from: m.from?.emailAddress?.address ?? "unknown",
+      received: m.receivedDateTime,
       hasAttachments: !!m.hasAttachments,
-      conversationId: m.conversationId as string,
+      conversationId: m.conversationId,
     }));
     return { ok: true as const, messages };
   });
@@ -3293,10 +3303,12 @@ export const ingestOutlookMessage = createServerFn({ method: "POST" })
       if (ar.ok) {
         const db = await (await import("@/integrations/supabase/client.server")).supabaseAdmin;
         const session = await loadSessionFor(db, context.userId, data.session_id);
-        for (const a of (ar.json.value as Array<Record<string, unknown>>) ?? []) {
-          const name = (a.name as string) ?? "attachment";
-          const contentType = (a.contentType as string) ?? "application/octet-stream";
-          const size = (a.size as number) ?? 0;
+        for (const a of
+          (ar.json.value as Array<{ id: string; name?: string; contentType?: string; size?: number }>) ??
+          []) {
+          const name = a.name ?? "attachment";
+          const contentType = a.contentType ?? "application/octet-stream";
+          const size = a.size ?? 0;
           if (size > 25 * 1024 * 1024) {
             attachments.push({ name, stored: false, reason: "over 25 MB" });
             continue;
