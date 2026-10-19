@@ -102,19 +102,17 @@ async function main() {
       p_rationale: "published",
     } as never);
     if (t.error) throw t.error;
-    const ins = await db
-      .from("confidence_rules")
-      .insert({
-        version: CONFIDENCE_RULE.version,
-        published_at: new Date().toISOString(),
-        definition: {
-          rule_object_id: r.id,
-          text: CONFIDENCE_RULE.text,
-          required: CONFIDENCE_RULE.required,
-          bands: CONFIDENCE_RULE.bands,
-          evaluator: `${ENGINE_ID}#computeOverall`,
-        },
-      });
+    const ins = await db.from("confidence_rules").insert({
+      version: CONFIDENCE_RULE.version,
+      published_at: new Date().toISOString(),
+      definition: {
+        rule_object_id: r.id,
+        text: CONFIDENCE_RULE.text,
+        required: CONFIDENCE_RULE.required,
+        bands: CONFIDENCE_RULE.bands,
+        evaluator: `${ENGINE_ID}#computeOverall`,
+      },
+    });
     if (ins.error) throw ins.error;
     console.log("rule", r.id);
   }
@@ -123,17 +121,15 @@ async function main() {
     .select("*", { count: "exact", head: true })
     .eq("active", true);
   if (!count) {
-    const g = await db
-      .from("guardrails")
-      .insert(
-        GUARDRAILS.map((x) => ({
-          id: crypto.randomUUID(),
-          version: "1.0.0",
-          active: true,
-          proposed_by: "human",
-          ...x,
-        })),
-      );
+    const g = await db.from("guardrails").insert(
+      GUARDRAILS.map((x) => ({
+        id: crypto.randomUUID(),
+        version: "1.0.0",
+        active: true,
+        proposed_by: "human",
+        ...x,
+      })),
+    );
     if (g.error) throw g.error;
   }
   console.log("ok");

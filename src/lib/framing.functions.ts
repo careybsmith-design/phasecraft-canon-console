@@ -590,15 +590,13 @@ async function extractUnits(
 ) {
   const discarded = units.filter((u) => !validExtractionSpan(u.span));
   for (const unit of discarded) {
-    const { error } = await c.db
-      .from("session_events")
-      .insert({
-        session_id: c.session.id,
-        t_offset_ms: 0,
-        kind: "extraction_discarded",
-        ref: c.artifact.id,
-        payload: { reason: "PROVENANCE_SPAN_MISSING", extractor_version: c.version },
-      });
+    const { error } = await c.db.from("session_events").insert({
+      session_id: c.session.id,
+      t_offset_ms: 0,
+      kind: "extraction_discarded",
+      ref: c.artifact.id,
+      payload: { reason: "PROVENANCE_SPAN_MISSING", extractor_version: c.version },
+    });
     if (error) throw threadError(error.message);
   }
   units = units.filter((u) => validExtractionSpan(u.span));

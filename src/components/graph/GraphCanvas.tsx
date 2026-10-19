@@ -167,7 +167,6 @@ export const GraphCanvas = forwardRef<GraphCanvasHandle, Props>(function GraphCa
       sigmaRef.current?.kill();
       sigmaRef.current = null;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [nodes, edges, labels]);
 
   useImperativeHandle(

@@ -286,7 +286,7 @@ function Quality() {
   const pub = useServerFn(publishExtractionQuality);
   const q = useQuery({ queryKey: ["extraction-quality"], queryFn: () => get() });
   const [busy, setBusy] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   const b = q.data?.body as any;
   const pct = (v: number | null) => (v == null ? "—" : `${Math.round(v * 100)}%`);
   return (
@@ -412,7 +412,7 @@ function Evidence() {
   const run = useServerFn(runPhase2bEvidence);
   const q = useQuery({ queryKey: ["phase2b-evidence"], queryFn: () => get() });
   const [busy, setBusy] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   const p = q.data?.payload as any;
   const yes = (b: boolean | undefined) =>
     b ? <span className="text-ok">met</span> : <span className="text-warn">not yet</span>;
