@@ -52,7 +52,7 @@ function DraftList({
 }: {
   drafts: DraftSignal[];
   origin: SignalOrigin;
-  sourceRef?: string;
+  sourceRef?: string | undefined;
   onConfirmed: (result: Awaited<ReturnType<typeof confirmDraftSignal>>, condition: string) => void;
 }) {
   const confirm = useServerFn(confirmDraftSignal);
