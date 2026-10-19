@@ -3222,9 +3222,10 @@ export const listOutlookMessages = createServerFn({ method: "GET" })
       id: m.id as string,
       subject: (m.subject as string) ?? "(no subject)",
       from:
-        (((m.from as Record<string, unknown> | undefined)?.emailAddress as
-          | Record<string, unknown>
-          | undefined)?.address as string) ?? "unknown",
+        ((
+          (m.from as Record<string, unknown> | undefined)?.emailAddress as
+            Record<string, unknown> | undefined
+        )?.address as string) ?? "unknown",
       received: m.receivedDateTime as string,
       hasAttachments: !!m.hasAttachments,
       conversationId: m.conversationId as string,
