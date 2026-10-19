@@ -199,11 +199,16 @@ export async function startLiveCapture(opts: {
   };
 }
 
-/** Retry every buffered chunk oldest-first; resolves when the outbox is empty. */
+/**
+ * Retry the caller's own buffered chunks oldest-first; resolves when that
+ * account's outbox is empty. Chunks captured under a different sign-in stay
+ * untouched on the device — they are never uploaded under the wrong identity.
+ */
 export async function flushOutbox(
   onChunk: (chunk: CaptureChunk) => Promise<void>,
+  accountId: string,
 ): Promise<number> {
-  const all = (await outboxAll()).sort((a, b) => a.id.localeCompare(b.id));
+  const all = (await outboxAll(accountId)).sort((a, b) => a.id.localeCompare(b.id));
   let sent = 0;
   for (const chunk of all) {
     await onChunk(chunk);
