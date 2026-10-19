@@ -1,0 +1,149 @@
+{
+  "suite": "session_mission",
+  "all_ok": true,
+  "checks": [
+    {
+      "ok": true,
+      "item": 1,
+      "output": {
+        "id": "01a15286-f996-704b-9ca3-c855720fc935",
+        "depth": 1,
+        "title": "Scope selftest mission",
+        "origin": "stated",
+        "human_ref": "VM-2026-0006"
+      }
+    },
+    {
+      "ok": true,
+      "item": 2,
+      "output": {
+        "id": "01a15286-f996-704b-9ca3-c855720fc935",
+        "depth": 3,
+        "title": "Scope selftest mission",
+        "origin": "containment",
+        "human_ref": "VM-2026-0006"
+      }
+    },
+    {
+      "ok": true,
+      "item": 3,
+      "output": {
+        "edge": {
+          "id": "01a15286-ff27-7649-a755-7aeb426b9ecf",
+          "kind": null,
+          "verb": "scoped_to",
+          "to_id": "01a15286-f996-704b-9ca3-c855720fc935",
+          "source": "stated",
+          "from_id": "01a15286-fd33-743a-a8bf-070d939244a2",
+          "rationale": "Retrospective scope decision",
+          "confidence": null,
+          "created_at": "2026-10-19T04:58:59.458959+00:00",
+          "created_by": {
+            "id": "c58d4be5-b5e7-4d3a-97c9-f90ba1200932",
+            "kind": "human",
+            "authority_used": "act_with_confirmation"
+          },
+          "retired_at": null,
+          "evidence_refs": [],
+          "authority_used": "act_with_confirmation"
+        },
+        "origin": "backfilled",
+        "reversed": false,
+        "decision_id": "01a15286-fecd-74a1-9724-6c817baa5a43",
+        "mission_ref": "01a15286-f996-704b-9ca3-c855720fc935",
+        "recorded_as": "decision",
+        "authority_basis": {
+          "kind": "mission_contract",
+          "holder": "c58d4be5-b5e7-4d3a-97c9-f90ba1200932",
+          "boundary": "Own this mission intent",
+          "mission_id": "01a15286-f996-704b-9ca3-c855720fc935"
+        }
+      }
+    },
+    {
+      "ok": true,
+      "item": 7,
+      "output": {
+        "after": false,
+        "before": true
+      }
+    },
+    {
+      "ok": true,
+      "item": 6,
+      "output": {
+        "confirmed_object_unchanged": true
+      }
+    },
+    {
+      "ok": true,
+      "item": 4,
+      "output": {
+        "edge": {
+          "id": "01a15286-ff27-7649-a755-7aeb426b9ecf",
+          "kind": null,
+          "verb": "scoped_to",
+          "to_id": "01a15286-f996-704b-9ca3-c855720fc935",
+          "source": "stated",
+          "from_id": "01a15286-fd33-743a-a8bf-070d939244a2",
+          "rationale": "Retrospective scope decision",
+          "confidence": null,
+          "created_at": "2026-10-19T04:58:59.458959+00:00",
+          "created_by": {
+            "id": "c58d4be5-b5e7-4d3a-97c9-f90ba1200932",
+            "kind": "human",
+            "authority_used": "act_with_confirmation"
+          },
+          "retired_at": "2026-10-19T04:58:59.458959+00:00",
+          "evidence_refs": [],
+          "authority_used": "act_with_confirmation"
+        },
+        "origin": "backfilled",
+        "reversed": true,
+        "decision_id": "01a15287-0098-70f7-91b3-f4124b6048f0",
+        "mission_ref": null,
+        "recorded_as": "decision",
+        "authority_basis": {
+          "kind": "mission_contract",
+          "holder": "c58d4be5-b5e7-4d3a-97c9-f90ba1200932",
+          "boundary": "Own this mission intent",
+          "mission_id": "01a15286-f996-704b-9ca3-c855720fc935"
+        }
+      }
+    },
+    {
+      "ok": true,
+      "item": 5,
+      "output": {
+        "edge": null,
+        "decision_id": null,
+        "recorded_as": "suggestion",
+        "authority_mismatch": true
+      }
+    },
+    {
+      "ok": true,
+      "item": 9,
+      "output": "ValueMission -> ValueCell scoped_to inserted"
+    },
+    {
+      "ok": true,
+      "item": 10,
+      "output": {
+        "signal_sqlstate": "P0001",
+        "signal_exception": "SIGNAL_NOT_FRAMED: VS-2026-0010 cannot become a mission without a framed measurable condition (observed condition and baseline) (Part 5.2)",
+        "need_edge_inserted": true
+      }
+    },
+    {
+      "ok": true,
+      "item": 8,
+      "output": {
+        "frontier": "intent awaiting a signal",
+        "sqlstate": "P0001",
+        "exception": "INTENT_AWAITING_SIGNAL: record and promote a readable signal through /signals first"
+      }
+    }
+  ],
+  "fixtures_rolled_back": true
+}
