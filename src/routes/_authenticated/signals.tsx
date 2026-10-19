@@ -79,7 +79,7 @@ function IntakePanel({ onChanged }: { onChanged: () => void }) {
   async function submitDirect() {
     setBusy(true);
     try {
-      const r = await record({ data: { observed_condition: condition, affected_population: population || undefined, urgency: (urgency || undefined) as never, potential_value: value || undefined, evidence_refs: [] } });
+      const r = (await record({ data: { observed_condition: condition, affected_population: population || undefined, urgency: (urgency || undefined) as never, potential_value: value || undefined, evidence_refs: [] } })) as Record<string, unknown>;
       if (r["status"] === "duplicate") {
         const ex = r["existing_signal"] as { human_ref: string };
         toast.info(`Already recorded as ${ex.human_ref} — the existing signal is surfaced instead.`);
