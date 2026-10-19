@@ -39,6 +39,30 @@ async function generate(ctx: AgentCtx, kind: RenditionKind, a: Json) {
 }
 
 export const HANDLERS: Record<string, Handler> = {
+  async record_value_signal(ctx, a) {
+    const { recordSignalCore } = await import("@/server/ops/signal-intake.server");
+    return recordSignalCore(ctx, a as never, ctx.actor.kind === "agent" ? "agent_sensor" : "human_expertise");
+  },
+  async extract_signal_from_artifact(ctx, a) {
+    const { extractSignalCore } = await import("@/server/ops/signal-intake.server");
+    return extractSignalCore(ctx, a as never);
+  },
+  async start_signal_capture(_ctx, a) {
+    const { startCaptureCore } = await import("@/server/ops/signal-intake.server");
+    return startCaptureCore(a as { modalities: string[]; purpose: string });
+  },
+  async complete_signal_capture(ctx, a) {
+    const { completeCaptureCore } = await import("@/server/ops/signal-intake.server");
+    return completeCaptureCore(ctx, a as { capture_id: string; transcript: string });
+  },
+  async promote_signal(ctx, a) {
+    const { promoteSignalCore } = await import("@/server/ops/signal-intake.server");
+    return promoteSignalCore(ctx, { signal_id: S(a["signal_id"]), rationale: S(a["rationale"]) });
+  },
+  async link_signal_to_mission(ctx, a) {
+    const { linkSignalCore } = await import("@/server/ops/signal-intake.server");
+    return linkSignalCore(ctx, { signal_id: S(a["signal_id"]), mission_id: S(a["mission_id"]), rationale: S(a["rationale"]) });
+  },
   async detect_value_signal(ctx, a) {
     const cond = S(a["observed_condition"]);
     return create(ctx, "ValueSignal", S(a["title"]) || `Signal: ${cond.slice(0, 120)}`, cond, {
