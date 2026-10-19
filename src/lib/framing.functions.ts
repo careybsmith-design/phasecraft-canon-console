@@ -3371,7 +3371,13 @@ export const ingestOutlookMessage = createServerFn({ method: "POST" })
       "live",
     );
 
-    const attachments: Array<{ name: string; stored: boolean; reason?: string }> = [];
+    const attachments: Array<{
+      name: string;
+      stored: boolean;
+      quarantined?: boolean;
+      reason?: string;
+      tier_basis?: string;
+    }> = [];
     if (data.include_attachments && m.hasAttachments && !out.duplicate && !out.blocked) {
       const ar = await callGraph(
         context.userId,
@@ -3403,15 +3409,75 @@ export const ingestOutlookMessage = createServerFn({ method: "POST" })
             attachments.push({ name, stored: false, reason: dl.reason });
             continue;
           }
-          // Tier gate on the actual bytes before storing (8A.3): text-like files
-          // are decoded and classified by content; binary files are classified by
-          // name/type plus a best-effort scan of any readable text in the bytes.
+          // N03: inspect before storing. Supported text is decoded strictly and the
+          // extracted text classified; every other format is quarantined, not stored.
+          const { inspectBytes } = await import("@/domain/inspection");
           const bytes = dl.bytes;
-          const decoded = new TextDecoder("utf-8", { fatal: false }).decode(bytes);
-          const readable = decoded.replace(/[^\x20-\x7E\n\r\t]/g, " ").slice(0, 200_000);
-          const tier = classifyContent(`${name} ${contentType}\n${readable}`);
-          if (tier.tier === "C") {
-            attachments.push({ name, stored: false, reason: "content tier C hard-block" });
+          const inspection = inspectBytes(name, contentType, bytes);
+          if (inspection.action === "block") {
+            attachments.push({
+              name,
+              stored: false,
+              reason: "content tier C hard-block",
+              tier_basis: inspection.tier_basis,
+            });
+            continue;
+          }
+          const consentIds =
+            (
+              await db
+                .from("consent_records")
+                .select("id")
+                .eq("session_id", data.session_id)
+                .is("withdrawn_at", null)
+            ).data?.map((x: { id: string }) => x.id) ?? [];
+          const provenance = {
+            simulated: false,
+            adapter: "Outlook.connector",
+            source: "microsoft_outlook",
+            message_id: m.id,
+            conversation_id: m.conversationId ?? null,
+            from: sender,
+            received: m.receivedDateTime ?? null,
+            attachment_name: name,
+          };
+          if (inspection.action === "quarantine") {
+            await create(db, extractor(context.userId), {
+              ...payload(
+                "CoCreationArtifact",
+                `Email attachment · quarantined`,
+                `Attachment from Outlook message quarantined uninspected`,
+                {
+                  session_ref: data.session_id,
+                  kind: "brought_in_document",
+                  media_ref: null,
+                  content: null,
+                  duration_or_size: size,
+                  captured_at: new Date().toISOString(),
+                  captured_by: context.userId,
+                  speaker_id: data.speaker_id,
+                  content_tier: inspection.tier,
+                  tier_basis: inspection.tier_basis,
+                  consent_basis: consentIds,
+                  extraction_state: "quarantined",
+                  quarantine_reason: inspection.reason,
+                  evidence_weight: "corroborating",
+                  provenance,
+                },
+                {
+                  owner: session.owner_id,
+                  tier: inspection.tier,
+                  rationale: "Attachment not stored: content could not be inspected",
+                },
+              ),
+            });
+            attachments.push({
+              name,
+              stored: false,
+              quarantined: true,
+              reason: inspection.reason,
+              tier_basis: inspection.tier_basis,
+            });
             continue;
           }
           const path = `outlook/${data.session_id}/${m.id}/${a.id}`;
@@ -3436,36 +3502,21 @@ export const ingestOutlookMessage = createServerFn({ method: "POST" })
                 captured_at: new Date().toISOString(),
                 captured_by: context.userId,
                 speaker_id: data.speaker_id,
-                content_tier: tier.tier,
-                consent_basis:
-                  (
-                    await db
-                      .from("consent_records")
-                      .select("id")
-                      .eq("session_id", data.session_id)
-                      .is("withdrawn_at", null)
-                  ).data?.map((x: { id: string }) => x.id) ?? [],
+                content_tier: inspection.tier,
+                tier_basis: inspection.tier_basis,
+                consent_basis: consentIds,
                 extraction_state: "pending",
                 evidence_weight: "corroborating",
-                provenance: {
-                  simulated: false,
-                  adapter: "Outlook.connector",
-                  source: "microsoft_outlook",
-                  message_id: m.id,
-                  conversation_id: m.conversationId ?? null,
-                  from: sender,
-                  received: m.receivedDateTime ?? null,
-                  attachment_name: name,
-                },
+                provenance,
               },
               {
                 owner: session.owner_id,
-                tier: tier.tier,
+                tier: inspection.tier,
                 rationale: "Ingested from Outlook with provenance",
               },
             ),
           });
-          attachments.push({ name, stored: true });
+          attachments.push({ name, stored: true, tier_basis: inspection.tier_basis });
         }
       }
     }
