@@ -43,8 +43,8 @@ function DraftList({ drafts, origin, sourceRef, onConfirmed }: { drafts: DraftSi
               setBusy(d.observed_condition);
               try {
                 const r = await confirm({ data: { origin, observed_condition: d.observed_condition, evidence_refs: [], source_ref: sourceRef, extraction_method: origin === "human_expertise" ? "manual" : "model_extraction" } });
-                if (r["status"] === "duplicate") {
-                  const ex = r["existing_signal"] as { human_ref: string };
+                if (r.status === "duplicate") {
+                  const ex = r.existing_signal!;
                   toast.info(`Already recorded as ${ex.human_ref} — the existing signal is surfaced instead.`);
                 } else toast.success("Signal recorded in detected state");
                 onConfirmed();
@@ -79,9 +79,9 @@ function IntakePanel({ onChanged }: { onChanged: () => void }) {
   async function submitDirect() {
     setBusy(true);
     try {
-      const r = (await record({ data: { observed_condition: condition, affected_population: population || undefined, urgency: (urgency || undefined) as never, potential_value: value || undefined, evidence_refs: [] } })) as Record<string, unknown>;
-      if (r["status"] === "duplicate") {
-        const ex = r["existing_signal"] as { human_ref: string };
+      const r = await record({ data: { observed_condition: condition, affected_population: population || undefined, urgency: (urgency || undefined) as never, potential_value: value || undefined, evidence_refs: [] } });
+      if (r.status === "duplicate") {
+        const ex = r.existing_signal!;
         toast.info(`Already recorded as ${ex.human_ref} — the existing signal is surfaced instead.`);
       } else toast.success("Signal recorded in detected state");
       setCondition(""); setPopulation(""); setUrgency(""); setValue("");
@@ -174,9 +174,9 @@ function PromoteControl({ signalId, state, onChanged }: { signalId: string; stat
       <Button variant="outline" size="sm" disabled={busy || !rationale.trim()} onClick={async () => {
         setBusy(true); setResult("");
         try {
-          const r = (await promote({ data: { signal_id: signalId, rationale } })) as Record<string, unknown>;
-          if (r["promoted"]) { toast.success("Signal promoted — it can now originate a mission"); onChanged(); }
-          else setResult(String(r["note"] ?? "Recorded as a suggestion; state unchanged."));
+          const r = await promote({ data: { signal_id: signalId, rationale } });
+          if (r.promoted) { toast.success("Signal promoted — it can now originate a mission"); onChanged(); }
+          else setResult(r.note ?? "Recorded as a suggestion; state unchanged.");
         } catch (e) { toast.error(errorText(e)); } finally { setBusy(false); }
       }}>{busy ? "Recording…" : "Promote signal"}</Button>
       {result && <p role="status" className="text-xs text-muted-foreground">{result}</p>}
