@@ -174,7 +174,7 @@ function PromoteControl({ signalId, state, onChanged }: { signalId: string; stat
       <Button variant="outline" size="sm" disabled={busy || !rationale.trim()} onClick={async () => {
         setBusy(true); setResult("");
         try {
-          const r = await promote({ data: { signal_id: signalId, rationale } });
+          const r = (await promote({ data: { signal_id: signalId, rationale } })) as Record<string, unknown>;
           if (r["promoted"]) { toast.success("Signal promoted — it can now originate a mission"); onChanged(); }
           else setResult(String(r["note"] ?? "Recorded as a suggestion; state unchanged."));
         } catch (e) { toast.error(errorText(e)); } finally { setBusy(false); }
