@@ -7,7 +7,7 @@ vi.mock("./agent-session.server", () => ({ agentReadClient: vi.fn(async () => ({
   const chain = { select: () => chain, eq: () => chain, contains: () => chain, limit: () => chain, maybeSingle: () => chain, then: (resolve: (v: unknown) => unknown) => fake.read().then(resolve) };
   return chain;
 }, rpc: fake.read })) }));
-vi.mock("./tools.server", () => ({ HANDLERS: { detect_value_signal: fake.handler, score_value_signal: fake.handler } }));
+vi.mock("./tools.server", () => ({ HANDLERS: { detect_value_signal: fake.handler, score_value_signal: fake.handler, confirm_object: fake.handler } }));
 const id = "11111111-1111-4111-8111-111111111111";
 const begin = { refused: false, call_id: id, agent: { id, name: "test", auth_user_id: id, owner_id: id, authority_ceiling: "recommend" } };
 beforeEach(() => {
@@ -17,6 +17,13 @@ beforeEach(() => {
   fake.rpc.mockImplementation(async (name: string) => name === "thread_agent_begin_call" ? { data: begin, error: null } : { data: 123, error: null });
 });
 describe("MCP receipt enforcement", () => {
+  it("confirm_object is reachable through tools/call but rejects agents with HUMAN_ONLY before handler dispatch", async () => {
+    const result = await handleRpc("test-hash", { jsonrpc: "2.0", id: 1, method: "tools/call", params: {
+      name: "confirm_object", arguments: { object_id: id, expected_version: 1, to_state: "confirmed", rationale: "Confirm the drafted material" },
+    } });
+    expect(result).toMatchObject({ result: { isError: true, structuredContent: { code: "HUMAN_ONLY" } } });
+    expect(fake.handler).not.toHaveBeenCalled();
+  });
   it.each(["resources/read", "prompts/list", "prompts/get"])("%s does not turn failed permitted retrieval into success", async method => {
     fake.read.mockResolvedValue({ data: null, error: { message: "unavailable" } });
     const result = await handleRpc("test-hash", { jsonrpc: "2.0", id: 1, method, params: { uri: "thread://glossary", name: "TP-2026-0001" } });

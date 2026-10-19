@@ -3128,6 +3128,7 @@ export type Database = {
         Args: { p: Json; p_actor: Json; p_operation: string }
         Returns: Json
       }
+      thread_intake_read_selftest: { Args: never; Returns: Json }
       thread_issue_confirmation: {
         Args: {
           p_actor: Json

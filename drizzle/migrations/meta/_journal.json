@@ -526,6 +526,13 @@
       "when": 1792377804533,
       "tag": "0074_signal_intake_si1_selftest",
       "breakpoints": true
+    },
+    {
+      "idx": 75,
+      "version": "7",
+      "when": 1792377965777,
+      "tag": "0075_intake_read_classification",
+      "breakpoints": true
     }
   ]
 }
