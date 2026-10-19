@@ -2275,6 +2275,39 @@ export type Database = {
         }
         Relationships: []
       }
+      signal_intake_captures: {
+        Row: {
+          consent_confirmed: boolean
+          created_at: string
+          id: string
+          modalities: Json
+          owner_id: string
+          purpose: string
+          resolved_at: string | null
+          status: string
+        }
+        Insert: {
+          consent_confirmed: boolean
+          created_at?: string
+          id?: string
+          modalities: Json
+          owner_id: string
+          purpose: string
+          resolved_at?: string | null
+          status?: string
+        }
+        Update: {
+          consent_confirmed?: boolean
+          created_at?: string
+          id?: string
+          modalities?: Json
+          owner_id?: string
+          purpose?: string
+          resolved_at?: string | null
+          status?: string
+        }
+        Relationships: []
+      }
       signal_intake_events: {
         Row: {
           created_at: string
@@ -3774,6 +3807,8 @@ export type Database = {
         | "confirmed"
         | "rejected"
         | "duplicate"
+        | "no_proposal"
+        | "abandoned"
       risk_tier: "1" | "2" | "3" | "4"
       signal_origin:
         | "agent_sensor"
@@ -3938,6 +3973,8 @@ export const Constants = {
         "confirmed",
         "rejected",
         "duplicate",
+        "no_proposal",
+        "abandoned",
       ],
       risk_tier: ["1", "2", "3", "4"],
       signal_origin: [
