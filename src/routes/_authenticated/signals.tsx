@@ -298,42 +298,44 @@ function IntakePanel({ onChanged }: { onChanged: () => void }) {
             {busy ? "Saving…" : "Save signal"}
           </Button>
           <details>
-            <summary className="cursor-pointer text-sm text-muted-foreground">Additional signal details (optional)</summary>
-          <div className="grid gap-3 sm:grid-cols-3">
-            <div className="space-y-1">
-              <Label htmlFor="si-population">Affected population</Label>
-              <Input
-                id="si-population"
-                maxLength={500}
-                value={population}
-                onChange={(e) => setPopulation(e.target.value)}
-              />
+            <summary className="cursor-pointer text-sm text-muted-foreground">
+              Additional signal details (optional)
+            </summary>
+            <div className="grid gap-3 sm:grid-cols-3">
+              <div className="space-y-1">
+                <Label htmlFor="si-population">Affected population</Label>
+                <Input
+                  id="si-population"
+                  maxLength={500}
+                  value={population}
+                  onChange={(e) => setPopulation(e.target.value)}
+                />
+              </div>
+              <div className="space-y-1">
+                <Label htmlFor="si-urgency">Urgency</Label>
+                <select
+                  id="si-urgency"
+                  value={urgency}
+                  onChange={(e) => setUrgency(e.target.value)}
+                  className="h-9 w-full rounded-md border bg-background px-2 text-sm"
+                >
+                  <option value="">Not recorded</option>
+                  <option value="low">Low</option>
+                  <option value="medium">Medium</option>
+                  <option value="high">High</option>
+                  <option value="critical">Critical</option>
+                </select>
+              </div>
+              <div className="space-y-1">
+                <Label htmlFor="si-value">Potential value</Label>
+                <Input
+                  id="si-value"
+                  maxLength={300}
+                  value={value}
+                  onChange={(e) => setValue(e.target.value)}
+                />
+              </div>
             </div>
-            <div className="space-y-1">
-              <Label htmlFor="si-urgency">Urgency</Label>
-              <select
-                id="si-urgency"
-                value={urgency}
-                onChange={(e) => setUrgency(e.target.value)}
-                className="h-9 w-full rounded-md border bg-background px-2 text-sm"
-              >
-                <option value="">Not recorded</option>
-                <option value="low">Low</option>
-                <option value="medium">Medium</option>
-                <option value="high">High</option>
-                <option value="critical">Critical</option>
-              </select>
-            </div>
-            <div className="space-y-1">
-              <Label htmlFor="si-value">Potential value</Label>
-              <Input
-                id="si-value"
-                maxLength={300}
-                value={value}
-                onChange={(e) => setValue(e.target.value)}
-              />
-            </div>
-          </div>
           </details>
         </form>
       )}
@@ -464,25 +466,53 @@ function IntakePanel({ onChanged }: { onChanged: () => void }) {
           sourceRef={draftSource}
           onConfirmed={(result, confirmed) => {
             saved(result);
-            setDrafts((current) => current.filter((draft) => draft.observed_condition !== confirmed));
+            setDrafts((current) =>
+              current.filter((draft) => draft.observed_condition !== confirmed),
+            );
           }}
         />
       )}
-      {issue && <p role="alert" className="text-sm text-destructive">{issue}</p>}
-      {outcome && <p role="status" className="text-sm text-muted-foreground">{outcome}</p>}
+      {issue && (
+        <p role="alert" className="text-sm text-destructive">
+          {issue}
+        </p>
+      )}
+      {outcome && (
+        <p role="status" className="text-sm text-muted-foreground">
+          {outcome}
+        </p>
+      )}
       {receipt && (
         <div role="status" className="space-y-2 border-t pt-3 text-sm">
           <p>
-            Saved <Link to="/signals/$signalId" params={{ signalId: receipt.id }} className="ident underline">{receipt.human_ref}</Link>
-            {" · "}{receipt.lifecycle_state}
+            Saved{" "}
+            <Link
+              to="/signals/$signalId"
+              params={{ signalId: receipt.id }}
+              className="ident underline"
+            >
+              {receipt.human_ref}
+            </Link>
+            {" · "}
+            {receipt.lifecycle_state}
           </p>
           {receipt.lifecycle_state !== "promoted" && (
-            <PromoteControl signalId={receipt.id} state={receipt.lifecycle_state} onChanged={() => {
-              setReceipt((current) => current ? { ...current, lifecycle_state: "promoted" } : null);
-              onChanged();
-            }} />
+            <PromoteControl
+              signalId={receipt.id}
+              state={receipt.lifecycle_state}
+              onChanged={() => {
+                setReceipt((current) =>
+                  current ? { ...current, lifecycle_state: "promoted" } : null,
+                );
+                onChanged();
+              }}
+            />
           )}
-          {receipt.lifecycle_state === "promoted" && <Button variant="outline" size="sm" asChild><Link to="/missions">Return to Value Missions</Link></Button>}
+          {receipt.lifecycle_state === "promoted" && (
+            <Button variant="outline" size="sm" asChild>
+              <Link to="/missions">Return to Value Missions</Link>
+            </Button>
+          )}
         </div>
       )}
     </section>

@@ -387,7 +387,8 @@ export function MissionForm({
                   </p>
                 )}
                 <p className="text-xs text-muted-foreground">
-                  Only promoted signals are available as mission sources; newly saved signals remain in the Signal Register until promoted.
+                  Only promoted signals are available as mission sources; newly saved signals remain
+                  in the Signal Register until promoted.
                 </p>
                 <Button variant="outline" size="sm" asChild>
                   <Link to="/signals">Record a new signal</Link>
