@@ -34,7 +34,7 @@ function errText(e: unknown): string {
 
 function waitForOAuthCompletion(popup: Window, connectorId: string): Promise<string | null> {
   return new Promise((resolve, reject) => {
-    let poll: number | undefined;
+    const poll: number | undefined = undefined;
     const cleanup = () => {
       window.removeEventListener("message", onMessage);
       if (poll !== undefined) window.clearInterval(poll);
