@@ -17,6 +17,8 @@ import {
   applyPostRules,
   artifactModality,
   confirmedState,
+  confirmationAuthority,
+  confirmationReason,
   entryTestComplete,
   entryTestSentence,
   evidenceWeight,
@@ -1788,7 +1790,6 @@ export const confirmObject = createServerFn({ method: "POST" })
       throw threadError(`ALREADY_${xs.lifecycle_state.toUpperCase()}: ${xs.human_ref}`);
     const ap = authorityParticipant(session, context.userId);
     const me = participants(session).find((p) => p.user_id === context.userId);
-    const { confirmationReason } = await import("@/domain/framing");
     const needsAuthority = confirmationReason(xs.body) !== null;
     if (needsAuthority && !ap)
       throw threadError(
