@@ -50,18 +50,25 @@ async function outboxDelete(id: string): Promise<void> {
   db.close();
 }
 
-export async function outboxCount(): Promise<number> {
-  const db = await openDb();
-  const n = await new Promise<number>((resolve, reject) => {
-    const req = db.transaction(STORE).objectStore(STORE).count();
-    req.onsuccess = () => resolve(req.result);
-    req.onerror = () => reject(req.error);
-  });
-  db.close();
-  return n;
+/**
+ * Count buffered chunks. With `accountId`, counts only that account's chunks —
+ * a different signed-in account never sees or sends another account's audio.
+ */
+export async function outboxCount(accountId?: string): Promise<number> {
+  if (accountId === undefined) {
+    const db = await openDb();
+    const n = await new Promise<number>((resolve, reject) => {
+      const req = db.transaction(STORE).objectStore(STORE).count();
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => reject(req.error);
+    });
+    db.close();
+    return n;
+  }
+  return (await outboxAll(accountId)).length;
 }
 
-export async function outboxAll(): Promise<CaptureChunk[]> {
+export async function outboxAll(accountId?: string): Promise<CaptureChunk[]> {
   const db = await openDb();
   const all = await new Promise<CaptureChunk[]>((resolve, reject) => {
     const req = db.transaction(STORE).objectStore(STORE).getAll();
@@ -69,7 +76,8 @@ export async function outboxAll(): Promise<CaptureChunk[]> {
     req.onerror = () => reject(req.error);
   });
   db.close();
-  return all;
+  if (accountId === undefined) return all;
+  return all.filter((c) => c.accountId === accountId);
 }
 
 export function encodeWav(chunks: readonly Float32Array[], sampleRate: number): ArrayBuffer {
