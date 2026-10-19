@@ -72,7 +72,11 @@ describe("signal intake field gating (W3.4)", () => {
     await expect(
       recordSignalCore(
         ctx,
-        { observed_condition: "Queue depth keeps growing", source_ref: `feed ${PAN}`, evidence_refs: [] },
+        {
+          observed_condition: "Queue depth keeps growing",
+          source_ref: `feed ${PAN}`,
+          evidence_refs: [],
+        },
         "agent_sensor",
       ),
     ).rejects.toThrow(/INTAKE_BLOCKED_PAN/);
@@ -108,7 +112,10 @@ describe("signal intake field gating (W3.4)", () => {
     const { ctx, rpc } = fakeCtx();
     rpc.mockRejectedValueOnce(new Error("CAPTURE_ALREADY_RESOLVED"));
     await expect(
-      completeCaptureCore(ctx, { capture_id: "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa", transcript: `pay ${PAN}` }),
+      completeCaptureCore(ctx, {
+        capture_id: "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+        transcript: `pay ${PAN}`,
+      }),
     ).rejects.toThrow(/CAPTURE_ALREADY_RESOLVED/);
     // The replayed id was rejected first; the transcript was never even gated.
     expect(ops(rpc)).toEqual(["complete_capture"]);
