@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useSurface, EvidenceLink, errorText } from "@/components/human-surfaces";
 import { Button } from "@/components/ui/button";
 
-export const Route = createFileRoute("/_authenticated/signals/$signalId")({
+export const Route = createFileRoute("/_authenticated/signals_/$signalId")({
   head: () => ({
     meta: [
       { title: "Value Signal · THREAD" },
