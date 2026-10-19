@@ -505,6 +505,13 @@
       "when": 1792297663345,
       "tag": "0071_app_user_connections",
       "breakpoints": true
+    },
+    {
+      "idx": 72,
+      "version": "7",
+      "when": 1792374411387,
+      "tag": "0072_signal_intake",
+      "breakpoints": true
     }
   ]
 }
