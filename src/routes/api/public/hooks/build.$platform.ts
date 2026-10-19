@@ -93,7 +93,8 @@ export const Route = createFileRoute("/api/public/hooks/build/$platform")({
           p: {
             run_id: j.run_id,
             external_run_id: j.external_run_id,
-            status: j.status,
+            outcome: j.outcome,
+            mirrored_from: `platform_webhook:${platform}`,
             cost_actual: j.cost,
             duration_ms: j.duration_ms,
             secrets_scan: j.secrets_scan,

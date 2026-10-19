@@ -199,8 +199,8 @@ export async function dispatchCore(
       return {
         run_id: disp.run_id,
         human_ref: disp.human_ref,
-        status: "dispatched",
-        note: "results arrive by signed webhook",
+        outcome: null,
+        note: "results arrive by signed webhook; the platform owns execution status",
       } as Json;
     }
     const st = await adapter.status(external_run_id);
@@ -210,7 +210,8 @@ export async function dispatchCore(
       p: {
         run_id: disp.run_id,
         external_run_id,
-        status: st.state === "succeeded" ? "succeeded" : "failed",
+        outcome: st.state === "succeeded" ? "succeeded" : "failed",
+        mirrored_from: `adapter:${adapter.mode}`,
         cost_actual: st.cost,
         duration_ms: st.duration_ms,
         secrets_scan: st.secrets_scan,
@@ -229,7 +230,12 @@ export async function dispatchCore(
       );
     const failed = await sb.rpc("thread_record_build_result", {
       p_actor: actor,
-      p: { run_id: disp.run_id, status: "failed", failure_reason: msg.slice(0, 500) },
+      p: {
+        run_id: disp.run_id,
+        outcome: "failed",
+        mirrored_from: `adapter:${adapter.mode}`,
+        failure_reason: msg.slice(0, 500),
+      },
     } as never);
     if (failed.error) throw err(`RESULT_RECORDING_FAILED: reconcile run ${disp.run_id}`);
     throw e;

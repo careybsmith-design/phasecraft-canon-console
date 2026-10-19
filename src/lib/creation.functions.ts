@@ -185,7 +185,7 @@ export const dispatchBuild = createServerFn({ method: "POST" })
     const out: Array<{
       platform: Platform;
       ok: boolean;
-      result: { human_ref: string; status: string } | null;
+      result: { human_ref: string; outcome: string | null } | null;
       error: string | null;
     }> = [];
     for (const platform of data.platforms) {
@@ -203,7 +203,7 @@ export const dispatchBuild = createServerFn({ method: "POST" })
             error: null,
             result: {
               human_ref: String(x["human_ref"]),
-              status: String(x["status"] ?? "dispatched"),
+              outcome: x["outcome"] == null ? null : String(x["outcome"]),
             },
           });
         }
