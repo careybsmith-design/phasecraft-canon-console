@@ -11,7 +11,8 @@ const Result = z
   .object({
     run_id: z.string().uuid(),
     external_run_id: z.string().trim().min(1).max(200),
-    status: z.enum(["succeeded", "failed"]),
+    // L-08: the platform reports its final outcome; THREAD never stores live execution status
+    outcome: z.enum(["succeeded", "failed", "partial"]),
     cost: z.number().finite().nonnegative().optional(),
     duration_ms: z.number().int().nonnegative().optional(),
     secrets_scan: z.string().max(200).optional(),

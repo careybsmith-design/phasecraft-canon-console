@@ -48,13 +48,8 @@ export const LIFECYCLE_FAMILIES = {
     ["underperforming"],
     ["retired"],
   ],
-  creation_run: [
-    ["compiled"],
-    ["dispatched"],
-    ["running"],
-    ["succeeded", "failed"],
-    ["superseded"],
-  ],
+  // L-08: no execution states — a prompt records lineage only; the platform owns running/succeeded/failed
+  creation_run: [["compiled"], ["dispatched"], ["superseded"]],
   rendition: [["live"], ["stale"], ["deleted"]],
   // States named in Part 4.3 for specific types
   detector_finding: [["new"], ["acknowledged"], ["remediated", "accepted_risk", "false_positive"]],
