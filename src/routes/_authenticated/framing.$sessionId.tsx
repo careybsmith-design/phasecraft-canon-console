@@ -846,15 +846,16 @@ function StatementCard({
           >
             Reject
           </Button>
-          {x.body.material && (
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => setMode(mode === "defer" ? null : "defer")}
-            >
-              Defer
-            </Button>
-          )}
+            {x.body.material && (
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => setMode(mode === "defer" ? null : "defer")}
+              >
+                Defer
+              </Button>
+            )}
+          </div>
         </div>
       )}
       {mode === "edit" && (
