@@ -21,6 +21,8 @@ export const INTAKE_STATUSES = [
   "confirmed",
   "rejected",
   "duplicate",
+  "no_proposal",
+  "abandoned",
 ] as const;
 export type IntakeStatus = (typeof INTAKE_STATUSES)[number];
 
@@ -61,6 +63,8 @@ export const CaptureStartInput = z
       .min(1)
       .max(2),
     purpose: text(500),
+    /** W3.2: a capture opens only when the opener positively confirms every participant consented. */
+    consent_confirmed: z.literal(true),
   })
   .strict();
 
@@ -70,6 +74,8 @@ export const CaptureCompleteInput = z
     transcript: text(20000),
   })
   .strict();
+
+export const CaptureAbandonInput = z.object({ capture_id: id }).strict();
 
 /** Human confirmation of one draft proposal from the artifact, capture or detector channel. */
 export const ConfirmDraftInput = z
