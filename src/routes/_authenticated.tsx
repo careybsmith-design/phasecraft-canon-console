@@ -2,6 +2,8 @@ import { createFileRoute, Outlet, useNavigate, Link } from "@tanstack/react-rout
 import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
+import { TEST_MODE } from "@/lib/test-mode";
+import { ensureTestStewardRole } from "@/lib/test-mode.functions";
 import { Button } from "@/components/ui/button";
 import { CompanionPanel } from "@/components/human-surfaces";
 import {
@@ -57,11 +59,44 @@ function AuthedLayout() {
   const { session, loading, user } = useAuth();
   const navigate = useNavigate();
   const [companionOpen, setCompanionOpen] = useState(false);
+  const [testSigningIn, setTestSigningIn] = useState(false);
   const qc = useQueryClient();
   useEffect(() => {
-    if (!loading && !session) navigate({ to: "/auth" });
-  }, [loading, session, navigate]);
-  if (loading || !session) return <p className="p-6 text-muted-foreground">Checking session…</p>;
+    if (loading || session) return;
+    if (!TEST_MODE) {
+      navigate({ to: "/auth" });
+      return;
+    }
+    // TEST MODE: hand the browser a disposable anonymous session instead of
+    // the sign-in page, so every record still carries a verified actor.
+    if (testSigningIn) return;
+    setTestSigningIn(true);
+    supabase.auth
+      .signInAnonymously()
+      .then(async ({ error }) => {
+        if (error) {
+          setTestSigningIn(false);
+          navigate({ to: "/auth" });
+          return;
+        }
+        try {
+          await ensureTestStewardRole();
+        } catch (roleError) {
+          console.error("Test-mode steward grant failed", roleError);
+        }
+      })
+      .catch(() => {
+        setTestSigningIn(false);
+        navigate({ to: "/auth" });
+      });
+  }, [loading, session, navigate, testSigningIn]);
+  if (loading || !session) {
+    return (
+      <p className="p-6 text-muted-foreground">
+        {TEST_MODE && testSigningIn ? "Preparing test session…" : "Checking session…"}
+      </p>
+    );
+  }
   return (
     <div className="thread-shell">
       <header className="thread-navigation">
