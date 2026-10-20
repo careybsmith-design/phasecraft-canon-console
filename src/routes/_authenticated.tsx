@@ -2,6 +2,8 @@ import { createFileRoute, Outlet, useNavigate, Link } from "@tanstack/react-rout
 import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
+import { TEST_MODE } from "@/lib/test-mode";
+import { ensureTestStewardRole } from "@/lib/test-mode.functions";
 import { Button } from "@/components/ui/button";
 import { CompanionPanel } from "@/components/human-surfaces";
 import {
@@ -57,13 +59,54 @@ function AuthedLayout() {
   const { session, loading, user } = useAuth();
   const navigate = useNavigate();
   const [companionOpen, setCompanionOpen] = useState(false);
+  const [testSigningIn, setTestSigningIn] = useState(false);
   const qc = useQueryClient();
   useEffect(() => {
-    if (!loading && !session) navigate({ to: "/auth" });
-  }, [loading, session, navigate]);
-  if (loading || !session) return <p className="p-6 text-muted-foreground">Checking session…</p>;
+    if (loading || session) return;
+    if (!TEST_MODE) {
+      navigate({ to: "/auth" });
+      return;
+    }
+    // TEST MODE: hand the browser a disposable anonymous session instead of
+    // the sign-in page, so every record still carries a verified actor.
+    if (testSigningIn) return;
+    setTestSigningIn(true);
+    supabase.auth
+      .signInAnonymously()
+      .then(async ({ error }) => {
+        if (error) {
+          setTestSigningIn(false);
+          navigate({ to: "/auth" });
+          return;
+        }
+        try {
+          await ensureTestStewardRole();
+        } catch (roleError) {
+          console.error("Test-mode steward grant failed", roleError);
+        }
+      })
+      .catch(() => {
+        setTestSigningIn(false);
+        navigate({ to: "/auth" });
+      });
+  }, [loading, session, navigate, testSigningIn]);
+  if (loading || !session) {
+    return (
+      <p className="p-6 text-muted-foreground">
+        {TEST_MODE && testSigningIn ? "Preparing test session…" : "Checking session…"}
+      </p>
+    );
+  }
   return (
     <div className="thread-shell">
+      {TEST_MODE && (
+        <div
+          role="status"
+          className="border-b border-border bg-muted px-4 py-1.5 text-center text-xs text-muted-foreground"
+        >
+          Test mode — authentication disabled. Records created here are temporary build-test data.
+        </div>
+      )}
       <header className="thread-navigation">
         <Link to="/feed" className="thread-brand">
           THREAD
@@ -77,7 +120,9 @@ function AuthedLayout() {
           ))}
         </nav>
         <div className="thread-account">
-          <span className="thread-account-email">{user?.email}</span>
+          <span className="thread-account-email">
+            {user?.email || (TEST_MODE ? "Test session" : "")}
+          </span>
           <Sheet open={companionOpen} onOpenChange={setCompanionOpen}>
             <SheetTrigger asChild>
               <Button
@@ -108,7 +153,9 @@ function AuthedLayout() {
             Sign out
           </Button>
         </div>
-        <span className="thread-account-email-mobile">{user?.email}</span>
+        <span className="thread-account-email-mobile">
+          {user?.email || (TEST_MODE ? "Test session" : "")}
+        </span>
       </header>
       <div className="thread-workspace">
         <Outlet />

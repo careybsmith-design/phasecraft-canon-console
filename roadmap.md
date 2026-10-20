@@ -283,3 +283,4 @@ Whole-build audit — permanent open items
 - [ ] D: re-verify D1–D9 and frontier advisory — not re-run this round (prior 0082/0083 evidence stands); two-person run blocked on a second real human.
 - [ ] E: W2.4/W3.1/W3.3/W3.4/W3.5 evidence — not produced this round; status stays unverified.
 - [ ] PDF/DOCX/XLSX text extraction — quarantined until a real extractor is approved.
+- [ ] Restore authentication before release (test mode is active): set TEST_MODE false (src/lib/test-mode.ts), turn anonymous sign-ins back off in the backend, delete the disposable anonymous test accounts (auth.users is_anonymous = true) and their build-test rows.
