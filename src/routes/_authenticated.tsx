@@ -153,7 +153,9 @@ function AuthedLayout() {
             Sign out
           </Button>
         </div>
-        <span className="thread-account-email-mobile">{user?.email}</span>
+        <span className="thread-account-email-mobile">
+          {user?.email || (TEST_MODE ? "Test session" : "")}
+        </span>
       </header>
       <div className="thread-workspace">
         <Outlet />
