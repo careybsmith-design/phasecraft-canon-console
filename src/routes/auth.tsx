@@ -1,6 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { TEST_MODE } from "@/lib/test-mode";
 import { lovable } from "@/integrations/lovable/index";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
@@ -34,7 +35,9 @@ function AuthPage() {
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    if (session) navigate({ to: "/feed" });
+    // TEST MODE: the sign-in page hands straight through to the app, where the
+    // layout mints a disposable anonymous session.
+    if (session || TEST_MODE) navigate({ to: "/feed" });
   }, [session, navigate]);
 
   async function submit(e: React.FormEvent) {

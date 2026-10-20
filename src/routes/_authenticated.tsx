@@ -99,6 +99,14 @@ function AuthedLayout() {
   }
   return (
     <div className="thread-shell">
+      {TEST_MODE && (
+        <div
+          role="status"
+          className="border-b border-border bg-muted px-4 py-1.5 text-center text-xs text-muted-foreground"
+        >
+          Test mode — authentication disabled. Records created here are temporary build-test data.
+        </div>
+      )}
       <header className="thread-navigation">
         <Link to="/feed" className="thread-brand">
           THREAD
@@ -112,7 +120,9 @@ function AuthedLayout() {
           ))}
         </nav>
         <div className="thread-account">
-          <span className="thread-account-email">{user?.email}</span>
+          <span className="thread-account-email">
+            {user?.email || (TEST_MODE ? "Test session" : "")}
+          </span>
           <Sheet open={companionOpen} onOpenChange={setCompanionOpen}>
             <SheetTrigger asChild>
               <Button
