@@ -17,8 +17,6 @@ export const TEST_MODE = true;
 // A test-mode grant may only ever touch a session whose token is flagged
 // anonymous. Real (email/Google) accounts never pass this predicate, so the
 // steward grant below is unreachable for them.
-export function isTestEligible(
-  claims: Record<string, unknown> | null | undefined,
-): boolean {
+export function isTestEligible(claims: Record<string, unknown> | null | undefined): boolean {
   return claims?.["is_anonymous"] === true;
 }
