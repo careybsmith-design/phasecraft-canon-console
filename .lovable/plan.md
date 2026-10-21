@@ -1,20 +1,13 @@
 # THREAD — narrated, step-by-step video training series
 
-## Purpose
-Create a practical training library that teaches new users **why to use THREAD, what to do next, exactly where to click, and how to verify the result**. Follow the Simple User Guide, correcting its gaps against the actual application before filming.
+## Purpose and teaching approach
+Plan **15 lessons, about 97 minutes**, following the Simple User Guide and actual THREAD controls. Teach why, where to click, what to enter, and how to verify the result. No app changes or video generation yet.
 
-Use original, 3Blue1Brown-inspired visual explanations: progressive diagrams, connected objects, cause-and-effect animations and restrained text. Combine those explanations with readable screenshots of THREAD and an original ElevenLabs narrator—not an imitation of the creator's voice or branding.
+Combine original **3Blue1Brown-inspired animated diagrams** with readable THREAD screenshots and ElevenLabs narration—not the creator's voice or branding. Produce one pilot before the full series.
 
-**Recommended scope:** 15 chaptered lessons, approximately **97 minutes** in total. Short chapters make the library usable both as a course and as a reference. Produce one pilot first; approve its clarity, voice and pacing before producing the remaining lessons. No app changes, deployment or videos are part of this planning step.
+Use one proposed fictional training example: **reduce internal service-request turnaround from nine days to two**. Label it as training, not company facts or demonstrated results. Follow the same records across lessons.
 
-## Teaching approach
-- One continuing worked example: **reduce internal service-request turnaround from nine days to two**. These are proposed fictional training values, not company facts or demonstrated results. Label examples as training throughout.
-- Follow the same Signal, Mission, session, confirmed objects and evidence through the course rather than introducing unrelated examples.
-- Each action uses **Why → Where → What to enter → What to click → What success looks like**.
-- Show the full journey once, then teach specialist tools when the learner actually needs them. Do not start with a long catalogue of technical terms.
-- Explain new terms in everyday language before showing the THREAD term.
-- Every lesson starts with prerequisites and ends with a visible result, a small practice task and the next lesson.
-- Show important failure/recovery cases: unsaved entry, duplicate signal, missing promotion, wrong decision authority, held-back attachments, incomplete evidence and unavailable external services.
+Every lesson: prerequisite → why → demonstrated steps → visible saved/result checkpoint → common mistake/recovery → practice → next lesson. Explain terms in plain language. Introduce specialist tools when needed, not as an opening terminology lecture.
 
 ## Curriculum and walkthroughs
 
@@ -43,38 +36,34 @@ Use original, 3Blue1Brown-inspired visual explanations: progressive diagrams, co
 - **Steward / reviewer:** 1–2, 8–10 and 12–15.
 All menu destinations receive an introduction; substantial workflows receive dedicated demonstrations rather than token mentions.
 
-## Screenshot and visual plan
-- Capture the actual training build, not design-proposal images or invented UI. Existing design images are brand references only.
-- Per procedure: show destination, completed inputs, submission, saved result, reopened result and relevant error/authority states. Zoom into readable controls; highlight one action at a time.
-- Inventory images by lesson/step, record reference, build version and date. Hide personal identifiers and secrets; preserve consistent case references.
-- Use an owner-approved populated training environment with two genuine participant roles. Do not weaken protections or fabricate evidence. Agree labels and cleanup before adding any training records to the main environment.
-- If filming the current test build, show its test-mode banner honestly; do not teach that as final sign-in behaviour.
-- Match THREAD's charcoal/graphite, restrained gold, semantic statuses and typography. Use labels as well as colour. Roughly two-thirds screenshots and one-third diagrams; calm transitions and readable pauses.
-- Deliver 16:9, 1920×1080 narrated MP4s, chapter timestamps, separate captions/transcripts and a practice checklist per lesson. Avoid music underneath detailed instructions.
+## Screenshots and presentation
+- Capture actual controls and populated workflow states from the training build, not design-proposal images. Existing proposals are brand references only.
+- Show destination, inputs, submission, saved result, reopened result and relevant failure/authority state. Use close-ups, one highlighted action and readable pauses.
+- Inventory images by lesson/step, record reference, version/date. Hide personal identifiers and secrets; keep case references consistent.
+- Use an owner-approved training environment with two genuine participants. Agree labels/cleanup before adding records to the main environment; never weaken safeguards or fabricate evidence. Show any current test-mode banner honestly.
+- Match THREAD's charcoal, gold, typography and semantic statuses. Use colour plus labels. Roughly two-thirds practical screenshots and one-third diagrams.
+- Output: 16:9 1080p narrated MP4s, chapters, captions, transcript and practice checklist per lesson. No distracting music during instructions.
 
 ## ElevenLabs narration
-- Use the user's account/key through the secure ElevenLabs connection. **No ElevenLabs connection or key is currently available in this project**; open the connection card after plan approval. Never put keys in chat or scripts.
-- Proposed voice: **George**, warm and clear, approximately 125–140 words per minute. Review a 30–45 second sample before full narration; another library voice can be chosen. No cloning or imitation is required.
-- Agree pronunciation of THREAD, Co-Creator, Canon and reference numbers. Approve scripts before generating full audio; generate natural sections with continuity, then time animation to actual speech.
-- Provider usage uses the user's ElevenLabs allowance/billing. Check production cost before batch generation; no invented quote. Captions must match the final narration.
+**No ElevenLabs connection or key is currently available in this project.** After approval, open the secure connection card for the user's account/key; never paste credentials into chat or scripts.
 
-## Production and approval sequence
-1. **Approve the curriculum**, proposed example and scope.
-2. **Verify teaching accuracy** against actual controls; inventory screenshots and classify stages as live, simulated or unavailable. Correct scripts against the guide; do not silently rewrite the guide.
-3. **Prepare the training case**, required participants and evidence; connect ElevenLabs and review a short voice sample.
-4. **Produce pilot lesson 3**, testing diagrams, screenshots, narration, recovery and saved-result verification around the previously confusing Signal workflow.
-5. **Review the rendered pilot** for beginner comprehension, voice, readability and pace before batch production.
-6. **Produce and review three batches:** orientation/Mission (1–5), Framing/Graph (6–10), delivery/governance/recap (11–15).
-7. **Deliver numbered videos, captions, transcripts, checklists and learning-path index in Files.** An in-app video library is outside this request.
+Proposed voice: **George**, warm and clear, about 125–140 words/minute. Review a 30–45 second sample first; another library voice can be selected. Agree term pronunciation, approve scripts, generate natural speech sections and time animation to actual audio. Check the user's provider allowance/cost before batch production; captions match final narration.
 
-## Accuracy, dependencies and acceptance
-- Source review found guide gaps: missing Cell/Burst steps, overly strict linear Framing prerequisites, simplified consent and delivery descriptions that overstate demonstrated functionality. Resolve them in narration.
-- Retain promoted-only Mission sources and human confirmation authority. Two different people are required for Mission roles; do not invent another person's authority.
-- Verify approved extraction, image-reading clearance, speech and Microsoft connections at filming time. Unsupported documents remain held back.
-- Compiled prompts, selected live mode, recorded runs and approved decisions do not establish an external build, deployment or realised value. Keep simulations visibly labelled and missing evidence explicit.
-- Verify each narrated click against captured UI and each claimed save by reopening it. Check Graph relationships against the same records.
-- Inspect each rendered lesson for clipping, readable screenshots, highlighting, audio gaps and caption alignment. If motion review is incomplete, call it a review draft, not final.
-- Keep a coverage checklist for every menu, guide workflow, prerequisite, success state and recovery case. External integrations and populated multi-person demonstrations remain dependencies; never manufacture evidence to finish a lesson.
+## Production and approvals
+1. Approve curriculum, scope and proposed example.
+2. Verify actual controls and screenshot inventory; classify stages as live, simulated or unavailable. Correct scripts against the guide without silently editing it.
+3. Prepare participants/evidence, connect ElevenLabs and approve voice sample.
+4. Produce **pilot lesson 3**: Signal saving/promotion tests diagrams, screenshots, narration and recovery for a previously confusing workflow.
+5. Review pilot for beginner comprehension, readability, voice and pace.
+6. Produce/review batches: **1–5**, **6–10**, **11–15**.
+7. Deliver numbered videos, captions, transcripts, checklists and learning-path index in Files. In-app video integration is excluded.
+
+## Accuracy and acceptance
+- Correct guide gaps in scripts: missing Cell/Burst, overly strict Framing sequence, simplified consent and delivery claims. Mission association is optional; promoted-signal creation and human authority still apply.
+- Verify document/image extraction clearance, speech, Microsoft and build/trial connections when filming. Unsupported documents stay held back.
+- A compiled prompt, selected live mode, recorded trial or decision is not proof of external execution or realised value. Label simulations; leave blocked demonstrations explicit.
+- Verify narrated actions against UI, claimed saves by reopening, and graph relationships against the same case. Inspect each lesson for readability, clipping, highlighting, audio and caption alignment. Incomplete motion review means a review draft, not final.
+- Check coverage of every menu, workflow, prerequisite, success and recovery. Genuine two-person access and external services are production dependencies, not reasons to invent results.
 
 ## Technical delivery
 Use the animated-video engine per approved lesson, supplying the approved script/requirements, real screenshot and brand asset paths, approved ElevenLabs narration audio, localhost app URL where relevant, duration/aspect and `/mnt/documents/videos/THREAD-training/` as output. Generate voiceover securely outside client code. Retrieve and review each rendered result; no silent-music-only substitute for requested narration. Keep generated MP4s outside the source repository. No changes to authentication, permissions, schema or app functionality are needed for this plan.
