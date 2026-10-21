@@ -3,7 +3,8 @@
 ## THREAD narrated training series — 21 October 2026
 
 - [x] Prepare a beginner-to-advanced video-series plan following the simple user guide, with actual UI screenshots, animated explanations, workflow checkpoints and ElevenLabs narration.
-- [ ] Produce one narrated pilot and obtain review before batch production — awaits approval of the plan and ElevenLabs connection.
+- [x] Curriculum approved; ElevenLabs connected; original 34-second George narration sample and plan copy saved in Files. Narration succeeded; allowance lookup is unavailable because the key lacks user_read permission.
+- [ ] Produce one narrated pilot and obtain review before batch production — awaits review of the voice sample and pilot script/screenshot preparation; no full video generated yet.
 - [ ] Produce the approved remaining lessons with screenshots, captions, transcripts and end-to-end checks — awaits pilot approval and any external workflow dependencies identified during filming.
 
 ## Signal recording validation — 19 October 2026
