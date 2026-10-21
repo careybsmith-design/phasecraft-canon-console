@@ -66,4 +66,4 @@ Proposed voice: **George**, warm and clear, about 125–140 words/minute. Review
 - Check coverage of every menu, workflow, prerequisite, success and recovery. Genuine two-person access and external services are production dependencies, not reasons to invent results.
 
 ## Technical delivery
-Use the animated-video engine per approved lesson, supplying the approved script/requirements, real screenshot and brand asset paths, approved ElevenLabs narration audio, localhost app URL where relevant, duration/aspect and `/mnt/documents/videos/THREAD-training/` as output. Generate voiceover securely outside client code. Retrieve and review each rendered result; no silent-music-only substitute for requested narration. Keep generated MP4s outside the source repository. No changes to authentication, permissions, schema or app functionality are needed for this plan.
+Use the animated-video engine per lesson with approved requirements, existing screenshot/brand paths, ElevenLabs audio, local app URL and duration/aspect. Save to `/mnt/documents/videos/THREAD-training/`, outside the repository. Retrieve and review each result; narration is required. No app or security changes.
