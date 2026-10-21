@@ -4,8 +4,9 @@
 
 - [x] Prepare a beginner-to-advanced video-series plan following the simple user guide, with actual UI screenshots, animated explanations, workflow checkpoints and ElevenLabs narration.
 - [x] Curriculum approved; ElevenLabs connected; original 34-second George narration sample and plan copy saved in Files. Narration succeeded; allowance lookup is unavailable because the key lacks user_read permission.
-- [x] Produce one narrated pilot: Lesson 3 "Record and promote a Signal" (4 min 46 s, 1920x1080, George narration, 44 caption cues). Screenshots taken from the live build; saving/promotion proved on VS-2026-0018 (saved detected, survived reload) and VS-2026-0016 (detected -> promoted -> appears as a mission source). Awaiting user review before batch production.
-- [ ] Produce the approved remaining lessons with screenshots, captions, transcripts and end-to-end checks — awaits pilot approval and any external workflow dependencies identified during filming.
+- [x] Produce one narrated pilot: Lesson 3 "Record and promote a Signal" (4 min 46 s, 1920x1080, George narration, 44 caption cues). Screenshots taken from the live build; saving/promotion proved on VS-2026-0018 (saved detected, survived reload) and VS-2026-0016 (detected -> promoted -> appears as a mission source). User approved voice, detail and pace on 21 October 2026.
+- [ ] Continue approved batch 1–5: produce lessons 1, 2, 4 and 5 matching the pilot; include captions, transcripts, practice checklists and honest workflow checks.
+- [ ] Produce lessons 6–15 after batch review, with screenshots, captions, transcripts and end-to-end checks; retain external workflow dependencies identified during filming.
 
 ## Signal recording validation — 19 October 2026
 
